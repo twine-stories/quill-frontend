@@ -2,16 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
-    // const Http = new XMLHttpRequest();
-    // const url='http://localhost:8080/greeting';
-    // Http.open("GET", url);
-    // Http.send();
-
-    // Http.onreadystatechange = (e) => {
-    //     console.log(Http.responseText)
-    // }
-    fetch('/api/greeting?name=Rithik')
-        // .then(response => console.log(response));
+    fetch('/api/users')
         .then(response => response.json())
         .then(data => console.log(data));
     return (
