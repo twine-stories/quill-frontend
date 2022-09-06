@@ -2,11 +2,6 @@ import React, { useContext } from 'react';
 import Popup from 'reactjs-popup';
 import { UserContext } from "../App.tsx";
 
-// interface FirstLoginProps {
-//     open: boolean;
-//     sendRequest: (walletAddress: string, firstName: string, lastName: string) => void;
-// }
-
 function FirstLogin() {
     const context: object = useContext(UserContext);
     const sendRequest = context['addUser'];

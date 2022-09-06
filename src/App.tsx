@@ -25,7 +25,7 @@ function App() {
     const [openLogin, setOpenLogin] = useState<boolean>(false);
     const [getUserToggle, setGetUserToggle] = useState<boolean>(false);
 
-    const logOut = () : void => {
+    const logOut = (): void => {
         deleteCookie('session');
         window.location.replace('/');
     }

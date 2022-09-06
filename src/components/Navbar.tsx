@@ -4,6 +4,15 @@ import styled from "styled-components";
 import Button from './Button.tsx';
 import FirstLogin from './FirstLogin.tsx';
 import { UserContext } from "../App.tsx";
+import LoginWall from './LoginWall.tsx';
+
+interface KonvaTextEventTarget extends EventTarget {
+    index: number;
+}
+  
+interface KonvaMouseEvent extends React.MouseEvent<HTMLElement> {
+    target: KonvaTextEventTarget;
+}
 
 const NavDiv = styled.div`
     display: flex;
@@ -13,6 +22,16 @@ const NavDiv = styled.div`
 
 function Navbar() {
     const context: object = useContext(UserContext);
+    const [open, setOpen] = useState<boolean>(false);
+
+    const blockAccess = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        e.preventDefault();
+        setOpen(true);
+    }
+
+    const closeWall = (): void => {
+        setOpen(false);
+    }
 
     return (
         <div>
@@ -27,13 +46,17 @@ function Navbar() {
                     <Button name="Log Out" onClick={context['logOut']} />
                 </NavDiv>
                 :
-                <NavDiv>
-                    <a href="/">Home</a>
-                    <a href="/written">Written</a>
-                    <a href="/illustrated">Illustrated</a>
-                    <a href="/create">Create</a>
-                    <Button name="Connect" onClick={context['connectToMyAlgo']} />
-                </NavDiv>}
+                <>
+                    <NavDiv>
+                        <a href="/">Home</a>
+                        <a href="/written">Written</a>
+                        <a href="/illustrated">Illustrated</a>
+                        <a onClick={blockAccess}>Create</a>
+                        <Button name="Connect" onClick={context['connectToMyAlgo']} />
+                    </NavDiv>
+                    <LoginWall open={open} closeWall={closeWall} />
+                </>
+                }
         </div>
     );
 }
