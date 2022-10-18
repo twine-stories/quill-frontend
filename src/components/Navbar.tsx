@@ -5,6 +5,7 @@ import Button from './Button.tsx';
 import FirstLogin from './FirstLogin.tsx';
 import { UserContext } from "../App.tsx";
 import LoginWall from './LoginWall.tsx';
+import RegisterCreator from './RegisterCreator.tsx';
 
 interface KonvaTextEventTarget extends EventTarget {
     index: number;
@@ -23,10 +24,26 @@ const NavDiv = styled.div`
 function Navbar() {
     const context: object = useContext(UserContext);
     const [open, setOpen] = useState<boolean>(false);
+    const [openCreator, setOpenCreator] = useState<boolean>(false);
 
     const blockAccess = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         e.preventDefault();
         setOpen(true);
+    }
+
+    const createNav = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        e.preventDefault();
+        console.log(context['user']['creator']);
+        if (context['user']['creator']) {
+            navToCreate();
+        } else {
+            setOpenCreator(true);
+        }
+    }
+
+    const navToCreate = () => {
+        setOpenCreator(false);
+        window.location.href = '/create';
     }
 
     const closeWall = (): void => {
@@ -37,14 +54,17 @@ function Navbar() {
         <div>
             <FirstLogin />
             {context['user'] && context['user']['walletAddress'] ?
-                <NavDiv>
-                    <a href="/">Home</a>
-                    <a href="/written">Written</a>
-                    <a href="/illustrated">Illustrated</a>
-                    <a href="/create">Create</a>
-                    <a href="/profile">Profile</a>
-                    <Button name="Log Out" onClick={context['logOut']} />
-                </NavDiv>
+                <>
+                    <NavDiv>
+                        <a href="/">Home</a>
+                        <a href="/written">Written</a>
+                        <a href="/illustrated">Illustrated</a>
+                        <a onClick={createNav}>Create</a>
+                        <a href="/profile">Profile</a>
+                        <Button name="Log Out" onClick={context['logOut']} />
+                    </NavDiv>
+                    <RegisterCreator open={openCreator} updateUser={context['updateUser']} navigate={navToCreate} />
+                </>
                 :
                 <>
                     <NavDiv>
@@ -56,7 +76,7 @@ function Navbar() {
                     </NavDiv>
                     <LoginWall open={open} closeWall={closeWall} />
                 </>
-                }
+            }
         </div>
     );
 }

@@ -30,6 +30,18 @@ function App() {
         window.location.replace('/');
     }
 
+    const updateUser = (newUser: object) => {
+        axios.post('/api/user/update', newUser)
+            .then(response => {
+                if (response.status === 200) {
+                    setUser(newUser);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
     const setUserCookie = (walletAddress: string, cookie: string) => {
         const params = {
             userCookie: cookie,
@@ -101,7 +113,6 @@ function App() {
     }
 
     useEffect(() => {
-        console.log('getting user');
         const cookie = getCookie('session');
         if (cookie === "") return;
         axios.get('/api/user/cookie/' + cookie)
@@ -134,7 +145,7 @@ function App() {
 
     return (
         <div className="App">
-            <UserContext.Provider value={{'address': address, 'user': user, 'connectToMyAlgo': connectToMyAlgo, 'logOut': logOut, 'openLogin': openLogin, 'addUser': addUser}}>
+            <UserContext.Provider value={{'address': address, 'user': user, 'connectToMyAlgo': connectToMyAlgo, 'logOut': logOut, 'openLogin': openLogin, 'addUser': addUser, 'updateUser': updateUser}}>
                 <Routes>
                     <Route path="/written" element={<Written />}></Route>
                     <Route path="/illustrated" element={<Illustrated />}></Route>

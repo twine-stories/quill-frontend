@@ -12,10 +12,10 @@ function FirstLogin() {
             <input type='text' id='firstName' name='firstName' placeholder='First Name'></input>
             <input type='text' id='lastName' name='lastName' placeholder='Last Name'></input>
             <button onClick={(e) => {
-                const first = document.getElementById('firstName');
-                const last = document.getElementById('lastName');
+                const first = document.getElementById('firstName') as HTMLInputElement;
+                const last = document.getElementById('lastName') as HTMLInputElement;
                 if (first && last) {
-                    sendRequest(context['address'], (first as HTMLInputElement).value, (last as HTMLInputElement).value);
+                    sendRequest(context['address'], first.value, last.value);
                 }
             }}>Submit</button>
         </Popup>

@@ -7,7 +7,6 @@ interface LoginWallProps {
 }
 
 function LoginWall(props: LoginWallProps) {
-    console.log(props.open);
     return (
         <Popup open={props.open} modal onClose={props.closeWall}>
             Must Login
