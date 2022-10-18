@@ -49,6 +49,10 @@ function Navbar() {
         setOpen(false);
     }
 
+    const closeCreator = (): void => {
+        setOpenCreator(false);
+    }
+
     return (
         <div>
             <FirstLogin />
@@ -62,7 +66,7 @@ function Navbar() {
                         <a href="/profile">Profile</a>
                         <Button name="Log Out" onClick={context['logOut']} />
                     </NavDiv>
-                    <RegisterCreator open={openCreator} updateUser={context['updateUser']} navigate={navToCreate} />
+                    <RegisterCreator open={openCreator} close={closeCreator} updateUser={context['updateUser']} navigate={navToCreate} />
                 </>
                 :
                 <>

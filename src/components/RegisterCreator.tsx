@@ -4,6 +4,7 @@ import { UserContext } from "../App.tsx";
 
 interface RegisterCreatorProps {
     open: boolean;
+    close: () => void;
     updateUser: (user: object) => void;
     navigate: () => void;
 }
@@ -12,7 +13,7 @@ function RegisterCreator(props: RegisterCreatorProps) {
     const context: object = useContext(UserContext);
 
     return (
-        <Popup open={props.open}>
+        <Popup open={props.open} onClose={props.close}>
             <input type='text' id='email' name='email' placeholder='Email Address'></input>
             <button onClick={(e) => {
                 const email = document.getElementById('email') as HTMLInputElement;

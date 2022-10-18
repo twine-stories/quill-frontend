@@ -6,9 +6,10 @@ function FirstLogin() {
     const context: object = useContext(UserContext);
     const sendRequest = context['addUser'];
     const open = context['openLogin'];
+    const close = context['closeLogin'];
 
     return (
-        <Popup open={open}>
+        <Popup open={open} onClose={close}>
             <input type='text' id='firstName' name='firstName' placeholder='First Name'></input>
             <input type='text' id='lastName' name='lastName' placeholder='Last Name'></input>
             <button onClick={(e) => {

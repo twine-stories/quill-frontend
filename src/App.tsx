@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from './pages/Home.tsx';
 import Written from './pages/Written';
 import Illustrated from './pages/Illustrated';
-import Create from './pages/Create';
+import Create from './pages/Create.tsx';
 import Profile from './pages/Profile.tsx';
 import { ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib } from '@reach-sh/stdlib';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,6 +24,7 @@ function App() {
     const [address, setAddress] = useState<string>();
     const [openLogin, setOpenLogin] = useState<boolean>(false);
     const [getUserToggle, setGetUserToggle] = useState<boolean>(false);
+    const [initUserLoad, setInitUserLoad] = useState<boolean>(false);
 
     const logOut = (): void => {
         deleteCookie('session');
@@ -112,9 +113,17 @@ function App() {
         setOpenLogin(false);
     }
 
+    const cancelLogin = (): void => {
+        setOpenLogin(false);
+        setAddress("");
+    }
+
     useEffect(() => {
         const cookie = getCookie('session');
-        if (cookie === "") return;
+        if (cookie === "") {
+            setInitUserLoad(true);
+            return;
+        }
         axios.get('/api/user/cookie/' + cookie)
             .then(response => {
                 if (response.data) {
@@ -143,9 +152,15 @@ function App() {
         }
     }, [address]);
 
+    useEffect(() => {
+        if (user) {
+            setInitUserLoad(true);
+        }
+    }, [user]);
+
     return (
         <div className="App">
-            <UserContext.Provider value={{'address': address, 'user': user, 'connectToMyAlgo': connectToMyAlgo, 'logOut': logOut, 'openLogin': openLogin, 'addUser': addUser, 'updateUser': updateUser}}>
+            <UserContext.Provider value={{'userLoaded': initUserLoad,'address': address, 'user': user, 'connectToMyAlgo': connectToMyAlgo, 'logOut': logOut, 'openLogin': openLogin, 'closeLogin': cancelLogin, 'addUser': addUser, 'updateUser': updateUser}}>
                 <Routes>
                     <Route path="/written" element={<Written />}></Route>
                     <Route path="/illustrated" element={<Illustrated />}></Route>
