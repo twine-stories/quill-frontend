@@ -33,7 +33,6 @@ function Navbar() {
 
     const createNav = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         e.preventDefault();
-        console.log(context['user']['creator']);
         if (context['user']['creator']) {
             navToCreate();
         } else {
