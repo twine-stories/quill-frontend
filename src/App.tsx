@@ -9,6 +9,8 @@ import Profile from './pages/Profile.tsx';
 import { ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib } from '@reach-sh/stdlib';
 import { v4 as uuidv4 } from 'uuid';
 import { getCookie, setCookie, deleteCookie } from './utils/cookies.ts';
+import { User, Work } from './utils/types.ts';
+import { Genre, WorkType } from './utils/enums.ts'
 
 const axios = require('axios').default;
 
@@ -20,7 +22,7 @@ reach.setWalletFallback(reach.walletFallback({
 export const UserContext = createContext(null as any);
 
 function App() {
-    const [user, setUser] = useState<object>();
+    const [user, setUser] = useState<User>();
     const [address, setAddress] = useState<string>();
     const [openLogin, setOpenLogin] = useState<boolean>(false);
     const [getUserToggle, setGetUserToggle] = useState<boolean>(false);
@@ -31,7 +33,7 @@ function App() {
         window.location.replace('/');
     }
 
-    const updateUser = (newUser: object) => {
+    const updateUser = (newUser: User) => {
         axios.post('/api/user/update', newUser)
             .then(response => {
                 if (response.status === 200) {
@@ -90,7 +92,7 @@ function App() {
 
     const addUser = (walletAddress: string, firstName: string, lastName: string): void => {
         const cookie = uuidv4();
-        const newUser = {
+        const newUser: User = {
             walletAddress: walletAddress,
             email: null,
             firstName: firstName,

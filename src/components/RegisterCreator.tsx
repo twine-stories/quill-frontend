@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
 import Popup from 'reactjs-popup';
 import { UserContext } from "../App.tsx";
+import { User } from '../utils/types.ts';
 
 interface RegisterCreatorProps {
     open: boolean;
     close: () => void;
-    updateUser: (user: object) => void;
+    updateUser: (user: User) => void;
     navigate: () => void;
 }
 
@@ -18,8 +19,7 @@ function RegisterCreator(props: RegisterCreatorProps) {
             <button onClick={(e) => {
                 const email = document.getElementById('email') as HTMLInputElement;
                 if (email) {
-                    let newUser: object = JSON.parse(JSON.stringify(context['user']));
-                    console.log(newUser);
+                    let newUser: User = JSON.parse(JSON.stringify(context['user']));
                     newUser['email'] = email.value;
                     newUser['creator'] = true;
 
