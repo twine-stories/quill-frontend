@@ -8,6 +8,7 @@ export type User = {
     email?: string;
     firstName: string;
     lastName: string;
+    displayName?: string;
     profileImg: string;
     illustrator: boolean;
     suspended: boolean;
@@ -16,7 +17,7 @@ export type User = {
 
 export type Work = {
     id: number;
-    creator: Array<User>;
+    creator: User;
     title: string;
     cover?: string;
     banner?: string;
@@ -24,5 +25,6 @@ export type Work = {
     genre1: Genre;
     genre2?: Genre;
     genre3?: Genre;
-    workType: WorkType;
+    medium: WorkType;
+    url: string;
 }

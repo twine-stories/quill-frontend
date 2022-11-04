@@ -1,13 +1,13 @@
 import React from 'react';
 
 interface ButtonProps {
-    onClick: () => Promise<void>;
+    action: () => Promise<void>;
     name: string;
 }
 
 function Button(props: ButtonProps) {
     return (
-        <button onClick={props.onClick}>{props.name}</button>
+        <button onClick={props.action}>{props.name}</button>
     )
 }
 

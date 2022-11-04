@@ -2,8 +2,6 @@ import { useEffect, useState, createContext } from 'react';
 import './App.css';
 import { Routes, Route } from "react-router-dom";
 import Home from './pages/Home.tsx';
-import Written from './pages/Written';
-import Illustrated from './pages/Illustrated';
 import Create from './pages/Create.tsx';
 import Profile from './pages/Profile.tsx';
 import { ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib } from '@reach-sh/stdlib';
@@ -115,6 +113,19 @@ function App() {
         setOpenLogin(false);
     }
 
+    const addWork = (work: Work): void => {
+        axios.post('/api/work/add', work)
+            .then(response => {
+                if (response.status === 200) {
+                    console.log('success');
+                }
+            })
+            .catch(error => {
+                // handle error
+                console.error(error);
+            });
+    }
+
     const cancelLogin = (): void => {
         setOpenLogin(false);
         setAddress("");
@@ -164,9 +175,7 @@ function App() {
         <div className="App">
             <UserContext.Provider value={{'userLoaded': initUserLoad,'address': address, 'user': user, 'connectToMyAlgo': connectToMyAlgo, 'logOut': logOut, 'openLogin': openLogin, 'closeLogin': cancelLogin, 'addUser': addUser, 'updateUser': updateUser}}>
                 <Routes>
-                    <Route path="/written" element={<Written />}></Route>
-                    <Route path="/illustrated" element={<Illustrated />}></Route>
-                    <Route path="/create" element={<Create />}></Route>
+                    <Route path="/create" element={<Create addWork={addWork} />}></Route>
                     <Route path="/profile" element={<Profile />}></Route>
                     <Route path="/" element={<Home />}></Route>
                 </Routes>

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import Popup from 'reactjs-popup';
 import { UserContext } from "../App.tsx";
+import Button from './Button.tsx';
 
 function FirstLogin() {
     const context: object = useContext(UserContext);
@@ -12,13 +13,13 @@ function FirstLogin() {
         <Popup open={open} onClose={close}>
             <input type='text' id='firstName' name='firstName' placeholder='First Name'></input>
             <input type='text' id='lastName' name='lastName' placeholder='Last Name'></input>
-            <button onClick={(e) => {
+            <Button action={(e) => {
                 const first = document.getElementById('firstName') as HTMLInputElement;
                 const last = document.getElementById('lastName') as HTMLInputElement;
                 if (first && last) {
                     sendRequest(context['address'], first.value, last.value);
                 }
-            }}>Submit</button>
+            }} name='Submit' />
         </Popup>
     )
 }

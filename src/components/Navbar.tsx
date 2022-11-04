@@ -59,9 +59,7 @@ function Navbar() {
             {context['user'] && context['user']['walletAddress'] ?
                 <>
                     <NavDiv>
-                        <a href="/">Home</a>
-                        <a href="/written">Written</a>
-                        <a href="/illustrated">Illustrated</a>
+                        <a href="/">Twine</a>
                         <a onClick={createNav}>Create</a>
                         <a href="/profile">Profile</a>
                         <Button name="Log Out" onClick={context['logOut']} />
@@ -71,11 +69,9 @@ function Navbar() {
                 :
                 <>
                     <NavDiv>
-                        <a href="/">Home</a>
-                        <a href="/written">Written</a>
-                        <a href="/illustrated">Illustrated</a>
+                        <a href="/">Twine</a>
                         <a onClick={blockAccess}>Create</a>
-                        <Button name="Connect" onClick={context['connectToMyAlgo']} />
+                        <Button name="Connect" action={context['connectToMyAlgo']} />
                     </NavDiv>
                     <LoginWall open={open} closeWall={closeWall} />
                 </>
