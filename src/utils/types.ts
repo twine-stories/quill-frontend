@@ -19,6 +19,7 @@ export type Work = {
     id: number;
     creator: User;
     title: string;
+    description: string;
     cover?: string;
     banner?: string;
     publishStamp?: Date;
