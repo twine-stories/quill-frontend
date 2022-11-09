@@ -49,7 +49,6 @@ function Create(props: CreateProps) {
                         const genre2 = document.getElementById('genre2') as HTMLInputElement;
                         const genre3 = document.getElementById('genre3') as HTMLInputElement;
                         if (title && description && url && genre1 && genre2 && genre3) {
-                            console.log(description.value);
                             let newWork: Work = {
                                 creator: context['user'],
                                 title: title.value,

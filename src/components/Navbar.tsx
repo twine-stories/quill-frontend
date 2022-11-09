@@ -62,7 +62,7 @@ function Navbar() {
                         <a href="/">Twine</a>
                         <a onClick={createNav}>Create</a>
                         <a href="/profile">Profile</a>
-                        <Button name="Log Out" onClick={context['logOut']} />
+                        <Button name="Log Out" action={context['logOut']} />
                     </NavDiv>
                     <RegisterCreator open={openCreator} close={closeCreator} updateUser={context['updateUser']} navigate={navToCreate} />
                 </>

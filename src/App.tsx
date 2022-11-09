@@ -9,9 +9,7 @@ import { ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib } from '@reach-sh/stdli
 import { v4 as uuidv4 } from 'uuid';
 import { getCookie, setCookie, deleteCookie } from './utils/cookies.ts';
 import { User, Work } from './utils/types.ts';
-import { Genre, WorkType } from './utils/enums.ts'
-
-const axios = require('axios').default;
+import { cookieSet, userGet, userUpdate, userAdd, cookieGet, workAdd } from './utils/api.ts';
 
 const reach = loadStdlib('ALGO');
 reach.setWalletFallback(reach.walletFallback({
@@ -28,20 +26,13 @@ function App() {
     const [initUserLoad, setInitUserLoad] = useState<boolean>(false);
 
     const logOut = (): void => {
+        console.log('here');
         deleteCookie('session');
         window.location.replace('/');
     }
 
     const updateUser = (newUser: User) => {
-        axios.post('/api/user/update', newUser)
-            .then(response => {
-                if (response.status === 200) {
-                    setUser(newUser);
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
+        userUpdate(newUser, setUser);
     }
 
     const setUserCookie = (walletAddress: string, cookie: string) => {
@@ -49,16 +40,10 @@ function App() {
             userCookie: cookie,
             walletAddress: walletAddress
         };
-        axios.post('/api/user/setUserCookie', params)
-            .then(response => {
-                if (response.status === 200) {
-                    setCookie('session', cookie);
-                    setGetUserToggle(!getUserToggle);
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
+        cookieSet(params, (cookie) => {
+            setCookie('session', cookie);
+            setGetUserToggle(!getUserToggle);
+        });
     };
 
     const onComplete = (account: object): void => {
@@ -78,15 +63,7 @@ function App() {
     }
 
     const getAndSetUser = (addr: string): void => {
-        axios.get('/api/user/' + addr)
-            .then(response => {
-                if (response.data) {
-                    setUser(response.data);
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
+        userGet(addr, setUser);
     }
 
     const addUser = (walletAddress: string, firstName: string, lastName: string): void => {
@@ -99,32 +76,16 @@ function App() {
             profileImg: 'temp',
             userCookie: cookie
         }
-        axios.post('/api/user/add', newUser)
-            .then(response => {
-                if (response.status === 200) {
-                    getAndSetUser(walletAddress);
-                    setCookie('session', cookie);
-                    setGetUserToggle(!getUserToggle);
-                }
-            })
-            .catch(error => {
-                // handle error
-                console.error(error);
-            });
+        userAdd(newUser, (user) => {
+            getAndSetUser(user.walletAddress);
+            setCookie('session', user.userCookie);
+            setGetUserToggle(!getUserToggle);
+        });
         setOpenLogin(false);
     }
 
     const addWork = (work: Work): void => {
-        axios.post('/api/work/add', work)
-            .then(response => {
-                if (response.status === 200) {
-                    console.log('success');
-                }
-            })
-            .catch(error => {
-                // handle error
-                console.error(error);
-            });
+        workAdd(work);
     }
 
     const cancelLogin = (): void => {
@@ -138,31 +99,18 @@ function App() {
             setInitUserLoad(true);
             return;
         }
-        axios.get('/api/user/cookie/' + cookie)
-            .then(response => {
-                if (response.data) {
-                    setUser(response.data);
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
+        cookieGet(cookie, setUser);
     }, [getUserToggle]);
 
     useEffect(() => {
         if (address) {
-            axios.get('/api/user/' + address)
-                .then(response => {
-                    if (response.data) {
-                        setUser(response.data);
-                    } else {
-                        setOpenLogin(true);
-                    }
-                })
-                .catch(error => {
-                    // handle error
-                    console.error(error);
-                });
+            userGet(address, (user) => {
+                if (user) {
+                    setUser(user);
+                } else {
+                    setOpenLogin(true);
+                }
+            });
         }
     }, [address]);
 

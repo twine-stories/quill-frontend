@@ -2,9 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import Navbar from "../components/Navbar.tsx";
 import { UserContext } from "../App.tsx";
 import { User, Work } from '../utils/types.ts';
-import ProfileWork from '../components/ProfileWork.tsx';
-
-const axios = require('axios').default;
+import { workGetByUrl } from '../utils/api.ts';
 
 function Story() {
 
@@ -14,15 +12,7 @@ function Story() {
 
     useEffect(() => {
         if (user) {
-            axios.get('/api/work/url/' + window.location.href.split('/')[4])
-                .then(response => {
-                    if (response.data) {
-                        setWork(response.data);
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+            workGetByUrl(window.location.href.split('/')[4], setWork);
         }
     }, [user]);
 
