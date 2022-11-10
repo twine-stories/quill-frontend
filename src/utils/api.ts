@@ -10,9 +10,7 @@ type CookieParams = {
 export const userGet = (addr: string, setter: (user: User) => void) : void => {
     axios.get('/api/user/' + addr)
         .then(response => {
-            if (response.data) {
-                setter(response.data);
-            }
+            setter(response.data);
         })
         .catch(error => {
             console.error(error);
