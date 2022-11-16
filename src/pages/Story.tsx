@@ -12,7 +12,9 @@ function Story() {
 
     useEffect(() => {
         if (user) {
-            workGetByUrl(window.location.href.split('/')[4], setWork);
+            workGetByUrl(window.location.href.split('/')[4], setWork, () => {
+                console.log('fail');
+            });
         }
     }, [user]);
 

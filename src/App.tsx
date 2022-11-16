@@ -84,9 +84,9 @@ function App() {
         setOpenLogin(false);
     }
 
-    const addWork = (work: Work): void => {
-        workAdd(work);
-    }
+    // const addWork = (work: Work, setter: () => void): void => {
+    //     workAdd(work, setter);
+    // }
 
     const cancelLogin = (): void => {
         setOpenLogin(false);
@@ -124,7 +124,7 @@ function App() {
         <div className="App">
             <UserContext.Provider value={{'userLoaded': initUserLoad,'address': address, 'user': user, 'connectToMyAlgo': connectToMyAlgo, 'logOut': logOut, 'openLogin': openLogin, 'closeLogin': cancelLogin, 'addUser': addUser, 'updateUser': updateUser}}>
                 <Routes>
-                    <Route path="/create" element={<Create addWork={addWork} />}></Route>
+                    <Route path="/create" element={<Create addWork={workAdd} />}></Route>
                     <Route path="/profile" element={<Profile />}></Route>
                     <Route path="/story/*" element={<Story />}></Route>
                     <Route path="/" element={<Home />}></Route>

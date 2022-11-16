@@ -6,7 +6,7 @@ import { Genre } from '../utils/enums.ts';
 import { Work } from '../utils/types.ts';
 
 interface CreateProps {
-    addWork: (work: Work) => void;
+    addWork: (work: Work, setter: (work: Work) => void) => void;
 }
 
 function Create(props: CreateProps) {
@@ -62,7 +62,9 @@ function Create(props: CreateProps) {
                                 url: url.value
                             };
         
-                            props.addWork(newWork);
+                            props.addWork(newWork, (work) => {
+                                console.log("url taken");
+                            });
                         }
                     }} />
                 </div>

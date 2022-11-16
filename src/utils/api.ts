@@ -65,11 +65,13 @@ export const cookieSet = (params: CookieParams, setter: (cookie: string) => void
         });
 }
 
-export const workGetByUrl = (url: string, setter: (work: Work) => void) : void => {
+export const workGetByUrl = (url: string, setter: (work: Work) => void, fail: () => void) : void => {
     axios.get('/api/work/url/' + url)
         .then(response => {
             if (response.data) {
                 setter(response.data);
+            } else {
+                fail();
             }
         })
         .catch(error => {
@@ -77,15 +79,17 @@ export const workGetByUrl = (url: string, setter: (work: Work) => void) : void =
         });
 }
 
-export const workAdd = (work: Work) : void => {
-    axios.post('/api/work/add', work)
-        .then(response => {
-            if (response.status === 200) {
-                console.log('success');
-            }
-        })
-        .catch(error => {
-            // handle error
-            console.error(error);
-        });
+export const workAdd = (work: Work, fail: (foundWork: Work) => void) : void => {
+    workGetByUrl(work.url, fail, () => {
+        axios.post('/api/work/add', work)
+            .then(response => {
+                if (response.status === 200) {
+                    console.log('success');
+                }
+            })
+            .catch(error => {
+                // handle error
+                console.error(error);
+            });
+    });
 }
