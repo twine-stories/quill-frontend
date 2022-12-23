@@ -4,6 +4,10 @@ import Navbar from "../components/Navbar.tsx";
 import Button from '../components/Button.tsx';
 import { Genre } from '../utils/enums.ts';
 import { Work } from '../utils/types.ts';
+import { createNFT } from '../utils/blockchain/transactionRepository.ts';
+import { User } from '../utils/types.ts';
+
+const axios = require('axios').default;
 
 interface CreateProps {
     addWork: (work: Work, setter: (work: Work) => void) => void;
@@ -14,6 +18,8 @@ function Create(props: CreateProps) {
     if (context['userLoaded'] === true && (!context['user'] || !context['user']['creator'])) {
         window.location.href = '/';
     }
+
+    const user: User = context['user'];
 
     const genreOptions: Array<JSX.Element> = [];
     const genres: object = Object.keys(Genre);
@@ -65,6 +71,20 @@ function Create(props: CreateProps) {
                             props.addWork(newWork, (work) => {
                                 console.log("url taken");
                             });
+                        }
+                    }} />
+                </div>
+                <p>create nft</p>
+                <div>
+                    <input type='text' id='unitName' name='unitNme' placeholder='unit name' />
+                    <input type='text' id='assetName' name='assetName' placeholder='asset name' />
+                    <input type='text' id='assetUrl' name='assetUrl' placeholder='asset url' />
+                    <Button name='Mint NFT' action={(e) => {
+                        const unitName: HTMLInputElement = document.getElementById('unitName') as HTMLInputElement;
+                        const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;
+                        const assetUrl: HTMLInputElement = document.getElementById('assetUrl') as HTMLInputElement;
+                        if (unitName && assetName && assetUrl) {
+                            createNFT(user.walletAddress, unitName.value, assetName.value, assetUrl.value);
                         }
                     }} />
                 </div>

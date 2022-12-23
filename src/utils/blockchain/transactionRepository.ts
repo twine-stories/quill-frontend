@@ -1,0 +1,75 @@
+import algosdk, { SuggestedParams, Transaction, Algodv2 } from 'algosdk';
+import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect';
+import { getClient, getIndexer } from './credentials.ts';
+import AccountInformation from 'algosdk/dist/types/src/client/v2/algod/accountInformation';
+
+const myAlgoConnect = new MyAlgoConnect();
+
+const client: Algodv2 = getClient();
+const encoder = new TextEncoder();
+
+async function getDefaultSuggestedParams(): Promise<SuggestedParams> {
+    let suggestedParams: SuggestedParams = await client.getTransactionParams().do();
+
+    suggestedParams.flatFee = true;
+    suggestedParams.fee = 1000;
+
+    return suggestedParams;
+}
+
+async function createASA(creatorAddress: string, unitName: string, assetName: string, total: number, decimals: number, assetUrl: string): Promise<string> {
+    const sp: SuggestedParams = await getDefaultSuggestedParams();
+    const createTxn: Transaction = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
+        from: creatorAddress,
+        suggestedParams: sp,
+        unitName: unitName,
+        assetName: assetName,
+        assetURL: assetUrl,
+        total: total,
+        decimals: decimals,
+        manager: creatorAddress,
+        reserve: creatorAddress,
+        freeze: creatorAddress,
+        clawback: creatorAddress,
+        defaultFrozen: false,
+    });
+
+    const signedTxn: SignedTx = await myAlgoConnect.signTransaction(createTxn.toByte());
+    const response = await client.sendRawTransaction(signedTxn.blob).do();
+    return response['txId'];
+}
+
+export async function createNFT(creatorAddress: string, unitName: string, assetName: string, assetUrl: string): Promise<string> {
+    return await createASA(creatorAddress, unitName, assetName, 1, 0, assetUrl);
+}
+
+async function createApplication(creatorAddress: string, approvalProgram: string, clearProgram: string, globalByteSlices: number, globalInts: number, localByteSlices: number, localInts: number, appArgs: string[], foreignAssets: number[]) {
+    const apBytes: Uint8Array = encoder.encode(approvalProgram);
+    const cpBytes: Uint8Array = encoder.encode(clearProgram);
+    let appArgsBytes: Uint8Array[] = [];
+
+    appArgs.forEach((val: string) => {
+        appArgsBytes.push(encoder.encode(val));
+    });
+
+    const sp: SuggestedParams = await getDefaultSuggestedParams();
+    const createTxn: Transaction = algosdk.makeApplicationCreateTxnFromObject({
+        from: creatorAddress,
+        suggestedParams: sp,
+        approvalProgram: apBytes,
+        clearProgram: cpBytes,
+        numLocalInts: localInts,
+        numLocalByteSlices: localByteSlices,
+        numGlobalInts: globalInts,
+        numGlobalByteSlices: globalByteSlices,
+        appArgs: appArgsBytes,
+        foreignAssets: foreignAssets,
+        onComplete: algosdk.OnApplicationComplete.NoOpOC
+    });
+
+    const signedTxn: SignedTx = await myAlgoConnect.signTransaction(createTxn.toByte());
+    const response = await client.sendRawTransaction(signedTxn.blob).do();
+    console.log(response);
+
+    // client.pendingTransactionInformation(signedTxn.txID);
+}
