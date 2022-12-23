@@ -1,7 +1,6 @@
 import algosdk, { SuggestedParams, Transaction, Algodv2 } from 'algosdk';
 import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect';
 import { getClient, getIndexer } from './credentials.ts';
-import AccountInformation from 'algosdk/dist/types/src/client/v2/algod/accountInformation';
 
 const myAlgoConnect = new MyAlgoConnect();
 
@@ -15,6 +14,19 @@ async function getDefaultSuggestedParams(): Promise<SuggestedParams> {
     suggestedParams.fee = 1000;
 
     return suggestedParams;
+}
+
+async function waitForTxn(txnId: string): Promise<Record<string, any>> {
+    const status = await client.status().do();
+    var lastRound = status['last-round'];
+    var pending = await client.pendingTransactionInformation(txnId).do();
+    while (!('confirmed-round' in pending && pending['confirmed-round'] > 0)) {
+        lastRound += 1;
+        await client.statusAfterBlock(lastRound);
+        pending = await client.pendingTransactionInformation(txnId).do();
+    }
+
+    return pending;
 }
 
 async function createASA(creatorAddress: string, unitName: string, assetName: string, total: number, decimals: number, assetUrl: string): Promise<string> {
@@ -36,6 +48,9 @@ async function createASA(creatorAddress: string, unitName: string, assetName: st
 
     const signedTxn: SignedTx = await myAlgoConnect.signTransaction(createTxn.toByte());
     const response = await client.sendRawTransaction(signedTxn.blob).do();
+
+    const txnInfo = await waitForTxn(signedTxn.txID);
+
     return response['txId'];
 }
 
@@ -70,6 +85,4 @@ async function createApplication(creatorAddress: string, approvalProgram: string
     const signedTxn: SignedTx = await myAlgoConnect.signTransaction(createTxn.toByte());
     const response = await client.sendRawTransaction(signedTxn.blob).do();
     console.log(response);
-
-    // client.pendingTransactionInformation(signedTxn.txID);
 }
