@@ -56,7 +56,7 @@ function Create(props: CreateProps) {
                         const genre3 = document.getElementById('genre3') as HTMLInputElement;
                         if (title && description && url && genre1 && genre2 && genre3) {
                             let newWork: Work = {
-                                creator: context['user'],
+                                creator: user,
                                 title: title.value,
                                 description: description.value,
                                 cover: 'cover',
