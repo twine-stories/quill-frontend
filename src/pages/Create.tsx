@@ -3,19 +3,21 @@ import { UserContext } from '../App.tsx';
 import Navbar from "../components/Navbar.tsx";
 import Button from '../components/Button.tsx';
 import { Genre } from '../utils/enums.ts';
-import { Work } from '../utils/types.ts';
+import { Work, Artwork } from '../utils/types';
 import { createNFT } from '../utils/blockchain/transactionRepository.ts';
 import { User } from '../utils/types.ts';
+import { workAdd, artworkAdd } from '../utils/api.ts'
 
 const axios = require('axios').default;
 
-interface CreateProps {
-    addWork: (work: Work, setter: (work: Work) => void) => void;
-}
-
-function Create(props: CreateProps) {
+function Create() {
     const context: object = useContext(UserContext);
-    if (context['userLoaded'] === true && (!context['user'] || !context['user']['creator'])) {
+
+    if (!context['userLoaded']) {
+        return (<div></div>);
+    }
+
+    if (!context['user'] || !context['user']['creator']) {
         window.location.href = '/';
     }
 
@@ -26,6 +28,16 @@ function Create(props: CreateProps) {
     for (let i in Object.values(Genre)) {
         let val: string = genres[i];
         genreOptions.push(<option key={val.toLowerCase()} value={val.toLowerCase()}>{val.toLowerCase()}</option>);
+    }
+
+    const mintNFT = async (walletAddress: string, unitName: string, assetName: string, assetUrl: string) => {
+        const response: object = await createNFT(walletAddress, unitName, assetName, assetUrl);
+        const assetId: number = response['asset-index'];
+        const artwork: Artwork = {
+            collection: {id: 1},
+            assetId: assetId
+        };
+        artworkAdd(artwork);
     }
 
     return (
@@ -68,7 +80,7 @@ function Create(props: CreateProps) {
                                 url: url.value
                             };
         
-                            props.addWork(newWork, (work) => {
+                            workAdd(newWork, (work) => {
                                 console.log("url taken");
                             });
                         }
@@ -84,7 +96,7 @@ function Create(props: CreateProps) {
                         const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;
                         const assetUrl: HTMLInputElement = document.getElementById('assetUrl') as HTMLInputElement;
                         if (unitName && assetName && assetUrl) {
-                            createNFT(user.walletAddress, unitName.value, assetName.value, assetUrl.value);
+                            mintNFT(user.walletAddress, unitName.value, assetName.value, assetUrl.value);
                         }
                     }} />
                 </div>

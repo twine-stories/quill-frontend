@@ -9,7 +9,7 @@ import { ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib } from '@reach-sh/stdli
 import { v4 as uuidv4 } from 'uuid';
 import { getCookie, setCookie, deleteCookie } from './utils/cookies.ts';
 import { User, Work } from './utils/types.ts';
-import { cookieSet, userGet, userUpdate, userAdd, cookieGet, workAdd } from './utils/api.ts';
+import { cookieSet, userGet, userUpdate, userAdd, cookieGet } from './utils/api.ts';
 
 const reach = loadStdlib('ALGO');
 reach.setWalletFallback(reach.walletFallback({
@@ -26,7 +26,6 @@ function App() {
     const [initUserLoad, setInitUserLoad] = useState<boolean>(false);
 
     const logOut = (): void => {
-        console.log('here');
         deleteCookie('session');
         window.location.replace('/');
     }
@@ -84,10 +83,6 @@ function App() {
         setOpenLogin(false);
     }
 
-    // const addWork = (work: Work, setter: () => void): void => {
-    //     workAdd(work, setter);
-    // }
-
     const cancelLogin = (): void => {
         setOpenLogin(false);
         setAddress("");
@@ -124,7 +119,7 @@ function App() {
         <div className="App">
             <UserContext.Provider value={{'userLoaded': initUserLoad,'address': address, 'user': user, 'connectToMyAlgo': connectToMyAlgo, 'logOut': logOut, 'openLogin': openLogin, 'closeLogin': cancelLogin, 'addUser': addUser, 'updateUser': updateUser}}>
                 <Routes>
-                    <Route path="/create" element={<Create addWork={workAdd} />}></Route>
+                    <Route path="/create" element={<Create />}></Route>
                     <Route path="/profile" element={<Profile />}></Route>
                     <Route path="/story/*" element={<Story />}></Route>
                     <Route path="/" element={<Home />}></Route>

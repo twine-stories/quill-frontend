@@ -1,7 +1,7 @@
 import { Genre, WorkType } from 'enums.ts';
 
 export type User = {
-    id: number;
+    id?: number;
     walletAddress: string;
     creator: boolean;
     accountCreationDate?: Date;
@@ -16,7 +16,7 @@ export type User = {
 }
 
 export type Work = {
-    id: number;
+    id?: number;
     creator: User;
     title: string;
     description: string;
@@ -28,4 +28,17 @@ export type Work = {
     genre3?: Genre;
     medium: WorkType;
     url: string;
+}
+
+export type NFTCollection = {
+    id?: number;
+    work: Work;
+    publishStamp?: Date;
+    name: string;
+}
+
+export type Artwork = {
+    id?: number;
+    collection: NFTCollection;
+    assetId: number;
 }

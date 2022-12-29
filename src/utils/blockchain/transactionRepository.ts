@@ -29,7 +29,7 @@ async function waitForTxn(txnId: string): Promise<Record<string, any>> {
     return pending;
 }
 
-async function createASA(creatorAddress: string, unitName: string, assetName: string, total: number, decimals: number, assetUrl: string): Promise<string> {
+async function createASA(creatorAddress: string, unitName: string, assetName: string, total: number, decimals: number, assetUrl: string): Promise<object> {
     const sp: SuggestedParams = await getDefaultSuggestedParams();
     const createTxn: Transaction = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
         from: creatorAddress,
@@ -51,10 +51,10 @@ async function createASA(creatorAddress: string, unitName: string, assetName: st
 
     const txnInfo = await waitForTxn(signedTxn.txID);
 
-    return response['txId'];
+    return txnInfo;
 }
 
-export async function createNFT(creatorAddress: string, unitName: string, assetName: string, assetUrl: string): Promise<string> {
+export async function createNFT(creatorAddress: string, unitName: string, assetName: string, assetUrl: string): Promise<object> {
     return await createASA(creatorAddress, unitName, assetName, 1, 0, assetUrl);
 }
 

@@ -1,4 +1,4 @@
-import { User, Work } from './types';
+import { User, Work, Artwork } from './types';
 
 const axios = require('axios').default;
 
@@ -88,8 +88,19 @@ export const workAdd = (work: Work, fail: (foundWork: Work) => void) : void => {
                 }
             })
             .catch(error => {
-                // handle error
                 console.error(error);
             });
     });
+}
+
+export const artworkAdd = (artwork: Artwork): void => {
+    axios.post('/api/artwork/create', artwork)
+        .then(response => {
+            if (response.status == 200) {
+                console.log('success');
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        });
 }
