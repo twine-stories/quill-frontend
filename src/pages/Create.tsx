@@ -4,9 +4,10 @@ import Navbar from "../components/Navbar.tsx";
 import Button from '../components/Button.tsx';
 import { Genre } from '../utils/enums.ts';
 import { Work, Artwork } from '../utils/types';
-import { createNFT } from '../utils/blockchain/transactionRepository.ts';
+import { createNFT, createApplication } from '../utils/blockchain/transactionRepository.ts';
 import { User } from '../utils/types.ts';
 import { workAdd, artworkAdd } from '../utils/api.ts'
+import algosdk, { decodeAddress } from 'algosdk';
 
 const axios = require('axios').default;
 
@@ -100,6 +101,22 @@ function Create() {
                         }
                     }} />
                 </div>
+                <Button name='Create Smart Contract' action={(e) => {
+                    axios.get('/algo/init')
+                        .then(response => {
+                            const data = response.data.data;
+                            if (data) {
+                                createApplication(user.walletAddress, data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(user.walletAddress).publicKey], [150999806]).then(response => {
+                                    console.log(response);
+                                }).catch(error => {
+                                    console.error(error);
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                }} />
             </div>
         </div>
     );

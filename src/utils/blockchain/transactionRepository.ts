@@ -1,5 +1,5 @@
 import algosdk, { SuggestedParams, Transaction, Algodv2 } from 'algosdk';
-import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect';
+import MyAlgoConnect, { CreateApplTxn, SignedTx } from '@randlabs/myalgo-connect';
 import { getClient, getIndexer } from './credentials.ts';
 
 const myAlgoConnect = new MyAlgoConnect();
@@ -58,17 +58,12 @@ export async function createNFT(creatorAddress: string, unitName: string, assetN
     return await createASA(creatorAddress, unitName, assetName, 1, 0, assetUrl);
 }
 
-async function createApplication(creatorAddress: string, approvalProgram: string, clearProgram: string, globalByteSlices: number, globalInts: number, localByteSlices: number, localInts: number, appArgs: string[], foreignAssets: number[]) {
-    const apBytes: Uint8Array = encoder.encode(approvalProgram);
-    const cpBytes: Uint8Array = encoder.encode(clearProgram);
-    let appArgsBytes: Uint8Array[] = [];
-
-    appArgs.forEach((val: string) => {
-        appArgsBytes.push(encoder.encode(val));
-    });
+export async function createApplication(creatorAddress: string, approvalProgram: string, clearProgram: string, globalInts: number, globalByteSlices: number, localInts: number, localByteSlices: number, appArgs: Uint8Array[], foreignAssets: number[]): Promise<object> {
+    const apBytes: Uint8Array = await compileProgram(approvalProgram);
+    const cpBytes: Uint8Array = await compileProgram(clearProgram);
 
     const sp: SuggestedParams = await getDefaultSuggestedParams();
-    const createTxn: Transaction = algosdk.makeApplicationCreateTxnFromObject({
+    const txn = {
         from: creatorAddress,
         suggestedParams: sp,
         approvalProgram: apBytes,
@@ -77,12 +72,45 @@ async function createApplication(creatorAddress: string, approvalProgram: string
         numLocalByteSlices: localByteSlices,
         numGlobalInts: globalInts,
         numGlobalByteSlices: globalByteSlices,
-        appArgs: appArgsBytes,
+        appArgs: appArgs,
         foreignAssets: foreignAssets,
         onComplete: algosdk.OnApplicationComplete.NoOpOC
-    });
+    }
+
+    let createTxn: Transaction = algosdk.makeApplicationCreateTxnFromObject(txn);
 
     const signedTxn: SignedTx = await myAlgoConnect.signTransaction(createTxn.toByte());
     const response = await client.sendRawTransaction(signedTxn.blob).do();
-    console.log(response);
+    
+    const txnInfo = await waitForTxn(signedTxn.txID);
+
+    return txnInfo;
+}
+
+async function compileProgram(source: string): Promise<Uint8Array> {
+    const programBytes = encoder.encode(source);
+    const compileResponse = await client.compile(programBytes).do();
+    const compiledBytes = new Uint8Array(Buffer.from(compileResponse.result, 'base64'));
+    return compiledBytes;
+}
+
+async function changeAssetManagement(asset_id: number, currentManagerAddress: string, manager: string, reserve: string, freeze: string, clawback: string, emptyAddressChecking: boolean): Promise<object> {
+    const sp: SuggestedParams = await getDefaultSuggestedParams();
+    const txn = {
+        from: currentManagerAddress,
+        assetIndex: asset_id,
+        manager: manager,
+        reserve: reserve,
+        freeze: freeze,
+        clawback: clawback,
+        suggestedParams: sp,
+        strictEmptyAddressChecking: emptyAddressChecking
+    }
+
+    const assetChangeTxn: Transaction = algosdk.makeAssetConfigTxnWithSuggestedParamsFromObject(txn);
+    const signedTxn: SignedTx = await myAlgoConnect.signTransaction(assetChangeTxn.toByte());
+    const response = await client.sendRawTransaction(signedTxn.blob).do();
+
+    const txnInfo = await waitForTxn(signedTxn.txID);
+    return txnInfo;
 }
