@@ -1,10 +1,12 @@
-import algosdk, { SuggestedParams, Transaction, Algodv2 } from 'algosdk';
+import algosdk, { SuggestedParams, Transaction, Algodv2, LogicSigAccount, makeLogicSigAccountTransactionSigner, Indexer } from 'algosdk';
 import MyAlgoConnect, { CreateApplTxn, SignedTx } from '@randlabs/myalgo-connect';
-import { getClient, getIndexer } from './credentials.ts';
+import { getClient, getIndexer, adminAddr, getSecretKey } from './credentials.ts';
+import LookupAccountAssets from 'algosdk/dist/types/src/client/v2/indexer/lookupAccountAssets';
 
 const myAlgoConnect = new MyAlgoConnect();
 
 const client: Algodv2 = getClient();
+const indexer: Indexer = getIndexer();
 const encoder = new TextEncoder();
 
 async function getDefaultSuggestedParams(): Promise<SuggestedParams> {
@@ -58,13 +60,13 @@ export async function createNFT(creatorAddress: string, unitName: string, assetN
     return await createASA(creatorAddress, unitName, assetName, 1, 0, assetUrl);
 }
 
-export async function createApplication(creatorAddress: string, approvalProgram: string, clearProgram: string, globalInts: number, globalByteSlices: number, localInts: number, localByteSlices: number, appArgs: Uint8Array[], foreignAssets: number[]): Promise<object> {
+export async function createApplication(approvalProgram: string, clearProgram: string, globalInts: number, globalByteSlices: number, localInts: number, localByteSlices: number, appArgs: Uint8Array[], foreignAssets: number[]): Promise<number> {
     const apBytes: Uint8Array = await compileProgram(approvalProgram);
     const cpBytes: Uint8Array = await compileProgram(clearProgram);
 
     const sp: SuggestedParams = await getDefaultSuggestedParams();
     const txn = {
-        from: creatorAddress,
+        from: adminAddr,
         suggestedParams: sp,
         approvalProgram: apBytes,
         clearProgram: cpBytes,
@@ -79,12 +81,12 @@ export async function createApplication(creatorAddress: string, approvalProgram:
 
     let createTxn: Transaction = algosdk.makeApplicationCreateTxnFromObject(txn);
 
-    const signedTxn: SignedTx = await myAlgoConnect.signTransaction(createTxn.toByte());
-    const response = await client.sendRawTransaction(signedTxn.blob).do();
+    const signedTxn = createTxn.signTxn(getSecretKey());
+    const response = await client.sendRawTransaction(signedTxn).do();
     
-    const txnInfo = await waitForTxn(signedTxn.txID);
+    const txnInfo = await waitForTxn(response['txId']);
 
-    return txnInfo;
+    return txnInfo['application-index'];
 }
 
 async function compileProgram(source: string): Promise<Uint8Array> {
@@ -94,7 +96,7 @@ async function compileProgram(source: string): Promise<Uint8Array> {
     return compiledBytes;
 }
 
-async function changeAssetManagement(asset_id: number, currentManagerAddress: string, manager: string, reserve: string, freeze: string, clawback: string, emptyAddressChecking: boolean): Promise<object> {
+export async function changeAssetManagement(asset_id: number, currentManagerAddress: string, manager: string | undefined, reserve: string | undefined, freeze: string | undefined, clawback: string | undefined, emptyAddressChecking: boolean): Promise<object> {
     const sp: SuggestedParams = await getDefaultSuggestedParams();
     const txn = {
         from: currentManagerAddress,
@@ -113,4 +115,14 @@ async function changeAssetManagement(asset_id: number, currentManagerAddress: st
 
     const txnInfo = await waitForTxn(signedTxn.txID);
     return txnInfo;
+}
+
+export async function escrowProgramToAddress(escrowProgram: string): Promise<string> {
+    const account: LogicSigAccount = new LogicSigAccount(await compileProgram(escrowProgram));
+    return account.address();
+}
+
+export async function getAccountAssets(walletAddress: string): Promise<Array<object>> {
+    const assets: Record<string, any> = await indexer.lookupAccountCreatedAssets(walletAddress).do()
+    return assets['assets'];
 }
