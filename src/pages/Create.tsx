@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, SyntheticEvent } from 'react';
 import { UserContext } from '../App.tsx';
 import Navbar from "../components/Navbar.tsx";
 import Button from '../components/Button.tsx';
@@ -22,10 +22,6 @@ function Create() {
 
     const [appId, setAppId] = useState<number>();
 
-    useEffect(() => {
-        // console.log(selectedNFTs);
-    }, [selectedNFTs])
-
     if (!context['userLoaded']) {
         return (<div></div>);
     }
@@ -44,12 +40,13 @@ function Create() {
     }
 
     let nfts: Array<JSX.Element> = [];
+    const cname: string = 'nftCheckboxes';
     if (!loadedAssets) {
         
         getAccountAssets(user.walletAddress).then(response => {
             response.forEach(element => {
                 const id: number = element['index'];
-                nfts.push(<NFTCheckbox check={addToConfirmed} uncheck={removeFromConfirmed} assetId={id} name={element['params']['name']} key={id} />)
+                nfts.push(<NFTCheckbox cname={cname} assetId={id} name={element['params']['name']} key={id} />)
             });
             setLoadedAssets(true);
             setAllAssets(nfts);
@@ -68,21 +65,31 @@ function Create() {
     }
 
     const confirmNFTs = async () => {
-        console.log(selectedNFTs);
-        if (selectedNFTs.length === 0) {
+        let nftList: Array<number> = [];
+        const checkboxes: HTMLCollectionOf<Element> = document.getElementsByClassName(cname);
+
+        Array.from(checkboxes).forEach(elem => {
+            if (elem['checked']) {
+                nftList.push(parseInt(elem['id']));
+            }
+        });
+
+        if (nftList.length === 0) {
             return;
         }
+
+        await setSelectedNFTs(nftList);
 
         const initResponse = await axios.get('algo/init');
         const data = initResponse.data.data;
         if (data) {
-            // setAppId(await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], selectedNFTs));
+            setAppId(await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], selectedNFTs));
         }
 
         setEnableSell(true);
     }
 
-    const makeSellOffer = async (appId: number, assetIds: number) => {
+    const makeSellOffer = async (appId: number, assetId: number) => {
         const escrowResponse = await axios.get('/algo/escrow?nftId=' + assetId + '&appId=' + appId);
         const escrowData = escrowResponse.data.data;
         if (escrowData) {
@@ -90,21 +97,6 @@ function Create() {
             const response = await changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, escrowAddress, false);
             console.log(response);
         }
-    }
-
-    const addToConfirmed = (id) => {
-        // console.log('here');
-        // console.log(selectedNFTs, id);
-        console.log(selectedNFTs);
-        setSelectedNFTs([
-            ...selectedNFTs,
-            id
-        ]);
-    }
-
-    const removeFromConfirmed = (id) => {
-        console.log('here');
-        setSelectedNFTs(selectedNFTs.filter(item => item !== id));
     }
 
     return (
@@ -169,7 +161,6 @@ function Create() {
                 </div>
                 {allAssets}
                 <Button name='Confirm Selected NFTs' action={confirmNFTs} />
-                <Button name='Test' action={(e) => {addToConfirmed(1)}} />
                 <Button name='Post NFTs for Sale' enabled={enableSell} action={(e) => {
                     if (appId) {
                         selectedNFTs.forEach(nftId => {
