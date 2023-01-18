@@ -4,12 +4,13 @@ import Navbar from "../components/Navbar.tsx";
 import Button from '../components/Button.tsx';
 import { Genre } from '../utils/enums.ts';
 import { Work, Artwork } from '../utils/types';
-import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets } from '../utils/blockchain/transactionRepository.ts';
+import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, pay, signTxns } from '../utils/blockchain/transactionRepository.ts';
 import { User } from '../utils/types.ts';
 import { workAdd, artworkAdd } from '../utils/api.ts'
-import algosdk, { decodeAddress } from 'algosdk';
+import algosdk, { decodeAddress, Transaction } from 'algosdk';
 import NFTCheckbox from '../components/NFTCheckbox.tsx';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
+import { initializeEscrow } from '../utils/blockchain/constants.ts';
 
 const axios = require('axios').default;
 
@@ -20,7 +21,13 @@ function Create() {
     const [enableSell, setEnableSell] = useState<boolean>(false);
     const [loadedAssets, setLoadedAssets] = useState<boolean>(false);
 
-    const [appId, setAppId] = useState<number>();
+    const [smartContractInfo, setSmartContractInfo] = useState<Record<number, object>>();
+
+    useEffect(() => {
+        if (selectedNFTs.length > 0) {
+            setEnableSell(true);
+        }
+    }, [selectedNFTs]);
 
     if (!context['userLoaded']) {
         return (<div></div>);
@@ -65,7 +72,7 @@ function Create() {
     }
 
     const confirmNFTs = async () => {
-        let nftList: Array<number> = [];
+        let nftList: number[] = [];
         const checkboxes: HTMLCollectionOf<Element> = document.getElementsByClassName(cname);
 
         Array.from(checkboxes).forEach(elem => {
@@ -78,25 +85,35 @@ function Create() {
             return;
         }
 
-        await setSelectedNFTs(nftList);
-
         const initResponse = await axios.get('algo/init');
         const data = initResponse.data.data;
         if (data) {
-            setAppId(await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], selectedNFTs));
-        }
+            let contractInfo: Record<number, object> = {};
+            for (const assetId of nftList) {
+                const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], [assetId]);
+                const escrowResponse = await axios.get('/algo/escrow?nftId=' + assetId + '&appId=' + id);
+                const escrowData = escrowResponse.data.data;
 
-        setEnableSell(true);
+                if (escrowData) {
+                    const escrowAddress: string = await escrowProgramToAddress(escrowData['escrow_program']);
+                    await callApplication(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [initializeEscrow, decodeAddress(escrowAddress).publicKey], [assetId], true, true);
+                    await pay(adminAddr, escrowAddress, 1000000, true, true);
+
+                    contractInfo[assetId] = {'appId': id, 'escrowAddress': escrowAddress};
+                }
+            }
+            
+            setSmartContractInfo(contractInfo);
+            setSelectedNFTs(nftList);
+        }
     }
 
-    const makeSellOffer = async (appId: number, assetId: number) => {
-        const escrowResponse = await axios.get('/algo/escrow?nftId=' + assetId + '&appId=' + appId);
-        const escrowData = escrowResponse.data.data;
-        if (escrowData) {
-            const escrowAddress: string = await escrowProgramToAddress(escrowData['escrow_program']);
-            const response = await changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, escrowAddress, false);
-            console.log(response);
-        }
+    const makeSellOffer = async (appId: number, escrowAddress: string, assetId: number, sellPrice: number | bigint) => {
+        let txns: Transaction[] = [];
+        txns.push(await changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, escrowAddress, false, false));
+        txns.push(await callApplication(appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [makeSellOffer, sellPrice], undefined, false));
+
+        await signTxns(txns);
     }
 
     return (
@@ -162,15 +179,14 @@ function Create() {
                 {allAssets}
                 <Button name='Confirm Selected NFTs' action={confirmNFTs} />
                 <Button name='Post NFTs for Sale' enabled={enableSell} action={(e) => {
-                    if (appId) {
-                        selectedNFTs.forEach(nftId => {
-                            makeSellOffer(appId, nftId);
-                        });
+                    for (const nftId in smartContractInfo) {
+                        console.log(nftId);
                     }
                 }} />
             </div>
         </div>
     );
+    // makeSellOffer(smartContractInfo[nftId]['appId'], smartContractInfo[nftId]['escrowAddress'],  nftId, 1000000);
 }
 
 export default Create;
