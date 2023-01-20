@@ -1,4 +1,6 @@
-export const initializeEscrow: string = "initializeEscrow";
-export const makeSellOffer: string = "makeSellOffer";
-export const buy: string = "buy";
-export const stopSellOffer: string = "stopSellOffer";
+const encoder = new TextEncoder();
+
+export const INIT_ESCROW: Uint8Array = encoder.encode("initializeEscrow");
+export const MAKE_SELL_OFFER: Uint8Array = encoder.encode("makeSellOffer");
+export const BUY: Uint8Array = encoder.encode("buy");
+export const STOP_SELL_OFFER: Uint8Array = encoder.encode("stopSellOffer");

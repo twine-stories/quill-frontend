@@ -10,9 +10,10 @@ import { workAdd, artworkAdd } from '../utils/api.ts'
 import algosdk, { decodeAddress, Transaction } from 'algosdk';
 import NFTCheckbox from '../components/NFTCheckbox.tsx';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
-import { initializeEscrow } from '../utils/blockchain/constants.ts';
+import { INIT_ESCROW, MAKE_SELL_OFFER } from '../utils/blockchain/constants.ts';
 
 const axios = require('axios').default;
+const encoder = new TextEncoder();
 
 function Create() {
     const context: object = useContext(UserContext);
@@ -90,16 +91,18 @@ function Create() {
         if (data) {
             let contractInfo: Record<number, object> = {};
             for (const assetId of nftList) {
+                console.log('in loop');
                 const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], [assetId]);
                 const escrowResponse = await axios.get('/algo/escrow?nftId=' + assetId + '&appId=' + id);
                 const escrowData = escrowResponse.data.data;
 
                 if (escrowData) {
                     const escrowAddress: string = await escrowProgramToAddress(escrowData['escrow_program']);
-                    await callApplication(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [initializeEscrow, decodeAddress(escrowAddress).publicKey], [assetId], true, true);
+                    await callApplication(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, true, true);
                     await pay(adminAddr, escrowAddress, 1000000, true, true);
 
-                    contractInfo[assetId] = {'appId': id, 'escrowAddress': escrowAddress};
+                    contractInfo[assetId] = {'appId': id, 'escrowAddress': escrowAddress, 'price': 1000000};
+                    console.log('end of loop');
                 }
             }
             
@@ -108,10 +111,15 @@ function Create() {
         }
     }
 
-    const makeSellOffer = async (appId: number, escrowAddress: string, assetId: number, sellPrice: number | bigint) => {
+    const makeSellOffer = async() => {
         let txns: Transaction[] = [];
-        txns.push(await changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, escrowAddress, false, false));
-        txns.push(await callApplication(appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [makeSellOffer, sellPrice], undefined, false));
+
+        for (const id in smartContractInfo) {
+            const assetId: number = parseInt(id);
+            const price: Uint8Array = encoder.encode(smartContractInfo[assetId]['price'].toString());
+            txns.push(await changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, smartContractInfo[assetId]['escrowAddress'], false, false));
+            txns.push(await callApplication(smartContractInfo[assetId]['appId'], user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId], false));
+        }
 
         await signTxns(txns);
     }
@@ -177,16 +185,11 @@ function Create() {
                     }} />
                 </div>
                 {allAssets}
-                <Button name='Confirm Selected NFTs' action={confirmNFTs} />
-                <Button name='Post NFTs for Sale' enabled={enableSell} action={(e) => {
-                    for (const nftId in smartContractInfo) {
-                        console.log(nftId);
-                    }
-                }} />
+                <Button name='Generate Contract(s)' action={confirmNFTs} />
+                <Button name='Post NFT(s) for Sale' enabled={enableSell} action={(e) => makeSellOffer()} />
             </div>
         </div>
     );
-    // makeSellOffer(smartContractInfo[nftId]['appId'], smartContractInfo[nftId]['escrowAddress'],  nftId, 1000000);
 }
 
 export default Create;

@@ -46,7 +46,9 @@ export async function signTxns(txns: Transaction[]) {
 
     const signedTxns: SignedTx[] = await myAlgoConnect.signTransaction(convertedTxns);
     for (const signedTxn of signedTxns) {
-        await client.sendRawTransaction(signedTxn.blob);
+        console.log(signedTxn);
+        await client.sendRawTransaction(signedTxn.blob).do();
+        console.log('sent ' + signedTxn.txID);
         await waitForTxn(signedTxn.txID);
     }
 }
@@ -66,7 +68,6 @@ export async function pay(sender: string, receiver: string, amount: number | big
         if (logicSig) {
             const signedTxn: Uint8Array = paymentTxn.signTxn(getSecretKey());
             const response = await client.sendRawTransaction(signedTxn).do();
-            console.log(response);
     
             return await waitForTxn(response['txId']);
         }
@@ -90,7 +91,7 @@ async function createASA(creatorAddress: string, unitName: string, assetName: st
         reserve: creatorAddress,
         freeze: creatorAddress,
         clawback: creatorAddress,
-        defaultFrozen: false,
+        defaultFrozen: true,
     });
 
     return await signTxn(createTxn);
@@ -130,7 +131,7 @@ export async function createApplication(approvalProgram: string, clearProgram: s
 }
 
 async function compileProgram(source: string): Promise<Uint8Array> {
-    const programBytes = encoder.encode(source);
+    const programBytes: Uint8Array = encoder.encode(source);
     const compileResponse = await client.compile(programBytes).do();
     const compiledBytes = new Uint8Array(Buffer.from(compileResponse.result, 'base64'));
     return compiledBytes;
@@ -167,6 +168,7 @@ export async function getAccountAssets(walletAddress: string): Promise<Array<obj
 }
 
 export async function callApplication(appId: number, callerAddress: string, onComplete: algosdk.OnApplicationComplete, appArgs?: Uint8Array[], foreignAssets?: number[], shouldSign?: boolean, logicSig?: boolean) {
+    console.log(appArgs);
     const sp: SuggestedParams = await getDefaultSuggestedParams();
     const txn = {
         from: callerAddress,
@@ -183,7 +185,6 @@ export async function callApplication(appId: number, callerAddress: string, onCo
         if (logicSig) {
             const signedTxn: Uint8Array = callTxn.signTxn(getSecretKey());
             const response = await client.sendRawTransaction(signedTxn).do();
-            console.log(response);
     
             return await waitForTxn(response['txId']);
         }
