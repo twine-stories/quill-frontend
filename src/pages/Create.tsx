@@ -91,7 +91,6 @@ function Create() {
         if (data) {
             let contractInfo: Record<number, object> = {};
             for (const assetId of nftList) {
-                console.log('in loop');
                 const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], [assetId]);
                 const escrowResponse = await axios.get('/algo/escrow?nftId=' + assetId + '&appId=' + id);
                 const escrowData = escrowResponse.data.data;
@@ -99,10 +98,9 @@ function Create() {
                 if (escrowData) {
                     const escrowAddress: string = await escrowProgramToAddress(escrowData['escrow_program']);
                     await callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, true);
-                    await paySign(adminAddr, escrowAddress, 1000000, true);
+                    await paySign(adminAddr, escrowAddress, 100000, true);
 
                     contractInfo[assetId] = {'appId': id, 'escrowAddress': escrowAddress, 'price': 1000000};
-                    console.log('end of loop');
                 }
             }
             
@@ -117,7 +115,7 @@ function Create() {
         for (const id in smartContractInfo) {
             const assetId: number = parseInt(id);
             const price: Uint8Array = encoder.encode(smartContractInfo[assetId]['price'].toString());
-            txns.push(changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, smartContractInfo[assetId]['escrowAddress']));
+            txns.push(changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, smartContractInfo[assetId]['escrowAddress'], false));
             txns.push(callApplication(smartContractInfo[assetId]['appId'], user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId]));
         }
 

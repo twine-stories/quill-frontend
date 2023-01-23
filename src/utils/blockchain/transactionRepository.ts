@@ -8,9 +8,12 @@ const client: Algodv2 = getClient();
 const indexer: Indexer = getIndexer();
 const encoder = new TextEncoder();
 
-let suggestedParams: SuggestedParams = await client.getTransactionParams().do();
-suggestedParams.flatFee = true;
-suggestedParams.fee = 1000;
+let suggestedParams: SuggestedParams;
+client.getTransactionParams().do().then(response => {
+    suggestedParams = response;
+    suggestedParams.flatFee = true;
+    suggestedParams.fee = 1000;
+});
 
 async function waitForTxn(txnId: string): Promise<Record<string, any>> {
     const status = await client.status().do();
@@ -77,7 +80,6 @@ export async function paySign(sender: string, receiver: string, amount: number |
 }
 
 async function createASA(creatorAddress: string, unitName: string, assetName: string, total: number, decimals: number, assetUrl: string): Promise<object> {
-    // const sp: SuggestedParams = await getDefaultSuggestedParams();
     const createTxn: Transaction = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
         from: creatorAddress,
         suggestedParams: suggestedParams,
@@ -104,7 +106,6 @@ export async function createApplication(approvalProgram: string, clearProgram: s
     const apBytes: Uint8Array = await compileProgram(approvalProgram);
     const cpBytes: Uint8Array = await compileProgram(clearProgram);
 
-    // const sp: SuggestedParams = await getDefaultSuggestedParams();
     const txn = {
         from: adminAddr,
         suggestedParams: suggestedParams,
