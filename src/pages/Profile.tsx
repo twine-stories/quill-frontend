@@ -16,7 +16,7 @@ function Profile() {
             axios.get('/api/work/creator/' + user['walletAddress'])
                 .then(response => {
                     if (response.data) {
-                        var profileWorks = [];
+                        var profileWorks: JSX.Element[] = [];
                         var i = 0;
                         response.data.forEach(element => {
                             profileWorks.push(<ProfileWork work={element} key={i} />);

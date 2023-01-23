@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar.tsx";
 import Button from '../components/Button.tsx';
 import { Genre } from '../utils/enums.ts';
 import { Work, Artwork } from '../utils/types';
-import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, pay, signTxns } from '../utils/blockchain/transactionRepository.ts';
+import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, callApplicationSign, paySign, signTxns } from '../utils/blockchain/transactionRepository.ts';
 import { User } from '../utils/types.ts';
 import { workAdd, artworkAdd } from '../utils/api.ts'
 import algosdk, { decodeAddress, Transaction } from 'algosdk';
@@ -98,8 +98,8 @@ function Create() {
 
                 if (escrowData) {
                     const escrowAddress: string = await escrowProgramToAddress(escrowData['escrow_program']);
-                    await callApplication(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, true, true);
-                    await pay(adminAddr, escrowAddress, 1000000, true, true);
+                    await callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, true);
+                    await paySign(adminAddr, escrowAddress, 1000000, true);
 
                     contractInfo[assetId] = {'appId': id, 'escrowAddress': escrowAddress, 'price': 1000000};
                     console.log('end of loop');
@@ -117,8 +117,8 @@ function Create() {
         for (const id in smartContractInfo) {
             const assetId: number = parseInt(id);
             const price: Uint8Array = encoder.encode(smartContractInfo[assetId]['price'].toString());
-            txns.push(await changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, smartContractInfo[assetId]['escrowAddress'], false, false));
-            txns.push(await callApplication(smartContractInfo[assetId]['appId'], user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId], false));
+            txns.push(changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, smartContractInfo[assetId]['escrowAddress']));
+            txns.push(callApplication(smartContractInfo[assetId]['appId'], user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId]));
         }
 
         await signTxns(txns);
