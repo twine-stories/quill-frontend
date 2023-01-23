@@ -7,13 +7,19 @@ import { Work, Artwork } from '../utils/types';
 import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, callApplicationSign, paySign, signTxns } from '../utils/blockchain/transactionRepository.ts';
 import { User } from '../utils/types.ts';
 import { workAdd, artworkAdd } from '../utils/api.ts'
-import algosdk, { decodeAddress, Transaction } from 'algosdk';
+import algosdk, { decodeAddress, LogicSigAccount, Transaction } from 'algosdk';
 import NFTCheckbox from '../components/NFTCheckbox.tsx';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
 import { INIT_ESCROW, MAKE_SELL_OFFER } from '../utils/blockchain/constants.ts';
 
 const axios = require('axios').default;
 const encoder = new TextEncoder();
+
+type AssetInfo = {
+    appId: number;
+    escrowAddress: string;
+    price: number | bigint;
+}
 
 function Create() {
     const context: object = useContext(UserContext);
@@ -22,7 +28,7 @@ function Create() {
     const [enableSell, setEnableSell] = useState<boolean>(false);
     const [loadedAssets, setLoadedAssets] = useState<boolean>(false);
 
-    const [smartContractInfo, setSmartContractInfo] = useState<Record<number, object>>();
+    const [smartContractInfo, setSmartContractInfo] = useState<Record<number, AssetInfo>>();
 
     useEffect(() => {
         if (selectedNFTs.length > 0) {
@@ -89,7 +95,7 @@ function Create() {
         const initResponse = await axios.get('algo/init');
         const data = initResponse.data.data;
         if (data) {
-            let contractInfo: Record<number, object> = {};
+            let contractInfo: Record<number, AssetInfo> = {};
             for (const assetId of nftList) {
                 const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], [assetId]);
                 const escrowResponse = await axios.get('/algo/escrow?nftId=' + assetId + '&appId=' + id);
@@ -98,9 +104,9 @@ function Create() {
                 if (escrowData) {
                     const escrowAddress: string = await escrowProgramToAddress(escrowData['escrow_program']);
                     await callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, true);
-                    await paySign(adminAddr, escrowAddress, 100000, true);
+                    await paySign(adminAddr, escrowAddress, 200000, true);
 
-                    contractInfo[assetId] = {'appId': id, 'escrowAddress': escrowAddress, 'price': 1000000};
+                    contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, price: 1000000};
                 }
             }
             
@@ -114,9 +120,9 @@ function Create() {
 
         for (const id in smartContractInfo) {
             const assetId: number = parseInt(id);
-            const price: Uint8Array = encoder.encode(smartContractInfo[assetId]['price'].toString());
-            txns.push(changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, smartContractInfo[assetId]['escrowAddress'], false));
-            txns.push(callApplication(smartContractInfo[assetId]['appId'], user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId]));
+            const price: Uint8Array = encoder.encode(smartContractInfo[assetId].price.toString());
+            txns.push(changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, smartContractInfo[assetId].escrowAddress, false));
+            txns.push(callApplication(smartContractInfo[assetId].appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId]));
         }
 
         await signTxns(txns);
