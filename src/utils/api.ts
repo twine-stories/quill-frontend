@@ -93,8 +93,25 @@ export const workAdd = (work: Work, fail: (foundWork: Work) => void) : void => {
     });
 }
 
+export const artworkGet = async (assetId: number): Promise<Artwork> => {
+    const response = await axios.get('/api/artwork/' + assetId);
+    return response.data;
+}
+
 export const artworkAdd = (artwork: Artwork): void => {
     axios.post('/api/artwork/create', artwork)
+        .then(response => {
+            if (response.status == 200) {
+                console.log('success');
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
+
+export const artworkUpdate = (artwork: Artwork): void => {
+    axios.post('/api/artwork/update', artwork)
         .then(response => {
             if (response.status == 200) {
                 console.log('success');

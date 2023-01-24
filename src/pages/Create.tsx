@@ -6,8 +6,8 @@ import { Genre } from '../utils/enums.ts';
 import { Work, Artwork } from '../utils/types';
 import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, callApplicationSign, paySign, signTxns } from '../utils/blockchain/transactionRepository.ts';
 import { User } from '../utils/types.ts';
-import { workAdd, artworkAdd } from '../utils/api.ts'
-import algosdk, { decodeAddress, LogicSigAccount, Transaction } from 'algosdk';
+import { workAdd, artworkAdd, artworkUpdate, artworkGet } from '../utils/api.ts'
+import algosdk, { decodeAddress, Transaction } from 'algosdk';
 import NFTCheckbox from '../components/NFTCheckbox.tsx';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
 import { INIT_ESCROW, MAKE_SELL_OFFER } from '../utils/blockchain/constants.ts';

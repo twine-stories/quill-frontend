@@ -41,4 +41,5 @@ export type Artwork = {
     id?: number;
     collection: NFTCollection;
     assetId: number;
+    appId?: number;
 }

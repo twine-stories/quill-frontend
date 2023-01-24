@@ -44,9 +44,7 @@ export async function signTxns(txns: Transaction[]) {
 
     const signedTxns: SignedTx[] = await myAlgoConnect.signTransaction(convertedTxns);
     for (const signedTxn of signedTxns) {
-        console.log(signedTxn);
         await client.sendRawTransaction(signedTxn.blob).do();
-        console.log('sent ' + signedTxn.txID);
         await waitForTxn(signedTxn.txID);
     }
 }
@@ -164,7 +162,7 @@ export async function escrowProgramToAddress(escrowProgram: string): Promise<str
 }
 
 export async function getAccountAssets(walletAddress: string): Promise<Array<object>> {
-    const assets: Record<string, any> = await indexer.lookupAccountCreatedAssets(walletAddress).do()
+    const assets: Record<string, any> = await indexer.lookupAccountCreatedAssets(walletAddress).do();
     return assets['assets'];
 }
 

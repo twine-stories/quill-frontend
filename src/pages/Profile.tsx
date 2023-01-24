@@ -12,8 +12,8 @@ function Profile() {
     const user: User = context['user'];
 
     useEffect(() => {
-        if (user && user['creator'] && user['walletAddress']) {
-            axios.get('/api/work/creator/' + user['walletAddress'])
+        if (user && user.creator && user.walletAddress) {
+            axios.get('/api/work/creator/' + user.walletAddress)
                 .then(response => {
                     if (response.data) {
                         var profileWorks: JSX.Element[] = [];
@@ -34,7 +34,8 @@ function Profile() {
     return (
         <div>
             <Navbar />
-            {user && user['creator'] &&
+            {user && <p>{user.firstName}</p>}
+            {user && user.creator &&
                 works
             }
         </div>
