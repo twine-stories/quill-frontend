@@ -1,4 +1,4 @@
-import { User, Work, Artwork } from './types';
+import { User, Work, Artwork, NFTCollection } from './types.ts';
 
 const axios = require('axios').default;
 
@@ -79,6 +79,14 @@ export const workGetByUrl = (url: string, setter: (work: Work) => void, fail: ()
         });
 }
 
+export const worksGetByCreator = async (address: string): Promise<Work[] | null> => {
+    const response = await axios.get('/api/work/creator/' + address);
+    if (response.status === 200) {
+        return response.data;
+    }
+    return null;
+}
+
 export const workAdd = (work: Work, fail: (foundWork: Work) => void) : void => {
     workGetByUrl(work.url, fail, () => {
         axios.post('/api/work/add', work)
@@ -93,15 +101,26 @@ export const workAdd = (work: Work, fail: (foundWork: Work) => void) : void => {
     });
 }
 
+export const artworkGetAll = async (): Promise<Artwork[] | null> => {
+    const response = await axios.get('/api/artworks');
+    if (response.status === 200) {
+        return response.data;
+    }
+    return null;
+}
+
 export const artworkGet = async (assetId: number): Promise<Artwork> => {
     const response = await axios.get('/api/artwork/' + assetId);
-    return response.data;
+    if (response.status === 200) {
+        return response.data;
+    }
+    return null;
 }
 
 export const artworkAdd = (artwork: Artwork): void => {
     axios.post('/api/artwork/create', artwork)
         .then(response => {
-            if (response.status == 200) {
+            if (response.status === 200) {
                 console.log('success');
             }
         })
@@ -113,11 +132,19 @@ export const artworkAdd = (artwork: Artwork): void => {
 export const artworkUpdate = (artwork: Artwork): void => {
     axios.post('/api/artwork/update', artwork)
         .then(response => {
-            if (response.status == 200) {
+            if (response.status === 200) {
                 console.log('success');
             }
         })
         .catch(error => {
             console.error(error);
         });
+}
+
+export const collectionCreateWithArt = async (collection: NFTCollection, artworks: Artwork[]): Promise<NFTCollection> => {
+    const response = await axios.post('/api/collection/createWithArt', {collection: collection, artworks: artworks});
+    if (response.status === 200) {
+        return response.data;
+    }
+    return null;
 }

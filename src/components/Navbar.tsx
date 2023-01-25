@@ -60,6 +60,7 @@ function Navbar() {
                 <>
                     <NavDiv>
                         <a href="/">Twine</a>
+                        <a href="/art">Art</a>
                         <a onClick={createNav}>Create</a>
                         <a href="/profile">Profile</a>
                         <Button name="Log Out" action={context['logOut']} />
@@ -70,6 +71,7 @@ function Navbar() {
                 <>
                     <NavDiv>
                         <a href="/">Twine</a>
+                        <a onClick={blockAccess}>Art</a>
                         <a onClick={blockAccess}>Create</a>
                         <Button name="Connect" action={context['connectToMyAlgo']} />
                     </NavDiv>

@@ -3,10 +3,9 @@ import { UserContext } from '../App.tsx';
 import Navbar from "../components/Navbar.tsx";
 import Button from '../components/Button.tsx';
 import { Genre } from '../utils/enums.ts';
-import { Work, Artwork } from '../utils/types';
+import { User, Work, Artwork, NFTCollection } from '../utils/types';
 import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, callApplicationSign, paySign, signTxns } from '../utils/blockchain/transactionRepository.ts';
-import { User } from '../utils/types.ts';
-import { workAdd, artworkAdd, artworkUpdate, artworkGet } from '../utils/api.ts'
+import { workAdd, worksGetByCreator, artworkAdd, artworkUpdate, artworkGet, collectionCreateWithArt } from '../utils/api.ts'
 import algosdk, { decodeAddress, Transaction } from 'algosdk';
 import NFTCheckbox from '../components/NFTCheckbox.tsx';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
@@ -23,12 +22,50 @@ type AssetInfo = {
 
 function Create() {
     const context: object = useContext(UserContext);
-    const [allAssets, setAllAssets] = useState<Array<JSX.Element>>([]);
-    const [selectedNFTs, setSelectedNFTs] = useState<Array<number>>([]);
+    const [allAssets, setAllAssets] = useState<JSX.Element[]>([]);
+    const [allWorks, setAllWorks] = useState<Record<number, Work>>({});
+    const [workOptions, setWorkOptions] = useState<JSX.Element[]>([]);
+    const [selectedNFTs, setSelectedNFTs] = useState<number[]>([]);
     const [enableSell, setEnableSell] = useState<boolean>(false);
-    const [loadedAssets, setLoadedAssets] = useState<boolean>(false);
+    const [updateAssets, setUpdateAssets] = useState<boolean>(false);
 
     const [smartContractInfo, setSmartContractInfo] = useState<Record<number, AssetInfo>>();
+
+    const user: User = context['user'];
+    const cname: string = 'nftCheckboxes';
+
+    useEffect(() => {
+        if (user) {
+            let worksObj: Record<number, Work> = {};
+            let works: JSX.Element[] = [];
+            worksGetByCreator(user.walletAddress).then((response: Work[] | null) => {
+                if (response) {
+                    response.forEach((element: Work) => {
+                        if (element.id) {
+                            works.push(<option key={element.id} value={element.id}>{element.title}</option>);
+                            worksObj[element.id] = element;
+                        }
+                    });
+
+                    setAllWorks(worksObj);
+                    setWorkOptions(works);
+                }
+            });
+        }
+    }, [context]);
+
+    useEffect(() => {
+        if (user) {
+            getAccountAssets(user.walletAddress).then(response => {
+                let nfts: JSX.Element[] = [];
+                response.forEach(element => {
+                    const id: number = element['index'];
+                    nfts.push(<NFTCheckbox cname={cname} assetId={id} name={element['params']['name']} key={id} />)
+                });
+                setAllAssets(nfts);
+            });
+        }
+    }, [context, updateAssets]);
 
     useEffect(() => {
         if (selectedNFTs.length > 0) {
@@ -44,38 +81,23 @@ function Create() {
         window.location.href = '/';
     }
 
-    const user: User = context['user'];
-
-    const genreOptions: Array<JSX.Element> = [];
+    const genreOptions: JSX.Element[] = [];
     const genres: object = Object.keys(Genre);
     for (let i in Object.values(Genre)) {
         let val: string = genres[i];
         genreOptions.push(<option key={val.toLowerCase()} value={val.toLowerCase()}>{val.toLowerCase()}</option>);
     }
 
-    let nfts: Array<JSX.Element> = [];
-    const cname: string = 'nftCheckboxes';
-    if (!loadedAssets) {
-        
-        getAccountAssets(user.walletAddress).then(response => {
-            response.forEach(element => {
-                const id: number = element['index'];
-                nfts.push(<NFTCheckbox cname={cname} assetId={id} name={element['params']['name']} key={id} />)
-            });
-            setLoadedAssets(true);
-            setAllAssets(nfts);
-        });
-    }
-
     const mintNFT = async (walletAddress: string, unitName: string, assetName: string, assetUrl: string) => {
         const response: object = await createNFT(walletAddress, unitName, assetName, assetUrl);
-        const assetId: number = response['asset-index'];
-        const artwork: Artwork = {
-            collection: {id: 1},
-            assetId: assetId
-        };
-        artworkAdd(artwork);
-        setLoadedAssets(false);
+        // const assetId: number = response['asset-index'];
+        // const artwork: Artwork = {
+        //     collection: {id: 1},
+        //     assetId: assetId
+        // };
+        // artworkAdd(artwork);
+        // setLoadedAssets(false);
+        setUpdateAssets(!updateAssets);
     }
 
     const confirmNFTs = async () => {
@@ -109,6 +131,25 @@ function Create() {
                     contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, price: 1000000};
                 }
             }
+
+            const work: HTMLInputElement = document.getElementById('works') as HTMLInputElement;
+            const name: HTMLInputElement = document.getElementById('collName') as HTMLInputElement;
+            const collection: NFTCollection = {
+                work: allWorks[parseInt(work.value)],
+                name: name.value
+            };
+
+            let artworks: Artwork[] = [];
+            for (const id in contractInfo) {
+                const assetId: number = parseInt(id);
+                artworks.push({
+                    assetId: assetId,
+                    collection: collection,
+                    appId: contractInfo[assetId].appId
+                });
+            }
+
+            collectionCreateWithArt(collection, artworks);
             
             setSmartContractInfo(contractInfo);
             setSelectedNFTs(nftList);
@@ -148,12 +189,12 @@ function Create() {
                         {genreOptions}
                     </select>
                     <Button name='Create!' action={(e) => {
-                        const title = document.getElementById('title') as HTMLInputElement;
-                        const description = document.getElementById('description') as HTMLInputElement;
-                        const url = document.getElementById('url') as HTMLInputElement;
-                        const genre1 = document.getElementById('genre1') as HTMLInputElement;
-                        const genre2 = document.getElementById('genre2') as HTMLInputElement;
-                        const genre3 = document.getElementById('genre3') as HTMLInputElement;
+                        const title: HTMLInputElement = document.getElementById('title') as HTMLInputElement;
+                        const description: HTMLInputElement = document.getElementById('description') as HTMLInputElement;
+                        const url: HTMLInputElement = document.getElementById('url') as HTMLInputElement;
+                        const genre1: HTMLInputElement = document.getElementById('genre1') as HTMLInputElement;
+                        const genre2: HTMLInputElement = document.getElementById('genre2') as HTMLInputElement;
+                        const genre3: HTMLInputElement = document.getElementById('genre3') as HTMLInputElement;
                         if (title && description && url && genre1 && genre2 && genre3) {
                             let newWork: Work = {
                                 creator: user,
@@ -189,6 +230,11 @@ function Create() {
                     }} />
                 </div>
                 {allAssets}
+                <label htmlFor="works">Choose a work:</label>
+                <select name="works" id="works">
+                    {workOptions}
+                </select>
+                <input type='text' id='collName' name='collName' placeholder='enter collection name' />
                 <Button name='Generate Contract(s)' action={confirmNFTs} />
                 <Button name='Post NFT(s) for Sale' enabled={enableSell} action={(e) => makeSellOffer()} />
             </div>

@@ -5,6 +5,7 @@ import Home from './pages/Home.tsx';
 import Create from './pages/Create.tsx';
 import Profile from './pages/Profile.tsx';
 import Story from './pages/Story.tsx';
+import Art from './pages/Art.tsx';
 import { ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib } from '@reach-sh/stdlib';
 import { v4 as uuidv4 } from 'uuid';
 import { getCookie, setCookie, deleteCookie } from './utils/cookies.ts';
@@ -119,6 +120,7 @@ function App() {
         <div className="App">
             <UserContext.Provider value={{'userLoaded': initUserLoad,'address': address, 'user': user, 'connectToMyAlgo': connectToMyAlgo, 'logOut': logOut, 'openLogin': openLogin, 'closeLogin': cancelLogin, 'addUser': addUser, 'updateUser': updateUser}}>
                 <Routes>
+                    <Route path="/art" element={<Art />}></Route>
                     <Route path="/create" element={<Create />}></Route>
                     <Route path="/profile" element={<Profile />}></Route>
                     <Route path="/story/*" element={<Story />}></Route>
