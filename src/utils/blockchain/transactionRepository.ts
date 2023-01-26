@@ -1,6 +1,7 @@
-import algosdk, { SuggestedParams, Transaction, Algodv2, LogicSigAccount, Indexer, makeApplicationCallTxnFromObject, makePaymentTxnWithSuggestedParamsFromObject } from 'algosdk';
+import algosdk, { SuggestedParams, Transaction, Algodv2, LogicSigAccount, Indexer, makeApplicationCallTxnFromObject, makePaymentTxnWithSuggestedParamsFromObject, makeAssetTransferTxnWithSuggestedParamsFromObject, computeGroupID } from 'algosdk';
 import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect';
 import { getClient, getIndexer, adminAddr, getSecretKey } from './credentials.ts';
+import { BUY } from './constants.ts';
 
 const myAlgoConnect = new MyAlgoConnect();
 
@@ -37,16 +38,16 @@ async function signTxn(txn: Transaction): Promise<object> {
 }
 
 export async function signTxns(txns: Transaction[]) {
-    const convertedTxns: Uint8Array[] = [];
-    txns.forEach(txn => {
-        convertedTxns.push(txn.toByte());
-    });
+    const convertedTxns: Uint8Array[] = txns.map((txn: Transaction) => txn.toByte());
 
     const signedTxns: SignedTx[] = await myAlgoConnect.signTransaction(convertedTxns);
-    for (const signedTxn of signedTxns) {
-        await client.sendRawTransaction(signedTxn.blob).do();
-        await waitForTxn(signedTxn.txID);
-    }
+    const signedTxnsBlobs: Uint8Array[] = signedTxns.map((elem: SignedTx) => elem.blob);
+    const { txId }: Record<string, any> = await client.sendRawTransaction(signedTxnsBlobs).do();
+    await waitForTxn(txId);
+    // for (const signedTxn of signedTxns) {
+    //     await client.sendRawTransaction(signedTxn.blob).do();
+    //     await waitForTxn(signedTxn.txID);
+    // }
 }
 
 async function logicSign(txn: Transaction) {
@@ -135,10 +136,10 @@ async function compileProgram(source: string): Promise<Uint8Array> {
     return compiledBytes;
 }
 
-export function changeAssetManagement(asset_id: number, currentManagerAddress: string, manager: string | undefined, reserve: string | undefined, freeze: string | undefined, clawback: string | undefined, emptyAddressChecking: boolean): Transaction {
+export function changeAssetManagement(assetId: number, currentManagerAddress: string, manager: string | undefined, reserve: string | undefined, freeze: string | undefined, clawback: string | undefined, emptyAddressChecking: boolean): Transaction {
     const txn = {
         from: currentManagerAddress,
-        assetIndex: asset_id,
+        assetIndex: assetId,
         manager: manager,
         reserve: reserve,
         freeze: freeze,
@@ -187,4 +188,37 @@ export async function callApplicationSign(appId: number, callerAddress: string, 
         return await logicSign(callTxn);
     }
     return await signTxn(callTxn);
+}
+
+function assetTransfer(senderAddress: string, receiverAddress: string, amount: number | bigint, assetId: number, revocationTarget?: string): Transaction {
+    const txn = {
+        from: senderAddress,
+        to: receiverAddress,
+        suggestedParams: suggestedParams,
+        amount: amount,
+        assetIndex: assetId,
+        revocationTarget: revocationTarget
+    };
+
+    const transferTxn = makeAssetTransferTxnWithSuggestedParamsFromObject(txn);
+    return transferTxn;
+}
+
+export function optIn(assetId: number, address: string): Transaction {
+    return assetTransfer(address, address, 0, assetId);
+}
+
+export function buyAsset(assetId: number, appId: number, ownerAddress: string, buyerAddress: string, price: number | bigint, escrowAddress: string): Transaction[] {
+    const appArgs: Uint8Array[] = [BUY];
+    let appCallTxn: Transaction = callApplication(appId, buyerAddress, algosdk.OnApplicationComplete.NoOpOC, appArgs);
+    let paymentTxn: Transaction = pay(buyerAddress, ownerAddress, price);
+    let assetTransferTxn: Transaction = assetTransfer(escrowAddress, buyerAddress, 1, assetId, ownerAddress);
+
+    let txns: Transaction[] = [appCallTxn, paymentTxn, assetTransferTxn];
+    const gid: Buffer = computeGroupID(txns);
+
+    return txns.map((txn: Transaction) => {
+        txn.group = gid;
+        return txn;
+    });
 }

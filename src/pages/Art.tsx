@@ -4,6 +4,8 @@ import Button from '../components/Button.tsx';
 import { UserContext } from "../App.tsx";
 import { User, Artwork } from '../utils/types.ts';
 import { artworkGetAll } from '../utils/api.ts';
+import { optIn, buyAsset } from '../utils/blockchain/transactionRepository.ts';
+import { Transaction } from 'algosdk';
 
 function Art() {
     const [artwork, setArtwork] = useState<Artwork[]>();
@@ -18,6 +20,12 @@ function Art() {
 
     const buyArtwork = (asset: Artwork) => {
         console.log(asset);
+        if (!user.walletAddress) {
+            return;
+        }
+        const optInTxn: Transaction = optIn(asset.assetId, user.walletAddress);
+        // FIX THIS
+        const buy: Transaction[] = buyAsset(asset.assetId, asset.appId);
     }
 
     let listing: any[] = [];
