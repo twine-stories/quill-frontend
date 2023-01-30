@@ -6,13 +6,12 @@ import { Genre } from '../utils/enums.ts';
 import { User, Work, Artwork, NFTCollection } from '../utils/types';
 import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, callApplicationSign, paySign, signTxns } from '../utils/blockchain/transactionRepository.ts';
 import { workAdd, worksGetByCreator, artworkAdd, artworkUpdate, artworkGet, collectionCreateWithArt } from '../utils/api.ts'
-import algosdk, { decodeAddress, Transaction } from 'algosdk';
+import algosdk, { decodeAddress, encodeUint64, Transaction } from 'algosdk';
 import NFTCheckbox from '../components/NFTCheckbox.tsx';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
 import { INIT_ESCROW, MAKE_SELL_OFFER } from '../utils/blockchain/constants.ts';
 
 const axios = require('axios').default;
-const encoder = new TextEncoder();
 
 type AssetInfo = {
     appId: number;
@@ -90,13 +89,6 @@ function Create() {
 
     const mintNFT = async (walletAddress: string, unitName: string, assetName: string, assetUrl: string) => {
         const response: object = await createNFT(walletAddress, unitName, assetName, assetUrl);
-        // const assetId: number = response['asset-index'];
-        // const artwork: Artwork = {
-        //     collection: {id: 1},
-        //     assetId: assetId
-        // };
-        // artworkAdd(artwork);
-        // setLoadedAssets(false);
         setUpdateAssets(!updateAssets);
     }
 
@@ -161,10 +153,12 @@ function Create() {
 
         for (const id in smartContractInfo) {
             const assetId: number = parseInt(id);
-            const price: Uint8Array = encoder.encode(smartContractInfo[assetId].price.toString());
+            const price: Uint8Array = encodeUint64(smartContractInfo[id].price);
             txns.push(changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, smartContractInfo[assetId].escrowAddress, false));
             txns.push(callApplication(smartContractInfo[assetId].appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId]));
         }
+
+        // algosdk.assignGroupID(txns);
 
         await signTxns(txns);
     }

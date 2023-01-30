@@ -41,13 +41,13 @@ export async function signTxns(txns: Transaction[]) {
     const convertedTxns: Uint8Array[] = txns.map((txn: Transaction) => txn.toByte());
 
     const signedTxns: SignedTx[] = await myAlgoConnect.signTransaction(convertedTxns);
-    const signedTxnsBlobs: Uint8Array[] = signedTxns.map((elem: SignedTx) => elem.blob);
-    const { txId }: Record<string, any> = await client.sendRawTransaction(signedTxnsBlobs).do();
-    await waitForTxn(txId);
-    // for (const signedTxn of signedTxns) {
-    //     await client.sendRawTransaction(signedTxn.blob).do();
-    //     await waitForTxn(signedTxn.txID);
-    // }
+    // const signedTxnsBlobs: Uint8Array[] = signedTxns.map((elem: SignedTx) => elem.blob);
+    // const { txId }: Record<string, any> = await client.sendRawTransaction(signedTxnsBlobs).do();
+    // await waitForTxn(txId);
+    for (const signedTxn of signedTxns) {
+        await client.sendRawTransaction(signedTxn.blob).do();
+        await waitForTxn(signedTxn.txID);
+    }
 }
 
 async function logicSign(txn: Transaction) {
@@ -160,6 +160,15 @@ export async function changeAssetManagementSign(assetId: number, currentManagerA
 export async function escrowProgramToAddress(escrowProgram: string): Promise<string> {
     const account: LogicSigAccount = new LogicSigAccount(await compileProgram(escrowProgram));
     return account.address();
+}
+
+export async function getApplicationById(appId: number): Promise<object> {
+    const app = await indexer.lookupApplications(appId).do();
+    return app['application'];
+}
+
+export async function getAssetById(assetId: number): Promise<object> {
+    return await indexer.lookupAssetByID(assetId).do()['asset'];
 }
 
 export async function getAccountAssets(walletAddress: string): Promise<Array<object>> {
