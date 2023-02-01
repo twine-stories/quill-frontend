@@ -5,7 +5,7 @@ import Button from '../components/Button.tsx';
 import { Genre } from '../utils/enums.ts';
 import { User, Work, Artwork, NFTCollection } from '../utils/types';
 import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, callApplicationSign, paySign, signTxns } from '../utils/blockchain/transactionRepository.ts';
-import { workAdd, worksGetByCreator, artworkAdd, artworkUpdate, artworkGet, collectionCreateWithArt } from '../utils/api.ts'
+import { workAdd, worksGetByCreator, artworkAdd, artworkUpdate, artworkGet, collectionCreateWithArt, getEscrowProgram } from '../utils/api.ts'
 import algosdk, { decodeAddress, encodeUint64, Transaction } from 'algosdk';
 import NFTCheckbox from '../components/NFTCheckbox.tsx';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
@@ -112,11 +112,10 @@ function Create() {
             let contractInfo: Record<number, AssetInfo> = {};
             for (const assetId of nftList) {
                 const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], [assetId]);
-                const escrowResponse = await axios.get('/algo/escrow?nftId=' + assetId + '&appId=' + id);
-                const escrowData = escrowResponse.data.data;
+                const escrowProgram: string = await getEscrowProgram(assetId, id);
 
-                if (escrowData) {
-                    const escrowAddress: string = await escrowProgramToAddress(escrowData['escrow_program']);
+                if (escrowProgram) {
+                    const escrowAddress: string = await escrowProgramToAddress(escrowProgram);
                     await callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, true);
                     await paySign(adminAddr, escrowAddress, 200000, true);
 

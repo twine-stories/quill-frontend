@@ -1,4 +1,4 @@
-import algosdk, { SuggestedParams, Transaction, Algodv2, LogicSigAccount, Indexer, makeApplicationCallTxnFromObject, makePaymentTxnWithSuggestedParamsFromObject, makeAssetTransferTxnWithSuggestedParamsFromObject, computeGroupID } from 'algosdk';
+import algosdk, { SuggestedParams, Transaction, Algodv2, LogicSigAccount, Indexer, makeApplicationCallTxnFromObject, makePaymentTxnWithSuggestedParamsFromObject, makeAssetTransferTxnWithSuggestedParamsFromObject, computeGroupID, signLogicSigTransactionObject } from 'algosdk';
 import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect';
 import { getClient, getIndexer, adminAddr, getSecretKey } from './credentials.ts';
 import { BUY } from './constants.ts';
@@ -230,4 +230,26 @@ export function buyAsset(assetId: number, appId: number, ownerAddress: string, b
         txn.group = gid;
         return txn;
     });
+}
+
+export async function buySign(optInTxn: Transaction, buyTxns: Transaction[], escrowProgram: string) {
+    const myAlgoSignTxns: Transaction[] = [optInTxn, buyTxns[0], buyTxns[1]];
+    const convertedTxns: Uint8Array[] = myAlgoSignTxns.map((txn: Transaction) => txn.toByte());
+
+    const signedTxns: SignedTx[] = await myAlgoConnect.signTransaction(convertedTxns);
+
+    const account: LogicSigAccount = new LogicSigAccount(await compileProgram(escrowProgram));
+    const transferTxnSigned: SignedTx = signLogicSigTransactionObject(buyTxns[2], account);
+
+    // send and wait for opt in
+    let response = await client.sendRawTransaction(signedTxns[0].blob).do();
+    let txnInfo = await waitForTxn(signedTxns[0].txID);
+
+    // send and wait for atomic swap
+    const buySignedTxns: SignedTx[] = [signedTxns[1], signedTxns[2], transferTxnSigned];
+    const buySignedTxnsBlobs: Uint8Array[] = buySignedTxns.map((elem: SignedTx) => elem.blob);
+    response = await client.sendRawTransaction(buySignedTxnsBlobs).do();
+    txnInfo = await waitForTxn(response['txId']);
+
+    return txnInfo;
 }
