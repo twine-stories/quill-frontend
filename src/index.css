@@ -1,13 +1,91 @@
+@font-face {
+    font-family: Twine;
+    src: url("/public/Twine.otf") format("opentype");
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Twine', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  background-color: #181411;
+  color: #a0b633;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.App {
+    width: 75vw;
+    height: auto;
+    margin: auto;
+    padding-bottom: 100px;
+}
+
+#header {
+    width: 300px;
+    height: auto;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.left, .right {
+    width: 35vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    /* min-height: 45vh; */
+    height: 350px
+}
+
+.purple {
+    color: #9da0eb;
+}
+
+#mail {
+    display: inline;
+    width: 50px;
+    height: auto;
+    margin-right: 20px;
+}
+
+#digging {
+    width: 250px;
+    height: auto;
+}
+
+#email {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 5px;
+}
+
+#wrapper {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 26px;
+}
+
+/* #comingSoon {
+    margin-top: 0px;
+} */
+
+a {
+    text-decoration: none;
 }
