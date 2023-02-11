@@ -4,27 +4,10 @@ import Button from '../components/Button.tsx';
 import { UserContext } from "../App.tsx";
 import { User, Artwork } from '../utils/types.ts';
 import { artworkGetAll, getEscrowProgram } from '../utils/api.ts';
-import { optIn, buyAsset, getAssetById, getApplicationById, buySign } from '../utils/blockchain/transactionRepository.ts';
-import { encodeAddress, Transaction } from 'algosdk';
-
-const decoder = new TextDecoder()
-
-const nameMapping: object = {
-    'ESCROW_ADDRESS': 'escrowAddress',
-    'ASA_PRICE': 'asaPrice',
-    'ASA_OWNER': 'asaOwner',
-    'APP_STATE': 'appState',
-    'ASA_ID': 'asaId'
-};
-
-type Asset = {
-    escrowAddress: string;
-    asaPrice: number;
-    asaOwner: string;
-    appState: number;
-    asaId: number;
-    escrowProgram: string;
-};
+import { optIn, buyAsset, getAssetById, getApplicationById, buySign, callApplicationSign } from '../utils/blockchain/transactionRepository.ts';
+import algosdk, { encodeAddress, Transaction } from 'algosdk';
+import { nameMapping, STOP_SELL_OFFER } from '../utils/blockchain/constants.ts';
+import { Asset } from '../utils/blockchain/types.ts';
 
 function Art() {
     const [artwork, setArtwork] = useState<Artwork[]>();
@@ -87,17 +70,37 @@ function Art() {
         const optInTxn: Transaction = optIn(id, user.walletAddress);
         const buy: Transaction[] = buyAsset(id, art.appId, asset.asaOwner, user.walletAddress, asset.asaPrice, asset.escrowAddress);
 
-        buySign(optInTxn, buy, asset.escrowProgram);
+        buySign(optInTxn, buy, asset.escrowProgram).then((response) => {
+            console.log(response);
+        });
     }
 
-    let listing: any[] = [];
+    const stopSellOffer = (art: Artwork) => {
+        if (!user.walletAddress || !assets) {
+            return;
+        }
+
+        const id: number = art.assetId;
+        const asset: Asset = assets[id];
+
+        callApplicationSign(art.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [STOP_SELL_OFFER]).then((response) => {
+            console.log(response);
+        });
+    }
+
+    let listing: JSX.Element[] = [];
     artwork?.forEach((elem: Artwork) => {
-        if (!elem.appId) {
+        if (!assets) {
+            return;
+        }
+        const currAsset: Asset = assets[elem.assetId];
+        if (!elem.appId || currAsset.appState != 2) {
             return;
         }
         listing.push(<div key={elem.id}>
             <p>{elem.assetId}</p>
             <Button action={() => {buyArtwork(elem)}} name="Buy" enabled={initLoad} />
+            {currAsset.asaOwner == user.walletAddress && <Button action={() => {stopSellOffer(elem)}} name="Remove Listing" enabled={initLoad} />}
         </div>);
     });
 

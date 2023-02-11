@@ -232,7 +232,7 @@ export function buyAsset(assetId: number, appId: number, ownerAddress: string, b
     });
 }
 
-export async function buySign(optInTxn: Transaction, buyTxns: Transaction[], escrowProgram: string) {
+export async function buySign(optInTxn: Transaction, buyTxns: Transaction[], escrowProgram: string): Promise<object> {
     const myAlgoSignTxns: Transaction[] = [optInTxn, buyTxns[0], buyTxns[1]];
     const convertedTxns: Uint8Array[] = myAlgoSignTxns.map((txn: Transaction) => txn.toByte());
 
