@@ -168,11 +168,13 @@ export async function getApplicationById(appId: number): Promise<object> {
 }
 
 export async function getAssetById(assetId: number): Promise<object> {
-    return await indexer.lookupAssetByID(assetId).do()['asset'];
+    const asset = await indexer.lookupAssetByID(assetId).do();
+    return asset['asset'];
 }
 
 export async function getAccountAssets(walletAddress: string): Promise<Array<object>> {
     const assets: Record<string, any> = await indexer.lookupAccountCreatedAssets(walletAddress).do();
+    // console.log(await indexer.lookupAccountAssets(walletAddress).do());
     return assets['assets'];
 }
 

@@ -32,7 +32,9 @@ function Art() {
 
     const getArtwork = async (allArtworks: Artwork[]) => {
         const allAssets: Record<number, Asset> = {};
+        let skip;
         for (const elem of allArtworks) {
+            skip = false;
             const assetId: number = elem.assetId;
             const appId: number = elem.appId;
 
@@ -46,12 +48,20 @@ function Art() {
                 if (!key) {
                     return;
                 }
+                if (key == 'appState' && item['value']['uint'] != 2) {
+                    skip = true;
+                    return;
+                }
                 if (item['value']['type'] === 1) {
                     currAsset[key] = encodeAddress(new Uint8Array(Buffer.from(item['value']['bytes'], 'base64')));
                 } else {
                     currAsset[key] = item['value']['uint'];
                 }
             });
+            if (skip) {
+                continue;
+            }
+
             const escrowProgram: string = await getEscrowProgram(assetId, appId);
             currAsset.escrowProgram = escrowProgram;
             allAssets[assetId] = currAsset;
@@ -81,7 +91,6 @@ function Art() {
         }
 
         const id: number = art.assetId;
-        const asset: Asset = assets[id];
 
         callApplicationSign(art.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [STOP_SELL_OFFER]).then((response) => {
             console.log(response);
@@ -90,17 +99,14 @@ function Art() {
 
     let listing: JSX.Element[] = [];
     artwork?.forEach((elem: Artwork) => {
-        if (!assets) {
+        if (!assets || !elem.appId || !(elem.assetId in assets)) {
             return;
         }
         const currAsset: Asset = assets[elem.assetId];
-        if (!elem.appId || currAsset.appState != 2) {
-            return;
-        }
         listing.push(<div key={elem.id}>
             <p>{elem.assetId}</p>
             <Button action={() => {buyArtwork(elem)}} name="Buy" enabled={initLoad} />
-            {currAsset.asaOwner == user.walletAddress && <Button action={() => {stopSellOffer(elem)}} name="Remove Listing" enabled={initLoad} />}
+            {user && user.walletAddress && currAsset.asaOwner == user.walletAddress && <Button action={() => {stopSellOffer(elem)}} name="Remove Listing" enabled={initLoad} />}
         </div>);
     });
 
