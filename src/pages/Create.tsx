@@ -106,8 +106,9 @@ function Create() {
             return;
         }
 
-        const initResponse = await axios.get('algo/init');
-        const data = initResponse.data.data;
+        // change sale to auction for auction
+        const initResponse = await axios.get('algo/init/sale');
+        const data = initResponse.data;
         if (data) {
             let contractInfo: Record<number, AssetInfo> = {};
             for (const assetId of nftList) {
