@@ -16,7 +16,10 @@ const axios = require('axios').default;
 type AssetInfo = {
     appId: number;
     escrowAddress: string;
-    price: number | bigint;
+    price?: number | bigint;
+    startPrice?: number | bigint;
+    endPrice?: number | bigint;
+    duration?: number;
 }
 
 function Create() {
@@ -106,8 +109,8 @@ function Create() {
             return;
         }
 
-        // change sale to auction for auction
-        const initResponse = await axios.get('algo/init/sale');
+        const saleType: HTMLInputElement = document.getElementById('saleType') as HTMLInputElement;
+        const initResponse = await axios.get('algo/init/' + saleType.value);
         const data = initResponse.data;
         if (data) {
             let contractInfo: Record<number, AssetInfo> = {};
@@ -120,7 +123,11 @@ function Create() {
                     await callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, true);
                     await paySign(adminAddr, escrowAddress, 200000, true);
 
-                    contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, price: 1000000};
+                    if (saleType.value === 'sale') {
+                        contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, price: 1000000};
+                    } else {
+                        contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, startPrice: 3000000, endPrice: 1000000, duration: 100};
+                    }
                 }
             }
 
@@ -153,9 +160,22 @@ function Create() {
 
         for (const id in smartContractInfo) {
             const assetId: number = parseInt(id);
-            const price: Uint8Array = encodeUint64(smartContractInfo[id].price);
-            txns.push(changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, smartContractInfo[assetId].escrowAddress, false));
-            txns.push(callApplication(smartContractInfo[assetId].appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId]));
+            const info: AssetInfo = smartContractInfo[assetId];
+
+            txns.push(changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, info.escrowAddress, false));
+
+            if (info.price) {
+                const price: Uint8Array = encodeUint64(info.price);
+                txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId]));
+            } else if (info.startPrice && info.endPrice && info.duration) {
+                const startPrice: Uint8Array = encodeUint64(info.startPrice);
+                const endPrice: Uint8Array = encodeUint64(info.endPrice);
+                const duration: Uint8Array = encodeUint64(info.duration);
+                txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, startPrice, endPrice, duration], [assetId]));
+            } else {
+                txns.pop();
+                console.log('encountered incomplete asset info');
+            }
         }
 
         // algosdk.assignGroupID(txns);
@@ -224,6 +244,11 @@ function Create() {
                     }} />
                 </div>
                 {allAssets}
+                <label htmlFor="saleType">Choose a sale type:</label>
+                <select name="saleType" id="saleType">
+                    <option value={"sale"}>sale</option>
+                    <option value={"auction"}>auction</option>
+                </select>
                 <label htmlFor="works">Choose a work:</label>
                 <select name="works" id="works">
                     {workOptions}

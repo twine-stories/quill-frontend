@@ -78,7 +78,18 @@ function Art() {
         const id: number = art.assetId;
         const asset: Asset = assets[id];
         const optInTxn: Transaction = optIn(id, user.walletAddress);
-        const buy: Transaction[] = buyAsset(id, art.appId, asset.asaOwner, user.walletAddress, asset.asaPrice, asset.escrowAddress);
+        let buy: Transaction[];
+        if (asset.asaPrice) {
+            buy = buyAsset(id, art.appId, asset.asaOwner, user.walletAddress, asset.asaPrice, asset.escrowAddress);
+        } else {
+            const current: number = Math.floor(Date.now() / 1000);
+            if (current > asset.startTime + asset.duration) {
+                return;
+            }
+            console.log(asset);
+            const price: number | bigint = (((asset.startTime + asset.duration - current) * (asset.startPrice - asset.endPrice)) / asset.duration) + asset.endPrice;
+            buy = buyAsset(id, art.appId, asset.asaOwner, user.walletAddress, price, asset.escrowAddress, current);
+        }
 
         buySign(optInTxn, buy, asset.escrowProgram).then((response) => {
             console.log(response);
