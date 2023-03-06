@@ -30,6 +30,21 @@ export type Work = {
     url: string;
 }
 
+export type Episode = {
+    id?: number;
+    creator: User;
+    title: string;
+    description: string;
+    cover?: string;
+    banner?: string;
+    publishStamp?: Date;
+    genre1: Genre;
+    genre2?: Genre;
+    genre3?: Genre;
+    medium: WorkType;
+    url: string;
+}
+
 export type NFTCollection = {
     id?: number;
     work: Work;

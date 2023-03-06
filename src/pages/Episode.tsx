@@ -1,10 +1,14 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
+import useState from 'react-usestateref'
 import Navbar from "../components/Navbar.tsx";
 import {UserContext} from "../App.tsx";
 import {User, Episode} from '../utils/types.ts';
 import styled from "styled-components";
 import {AspectRatio, Box, Button, Card, IconButton, Input, Stack, Textarea, Typography} from "@mui/joy";
 import {useImmer} from "use-immer";
+import {enableMapSet} from "immer";
+
+enableMapSet();
 
 function CreateEpisode() {
 
@@ -13,30 +17,49 @@ function CreateEpisode() {
     const context: object = useContext(UserContext);
     const user: User = context['user'];
 
-    const [inputList, setInputList] = useState([]);
-    const [resultList, setResultList] = useImmer([]);
+    const [inputList, setInputList, inputListRef] = useState([]);
+    const [resultMap, setResultMap] = useImmer(new Map());
     const [counter, setCounter] = useState(0);
 
+    function removeItem(index: number) {
+        // setResultMap(newResultMap => {
+        //     newResultMap.set(index, "!BAD!");
+        // });
+
+        var newInputList = [];
+        for (let i = 0; i < inputListRef.current.length; i++) {
+            // !== does not work. Why? TODO: FIGURE THAT OUT
+            // But this works lol
+            if (inputListRef.current[i].key != index) {
+                newInputList.push(inputListRef.current[i]);
+            }
+        }
+        setInputList(newInputList);
+    }
+
     function onAddTextButtonClick() {
-        setResultList(resultList.concat(""));
+        setResultMap(newResultMap => {
+            newResultMap.set(counter, "");
+        });
         setInputList(inputList.concat(<Textarea
                 key={counter}
                 placeholder="Type in here…"
-                value={resultList[counter]}
+                value={resultMap.get(counter)}
                 onChange={(event) => {
-                    setResultList(temp => {
-                        temp[counter] = event.target.value;
+                    setResultMap(newResultMap => {
+                        newResultMap.set(counter, event.target.value);
                     })
-                    // resultList[counter] = event.target.value;
                 }}
                 minRows={1}
                 variant="outlined"
                 color="neutral"
                 endDecorator={
                     <Box sx={{ml: 'auto', gap: 1}}>
-                        <IconButton variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬆️</IconButton>
+                        <IconButton variant="outlined" color="neutral" sx={{ml: 'auto'}} onClick={function () {
+                            console.log(1);
+                        }}>⬆️</IconButton>
                         <IconButton variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬇️</IconButton>
-                        <IconButton variant="outlined" color="neutral" sx={{ml: 'auto'}}>❌</IconButton>
+                        <IconButton onClick={function(){removeItem(counter)}} variant="outlined" color="neutral" sx={{ml: 'auto'}}>❌</IconButton>
                     </Box>
                 }
                 sx={{minWidth: "40%"}}
@@ -46,7 +69,9 @@ function CreateEpisode() {
     }
 
     function onAddImageButtonClick() {
-        setResultList(resultList.concat("img"));
+        setResultMap(newResultMap => {
+            newResultMap.set(counter, "img");
+        });
         setInputList(inputList.concat(
             <Card key={counter} variant="outlined" sx={{width: 320}}>
                 <AspectRatio minHeight="120px" maxHeight="200px" sx={{my: 2}}>
@@ -60,7 +85,7 @@ function CreateEpisode() {
                 <Box sx={{ml: 'auto', gap: 1}}>
                     <IconButton variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬆️</IconButton>
                     <IconButton variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬇️</IconButton>
-                    <IconButton variant="outlined" color="neutral" sx={{ml: 'auto'}}>❌</IconButton>
+                    <IconButton onClick={function(){removeItem(counter)}} variant="outlined" color="neutral" sx={{ml: 'auto'}}>❌</IconButton>
                 </Box>
             </Card>
         ));
@@ -108,7 +133,7 @@ function CreateEpisode() {
                     sx={{width: '100%'}}>
                     <Button variant="outlined" color="info" onClick={onAddTextButtonClick}>Add Text</Button>
                     <IconButton variant="outlined" color="info" onClick={function () {
-                        console.log(resultList)
+                        console.log(resultMap)
                     }} sx={{ml: 'auto'}}>✅</IconButton>
                     <Button variant="outlined" color="info" onClick={onAddImageButtonClick}>Add Image</Button>
                 </Stack>
