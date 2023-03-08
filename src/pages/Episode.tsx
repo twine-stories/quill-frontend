@@ -22,19 +22,54 @@ function CreateEpisode() {
     const [counter, setCounter] = useState(0);
 
     function removeItem(index: number) {
-        // setResultMap(newResultMap => {
-        //     newResultMap.set(index, "!BAD!");
-        // });
+        //TODO: Fix this later 💀
+        setResultMap(newResultMap => {
+            newResultMap.set(index, "!BAD!");
+        });
 
-        var newInputList = [];
+        // !== does not work. Why? TODO: FIGURE THAT OUT
+        // But this works lol
+        setInputList(inputListRef.current.filter(val => val.key != index));
+    }
+
+    function moveItemUp(counter: number) {
+        // iterate through inputListRef.current array and find index where key === counter
+        // then swap with the one above it
+        let index = -1;
         for (let i = 0; i < inputListRef.current.length; i++) {
-            // !== does not work. Why? TODO: FIGURE THAT OUT
-            // But this works lol
-            if (inputListRef.current[i].key != index) {
-                newInputList.push(inputListRef.current[i]);
+            if (inputListRef.current[i]["key"] == counter) {
+                index = i;
+                break;
             }
         }
-        setInputList(newInputList);
+        const tempInputList = [...inputListRef.current];
+        if (index !== 0 && index !== -1) {
+            if (index !== 0) {
+                const temp = tempInputList[index];
+                tempInputList[index] = tempInputList[index - 1];
+                tempInputList[index - 1] = temp;
+                setInputList(tempInputList);
+            }
+        }
+    }
+
+    function moveItemDown(counter: number) {
+        // iterate through inputListRef.current array and find index where key === counter
+        // then swap with the one below it
+        let index = -1;
+        for (let i = 0; i < inputListRef.current.length; i++) {
+            if (inputListRef.current[i]["key"] == counter) {
+                index = i;
+                break;
+            }
+        }
+        const tempInputList = [...inputListRef.current];
+        if (index !== tempInputList.length - 1) {
+            const temp = tempInputList[index];
+            tempInputList[index] = tempInputList[index + 1];
+            tempInputList[index + 1] = temp;
+            setInputList(tempInputList);
+        }
     }
 
     function onAddTextButtonClick() {
@@ -52,14 +87,18 @@ function CreateEpisode() {
                 }}
                 minRows={1}
                 variant="outlined"
-                color="neutral"
+                color="info"
                 endDecorator={
                     <Box sx={{ml: 'auto', gap: 1}}>
-                        <IconButton variant="outlined" color="neutral" sx={{ml: 'auto'}} onClick={function () {
-                            console.log(1);
-                        }}>⬆️</IconButton>
-                        <IconButton variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬇️</IconButton>
-                        <IconButton onClick={function(){removeItem(counter)}} variant="outlined" color="neutral" sx={{ml: 'auto'}}>❌</IconButton>
+                        <IconButton onClick={function () {
+                            moveItemUp(counter)
+                        }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬆️</IconButton>
+                        <IconButton onClick={function () {
+                            moveItemDown(counter)
+                        }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬇️</IconButton>
+                        <IconButton onClick={function () {
+                            removeItem(counter)
+                        }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>❌</IconButton>
                     </Box>
                 }
                 sx={{minWidth: "40%"}}
@@ -73,7 +112,7 @@ function CreateEpisode() {
             newResultMap.set(counter, "img");
         });
         setInputList(inputList.concat(
-            <Card key={counter} variant="outlined" sx={{width: 320}}>
+            <Card key={counter} variant="outlined" color="info" sx={{width: 320}}>
                 <AspectRatio minHeight="120px" maxHeight="200px" sx={{my: 2}}>
                     <img
                         src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
@@ -82,10 +121,16 @@ function CreateEpisode() {
                         alt=""
                     />
                 </AspectRatio>
-                <Box sx={{ml: 'auto', gap: 1}}>
-                    <IconButton variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬆️</IconButton>
-                    <IconButton variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬇️</IconButton>
-                    <IconButton onClick={function(){removeItem(counter)}} variant="outlined" color="neutral" sx={{ml: 'auto'}}>❌</IconButton>
+                <Box sx={{ml: 'auto'}}>
+                    <IconButton onClick={function () {
+                        moveItemUp(counter)
+                    }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬆️</IconButton>
+                    <IconButton onClick={function () {
+                        moveItemDown(counter)
+                    }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬇️</IconButton>
+                    <IconButton onClick={function () {
+                        removeItem(counter)
+                    }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>❌</IconButton>
                 </Box>
             </Card>
         ));
@@ -100,47 +145,93 @@ function CreateEpisode() {
     //     }
     // }, [user]);
 
-    return (
-        <div>
-            {/*<Navbar />*/}
-            <Typography level="h2" sx={{color: "#9E9FEB"}}>
-                Create Episode
-            </Typography>
-            <Box
-                sx={{
-                    py: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 2,
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                }}
-            >
-                <Input color="info" placeholder="Title Episode"/>
-                <Input color="info" placeholder="Chapter"/>
+    let view = false;
+    if (view) {
+        return (
+            <div>
+                {/*<Navbar />*/}
+                <Typography level="h2" sx={{color: "#9E9FEB"}}>
+                    Create Episode
+                </Typography>
+                <Box
+                    sx={{
+                        py: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                    }}
+                >
+                    <Input color="info" placeholder="Title Episode"/>
+                    <Input color="info" placeholder="Chapter"/>
 
-                <Stack
-                    alignItems="center"
-                    spacing={0.25}
-                    sx={{width: "100%"}}>
-                    {inputList}
-                </Stack>
+                    <Stack
+                        alignItems="center"
+                        spacing={0.25}
+                        sx={{width: "100%"}}>
+                        {inputList}
+                    </Stack>
 
-                <Stack
-                    direction="row"
-                    spacing={2}
-                    justifyContent="center"
-                    sx={{width: '100%'}}>
-                    <Button variant="outlined" color="info" onClick={onAddTextButtonClick}>Add Text</Button>
-                    <IconButton variant="outlined" color="info" onClick={function () {
-                        console.log(resultMap)
-                    }} sx={{ml: 'auto'}}>✅</IconButton>
-                    <Button variant="outlined" color="info" onClick={onAddImageButtonClick}>Add Image</Button>
-                </Stack>
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                        justifyContent="center"
+                        sx={{width: '100%'}}>
+                        <Button variant="outlined" color="info" onClick={onAddTextButtonClick}>Add Text</Button>
+                        <IconButton variant="outlined" color="info" onClick={function () {
+                            console.log(resultMap)
+                        }} sx={{ml: 'auto'}}>✅</IconButton>
+                        <Button variant="outlined" color="info" onClick={onAddImageButtonClick}>Add Image</Button>
+                    </Stack>
 
-            </Box>
-        </div>
-    );
+                </Box>
+            </div>
+        );
+    } else {
+
+        return (
+            <div>
+                {/*<Navbar />*/}
+                <Typography level="h2" sx={{color: "#9E9FEB"}}>
+                    Create Episode
+                </Typography>
+                <Box
+                    sx={{
+                        py: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                    }}
+                >
+                    <Input color="info" placeholder="Title Episode"/>
+                    <Input color="info" placeholder="Chapter"/>
+
+                    <Stack
+                        alignItems="center"
+                        spacing={0.25}
+                        sx={{width: "100%"}}>
+                        {inputList}
+                    </Stack>
+
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                        justifyContent="center"
+                        sx={{width: '100%'}}>
+                        <Button variant="outlined" color="info" onClick={onAddTextButtonClick}>Add Text</Button>
+                        <IconButton variant="outlined" color="info" onClick={function () {
+                            console.log(inputList)
+                        }} sx={{ml: 'auto'}}>✅</IconButton>
+                        <Button variant="outlined" color="info" onClick={onAddImageButtonClick}>Add Image</Button>
+                    </Stack>
+
+                </Box>
+            </div>
+        );
+    }
 }
 
 export default CreateEpisode;
