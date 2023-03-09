@@ -55,6 +55,10 @@ function App() {
         setAddress(addr);
     };
 
+    const mockConnectToMyAlgo = (): void => {
+        onComplete({'networkAccount': {'addr': 'KYUH2SNU6FWFGBK6PNWI4EUIABOYFIQIQH2WOP3FW7DGA623ESTGXYQPJA'}});
+    }
+
     const connectToMyAlgo = async (): Promise<void> => {
         try {
             const accounts = await reach.getDefaultAccount();
@@ -127,6 +131,7 @@ function App() {
                     'address': address,
                     'user': user,
                     'connectToMyAlgo': connectToMyAlgo,
+                    'mockConnectToMyAlgo': mockConnectToMyAlgo,
                     'logOut': logOut,
                     'openLogin': openLogin,
                     'closeLogin': cancelLogin,
