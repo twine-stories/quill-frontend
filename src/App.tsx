@@ -1,17 +1,20 @@
-import { useEffect, useState, createContext } from 'react';
+import {useEffect, useState, createContext} from 'react';
 import './App.css';
-import { Routes, Route } from "react-router-dom";
+import {Routes, Route} from "react-router-dom";
 import Home from './pages/Home.tsx';
 import Create from './pages/Create.tsx';
 import Profile from './pages/Profile.tsx';
 import Story from './pages/Story.tsx';
+import Episode from './pages/Episode.tsx';
 import Art from './pages/Art.tsx';
 import Collection from './pages/Collection.tsx';
-import { ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib } from '@reach-sh/stdlib';
-import { v4 as uuidv4 } from 'uuid';
-import { getCookie, setCookie, deleteCookie } from './utils/cookies.ts';
-import { User } from './utils/types.ts';
-import { cookieSet, userGet, userUpdate, userAdd, cookieGet } from './utils/api.ts';
+import {ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib} from '@reach-sh/stdlib';
+import {v4 as uuidv4} from 'uuid';
+import {getCookie, setCookie, deleteCookie} from './utils/cookies.ts';
+import {User, Work} from './utils/types.ts';
+import {cookieSet, userGet, userUpdate, userAdd, cookieGet} from './utils/api.ts';
+import {CssVarsProvider} from "@mui/joy";
+import GlobalStyle from "./utils/globalStyles.ts";
 
 const reach = loadStdlib('ALGO');
 reach.setWalletFallback(reach.walletFallback({
@@ -53,12 +56,15 @@ function App() {
         setAddress(addr);
     };
 
+    const mockConnectToMyAlgo = (): void => {
+        onComplete({'networkAccount': {'addr': 'KYUH2SNU6FWFGBK6PNWI4EUIABOYFIQIQH2WOP3FW7DGA623ESTGXYQPJA'}});
+    }
+
     const connectToMyAlgo = async (): Promise<void> => {
         try {
             const accounts = await reach.getDefaultAccount();
             onComplete(accounts);
-        }
-        catch (err) {
+        } catch (err) {
             console.error(err);
         }
     }
@@ -119,16 +125,32 @@ function App() {
 
     return (
         <div className="App">
-            <UserContext.Provider value={{'userLoaded': initUserLoad,'address': address, 'user': user, 'connectToMyAlgo': connectToMyAlgo, 'logOut': logOut, 'openLogin': openLogin, 'closeLogin': cancelLogin, 'addUser': addUser, 'updateUser': updateUser}}>
-                <Routes>
-                    <Route path="/art" element={<Art />}></Route>
-                    <Route path="/create" element={<Create />}></Route>
-                    <Route path="/profile" element={<Profile />}></Route>
-                    <Route path="/story/*" element={<Story />}></Route>
-                    <Route path="/collection/*" element={<Collection />}></Route>
-                    <Route path="/" element={<Home />}></Route>
-                </Routes>
-            </UserContext.Provider>
+            <CssVarsProvider defaultMode="dark">
+                <GlobalStyle />
+                <UserContext.Provider value={{
+                    'userLoaded': initUserLoad,
+                    'address': address,
+                    'user': user,
+                    'connectToMyAlgo': connectToMyAlgo,
+                    'mockConnectToMyAlgo': mockConnectToMyAlgo,
+                    'logOut': logOut,
+                    'openLogin': openLogin,
+                    'closeLogin': cancelLogin,
+                    'addUser': addUser,
+                    'updateUser': updateUser
+                }}>
+                    <Routes>
+                        <Route path="/art" element={<Art/>}></Route>
+                        <Route path="/create" element={<Create/>}></Route>
+                        <Route path="/profile" element={<Profile/>}></Route>
+                        <Route path="/story/*" element={<Story/>}></Route>
+                        <Route path="/episode/*" element={<Episode/>}></Route>
+                        <Route path="/collection/*" element={<Collection />}></Route>
+                        {/*<Route path="/" element={<Episode/>}></Route>*/}
+                        <Route path="/" element={<Home />}></Route>
+                    </Routes>
+                </UserContext.Provider>
+            </CssVarsProvider>
         </div>
     );
 }
