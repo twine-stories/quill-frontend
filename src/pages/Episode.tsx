@@ -7,6 +7,7 @@ import styled from "styled-components";
 import {AspectRatio, Box, Button, Card, IconButton, Input, Stack, Textarea, Typography} from "@mui/joy";
 import {useImmer} from "use-immer";
 import {enableMapSet} from "immer";
+import Sheet from '@mui/joy/Sheet';
 
 enableMapSet();
 
@@ -20,9 +21,11 @@ function CreateEpisode() {
     const [inputList, setInputList, inputListRef] = useState([]);
     const [resultMap, setResultMap] = useImmer(new Map());
     const [counter, setCounter] = useState(0);
+    const [view, setView] = useState(false);
 
     function removeItem(index: number) {
         //TODO: Fix this later 💀
+        // add uuid
         setResultMap(newResultMap => {
             newResultMap.set(index, "!BAD!");
         });
@@ -92,10 +95,10 @@ function CreateEpisode() {
                     <Box sx={{ml: 'auto', gap: 1}}>
                         <IconButton onClick={function () {
                             moveItemUp(counter)
-                        }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬆️</IconButton>
+                        }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬆</IconButton>
                         <IconButton onClick={function () {
                             moveItemDown(counter)
-                        }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬇️</IconButton>
+                        }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬇</IconButton>
                         <IconButton onClick={function () {
                             removeItem(counter)
                         }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>❌</IconButton>
@@ -124,10 +127,10 @@ function CreateEpisode() {
                 <Box sx={{ml: 'auto'}}>
                     <IconButton onClick={function () {
                         moveItemUp(counter)
-                    }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬆️</IconButton>
+                    }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬆</IconButton>
                     <IconButton onClick={function () {
                         moveItemDown(counter)
-                    }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬇️</IconButton>
+                    }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>⬇</IconButton>
                     <IconButton onClick={function () {
                         removeItem(counter)
                     }} variant="outlined" color="neutral" sx={{ml: 'auto'}}>❌</IconButton>
@@ -145,48 +148,63 @@ function CreateEpisode() {
     //     }
     // }, [user]);
 
-    let view = false;
     if (view) {
+        var compoundedElements = []
+        for (let i = 0; i < inputListRef.current.length; i++) {
+            // to convert string to number, use + in front of it for some reason 💀
+            let content = resultMap.get(+inputListRef.current[i]["key"])
+            if (content === "!BAD!") {
+                // THIS SHOULD NEVER HAPPEN
+                // IF IT DOES, GOOD LUCK
+                console.log("good luck");
+            } else if (content.indexOf("img") !== -1) {
+                compoundedElements.push(
+                    <AspectRatio variant="plain" minHeight="120px" maxHeight="300px" objectFit="contain" sx={{my: 2}}>
+                        <img
+                            src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
+                            srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
+                            loading="lazy"
+                            alt=""
+                        />
+                    </AspectRatio>)
+            } else {
+                compoundedElements.push(<Typography level="h6" sx={{color: "#9E9FEB"}}>{content}</Typography>)
+            }
+        }
+
         return (
-            <div>
-                {/*<Navbar />*/}
+            <Box
+                sx={{
+                    py: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                }}
+            >
                 <Typography level="h2" sx={{color: "#9E9FEB"}}>
                     Create Episode
                 </Typography>
-                <Box
-                    sx={{
-                        py: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 2,
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                    }}
-                >
-                    <Input color="info" placeholder="Title Episode"/>
-                    <Input color="info" placeholder="Chapter"/>
+                {/*<Navbar />*/}
 
-                    <Stack
-                        alignItems="center"
-                        spacing={0.25}
-                        sx={{width: "100%"}}>
-                        {inputList}
-                    </Stack>
+                <Sheet sx={{width: '50%', my: 1}} color="info" variant="outlined">
+                    {
+                        compoundedElements
+                    }
+                </Sheet>
 
-                    <Stack
-                        direction="row"
-                        spacing={2}
-                        justifyContent="center"
-                        sx={{width: '100%'}}>
-                        <Button variant="outlined" color="info" onClick={onAddTextButtonClick}>Add Text</Button>
-                        <IconButton variant="outlined" color="info" onClick={function () {
-                            console.log(resultMap)
-                        }} sx={{ml: 'auto'}}>✅</IconButton>
-                        <Button variant="outlined" color="info" onClick={onAddImageButtonClick}>Add Image</Button>
-                    </Stack>
-
-                </Box>
-            </div>
+                <Stack
+                    direction="row"
+                    spacing={2}
+                    justifyContent="center"
+                    sx={{width: '100%'}}>
+                    <Button variant="outlined" color="info" onClick={function () {
+                        setView(false);
+                    }
+                    }>Edit</Button>
+                </Stack>
+            </Box>
         );
     } else {
 
@@ -222,12 +240,18 @@ function CreateEpisode() {
                         justifyContent="center"
                         sx={{width: '100%'}}>
                         <Button variant="outlined" color="info" onClick={onAddTextButtonClick}>Add Text</Button>
-                        <IconButton variant="outlined" color="info" onClick={function () {
-                            console.log(inputList)
-                        }} sx={{ml: 'auto'}}>✅</IconButton>
-                        <Button variant="outlined" color="info" onClick={onAddImageButtonClick}>Add Image</Button>
+                        <Button variant="outlined" color="info" onClick={function () {
+                            setView(true);
+                        }
+                        }>Preview</Button>
+                        {/*<IconButton variant="outlined" color="info" onClick={function () {*/}
+                        {/*    console.log(inputList)*/}
+                        {/*}} sx={{ml: 'auto'}}>✅</IconButton>*/}
+                        <Button startDecorator={<img
+                            src="../../public/add_image.svg"
+                            alt=""
+                        />} variant="outlined" color="info" onClick={onAddImageButtonClick}>Add Image</Button>
                     </Stack>
-
                 </Box>
             </div>
         );

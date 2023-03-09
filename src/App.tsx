@@ -139,8 +139,8 @@ function App() {
                         <Route path="/profile" element={<Profile/>}></Route>
                         <Route path="/story/*" element={<Story/>}></Route>
                         <Route path="/episode/*" element={<Episode/>}></Route>
-                        <Route path="/" element={<Episode/>}></Route>
-                        {/*<Route path="/" element={<Home />}></Route>*/}
+                        {/*<Route path="/" element={<Episode/>}></Route>*/}
+                        <Route path="/" element={<Home />}></Route>
                     </Routes>
                 </UserContext.Provider>
             </CssVarsProvider>
