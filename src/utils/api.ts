@@ -7,6 +7,15 @@ type CookieParams = {
     walletAddress: string;
 }
 
+export const genericGet = async (endpoint: string): Promise<object | null> => {
+    const response = await axios.get(endpoint);
+    if (response.status === 200) {
+        return response.data;
+    }
+
+    return null;
+}
+
 export const userGet = (addr: string, setter: (user: User) => void) : void => {
     axios.get('/api/user/' + addr)
         .then(response => {
@@ -153,4 +162,20 @@ export const getEscrowProgram = async (assetId: number, appId: number): Promise<
     const escrowResponse = await axios.get('/algo/escrow?nft_id=' + assetId + '&app_id=' + appId);
     const escrowData = escrowResponse.data;
     return escrowData;
+}
+
+export const collectionGetAll = async (): Promise<NFTCollection[] | null> => {
+    const response = await axios.get('/api/collections');
+    if (response.status === 200) {
+        return response.data;
+    }
+    return null;
+}
+
+export const collectionGetByUrl = async (url: string): Promise<NFTCollection> => {
+    const response = await axios.get('/api/collection/url/' + url);
+    if (response.status === 200) {
+        return response.data;
+    }
+    return null;
 }

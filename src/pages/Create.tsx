@@ -10,6 +10,7 @@ import algosdk, { decodeAddress, encodeUint64, Transaction } from 'algosdk';
 import NFTCheckbox from '../components/NFTCheckbox.tsx';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
 import { INIT_ESCROW, MAKE_SELL_OFFER } from '../utils/blockchain/constants.ts';
+import { saleTypeMap } from '../utils/constants.ts';
 
 const axios = require('axios').default;
 
@@ -123,19 +124,25 @@ function Create() {
                     await callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, true);
                     await paySign(adminAddr, escrowAddress, 200000, true);
 
-                    if (saleType.value === 'sale') {
-                        contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, price: 1000000};
-                    } else {
+                    if (saleType.value === 'auction') {
                         contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, startPrice: 3000000, endPrice: 1000000, duration: 100};
+                    } else if (saleType.value === 'sale') {
+                        contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, price: 1000000};
+                    } else if (saleType.value === 'shuffle') {
+                        contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, price: 1000000};
                     }
                 }
             }
 
             const work: HTMLInputElement = document.getElementById('works') as HTMLInputElement;
             const name: HTMLInputElement = document.getElementById('collName') as HTMLInputElement;
+            // need to fix the url
             const collection: NFTCollection = {
                 work: allWorks[parseInt(work.value)],
-                name: name.value
+                name: name.value,
+                collType: saleTypeMap[saleType.value],
+                url: name.value,
+                active: true
             };
 
             let artworks: Artwork[] = [];
@@ -248,6 +255,7 @@ function Create() {
                 <select name="saleType" id="saleType">
                     <option value={"sale"}>sale</option>
                     <option value={"auction"}>auction</option>
+                    <option value={"shuffle"}>shuffle</option>
                 </select>
                 <label htmlFor="works">Choose a work:</label>
                 <select name="works" id="works">

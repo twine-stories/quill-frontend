@@ -1,4 +1,4 @@
-import { Genre, WorkType } from 'enums.ts';
+import { Genre, WorkType, CollectionType } from 'enums.ts';
 
 export type User = {
     id?: number;
@@ -35,6 +35,9 @@ export type NFTCollection = {
     work: Work;
     publishStamp?: Date;
     name: string;
+    collType: CollectionType;
+    url: string;
+    active: boolean;
 }
 
 export type Artwork = {

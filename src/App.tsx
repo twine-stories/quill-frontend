@@ -6,10 +6,11 @@ import Create from './pages/Create.tsx';
 import Profile from './pages/Profile.tsx';
 import Story from './pages/Story.tsx';
 import Art from './pages/Art.tsx';
+import Collection from './pages/Collection.tsx';
 import { ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib } from '@reach-sh/stdlib';
 import { v4 as uuidv4 } from 'uuid';
 import { getCookie, setCookie, deleteCookie } from './utils/cookies.ts';
-import { User, Work } from './utils/types.ts';
+import { User } from './utils/types.ts';
 import { cookieSet, userGet, userUpdate, userAdd, cookieGet } from './utils/api.ts';
 
 const reach = loadStdlib('ALGO');
@@ -124,6 +125,7 @@ function App() {
                     <Route path="/create" element={<Create />}></Route>
                     <Route path="/profile" element={<Profile />}></Route>
                     <Route path="/story/*" element={<Story />}></Route>
+                    <Route path="/collection/*" element={<Collection />}></Route>
                     <Route path="/" element={<Home />}></Route>
                 </Routes>
             </UserContext.Provider>

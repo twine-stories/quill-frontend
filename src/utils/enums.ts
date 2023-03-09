@@ -14,3 +14,9 @@ export const enum WorkType {
     ILLUSTRATED = 'ILLUSTRATED',
     WRITTEN = 'WRITTEN'
 }
+
+export const enum CollectionType {
+    SALE = 'SALE',
+    REV_AUCTION = 'REV_AUCTION',
+    SHUFFLE = 'SHUFFLE'
+}
