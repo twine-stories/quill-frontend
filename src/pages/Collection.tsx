@@ -140,6 +140,10 @@ function Collection() {
                 <div>
                     <p>{coll.name}</p>
                     {listings}
+                    {
+                        coll.collType === CollectionType.SHUFFLE &&
+                        <Button action={() => {console.log('buy shuffle')}} name="Buy Shuffle" enabled={initLoad} />
+                    }
                 </div>
             }
         </div>

@@ -11,6 +11,7 @@ import NFTCheckbox from '../components/NFTCheckbox.tsx';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
 import { INIT_ESCROW, MAKE_SELL_OFFER } from '../utils/blockchain/constants.ts';
 import { saleTypeMap } from '../utils/constants.ts';
+import { CollectionType } from '../utils/enums.ts';
 
 const axios = require('axios').default;
 
@@ -33,6 +34,8 @@ function Create() {
     const [updateAssets, setUpdateAssets] = useState<boolean>(false);
 
     const [smartContractInfo, setSmartContractInfo] = useState<Record<number, AssetInfo>>();
+
+    const [contractType, setContractType] = useState<CollectionType>(CollectionType.SALE);
 
     const user: User = context['user'];
     const cname: string = 'nftCheckboxes';
@@ -109,27 +112,37 @@ function Create() {
         if (nftList.length === 0) {
             return;
         }
-
-        const saleType: HTMLInputElement = document.getElementById('saleType') as HTMLInputElement;
-        const initResponse = await axios.get('algo/init/' + saleType.value);
+        const saleType: string = contractType.toLowerCase();
+        const initResponse = await axios.get('algo/init/' + saleType);
         const data = initResponse.data;
         if (data) {
             let contractInfo: Record<number, AssetInfo> = {};
-            for (const assetId of nftList) {
-                const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], [assetId]);
-                const escrowProgram: string = await getEscrowProgram(assetId, id);
-
+            if (contractType === CollectionType.SHUFFLE) {
+                const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], nftList);
+                const escrowProgram: string = await getEscrowProgram('shuffle', nftList.toString(), id);
                 if (escrowProgram) {
                     const escrowAddress: string = await escrowProgramToAddress(escrowProgram);
                     await callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, true);
-                    await paySign(adminAddr, escrowAddress, 200000, true);
-
-                    if (saleType.value === 'auction') {
-                        contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, startPrice: 3000000, endPrice: 1000000, duration: 100};
-                    } else if (saleType.value === 'sale') {
+                    await paySign(adminAddr, escrowAddress, 100000 + (100000 * nftList.length), true);
+                    for (const assetId of nftList) {
                         contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, price: 1000000};
-                    } else if (saleType.value === 'shuffle') {
-                        contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, price: 1000000};
+                    }
+                }
+            } else {
+                for (const assetId of nftList) {
+                    const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], [assetId]);
+                    const escrowProgram: string = await getEscrowProgram(saleType, assetId.toString(), id);
+    
+                    if (escrowProgram) {
+                        const escrowAddress: string = await escrowProgramToAddress(escrowProgram);
+                        await callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, true);
+                        await paySign(adminAddr, escrowAddress, 200000, true);
+    
+                        if (contractType === CollectionType.REV_AUCTION) {
+                            contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, startPrice: 3000000, endPrice: 1000000, duration: 100};
+                        } else if (contractType === CollectionType.SALE) {
+                            contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, price: 1000000};
+                        }
                     }
                 }
             }
@@ -140,7 +153,7 @@ function Create() {
             const collection: NFTCollection = {
                 work: allWorks[parseInt(work.value)],
                 name: name.value,
-                collType: saleTypeMap[saleType.value],
+                collType: saleTypeMap[saleType],
                 url: name.value,
                 active: true
             };
@@ -162,26 +175,41 @@ function Create() {
         }
     }
 
-    const makeSellOffer = async() => {
+    const makeSellOffer = async (): Promise<void> => {
         let txns: Transaction[] = [];
+
+        if (!smartContractInfo || Object.keys(smartContractInfo).length === 0) {
+            return;
+        }
 
         for (const id in smartContractInfo) {
             const assetId: number = parseInt(id);
             const info: AssetInfo = smartContractInfo[assetId];
 
             txns.push(changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, info.escrowAddress, false));
+        }
 
-            if (info.price) {
-                const price: Uint8Array = encodeUint64(info.price);
-                txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId]));
-            } else if (info.startPrice && info.endPrice && info.duration) {
-                const startPrice: Uint8Array = encodeUint64(info.startPrice);
-                const endPrice: Uint8Array = encodeUint64(info.endPrice);
-                const duration: Uint8Array = encodeUint64(info.duration);
-                txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, startPrice, endPrice, duration], [assetId]));
-            } else {
-                txns.pop();
-                console.log('encountered incomplete asset info');
+        if (contractType === CollectionType.SHUFFLE) {
+            const nftIds: number[] = Object.keys(smartContractInfo).map((elem: string) => parseInt(elem));
+            const dummyInfo: AssetInfo = smartContractInfo[nftIds[0]];
+            txns.push(callApplication(dummyInfo.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, dummyInfo.price], nftIds));
+        } else {
+            for (const id in smartContractInfo) {
+                const assetId: number = parseInt(id);
+                const info: AssetInfo = smartContractInfo[assetId];
+
+                if (info.price && contractType === CollectionType.SALE) {
+                    const price: Uint8Array = encodeUint64(info.price);
+                    txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId]));
+                } else if (info.startPrice && info.endPrice && info.duration && contractType === CollectionType.REV_AUCTION) {
+                    const startPrice: Uint8Array = encodeUint64(info.startPrice);
+                    const endPrice: Uint8Array = encodeUint64(info.endPrice);
+                    const duration: Uint8Array = encodeUint64(info.duration);
+                    txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, startPrice, endPrice, duration], [assetId]));
+                } else {
+                    txns.pop();
+                    console.log('encountered incomplete asset info');
+                }
             }
         }
 
@@ -189,6 +217,8 @@ function Create() {
 
         await signTxns(txns);
     }
+
+    console.log(contractType.toLowerCase());
 
     return (
         <div>
@@ -252,9 +282,9 @@ function Create() {
                 </div>
                 {allAssets}
                 <label htmlFor="saleType">Choose a sale type:</label>
-                <select name="saleType" id="saleType">
+                <select name="saleType" id="saleType" onChange={(e) => {setContractType(saleTypeMap[e.target.value])}}>
                     <option value={"sale"}>sale</option>
-                    <option value={"auction"}>auction</option>
+                    <option value={"rev_auction"}>reverse auction</option>
                     <option value={"shuffle"}>shuffle</option>
                 </select>
                 <label htmlFor="works">Choose a work:</label>

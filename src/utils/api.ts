@@ -158,8 +158,8 @@ export const collectionCreateWithArt = async (collection: NFTCollection, artwork
     return null;
 }
 
-export const getEscrowProgram = async (assetId: number, appId: number): Promise<string> => {
-    const escrowResponse = await axios.get('/algo/escrow?nft_id=' + assetId + '&app_id=' + appId);
+export const getEscrowProgram = async (saleType: string, assetIds: string, appId: number): Promise<string> => {
+    const escrowResponse = await axios.get('/algo/escrow/saleType?nft_id=' + assetIds + '&app_id=' + appId);
     const escrowData = escrowResponse.data;
     return escrowData;
 }
