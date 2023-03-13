@@ -20,3 +20,8 @@ export const enum CollectionType {
     REV_AUCTION = 'REV_AUCTION',
     SHUFFLE = 'SHUFFLE'
 }
+
+export const enum ConnectType {
+    MY_ALGO = 'MY_ALGO',
+    PERA = 'PERA'
+}

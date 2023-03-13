@@ -30,6 +30,7 @@ export const userUpdate = (user: User, setter: (user: User) => void) : void => {
     axios.post('/api/user/update', user)
         .then(response => {
             if (response.status === 200) {
+                console.log(user);
                 setter(user);
             }
         })

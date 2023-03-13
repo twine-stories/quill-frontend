@@ -1,4 +1,4 @@
-import { Genre, WorkType, CollectionType } from 'enums.ts';
+import { Genre, WorkType, ConnectType, CollectionType } from 'enums.ts';
 
 export type User = {
     id?: number;
@@ -13,6 +13,7 @@ export type User = {
     illustrator: boolean;
     suspended: boolean;
     userCookie?: string;
+    connectType: ConnectType;
 }
 
 export type Work = {
