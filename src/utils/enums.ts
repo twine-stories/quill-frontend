@@ -14,3 +14,8 @@ export const enum WorkType {
     ILLUSTRATED = 'ILLUSTRATED',
     WRITTEN = 'WRITTEN'
 }
+
+export const enum ConnectType {
+    MY_ALGO = 'MY_ALGO',
+    PERA = 'PERA'
+}

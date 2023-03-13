@@ -14,6 +14,8 @@ import {User, Work} from './utils/types.ts';
 import {cookieSet, userGet, userUpdate, userAdd, cookieGet} from './utils/api.ts';
 import {CssVarsProvider} from "@mui/joy";
 import GlobalStyle from "./utils/globalStyles.ts";
+import {PeraWalletConnect} from "@perawallet/connect";
+import {ConnectType} from './utils/enums.ts';
 
 const reach = loadStdlib('ALGO');
 reach.setWalletFallback(reach.walletFallback({
@@ -21,6 +23,7 @@ reach.setWalletFallback(reach.walletFallback({
 }));
 
 export const UserContext = createContext(null as any);
+const peraWallet = new PeraWalletConnect();
 
 function App() {
     const [user, setUser] = useState<User>();
@@ -28,9 +31,14 @@ function App() {
     const [openLogin, setOpenLogin] = useState<boolean>(false);
     const [getUserToggle, setGetUserToggle] = useState<boolean>(false);
     const [initUserLoad, setInitUserLoad] = useState<boolean>(false);
+    const [connType, setConnType] = useState<ConnectType>();
 
     const logOut = (): void => {
+        if (user.connectType === ConnectType.PERA) {
+            peraWallet.disconnect();
+        }
         deleteCookie('session');
+        // change this redirect
         window.location.replace('/');
     }
 
@@ -49,20 +57,31 @@ function App() {
         });
     };
 
-    const onComplete = (account: object): void => {
-        const addr: string = account['networkAccount']['addr'];
+    const onComplete = (addr: string): void => {
         setUserCookie(addr, uuidv4());
         setAddress(addr);
     };
 
     const mockConnectToMyAlgo = (): void => {
-        onComplete({'networkAccount': {'addr': 'KYUH2SNU6FWFGBK6PNWI4EUIABOYFIQIQH2WOP3FW7DGA623ESTGXYQPJA'}});
+        onComplete('KYUH2SNU6FWFGBK6PNWI4EUIABOYFIQIQH2WOP3FW7DGA623ESTGXYQPJA');
     }
 
     const connectToMyAlgo = async (): Promise<void> => {
         try {
             const accounts = await reach.getDefaultAccount();
-            onComplete(accounts);
+            setConnType(ConnectType.MY_ALGO);
+            onComplete(accounts['networkAccount']['addr']);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const connectToPera = async (): Promise<void> => {
+        try {
+            const newAccounts = await peraWallet.connect();
+            peraWallet.connector?.on('disconnect', logOut);
+            setConnType(ConnectType.PERA);
+            onComplete(newAccounts[0]);
         } catch (err) {
             console.error(err);
         }
@@ -80,7 +99,8 @@ function App() {
             firstName: firstName,
             lastName: lastName,
             profileImg: 'temp',
-            userCookie: cookie
+            userCookie: cookie,
+            connectType: connType
         }
         userAdd(newUser, (user) => {
             getAndSetUser(user.walletAddress);
@@ -106,9 +126,15 @@ function App() {
 
     useEffect(() => {
         if (address) {
-            userGet(address, (user) => {
-                if (user) {
-                    setUser(user);
+            userGet(address, (newUser: User) => {
+                if (newUser) {
+                    if (newUser.connectType !== connType) {
+                        newUser.connectType = connType;
+                        setCookie('session', newUser.userCookie);
+                        updateUser(newUser)
+                    } else {
+                        setUser(newUser);
+                    }
                 } else {
                     setOpenLogin(true);
                 }
@@ -130,6 +156,7 @@ function App() {
                     'userLoaded': initUserLoad,
                     'address': address,
                     'user': user,
+                    'connectToPera': connectToPera,
                     'connectToMyAlgo': connectToMyAlgo,
                     'mockConnectToMyAlgo': mockConnectToMyAlgo,
                     'logOut': logOut,

@@ -74,6 +74,7 @@ function Navbar() {
                         <a onClick={blockAccess}>Art</a>
                         <a onClick={blockAccess}>Create</a>
                         <Button name="Connect" action={context['connectToMyAlgo']} />
+                        <Button name="Connect Pera" action={context['connectToPera']} />
                         <Button name="Mock Connect" action={context['mockConnectToMyAlgo']} />
                     </NavDiv>
                     <LoginWall open={open} closeWall={closeWall} />
