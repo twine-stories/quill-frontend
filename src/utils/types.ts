@@ -54,6 +54,7 @@ export type NFTCollection = {
     collType: CollectionType;
     url: string;
     active: boolean;
+    soldMask: number;
 }
 
 export type Artwork = {

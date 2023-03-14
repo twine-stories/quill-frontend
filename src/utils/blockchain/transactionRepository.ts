@@ -225,7 +225,6 @@ export function buyAsset(assetId: number, appId: number, ownerAddress: string, b
         appArgs.push(encodeUint64(timestamp));
     }
     let appCallTxn: Transaction = callApplication(appId, buyerAddress, algosdk.OnApplicationComplete.NoOpOC, appArgs);
-    console.log(price);
     let paymentTxn: Transaction = pay(buyerAddress, ownerAddress, price);
     let assetTransferTxn: Transaction = assetTransfer(escrowAddress, buyerAddress, 1, assetId, ownerAddress);
 

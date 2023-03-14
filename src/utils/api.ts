@@ -16,6 +16,14 @@ export const genericGet = async (endpoint: string): Promise<object | null> => {
     return null;
 }
 
+export const genericPost = async (endpoint: string, requestBody: object): Promise<object | null> => {
+    const response = await axios.post(endpoint, requestBody);
+    if (response.status === 200) {
+        return response.data;
+    }
+    return null;
+}
+
 export const userGet = (addr: string, setter: (user: User) => void) : void => {
     axios.get('/api/user/' + addr)
         .then(response => {
@@ -160,7 +168,7 @@ export const collectionCreateWithArt = async (collection: NFTCollection, artwork
 }
 
 export const getEscrowProgram = async (saleType: string, assetIds: string, appId: number): Promise<string> => {
-    const escrowResponse = await axios.get('/algo/escrow/saleType?nft_id=' + assetIds + '&app_id=' + appId);
+    const escrowResponse = await axios.get('/algo/escrow/' + saleType + '?nft_ids=' + assetIds + '&app_id=' + appId);
     const escrowData = escrowResponse.data;
     return escrowData;
 }

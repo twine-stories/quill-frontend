@@ -4,7 +4,7 @@ import { UserContext } from "../App.tsx";
 import { User, NFTCollection, Artwork } from '../utils/types.ts';
 import { collectionGetByUrl } from '../utils/api.ts';
 import { Asset } from '../utils/blockchain/types.ts';
-import { artworkGetAll, getEscrowProgram } from '../utils/api.ts';
+import { getEscrowProgram, genericGet, genericPost } from '../utils/api.ts';
 import { optIn, buyAsset, getAssetById, getApplicationById, buySign, callApplicationSign } from '../utils/blockchain/transactionRepository.ts';
 import algosdk, { encodeAddress, Transaction } from 'algosdk';
 import { nameMapping, STOP_SELL_OFFER } from '../utils/blockchain/constants.ts';
@@ -21,12 +21,14 @@ function Collection() {
     const user: User = context['user'];
 
     useEffect(() => {
-        artworkGetAll().then((response: Artwork[]) => {
-            let filteredResponse: Artwork[] = response.filter((elem: Artwork) => elem.appId !== null);
-            getArtwork(filteredResponse);
-            setArtwork(filteredResponse);
-        });
-    }, []);
+        if (coll) {
+            genericGet('/api/artwork/collection/' + coll.id).then((response: Artwork[]) => {
+                let filteredResponse: Artwork[] = response.filter((elem: Artwork) => elem.appId !== null);
+                getArtwork(filteredResponse);
+                setArtwork(filteredResponse);
+            });
+        }
+    }, [coll]);
 
     useEffect(() => {
         if (user) {
@@ -74,15 +76,14 @@ function Collection() {
                 continue;
             }
 
-            const escrowProgram: string = await getEscrowProgram(assetId, appId);
+            const escrowProgram: string = await getEscrowProgram(coll.collType.toLowerCase(), assetId, appId);
             currAsset.escrowProgram = escrowProgram;
             allAssets[assetId] = currAsset;
         }
-
         setAssets(allAssets);
     }
 
-    const buyArtwork = (art: Artwork) => {
+    const buyArtwork = (art: Artwork): void => {
         if (!user.walletAddress || !assets) {
             return;
         }
@@ -91,27 +92,69 @@ function Collection() {
         const asset: Asset = assets[id];
         const optInTxn: Transaction = optIn(id, user.walletAddress);
         let buy: Transaction[];
-        if (asset.asaPrice) {
+        if ((coll.collType === CollectionType.SALE || coll.collType === CollectionType.SHUFFLE) && asset.asaPrice) {
             buy = buyAsset(id, art.appId, asset.asaOwner, user.walletAddress, asset.asaPrice, asset.escrowAddress);
-        } else {
+        } else if (coll.collType === CollectionType.REV_AUCTION) {
             const current: number = Math.floor(Date.now() / 1000);
             if (current > asset.startTime + asset.duration) {
                 return;
             }
-            console.log(asset);
             const price: number | bigint = (((asset.startTime + asset.duration - current) * (asset.startPrice - asset.endPrice)) / asset.duration) + asset.endPrice;
             buy = buyAsset(id, art.appId, asset.asaOwner, user.walletAddress, price, asset.escrowAddress, current);
+        } else {
+            return;
         }
 
         buySign(optInTxn, buy, asset.escrowProgram).then((response) => {
             console.log(response);
         });
+        // update active in db if sold out
+    }
+
+    const buyShuffle = async (): Promise<void> => {
+        if (!user.walletAddress || !assets || !artwork || coll.collType !== CollectionType.SHUFFLE) {
+            return;
+        }
+
+        const totalAssets = artwork.length;
+
+        let idx: number = Math.floor(Math.random() * totalAssets);
+        let newMask: number;
+        while (true) {
+            const response = await genericGet('/api/collection/soldMask/' + coll.id);
+            if (response !== null && response !== undefined) {
+                let binary: string = '';
+                for (let i = 0; i < totalAssets; i++) {
+                    if (i === idx) {
+                        binary += '1';
+                    } else {
+                        binary += '0';
+                    }
+                }
+
+                newMask = parseInt(binary, 2) | response;
+                if (newMask === response) {
+                    idx = Math.floor(Math.random() * totalAssets);
+                } else {
+                    coll.soldMask = newMask;
+                    break;
+                }
+            } else {
+                return;
+            }
+        }
+
+        buyArtwork(artwork[idx]);
+        // can make changes in global variables instead (also need to make sure this only happens on success)
+        genericPost('/api/collection/update', coll);
     }
 
     const stopSellOffer = (art: Artwork) => {
         if (!user.walletAddress || !assets) {
             return;
         }
+
+        // update active in db
 
         callApplicationSign(art.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [STOP_SELL_OFFER]).then((response) => {
             console.log(response);
@@ -142,7 +185,7 @@ function Collection() {
                     {listings}
                     {
                         coll.collType === CollectionType.SHUFFLE &&
-                        <Button action={() => {console.log('buy shuffle')}} name="Buy Shuffle" enabled={initLoad} />
+                        <Button action={buyShuffle} name="Buy Shuffle" enabled={initLoad} />
                     }
                 </div>
             }

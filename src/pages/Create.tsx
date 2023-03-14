@@ -155,7 +155,8 @@ function Create() {
                 name: name.value,
                 collType: saleTypeMap[saleType],
                 url: name.value,
-                active: true
+                active: true,
+                soldMask: 0
             };
 
             let artworks: Artwork[] = [];
@@ -192,7 +193,10 @@ function Create() {
         if (contractType === CollectionType.SHUFFLE) {
             const nftIds: number[] = Object.keys(smartContractInfo).map((elem: string) => parseInt(elem));
             const dummyInfo: AssetInfo = smartContractInfo[nftIds[0]];
-            txns.push(callApplication(dummyInfo.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, dummyInfo.price], nftIds));
+            if (dummyInfo.price) {
+                const price: Uint8Array = encodeUint64(dummyInfo.price);
+                txns.push(callApplication(dummyInfo.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], nftIds));
+            }
         } else {
             for (const id in smartContractInfo) {
                 const assetId: number = parseInt(id);
@@ -217,8 +221,6 @@ function Create() {
 
         await signTxns(txns);
     }
-
-    console.log(contractType.toLowerCase());
 
     return (
         <div>
