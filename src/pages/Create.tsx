@@ -10,6 +10,7 @@ import algosdk, { decodeAddress, encodeUint64, Transaction } from 'algosdk';
 import NFTCheckbox from '../components/NFTCheckbox.tsx';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
 import { INIT_ESCROW, MAKE_SELL_OFFER } from '../utils/blockchain/constants.ts';
+import {Typography} from "@mui/joy";
 
 const axios = require('axios').default;
 
@@ -166,9 +167,10 @@ function Create() {
     return (
         <div>
             <Navbar />
-            <div className='pageHeader'>Create</div>
             <div className='pageContent'>
-                <p>create story</p>
+                <Typography level="h2" sx={{color: "#A5BB2D"}}>
+                    Create Story
+                </Typography>
                 <div>
                     <input type='text' id='title' name='title' placeholder='enter title' />
                     <input type='text' id='description' name='description' placeholder='description' />
