@@ -7,6 +7,8 @@ import './EditProfile.css';
 import "../components/EditSidebar.tsx"
 import EditSidebar from '../components/EditSidebar.tsx';
 import {Button, FormControl, Textarea} from "@mui/joy";
+import { useNavigate } from 'react-router-dom';
+import { genericPost } from '../utils/api.ts'; 
 
 const axios = require('axios').default;
 
@@ -35,6 +37,49 @@ function EditProfile() {
         }
     }, [context['user']]);
 
+    let navigate = useNavigate();
+
+    const handleSave = () => {
+        let name: string = document.getElementsByClassName("name")[0].getElementsByTagName("textarea")[0].value;
+        let username: string = document.getElementsByClassName("username")[0].getElementsByTagName("textarea")[0].value;
+        let description: string = document.getElementsByClassName("desc")[0].getElementsByTagName("textarea")[0].value;
+        let walletAddress: string = document.getElementsByClassName("wallet")[0].getElementsByTagName("textarea")[0].value;
+        let website: string = document.getElementsByClassName("website")[0].getElementsByTagName("textarea")[0].value;
+        let twitter: string = document.getElementsByClassName("twitter")[0].getElementsByTagName("textarea")[0].value;
+        let instagram: string = document.getElementsByClassName("instagram")[0].getElementsByTagName("textarea")[0].value;
+        let reddit: string = document.getElementsByClassName("reddit")[0].getElementsByTagName("textarea")[0].value;
+        let discord: string = document.getElementsByClassName("discord")[0].getElementsByTagName("textarea")[0].value;
+
+        let firstName: string = name.split(" ")[0];
+        let lastName: string = name.split(" ")[1];
+        if ("@" == username[0]) {
+            username = username.substring(1);
+        }
+
+
+        user.firstName = firstName;
+        user.lastName = lastName;
+        user.displayName = username;
+        user.description = description;
+        user.walletAddress = walletAddress;
+        user.website = website;
+        user.twitter = twitter;
+        user.instagram = instagram;
+        user.reddit = reddit;
+        user.discord = discord;
+
+
+        genericPost('/api/user/update', user);
+
+        navigate('/profile/')
+
+
+    }
+
+    const handleCancel = () => {
+        navigate('/profile/');
+    }
+
 
 
     return (
@@ -42,37 +87,35 @@ function EditProfile() {
             <Navbar />
             <div className="entire-page">
                 <div className="edit-profile-page">
-                    <h1 align="left">Edit Profile</h1>
-                    <FormControl>
-                        <div className="about-profile">
-                            <h2 align="left">About Profile</h2>
-                            <div className="name-info">
-                                <Textarea className="name" defaultValue={user && user.firstName + " " + user.lastName} maxRows={1} />
-                                <Textarea className="username" defaultValue={"@" + (user && user.displayName)} maxRows={1} />
-                            </div>
-                            <div className="description-info">
-                                <Textarea defaultValue={user && user.description} placeholder="Add a description..." minRows={4} maxRows={4}/>
-                            </div>
+                    <h1>Edit Profile</h1>
+                    <div className="about-profile">
+                        <h2>About Profile</h2>
+                        <div className="name-info">
+                            <Textarea className="name" defaultValue={user && user.firstName + " " + user.lastName} maxRows={1} />
+                            <Textarea className="username" defaultValue={(user && ("@" + user.displayName))} maxRows={1} />
                         </div>
-                        <div className="your-wallet">
-                            <h2 align="left">Your Wallet</h2>
-                            <div className="wallet-info">
-                                <Textarea defaultValue={user && user.walletAddress} maxRows={1} />
-                            </div>
+                        <div className="description-info">
+                            <Textarea className = "desc" defaultValue={user && user.description} placeholder="Add a description..." minRows={4} maxRows={4}/>
                         </div>
-                        <div className="social-media">
-                            <h2 align="left">Your Social Media</h2>
-                            <div className="social-info">
-                                <Textarea defaultValue={user && user.website} placeholder="Add personal website..." />
-                                <Textarea defaultValue={user && user.twitter} placeholder="Add twitter..."/>
-                                <Textarea defaultValue={user && user.instagram} placeholder="Add instagram..."/>
-                                <Textarea defaultValue={user && user.reddit} placeholder="Add reddit..."/>
-                                <Textarea defaultValue={user && user.discord} placeholder="Add discord..."/>
-                            </div>
+                    </div>
+                    <div className="your-wallet">
+                        <h2>Your Wallet</h2>
+                        <div className="wallet-info">
+                            <Textarea className = "wallet" defaultValue={user && user.walletAddress} maxRows={1} />
                         </div>
-                    </FormControl>
+                    </div>
+                    <div className="social-media">
+                        <h2>Your Social Media</h2>
+                        <div className="social-info">
+                            <Textarea className = "website" defaultValue={user && user.website} placeholder="Add personal website..." />
+                            <Textarea className = "twitter" defaultValue={user && user.twitter} placeholder="Add twitter..."/>
+                            <Textarea className = "instagram" defaultValue={user && user.instagram} placeholder="Add instagram..."/>
+                            <Textarea className = "reddit" defaultValue={user && user.reddit} placeholder="Add reddit..."/>
+                            <Textarea className = "discord" defaultValue={user && user.discord} placeholder="Add discord..."/>
+                        </div>
+                    </div>
                 </div>
-                <EditSidebar />
+                <EditSidebar handleCancel={handleCancel} handleSave={handleSave} />
             </div>
             
 

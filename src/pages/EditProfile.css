@@ -13,6 +13,14 @@
     padding-bottom: 50px;
 }
 
+.edit-profile-page h1 {
+    text-align: left;
+}
+
+.edit-profile-page h2 {
+    text-align: left;
+}
+
 
 .name-info {
     display: flex;

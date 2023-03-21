@@ -7,14 +7,14 @@ import { UserContext } from "../App.tsx";
 
 
 
-const EditSidebar = () => {
+const EditSidebar = ({handleSave, handleCancel}) => {
 
     const saveEdit = () => {
-        console.log("Save Edit");
+        handleSave();
     }
     
     const cancelEdit = () => {
-        console.log("Cancel Edit");
+        handleCancel();
     }
 
     const context: object = useContext(UserContext);
