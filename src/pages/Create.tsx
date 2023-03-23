@@ -3,9 +3,9 @@ import { UserContext } from '../App.tsx';
 import Navbar from "../components/Navbar.tsx";
 import Collaborator from '../components/Collaborator.tsx';
 import { Genre } from '../utils/enums.ts';
-import { User, Work, Artwork, NFTCollection } from '../utils/types';
+import { User, Work, Artwork, NFTCollection, ProfitSplit } from '../utils/types.ts';
 import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, callApplicationSign, paySign, signTxns } from '../utils/blockchain/transactionRepository.ts';
-import { workAdd, worksGetByCreator, artworkAdd, artworkUpdate, artworkGet, collectionCreateWithArt, getEscrowProgram } from '../utils/api.ts'
+import { workAdd, worksGetByCreator, collectionCreateWithArt, getEscrowProgram, genericPost, genericGet } from '../utils/api.ts'
 import algosdk, { decodeAddress, encodeUint64, getApplicationAddress, Transaction } from 'algosdk';
 import NFTCheckbox from '../components/NFTCheckbox.tsx';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
@@ -40,6 +40,9 @@ function Create() {
     const [smartContractInfo, setSmartContractInfo] = useState<Record<number, AssetInfo>>();
 
     const [contractType, setContractType] = useState<CollectionType>(CollectionType.SALE);
+
+    const [profitSplitAddrs, setProfitSplitAddrs] = useState<string[]>([]);
+    const [profitSplits, setProfitSplits] = useState<number[]>([]);
 
     const user: User = context['user'];
     const cname: string = 'nftCheckboxes';
@@ -144,6 +147,25 @@ function Create() {
         if (nftList.length === 0) {
             return;
         }
+
+        const collabElements: HTMLCollectionOf<Element> = document.getElementsByClassName('collaborators');
+        let addrs: string[] = [];
+        let vals: number[] = [];
+
+        Array.from(collabElements).forEach(elem => {
+            addrs.push((elem.children[0].children[0] as HTMLInputElement).value);
+            vals.push(parseInt((elem.children[1].children[0] as HTMLInputElement).value));
+        });
+
+        const sum: number = vals.reduce((partial, curr) => partial + curr, 0);
+        if (sum !== 100) {
+            console.log('invalid percent sum');
+            return;
+        } else {
+            setProfitSplitAddrs(addrs);
+            setProfitSplits(vals);
+        }
+
         const saleType: string = contractType.toLowerCase();
         const initResponse = await axios.get('algo/init/' + saleType);
         const data = initResponse.data;
@@ -174,30 +196,6 @@ function Create() {
                     }
                 });
             }
-
-            const work: HTMLInputElement = document.getElementById('works') as HTMLInputElement;
-            const name: HTMLInputElement = document.getElementById('collName') as HTMLInputElement;
-            // need to fix the url
-            const collection: NFTCollection = {
-                work: allWorks[parseInt(work.value)],
-                name: name.value,
-                collType: saleTypeMap[saleType],
-                url: name.value,
-                active: true,
-                soldMask: 0
-            };
-
-            let artworks: Artwork[] = [];
-            for (const id in contractInfo) {
-                const assetId: number = parseInt(id);
-                artworks.push({
-                    assetId: assetId,
-                    collection: collection,
-                    appId: contractInfo[assetId].appId
-                });
-            }
-
-            collectionCreateWithArt(collection, artworks);
             
             setSmartContractInfo(contractInfo);
             setSelectedNFTs(nftList);
@@ -217,21 +215,7 @@ function Create() {
 
             txns.push(changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, info.escrowAddress, false));
         }
-
-        // let profitSplitsStrs: string[] = [];
-        // const collabElements: HTMLCollectionOf<Element> = document.getElementsByClassName('collaborators');
-
-        // Array.from(collabElements).forEach(elem => {
-        //     let val: string = (elem.children[1].children[0] as HTMLInputElement).value;
-        //     while (val.length < 3) {
-        //         val = '0' + val;
-        //     }
-        //     let addr: string = (elem.children[0].children[0] as HTMLInputElement).value;
-        //     profitSplitsStrs.push(decodeAddress(addr).publicKey + val);
-        // });
-        // console.log(profitSplitsStrs);
         
-        // const profitSplits: Uint8Array[] = profitSplitsStrs.map(elem => encoder.encode(elem));
         if (contractType === CollectionType.SHUFFLE) {
             const nftIds: number[] = Object.keys(smartContractInfo).map((elem: string) => parseInt(elem));
             const dummyInfo: AssetInfo = smartContractInfo[nftIds[0]];
@@ -253,6 +237,7 @@ function Create() {
                     const duration: Uint8Array = encodeUint64(info.duration);
                     txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, startPrice, endPrice, duration], [assetId]));
                 } else {
+                    // incorrect behavior here
                     txns.pop();
                     console.log('encountered incomplete asset info');
                 }
@@ -261,7 +246,50 @@ function Create() {
 
         // algosdk.assignGroupID(txns);
 
-        await signTxns(txns);
+        const response = await signTxns(txns);
+        if (response) {
+            const work: HTMLInputElement = document.getElementById('works') as HTMLInputElement;
+            const name: HTMLInputElement = document.getElementById('collName') as HTMLInputElement;
+            // need to fix the url
+            const collection: NFTCollection = {
+                work: allWorks[parseInt(work.value)],
+                name: name.value,
+                collType: saleTypeMap[contractType.toLowerCase()],
+                url: name.value,
+                active: true
+            };
+
+            let artworks: Artwork[] = [];
+            for (const id in smartContractInfo) {
+                const assetId: number = parseInt(id);
+                artworks.push({
+                    id: assetId,
+                    origColl: collection,
+                    currColl: collection,
+                    appId: smartContractInfo[assetId].appId
+                });
+            }
+
+            collectionCreateWithArt(collection, artworks).then((coll) => {
+                if (coll.status !== 200) {
+                    console.log('failed to create collection');
+                    return;
+                }
+
+                let profitSplitsWithAddrs: object[] = [];
+                for (let i = 0; i < profitSplitAddrs.length; i++) {
+                    profitSplitsWithAddrs.push({
+                        creatorAddress: profitSplitAddrs[i],
+                        profitSplit: {
+                            creator: null,
+                            collection: coll.data,
+                            percentage: profitSplits[i]
+                        }
+                    })
+                }
+                genericPost('/api/profitSplit/addMany', profitSplitsWithAddrs);
+            });
+        }
     }
 
     return (

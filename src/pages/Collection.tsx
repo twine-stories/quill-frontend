@@ -6,7 +6,7 @@ import { collectionGetByUrl } from '../utils/api.ts';
 import { Asset } from '../utils/blockchain/types.ts';
 import { getEscrowProgram, genericGet, genericPost } from '../utils/api.ts';
 import { optIn, buyAsset, getAssetById, getApplicationById, buySign, callApplicationSign } from '../utils/blockchain/transactionRepository.ts';
-import algosdk, { decodeAddress, encodeAddress, encodeUint64, getApplicationAddress, Transaction } from 'algosdk';
+import algosdk, { encodeAddress, encodeUint64, getApplicationAddress, Transaction } from 'algosdk';
 import { nameMapping, MAKE_PAYMENTS, STOP_SELL_OFFER } from '../utils/blockchain/constants.ts';
 import Button from '../components/Button.tsx';
 import { CollectionType } from '../utils/enums.ts';
@@ -50,7 +50,7 @@ function Collection() {
         let skip;
         for (const elem of allArtworks) {
             skip = false;
-            const assetId: number = elem.assetId;
+            const assetId: number = elem.id;
             const appId: number = elem.appId;
 
             await getAssetById(assetId);
@@ -89,7 +89,7 @@ function Collection() {
             return;
         }
 
-        const id: number = art.assetId;
+        const id: number = art.id;
         const asset: Asset = assets[id];
         const optInTxn: Transaction = optIn(id, user.walletAddress);
         let buy: Transaction[];
@@ -141,7 +141,6 @@ function Collection() {
                 if (newMask === response) {
                     idx = Math.floor(Math.random() * totalAssets);
                 } else {
-                    coll.soldMask = newMask;
                     break;
                 }
             } else {
@@ -150,8 +149,11 @@ function Collection() {
         }
 
         buyArtwork(artwork[idx]);
-        // can make changes in global variables instead (also need to make sure this only happens on success)
-        genericPost('/api/collection/update', coll);
+        // need to change how this works (no more mask)
+        genericPost('/api/collection/update', {
+            ...coll,
+            soldMask: newMask
+        });
     }
 
     const stopSellOffer = (art: Artwork) => {
@@ -168,12 +170,12 @@ function Collection() {
     let listings: JSX.Element[] = [];
     if (coll && coll.collType !== CollectionType.SHUFFLE) {
         artwork?.forEach((elem: Artwork) => {
-            if (!assets || !elem.appId || !(elem.assetId in assets)) {
+            if (!assets || !elem.appId || !(elem.id in assets)) {
                 return;
             }
-            const currAsset: Asset = assets[elem.assetId];
+            const currAsset: Asset = assets[elem.id];
             listings.push(<div key={elem.id}>
-                <p>{elem.assetId}</p>
+                <p>{elem.id}</p>
                 <Button action={() => {buyArtwork(elem)}} name="Buy" enabled={initLoad} />
                 {user && user.walletAddress && currAsset.asaOwner === user.walletAddress && <Button action={() => {stopSellOffer(elem)}} name="Remove Listing" enabled={initLoad} />}
             </div>);
