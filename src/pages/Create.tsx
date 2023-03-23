@@ -1,22 +1,25 @@
-import React, { useContext, useState, useEffect, SyntheticEvent } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../App.tsx';
 import Navbar from "../components/Navbar.tsx";
-import Button from '../components/Button.tsx';
+import Collaborator from '../components/Collaborator.tsx';
 import { Genre } from '../utils/enums.ts';
 import { User, Work, Artwork, NFTCollection } from '../utils/types';
 import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, callApplicationSign, paySign, signTxns } from '../utils/blockchain/transactionRepository.ts';
 import { workAdd, worksGetByCreator, artworkAdd, artworkUpdate, artworkGet, collectionCreateWithArt, getEscrowProgram } from '../utils/api.ts'
-import algosdk, { decodeAddress, encodeUint64, Transaction } from 'algosdk';
+import algosdk, { decodeAddress, encodeUint64, getApplicationAddress, Transaction } from 'algosdk';
 import NFTCheckbox from '../components/NFTCheckbox.tsx';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
 import { INIT_ESCROW, MAKE_SELL_OFFER } from '../utils/blockchain/constants.ts';
 import { saleTypeMap } from '../utils/constants.ts';
 import { CollectionType } from '../utils/enums.ts';
+import { Button } from '@mui/joy';
 
 const axios = require('axios').default;
+const encoder = new TextEncoder();
 
 type AssetInfo = {
     appId: number;
+    assetId: number;
     escrowAddress: string;
     price?: number | bigint;
     startPrice?: number | bigint;
@@ -32,6 +35,7 @@ function Create() {
     const [selectedNFTs, setSelectedNFTs] = useState<number[]>([]);
     const [enableSell, setEnableSell] = useState<boolean>(false);
     const [updateAssets, setUpdateAssets] = useState<boolean>(false);
+    const [collaborators, setCollaborators] = useState<JSX.Element[]>([])
 
     const [smartContractInfo, setSmartContractInfo] = useState<Record<number, AssetInfo>>();
 
@@ -57,8 +61,14 @@ function Create() {
                     setWorkOptions(works);
                 }
             });
+
+            if (collaborators.length === 0) {
+                setCollaborators([
+                    <Collaborator defaultCreator={user.walletAddress} defaultProfit={100} key={0} />
+                ])
+            }
         }
-    }, [context]);
+    }, [user]);
 
     useEffect(() => {
         if (user) {
@@ -71,7 +81,7 @@ function Create() {
                 setAllAssets(nfts);
             });
         }
-    }, [context, updateAssets]);
+    }, [user, updateAssets]);
 
     useEffect(() => {
         if (selectedNFTs.length > 0) {
@@ -99,6 +109,28 @@ function Create() {
         setUpdateAssets(!updateAssets);
     }
 
+    const genContract = async (assetId: number, data: object): Promise<AssetInfo | null> => {
+        const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], [assetId]);
+        const escrowProgram: string = await getEscrowProgram(contractType.toLowerCase(), assetId.toString(), id);
+
+        if (escrowProgram) {
+            const escrowAddress: string = await escrowProgramToAddress(escrowProgram);
+            await Promise.all([
+                callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, undefined, true),
+                paySign(adminAddr, escrowAddress, 200000, true),
+                paySign(adminAddr, getApplicationAddress(id), 100000, true)
+            ]);
+
+            if (contractType === CollectionType.REV_AUCTION) {
+                return {appId: id, assetId: assetId, escrowAddress: escrowAddress, startPrice: 3000000, endPrice: 1000000, duration: 100};
+            } else if (contractType === CollectionType.SALE) {
+                return {appId: id, assetId: assetId, escrowAddress: escrowAddress, price: 1000000};
+            }
+        }
+
+        return null;
+    }
+
     const confirmNFTs = async () => {
         let nftList: number[] = [];
         const checkboxes: HTMLCollectionOf<Element> = document.getElementsByClassName(cname);
@@ -115,36 +147,32 @@ function Create() {
         const saleType: string = contractType.toLowerCase();
         const initResponse = await axios.get('algo/init/' + saleType);
         const data = initResponse.data;
+        let contractInfo: Record<number, AssetInfo> = {};
         if (data) {
-            let contractInfo: Record<number, AssetInfo> = {};
             if (contractType === CollectionType.SHUFFLE) {
                 const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], nftList);
                 const escrowProgram: string = await getEscrowProgram('shuffle', nftList.toString(), id);
                 if (escrowProgram) {
                     const escrowAddress: string = await escrowProgramToAddress(escrowProgram);
-                    await callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, true);
-                    await paySign(adminAddr, escrowAddress, 100000 + (100000 * nftList.length), true);
+                    await Promise.all([
+                        callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, undefined, true),
+                        paySign(adminAddr, escrowAddress, 100000 + (100000 * nftList.length), true)
+                    ])
                     for (const assetId of nftList) {
-                        contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, price: 1000000};
+                        contractInfo[assetId] = {appId: id, assetId: assetId, escrowAddress: escrowAddress, price: 1000000};
                     }
                 }
             } else {
+                let promises: Promise<AssetInfo | null>[] = [];
                 for (const assetId of nftList) {
-                    const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], [assetId]);
-                    const escrowProgram: string = await getEscrowProgram(saleType, assetId.toString(), id);
-    
-                    if (escrowProgram) {
-                        const escrowAddress: string = await escrowProgramToAddress(escrowProgram);
-                        await callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, true);
-                        await paySign(adminAddr, escrowAddress, 200000, true);
-    
-                        if (contractType === CollectionType.REV_AUCTION) {
-                            contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, startPrice: 3000000, endPrice: 1000000, duration: 100};
-                        } else if (contractType === CollectionType.SALE) {
-                            contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, price: 1000000};
-                        }
-                    }
+                    promises.push(genContract(assetId, data));
                 }
+                const values: (AssetInfo | null)[] = await Promise.all(promises);
+                values.forEach((val: AssetInfo | null) => {
+                    if (val !== null) {
+                        contractInfo[val.assetId] = val;
+                    }
+                });
             }
 
             const work: HTMLInputElement = document.getElementById('works') as HTMLInputElement;
@@ -190,6 +218,20 @@ function Create() {
             txns.push(changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, info.escrowAddress, false));
         }
 
+        // let profitSplitsStrs: string[] = [];
+        // const collabElements: HTMLCollectionOf<Element> = document.getElementsByClassName('collaborators');
+
+        // Array.from(collabElements).forEach(elem => {
+        //     let val: string = (elem.children[1].children[0] as HTMLInputElement).value;
+        //     while (val.length < 3) {
+        //         val = '0' + val;
+        //     }
+        //     let addr: string = (elem.children[0].children[0] as HTMLInputElement).value;
+        //     profitSplitsStrs.push(decodeAddress(addr).publicKey + val);
+        // });
+        // console.log(profitSplitsStrs);
+        
+        // const profitSplits: Uint8Array[] = profitSplitsStrs.map(elem => encoder.encode(elem));
         if (contractType === CollectionType.SHUFFLE) {
             const nftIds: number[] = Object.keys(smartContractInfo).map((elem: string) => parseInt(elem));
             const dummyInfo: AssetInfo = smartContractInfo[nftIds[0]];
@@ -241,7 +283,7 @@ function Create() {
                     <select name='genre3' id='genre3'>
                         {genreOptions}
                     </select>
-                    <Button name='Create!' action={(e) => {
+                    <Button onClick={(e) => {
                         const title: HTMLInputElement = document.getElementById('title') as HTMLInputElement;
                         const description: HTMLInputElement = document.getElementById('description') as HTMLInputElement;
                         const url: HTMLInputElement = document.getElementById('url') as HTMLInputElement;
@@ -266,21 +308,21 @@ function Create() {
                                 console.log("url taken");
                             });
                         }
-                    }} />
+                    }}>Create!</Button>
                 </div>
                 <p>create nft</p>
                 <div>
                     <input type='text' id='unitName' name='unitNme' placeholder='unit name' />
                     <input type='text' id='assetName' name='assetName' placeholder='asset name' />
                     <input type='text' id='assetUrl' name='assetUrl' placeholder='asset url' />
-                    <Button name='Mint NFT' action={(e) => {
+                    <Button onClick={(e) => {
                         const unitName: HTMLInputElement = document.getElementById('unitName') as HTMLInputElement;
                         const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;
                         const assetUrl: HTMLInputElement = document.getElementById('assetUrl') as HTMLInputElement;
                         if (unitName && assetName && assetUrl) {
                             mintNFT(user.walletAddress, unitName.value, assetName.value, assetUrl.value);
                         }
-                    }} />
+                    }}>Mint NFT</Button>
                 </div>
                 {allAssets}
                 <label htmlFor="saleType">Choose a sale type:</label>
@@ -294,8 +336,25 @@ function Create() {
                     {workOptions}
                 </select>
                 <input type='text' id='collName' name='collName' placeholder='enter collection name' />
-                <Button name='Generate Contract(s)' action={confirmNFTs} />
-                <Button name='Post NFT(s) for Sale' enabled={enableSell} action={(e) => makeSellOffer()} />
+                <div>
+                    {collaborators}
+                    <Button onClick={(e) => {
+                        if (collaborators.length < 10) {
+                            setCollaborators([
+                                ...collaborators,
+                                <Collaborator key={collaborators.length} />
+                            ])
+                        }
+                    }}>Add Collaborator</Button>
+                </div>
+                <div>
+                    <Button onClick={confirmNFTs}>Generate Contract(s)</Button>
+                    {enableSell ?
+                        <Button onClick={(e) => makeSellOffer()}>Post NFT(s) for Sale</Button>
+                        :
+                        <Button disabled onClick={(e) => makeSellOffer()}>Post NFT(s) for Sale</Button>
+                    }
+                </div>
             </div>
         </div>
     );

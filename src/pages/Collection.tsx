@@ -6,10 +6,11 @@ import { collectionGetByUrl } from '../utils/api.ts';
 import { Asset } from '../utils/blockchain/types.ts';
 import { getEscrowProgram, genericGet, genericPost } from '../utils/api.ts';
 import { optIn, buyAsset, getAssetById, getApplicationById, buySign, callApplicationSign } from '../utils/blockchain/transactionRepository.ts';
-import algosdk, { encodeAddress, Transaction } from 'algosdk';
-import { nameMapping, STOP_SELL_OFFER } from '../utils/blockchain/constants.ts';
+import algosdk, { decodeAddress, encodeAddress, encodeUint64, getApplicationAddress, Transaction } from 'algosdk';
+import { nameMapping, MAKE_PAYMENTS, STOP_SELL_OFFER } from '../utils/blockchain/constants.ts';
 import Button from '../components/Button.tsx';
 import { CollectionType } from '../utils/enums.ts';
+import { adminAddr } from '../utils/blockchain/credentials.ts';
 
 function Collection() {
 
@@ -92,21 +93,25 @@ function Collection() {
         const asset: Asset = assets[id];
         const optInTxn: Transaction = optIn(id, user.walletAddress);
         let buy: Transaction[];
+        // TODO: change hardcoded 2000, addresses, and splits
         if ((coll.collType === CollectionType.SALE || coll.collType === CollectionType.SHUFFLE) && asset.asaPrice) {
-            buy = buyAsset(id, art.appId, asset.asaOwner, user.walletAddress, asset.asaPrice, asset.escrowAddress);
+            buy = buyAsset(id, art.appId, asset.asaOwner, user.walletAddress, asset.asaPrice + 2000, asset.escrowAddress, getApplicationAddress(art.appId));
         } else if (coll.collType === CollectionType.REV_AUCTION) {
             const current: number = Math.floor(Date.now() / 1000);
             if (current > asset.startTime + asset.duration) {
                 return;
             }
-            const price: number | bigint = (((asset.startTime + asset.duration - current) * (asset.startPrice - asset.endPrice)) / asset.duration) + asset.endPrice;
-            buy = buyAsset(id, art.appId, asset.asaOwner, user.walletAddress, price, asset.escrowAddress, current);
+            const price: number | bigint = (((asset.startTime + asset.duration - current) * (asset.startPrice - asset.endPrice)) / asset.duration) + asset.endPrice + 2000;
+            buy = buyAsset(id, art.appId, asset.asaOwner, user.walletAddress, price, asset.escrowAddress, getApplicationAddress(art.appId), current);
         } else {
             return;
         }
 
         buySign(optInTxn, buy, asset.escrowProgram).then((response) => {
-            console.log(response);
+            console.log('sent money to smart contract');
+            callApplicationSign(art.appId, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [MAKE_PAYMENTS, encodeUint64(90), encodeUint64(10)], undefined, ['KYUH2SNU6FWFGBK6PNWI4EUIABOYFIQIQH2WOP3FW7DGA623ESTGXYQPJA', 'CB2MYSJFLTUMGRURINUT3B5A7VK45LNZWFRTLG2SJGBRVAQF32UDDUEX34'], true).then((resp) => {
+                console.log('pog');
+            });
         });
         // update active in db if sold out
     }
@@ -154,10 +159,9 @@ function Collection() {
             return;
         }
 
-        // update active in db
-
         callApplicationSign(art.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [STOP_SELL_OFFER]).then((response) => {
-            console.log(response);
+            coll.active = false;
+            genericPost('/api/collection/update', coll);
         });
     }
 
