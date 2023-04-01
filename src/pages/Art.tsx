@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Navbar from "../components/Navbar.tsx";
-import Button from '../components/Button.tsx';
+import TwineButton from '../components/TwineButton.tsx';
 import { UserContext } from "../App.tsx";
 import { User, Artwork } from '../utils/types.ts';
 import { artworkGetAll, getEscrowProgram } from '../utils/api.ts';
@@ -105,8 +105,8 @@ function Art() {
         const currAsset: Asset = assets[elem.assetId];
         listing.push(<div key={elem.id}>
             <p>{elem.assetId}</p>
-            <Button action={() => {buyArtwork(elem)}} name="Buy" enabled={initLoad} />
-            {user && user.walletAddress && currAsset.asaOwner == user.walletAddress && <Button action={() => {stopSellOffer(elem)}} name="Remove Listing" enabled={initLoad} />}
+            <TwineButton action={() => {buyArtwork(elem)}} name="Buy" enabled={initLoad} />
+            {user && user.walletAddress && currAsset.asaOwner == user.walletAddress && <TwineButton action={() => {stopSellOffer(elem)}} name="Remove Listing" enabled={initLoad} />}
         </div>);
     });
 

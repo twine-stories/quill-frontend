@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, SyntheticEvent } from 'react';
 import { UserContext } from '../App.tsx';
 import Navbar from "../components/Navbar.tsx";
-import Button from '../components/Button.tsx';
+import TwineButton from '../components/TwineButton.tsx';
 import { Genre } from '../utils/enums.ts';
 import { User, Work, Artwork, NFTCollection } from '../utils/types';
 import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, callApplicationSign, paySign, signTxns } from '../utils/blockchain/transactionRepository.ts';
@@ -171,6 +171,8 @@ function Create() {
                 <Typography level="h2" sx={{color: "#A5BB2D"}}>
                     Create Story
                 </Typography>
+                <TwineButton name="Good Luck" />
+
                 <div>
                     <input type='text' id='title' name='title' placeholder='enter title' />
                     <input type='text' id='description' name='description' placeholder='description' />
@@ -184,7 +186,7 @@ function Create() {
                     <select name='genre3' id='genre3'>
                         {genreOptions}
                     </select>
-                    <Button name='Create!' action={(e) => {
+                    <TwineButton name='Create!' action={(e) => {
                         const title: HTMLInputElement = document.getElementById('title') as HTMLInputElement;
                         const description: HTMLInputElement = document.getElementById('description') as HTMLInputElement;
                         const url: HTMLInputElement = document.getElementById('url') as HTMLInputElement;
@@ -204,19 +206,24 @@ function Create() {
                                 medium: "WRITTEN",
                                 url: url.value
                             };
-        
+
                             workAdd(newWork, (work) => {
                                 console.log("url taken");
                             });
                         }
                     }} />
                 </div>
+
+
+                {/*I DIDN"T TOUCH ANYTHING BELOW THIS*/}
+
+
                 <p>create nft</p>
                 <div>
                     <input type='text' id='unitName' name='unitNme' placeholder='unit name' />
                     <input type='text' id='assetName' name='assetName' placeholder='asset name' />
                     <input type='text' id='assetUrl' name='assetUrl' placeholder='asset url' />
-                    <Button name='Mint NFT' action={(e) => {
+                    <TwineButton name='Mint NFT' action={(e) => {
                         const unitName: HTMLInputElement = document.getElementById('unitName') as HTMLInputElement;
                         const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;
                         const assetUrl: HTMLInputElement = document.getElementById('assetUrl') as HTMLInputElement;
@@ -231,8 +238,8 @@ function Create() {
                     {workOptions}
                 </select>
                 <input type='text' id='collName' name='collName' placeholder='enter collection name' />
-                <Button name='Generate Contract(s)' action={confirmNFTs} />
-                <Button name='Post NFT(s) for Sale' enabled={enableSell} action={(e) => makeSellOffer()} />
+                <TwineButton name='Generate Contract(s)' action={confirmNFTs} />
+                <TwineButton name='Post NFT(s) for Sale' enabled={enableSell} action={(e) => makeSellOffer()} />
             </div>
         </div>
     );
