@@ -74,6 +74,7 @@ function Navbar() {
                         <a onClick={blockAccess}>Art</a>
                         <a onClick={blockAccess}>Create</a>
                         <TwineButton name="Connect" action={context['connectToMyAlgo']} />
+                        <TwineButton name="Connect Pera" action={context['connectToPera']} />
                         <TwineButton name="Mock Connect" action={context['mockConnectToMyAlgo']} />
                     </NavDiv>
                     <LoginWall open={open} closeWall={closeWall} />

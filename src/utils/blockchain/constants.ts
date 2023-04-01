@@ -17,5 +17,9 @@ export const nameMapping: object = {
     'ASA_PRICE': 'asaPrice',
     'ASA_OWNER': 'asaOwner',
     'APP_STATE': 'appState',
-    'ASA_ID': 'asaId'
+    'ASA_ID': 'asaId',
+    'START_PRICE': 'startPrice',
+    'END_PRICE': 'endPrice',
+    'START_TIME': 'startTime',
+    'DURATION': 'duration'
 };

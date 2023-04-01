@@ -1,4 +1,4 @@
-import algosdk, { SuggestedParams, Transaction, Algodv2, LogicSigAccount, Indexer, makeApplicationCallTxnFromObject, makePaymentTxnWithSuggestedParamsFromObject, makeAssetTransferTxnWithSuggestedParamsFromObject, computeGroupID, signLogicSigTransactionObject } from 'algosdk';
+import algosdk, { SuggestedParams, Transaction, Algodv2, LogicSigAccount, Indexer, makeApplicationCallTxnFromObject, makePaymentTxnWithSuggestedParamsFromObject, makeAssetTransferTxnWithSuggestedParamsFromObject, computeGroupID, signLogicSigTransactionObject, encodeUint64 } from 'algosdk';
 import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect';
 import { getClient, getIndexer, adminAddr, getSecretKey } from './credentials.ts';
 import { BUY } from './constants.ts';
@@ -219,8 +219,11 @@ export function optIn(assetId: number, address: string): Transaction {
     return assetTransfer(address, address, 0, assetId);
 }
 
-export function buyAsset(assetId: number, appId: number, ownerAddress: string, buyerAddress: string, price: number | bigint, escrowAddress: string): Transaction[] {
-    const appArgs: Uint8Array[] = [BUY];
+export function buyAsset(assetId: number, appId: number, ownerAddress: string, buyerAddress: string, price: number | bigint, escrowAddress: string, timestamp?: number): Transaction[] {
+    let appArgs: Uint8Array[] = [BUY];
+    if (timestamp) {
+        appArgs.push(encodeUint64(timestamp));
+    }
     let appCallTxn: Transaction = callApplication(appId, buyerAddress, algosdk.OnApplicationComplete.NoOpOC, appArgs);
     let paymentTxn: Transaction = pay(buyerAddress, ownerAddress, price);
     let assetTransferTxn: Transaction = assetTransfer(escrowAddress, buyerAddress, 1, assetId, ownerAddress);

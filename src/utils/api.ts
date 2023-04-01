@@ -7,6 +7,23 @@ type CookieParams = {
     walletAddress: string;
 }
 
+export const genericGet = async (endpoint: string): Promise<object | null> => {
+    const response = await axios.get(endpoint);
+    if (response.status === 200) {
+        return response.data;
+    }
+
+    return null;
+}
+
+export const genericPost = async (endpoint: string, requestBody: object): Promise<object | null> => {
+    const response = await axios.post(endpoint, requestBody);
+    if (response.status === 200) {
+        return response.data;
+    }
+    return null;
+}
+
 export const userGet = (addr: string, setter: (user: User) => void) : void => {
     axios.get('/api/user/' + addr)
         .then(response => {
@@ -21,6 +38,7 @@ export const userUpdate = (user: User, setter: (user: User) => void) : void => {
     axios.post('/api/user/update', user)
         .then(response => {
             if (response.status === 200) {
+                console.log(user);
                 setter(user);
             }
         })
@@ -149,8 +167,24 @@ export const collectionCreateWithArt = async (collection: NFTCollection, artwork
     return null;
 }
 
-export const getEscrowProgram = async (assetId: number, appId: number): Promise<string> => {
-    const escrowResponse = await axios.get('/algo/escrow?nft_id=' + assetId + '&app_id=' + appId);
+export const getEscrowProgram = async (saleType: string, assetIds: string, appId: number): Promise<string> => {
+    const escrowResponse = await axios.get('/algo/escrow/' + saleType + '?nft_ids=' + assetIds + '&app_id=' + appId);
     const escrowData = escrowResponse.data;
     return escrowData;
+}
+
+export const collectionGetAll = async (): Promise<NFTCollection[] | null> => {
+    const response = await axios.get('/api/collections');
+    if (response.status === 200) {
+        return response.data;
+    }
+    return null;
+}
+
+export const collectionGetByUrl = async (url: string): Promise<NFTCollection> => {
+    const response = await axios.get('/api/collection/url/' + url);
+    if (response.status === 200) {
+        return response.data;
+    }
+    return null;
 }

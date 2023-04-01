@@ -1,4 +1,4 @@
-import { Genre, WorkType } from 'enums.ts';
+import { Genre, WorkType, ConnectType, CollectionType } from 'enums.ts';
 
 export type User = {
     id?: number;
@@ -13,6 +13,7 @@ export type User = {
     illustrator: boolean;
     suspended: boolean;
     userCookie?: string;
+    connectType: ConnectType;
 }
 
 export type Work = {
@@ -50,6 +51,10 @@ export type NFTCollection = {
     work: Work;
     publishStamp?: Date;
     name: string;
+    collType: CollectionType;
+    url: string;
+    active: boolean;
+    soldMask: number;
 }
 
 export type Artwork = {
