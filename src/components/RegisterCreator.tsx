@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import Popup from 'reactjs-popup';
 import { UserContext } from "../App.tsx";
 import { User } from '../utils/types.ts';
-import Button from './Button.tsx';
+import TwineButton from './TwineButton.tsx';
 
 interface RegisterCreatorProps {
     open: boolean;
@@ -18,7 +18,7 @@ function RegisterCreator(props: RegisterCreatorProps) {
         <Popup open={props.open} onClose={props.close}>
             <input type='text' id='email' name='email' placeholder='Email Address'></input>
             <input type='text' id='displayName' name='displayName' placeholder='Display Name'></input>
-            <Button action={(e) => {
+            <TwineButton action={(e) => {
                 const email = document.getElementById('email') as HTMLInputElement;
                 const displayName = document.getElementById('displayName') as HTMLInputElement;
                 if (email && displayName) {

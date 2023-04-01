@@ -3,7 +3,7 @@ import {createGlobalStyle} from 'styled-components';
 const GlobalStyle = createGlobalStyle`
   @font-face {
     font-family: Twine;
-    src: url("/public/Twine.otf") format("opentype");
+    src: url("../../public/Twine.otf") format("opentype");
   }
   
   body {
