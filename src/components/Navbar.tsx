@@ -1,7 +1,7 @@
 import { Accounts } from '@randlabs/myalgo-connect';
 import React, { useState, useContext } from 'react';
 import styled from "styled-components";
-import Button from './Button.tsx';
+import TwineButton from './TwineButton.tsx';
 import FirstLogin from './FirstLogin.tsx';
 import { UserContext } from "../App.tsx";
 import LoginWall from './LoginWall.tsx';
@@ -63,7 +63,7 @@ function Navbar() {
                         <a href="/art">Art</a>
                         <a onClick={createNav}>Create</a>
                         <a href="/profile">Profile</a>
-                        <Button name="Log Out" action={context['logOut']} />
+                        <TwineButton name="Log Out" action={context['logOut']} />
                     </NavDiv>
                     <RegisterCreator open={openCreator} close={closeCreator} updateUser={context['updateUser']} navigate={navToCreate} />
                 </>
@@ -73,9 +73,9 @@ function Navbar() {
                         <a href="/">Twine</a>
                         <a onClick={blockAccess}>Art</a>
                         <a onClick={blockAccess}>Create</a>
-                        <Button name="Connect" action={context['connectToMyAlgo']} />
-                        <Button name="Connect Pera" action={context['connectToPera']} />
-                        <Button name="Mock Connect" action={context['mockConnectToMyAlgo']} />
+                        <TwineButton name="Connect" action={context['connectToMyAlgo']} />
+                        <TwineButton name="Connect Pera" action={context['connectToPera']} />
+                        <TwineButton name="Mock Connect" action={context['mockConnectToMyAlgo']} />
                     </NavDiv>
                     <LoginWall open={open} closeWall={closeWall} />
                 </>
