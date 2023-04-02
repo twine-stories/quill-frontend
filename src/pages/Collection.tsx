@@ -8,7 +8,7 @@ import { getEscrowProgram, genericGet, genericPost } from '../utils/api.ts';
 import { optIn, buyAsset, getAssetById, getApplicationById, buySign, callApplicationSign } from '../utils/blockchain/transactionRepository.ts';
 import algosdk, { encodeAddress, encodeUint64, getApplicationAddress, Transaction } from 'algosdk';
 import { nameMapping, MAKE_PAYMENTS, STOP_SELL_OFFER } from '../utils/blockchain/constants.ts';
-import Button from '../components/Button.tsx';
+import Button from '../components/TwineButton.tsx';
 import { CollectionType } from '../utils/enums.ts';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
 
@@ -52,7 +52,7 @@ function Collection() {
             skip = false;
             const assetId: number = elem.id;
             const appId: number = elem.appId;
-
+            
             await getAssetById(assetId);
             const app = await getApplicationById(appId);
             const globalState: object[] = app['params']['global-state'];
@@ -104,6 +104,9 @@ function Collection() {
             percents.push(encodeUint64(item.percentage));
             wallets.push(item.creator.walletAddress);
         });
+
+        console.log(percents);
+        console.log(wallets);
 
         // TODO: change hardcoded 2000, addresses, and splits
         if ((coll.collType === CollectionType.SALE || coll.collType === CollectionType.SHUFFLE) && asset.asaPrice) {

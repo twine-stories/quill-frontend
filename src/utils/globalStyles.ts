@@ -14,6 +14,12 @@ const GlobalStyle = createGlobalStyle`
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
     color: #ffffff;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .App {
+    width: 75vw;
   }
 `;
 

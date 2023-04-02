@@ -1,11 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../App.tsx';
 import Navbar from "../components/Navbar.tsx";
-<<<<<<< HEAD
 import Collaborator from '../components/Collaborator.tsx';
-=======
 import TwineButton from '../components/TwineButton.tsx';
->>>>>>> dev
 import { Genre } from '../utils/enums.ts';
 import { User, Work, Artwork, NFTCollection, ProfitSplit } from '../utils/types.ts';
 import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, callApplicationSign, paySign, signTxns } from '../utils/blockchain/transactionRepository.ts';
@@ -14,14 +11,9 @@ import algosdk, { decodeAddress, encodeUint64, getApplicationAddress, Transactio
 import NFTCheckbox from '../components/NFTCheckbox.tsx';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
 import { INIT_ESCROW, MAKE_SELL_OFFER } from '../utils/blockchain/constants.ts';
-<<<<<<< HEAD
 import { saleTypeMap, MAX_COLLABORATORS } from '../utils/constants.ts';
-=======
 import {Typography} from "@mui/joy";
-import { saleTypeMap } from '../utils/constants.ts';
->>>>>>> dev
 import { CollectionType } from '../utils/enums.ts';
-import { Button } from '@mui/joy';
 
 const axios = require('axios').default;
 const encoder = new TextEncoder();
@@ -196,24 +188,7 @@ function Create() {
             } else {
                 let promises: Promise<AssetInfo | null>[] = [];
                 for (const assetId of nftList) {
-<<<<<<< HEAD
                     promises.push(genContract(assetId, data));
-=======
-                    const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], [assetId]);
-                    const escrowProgram: string = await getEscrowProgram(saleType, assetId.toString(), id);
-
-                    if (escrowProgram) {
-                        const escrowAddress: string = await escrowProgramToAddress(escrowProgram);
-                        await callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, true);
-                        await paySign(adminAddr, escrowAddress, 200000, true);
-
-                        if (contractType === CollectionType.REV_AUCTION) {
-                            contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, startPrice: 3000000, endPrice: 1000000, duration: 100};
-                        } else if (contractType === CollectionType.SALE) {
-                            contractInfo[assetId] = {appId: id, escrowAddress: escrowAddress, price: 1000000};
-                        }
-                    }
->>>>>>> dev
                 }
                 const values: (AssetInfo | null)[] = await Promise.all(promises);
                 values.forEach((val: AssetInfo | null) => {
@@ -294,21 +269,21 @@ function Create() {
                 appId: smartContractInfo[assetId].appId
             });
         }
-        collectionCreateWithArt(collection, artworks).then((coll) => {
-            let profitSplitsWithAddrs: object[] = [];
-            for (let i = 0; i < profitSplitAddrs.length; i++) {
-                profitSplitsWithAddrs.push({
-                    creatorAddress: profitSplitAddrs[i],
-                    profitSplit: {
-                        creator: null,
-                        collection: coll,
-                        percentage: profitSplits[i]
-                    }
-                })
-            }
+        
+        const coll: NFTCollection = await collectionCreateWithArt(collection, artworks);
+        let profitSplitsWithAddrs: object[] = [];
+        for (let i = 0; i < profitSplitAddrs.length; i++) {
+            profitSplitsWithAddrs.push({
+                creatorAddress: profitSplitAddrs[i],
+                profitSplit: {
+                    creator: null,
+                    collection: coll,
+                    percentage: profitSplits[i]
+                }
+            })
+        }
 
-            genericPost('/api/profitSplit/addMany', profitSplitsWithAddrs);
-        });
+        genericPost('/api/profitSplit/addMany', profitSplitsWithAddrs);
     }
 
     return (
@@ -333,11 +308,7 @@ function Create() {
                     <select name='genre3' id='genre3'>
                         {genreOptions}
                     </select>
-<<<<<<< HEAD
-                    <Button onClick={(e) => {
-=======
                     <TwineButton name='Create!' action={(e) => {
->>>>>>> dev
                         const title: HTMLInputElement = document.getElementById('title') as HTMLInputElement;
                         const description: HTMLInputElement = document.getElementById('description') as HTMLInputElement;
                         const url: HTMLInputElement = document.getElementById('url') as HTMLInputElement;
@@ -362,7 +333,7 @@ function Create() {
                                 console.log("url taken");
                             });
                         }
-                    }}>Create!</Button>
+                    }} />
                 </div>
 
 
@@ -374,18 +345,14 @@ function Create() {
                     <input type='text' id='unitName' name='unitNme' placeholder='unit name' />
                     <input type='text' id='assetName' name='assetName' placeholder='asset name' />
                     <input type='text' id='assetUrl' name='assetUrl' placeholder='asset url' />
-<<<<<<< HEAD
-                    <Button onClick={(e) => {
-=======
                     <TwineButton name='Mint NFT' action={(e) => {
->>>>>>> dev
                         const unitName: HTMLInputElement = document.getElementById('unitName') as HTMLInputElement;
                         const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;
                         const assetUrl: HTMLInputElement = document.getElementById('assetUrl') as HTMLInputElement;
                         if (unitName && assetName && assetUrl) {
                             mintNFT(user.walletAddress, unitName.value, assetName.value, assetUrl.value);
                         }
-                    }}>Mint NFT</Button>
+                    }} />
                 </div>
                 {allAssets}
                 <label htmlFor="saleType">Choose a sale type:</label>
@@ -399,30 +366,21 @@ function Create() {
                     {workOptions}
                 </select>
                 <input type='text' id='collName' name='collName' placeholder='enter collection name' />
-<<<<<<< HEAD
                 <div>
                     {collaborators}
-                    <Button onClick={(e) => {
+                    <TwineButton name='Add Collaborator' action={(e) => {
                         if (collaborators.length < MAX_COLLABORATORS) {
                             setCollaborators([
                                 ...collaborators,
                                 <Collaborator key={collaborators.length} />
                             ])
                         }
-                    }}>Add Collaborator</Button>
+                    }} />
                 </div>
                 <div>
-                    <Button onClick={confirmNFTs}>Generate Contract(s)</Button>
-                    {enableSell ?
-                        <Button onClick={(e) => makeSellOffer()}>Post NFT(s) for Sale</Button>
-                        :
-                        <Button disabled onClick={(e) => makeSellOffer()}>Post NFT(s) for Sale</Button>
-                    }
+                    <TwineButton name='Generate Contract(s)' action={confirmNFTs} />
+                    <TwineButton name='Post NFT(s) for Sale' enabled={enableSell} action={(e) => makeSellOffer()} />
                 </div>
-=======
-                <TwineButton name='Generate Contract(s)' action={confirmNFTs} />
-                <TwineButton name='Post NFT(s) for Sale' enabled={enableSell} action={(e) => makeSellOffer()} />
->>>>>>> dev
             </div>
         </div>
     );
