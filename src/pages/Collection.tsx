@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Navbar from "../components/Navbar.tsx";
 import { UserContext } from "../App.tsx";
-import { User, NFTCollection, Artwork } from '../utils/types.ts';
+import { User, NFTCollection, Artwork, ProfitSplit } from '../utils/types.ts';
 import { collectionGetByUrl } from '../utils/api.ts';
 import { Asset } from '../utils/blockchain/types.ts';
 import { getEscrowProgram, genericGet, genericPost } from '../utils/api.ts';
@@ -84,7 +84,7 @@ function Collection() {
         setAssets(allAssets);
     }
 
-    const buyArtwork = (art: Artwork): void => {
+    const buyArtwork = async (art: Artwork): Promise<void> => {
         if (!user.walletAddress || !assets) {
             return;
         }
@@ -93,8 +93,21 @@ function Collection() {
         const asset: Asset = assets[id];
         const optInTxn: Transaction = optIn(id, user.walletAddress);
         let buy: Transaction[];
+
+        const psResp: ProfitSplit[] = await genericGet('/api/profitSplit/collection/' + art.origColl.id);
+
+        console.log('after');
+
+        let percents: Uint8Array[] = [];
+        let wallets: string[] = [];
+        psResp.forEach((item: ProfitSplit) => {
+            percents.push(encodeUint64(item.percentage));
+            wallets.push(item.creator.walletAddress);
+        });
+
         // TODO: change hardcoded 2000, addresses, and splits
         if ((coll.collType === CollectionType.SALE || coll.collType === CollectionType.SHUFFLE) && asset.asaPrice) {
+            console.log('in here and buying');
             buy = buyAsset(id, art.appId, asset.asaOwner, user.walletAddress, asset.asaPrice + 2000, asset.escrowAddress, getApplicationAddress(art.appId));
         } else if (coll.collType === CollectionType.REV_AUCTION) {
             const current: number = Math.floor(Date.now() / 1000);
@@ -107,12 +120,12 @@ function Collection() {
             return;
         }
 
-        buySign(optInTxn, buy, asset.escrowProgram).then((response) => {
-            console.log('sent money to smart contract');
-            callApplicationSign(art.appId, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [MAKE_PAYMENTS, encodeUint64(90), encodeUint64(10)], undefined, ['KYUH2SNU6FWFGBK6PNWI4EUIABOYFIQIQH2WOP3FW7DGA623ESTGXYQPJA', 'CB2MYSJFLTUMGRURINUT3B5A7VK45LNZWFRTLG2SJGBRVAQF32UDDUEX34'], true).then((resp) => {
-                console.log('pog');
-            });
-        });
+        console.log('signing');
+        await buySign(optInTxn, buy, asset.escrowProgram);
+        console.log('going to distribute');
+        await callApplicationSign(art.appId, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [MAKE_PAYMENTS, ...percents], undefined, wallets, true);
+        // on error, send money back to the sender
+        console.log('distributed funds');
         // update active in db if sold out
     }
 

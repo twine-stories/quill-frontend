@@ -10,7 +10,7 @@ import algosdk, { decodeAddress, encodeUint64, getApplicationAddress, Transactio
 import NFTCheckbox from '../components/NFTCheckbox.tsx';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
 import { INIT_ESCROW, MAKE_SELL_OFFER } from '../utils/blockchain/constants.ts';
-import { saleTypeMap } from '../utils/constants.ts';
+import { saleTypeMap, MAX_COLLABORATORS } from '../utils/constants.ts';
 import { CollectionType } from '../utils/enums.ts';
 import { Button } from '@mui/joy';
 
@@ -245,51 +245,44 @@ function Create() {
         }
 
         // algosdk.assignGroupID(txns);
-
         const response = await signTxns(txns);
-        if (response) {
-            const work: HTMLInputElement = document.getElementById('works') as HTMLInputElement;
-            const name: HTMLInputElement = document.getElementById('collName') as HTMLInputElement;
-            // need to fix the url
-            const collection: NFTCollection = {
-                work: allWorks[parseInt(work.value)],
-                name: name.value,
-                collType: saleTypeMap[contractType.toLowerCase()],
-                url: name.value,
-                active: true
-            };
 
-            let artworks: Artwork[] = [];
-            for (const id in smartContractInfo) {
-                const assetId: number = parseInt(id);
-                artworks.push({
-                    id: assetId,
-                    origColl: collection,
-                    currColl: collection,
-                    appId: smartContractInfo[assetId].appId
-                });
-            }
+        const work: HTMLInputElement = document.getElementById('works') as HTMLInputElement;
+        const name: HTMLInputElement = document.getElementById('collName') as HTMLInputElement;
+        // need to fix the url
+        const collection: NFTCollection = {
+            work: allWorks[parseInt(work.value)],
+            name: name.value,
+            collType: saleTypeMap[contractType.toLowerCase()],
+            url: name.value,
+            active: true
+        };
 
-            collectionCreateWithArt(collection, artworks).then((coll) => {
-                if (coll.status !== 200) {
-                    console.log('failed to create collection');
-                    return;
-                }
-
-                let profitSplitsWithAddrs: object[] = [];
-                for (let i = 0; i < profitSplitAddrs.length; i++) {
-                    profitSplitsWithAddrs.push({
-                        creatorAddress: profitSplitAddrs[i],
-                        profitSplit: {
-                            creator: null,
-                            collection: coll.data,
-                            percentage: profitSplits[i]
-                        }
-                    })
-                }
-                genericPost('/api/profitSplit/addMany', profitSplitsWithAddrs);
+        let artworks: Artwork[] = [];
+        for (const id in smartContractInfo) {
+            const assetId: number = parseInt(id);
+            artworks.push({
+                id: assetId,
+                origColl: collection,
+                currColl: collection,
+                appId: smartContractInfo[assetId].appId
             });
         }
+        collectionCreateWithArt(collection, artworks).then((coll) => {
+            let profitSplitsWithAddrs: object[] = [];
+            for (let i = 0; i < profitSplitAddrs.length; i++) {
+                profitSplitsWithAddrs.push({
+                    creatorAddress: profitSplitAddrs[i],
+                    profitSplit: {
+                        creator: null,
+                        collection: coll,
+                        percentage: profitSplits[i]
+                    }
+                })
+            }
+
+            genericPost('/api/profitSplit/addMany', profitSplitsWithAddrs);
+        });
     }
 
     return (
@@ -367,7 +360,7 @@ function Create() {
                 <div>
                     {collaborators}
                     <Button onClick={(e) => {
-                        if (collaborators.length < 10) {
+                        if (collaborators.length < MAX_COLLABORATORS) {
                             setCollaborators([
                                 ...collaborators,
                                 <Collaborator key={collaborators.length} />
