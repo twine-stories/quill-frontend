@@ -11,7 +11,7 @@ import Collection from './pages/Collection.tsx';
 import {ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib} from '@reach-sh/stdlib';
 import {v4 as uuidv4} from 'uuid';
 import {getCookie, setCookie, deleteCookie} from './utils/cookies.ts';
-import {User, Work} from './utils/types.ts';
+import {User} from './utils/types.ts';
 import {cookieSet, userGet, userUpdate, userAdd, cookieGet} from './utils/api.ts';
 import {CssVarsProvider} from "@mui/joy";
 import GlobalStyle from "./utils/globalStyles.ts";
