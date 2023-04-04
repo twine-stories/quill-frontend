@@ -82,7 +82,7 @@ function Create() {
 
             if (collaborators.length === 0) {
                 setCollaborators([
-                    <Collaborator defaultCreator={user.displayName} defaultWallet={user.walletAddress} defaultProfit={100} principle={true} id={0} key={0} />
+                    <Collaborator profitSplit={true} defaultCreator={user.displayName} defaultWallet={user.walletAddress} defaultProfit={100} principle={true} id={0} key={0} />
                 ])
             }
         }
@@ -385,12 +385,12 @@ function Create() {
                 }}>
                     <div>
                         {collaborators}
-                        <TwineButton name='Add Collaborator' action={(e) => {
+                        <TwineButton name='Add Collaborator' enabled={collaborators.length < MAX_COLLABORATORS} action={(e) => {
                             if (collaborators.length < MAX_COLLABORATORS) {
                                 const id: number = collaborators[collaborators.length - 1].props.id + 1;
                                 setCollaborators([
                                     ...collaborators,
-                                    <Collaborator principle={false} id={id} key={id} />
+                                    <Collaborator profitSplit={true} principle={false} id={id} key={id} />
                                 ])
                             }
                         }} />

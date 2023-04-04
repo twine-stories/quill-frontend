@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Input, IconButton } from '@mui/joy';
+import { Input, IconButton, Grid } from '@mui/joy';
 import { CollaboratorContext } from '../pages/Create.tsx';
 
 interface CollaboratorProps {
@@ -8,6 +8,7 @@ interface CollaboratorProps {
     defaultProfit: number;
     principle: boolean;
     id: number;
+    profitSplit: boolean;
 }
 
 function Collaborator(props: CollaboratorProps) {
@@ -15,23 +16,34 @@ function Collaborator(props: CollaboratorProps) {
     const context: object = useContext(CollaboratorContext);
     const remove: (id: number) => void = context['remove'];
 
-    const creatorName: string = props.principle ? 'Principle Creator' : 'Creator Name';
-    const creatorWallet: string = props.principle ? 'Your Wallet' : 'Collaborator\'s Wallet';
+    const creatorName: string = props.principle ? 'Principle Creator' : 'Creator Username';
+    const topRightField: string = props.profitSplit ? 'Profit Percentage' : 'Title';
+    const bottomField: string = props.profitSplit ? (props.principle ? 'Your Wallet' : 'Collaborator\'s Wallet') : 'Responsible For';
+
+    const offset: number = props.principle ? 2 : 0;
 
     return (
-        <div className='collaborators'>
-            <Input placeholder={creatorName} defaultValue={props.defaultCreator}/>
-            <Input placeholder='Profit Percentage' defaultValue={props.defaultProfit}/>
-            <Input placeholder={creatorWallet} defaultValue={props.defaultWallet}/>
-            {!props.principle && <IconButton sx={{ '&:hover': {
-                backgroundColor: 'black',
-            } }} variant="plain" onClick={() => {remove(props.id)}}>
-                <img
-                    src="icons/remove.svg"
-                    alt=""
-                />
-            </IconButton>}
-        </div>
+        <Grid className='collaborators' container justifyContent='space-around' alignItems='center'>
+            <Grid container direction='row' justifyContent='space-around' alignItems='center' rowSpacing={2} xs={10}>
+                <Grid xs={10 + offset}>
+                    <Grid container direction='row' justifyContent='space-between' alignItems='center' columnSpacing={1}>
+                        <Grid xs={6}><Input placeholder={creatorName} defaultValue={props.defaultCreator}/></Grid>
+                        <Grid xs={6}><Input placeholder={topRightField} defaultValue={props.defaultProfit}/></Grid>
+                    </Grid>
+                    <Grid><Input placeholder={bottomField} defaultValue={props.defaultWallet}/></Grid>
+                </Grid>
+                <Grid xs={2 - offset}>
+                    {!props.principle && <IconButton sx={{ '&:hover': {
+                        backgroundColor: 'black',
+                    } }} variant='plain' onClick={() => {remove(props.id)}}>
+                        <img
+                            src='icons/remove.svg'
+                            alt=''
+                        />
+                    </IconButton>}
+                </Grid>
+            </Grid>
+        </Grid>
     )
 
 }
