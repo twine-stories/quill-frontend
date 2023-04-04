@@ -17,6 +17,7 @@ import {CssVarsProvider} from "@mui/joy";
 import GlobalStyle from "./utils/globalStyles.ts";
 import {PeraWalletConnect} from "@perawallet/connect";
 import {ConnectType} from './utils/enums.ts';
+import WorkGallery from "./pages/WorkGallery";
 
 const reach = loadStdlib('ALGO');
 reach.setWalletFallback(reach.walletFallback({
@@ -174,6 +175,7 @@ function App() {
                         <Route path="/episode/*" element={<Episode/>}></Route>
                         <Route path="/collection/*" element={<Collection />}></Route>
                         {/*<Route path="/" element={<Episode/>}></Route>*/}
+                        {/*<Route path="/" element={<WorkGallery/>}></Route>*/}
                         <Route path="/" element={<Home />}></Route>
                     </Routes>
                 </UserContext.Provider>

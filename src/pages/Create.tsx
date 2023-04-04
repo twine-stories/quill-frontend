@@ -230,7 +230,9 @@ function Create() {
                 <Typography level="h2" sx={{color: "#A5BB2D"}}>
                     Create Story
                 </Typography>
-                <TwineButton name="Good Luck" />
+                <TwineButton name="New Story" />
+                <TwineButton name="Published Stories" />
+                <TwineButton name="Story Drafts" />
 
                 <div>
                     <input type='text' id='title' name='title' placeholder='enter title' />

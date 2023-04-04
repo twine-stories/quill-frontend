@@ -8,7 +8,7 @@ import { getEscrowProgram, genericGet, genericPost } from '../utils/api.ts';
 import { optIn, buyAsset, getAssetById, getApplicationById, buySign, callApplicationSign } from '../utils/blockchain/transactionRepository.ts';
 import algosdk, { encodeAddress, Transaction } from 'algosdk';
 import { nameMapping, STOP_SELL_OFFER } from '../utils/blockchain/constants.ts';
-import Button from '../components/Button.tsx';
+import TwineButton from '../components/TwineButton.tsx';
 import { CollectionType } from '../utils/enums.ts';
 
 function Collection() {
@@ -170,8 +170,8 @@ function Collection() {
             const currAsset: Asset = assets[elem.assetId];
             listings.push(<div key={elem.id}>
                 <p>{elem.assetId}</p>
-                <Button action={() => {buyArtwork(elem)}} name="Buy" enabled={initLoad} />
-                {user && user.walletAddress && currAsset.asaOwner === user.walletAddress && <Button action={() => {stopSellOffer(elem)}} name="Remove Listing" enabled={initLoad} />}
+                <TwineButton action={() => {buyArtwork(elem)}} name="Buy" enabled={initLoad} />
+                {user && user.walletAddress && currAsset.asaOwner === user.walletAddress && <TwineButton action={() => {stopSellOffer(elem)}} name="Remove Listing" enabled={initLoad} />}
             </div>);
         });
     }
@@ -185,7 +185,7 @@ function Collection() {
                     {listings}
                     {
                         coll.collType === CollectionType.SHUFFLE &&
-                        <Button action={buyShuffle} name="Buy Shuffle" enabled={initLoad} />
+                        <TwineButton action={buyShuffle} name="Buy Shuffle" enabled={initLoad} />
                     }
                 </div>
             }
