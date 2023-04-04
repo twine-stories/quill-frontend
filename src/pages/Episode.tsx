@@ -18,7 +18,7 @@ function CreateEpisode() {
     const context: object = useContext(UserContext);
     const user: User = context['user'];
 
-    const [inputList, setInputList, inputListRef] = useState([]);
+    const [inputList, setInputList, inputListRef] = useState<JSX.Element[]>([]);
     const [resultMap, setResultMap] = useImmer(new Map());
     const [counter, setCounter] = useState(0);
     const [view, setView] = useState(false);
