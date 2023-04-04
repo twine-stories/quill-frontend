@@ -82,7 +82,7 @@ function Create() {
 
             if (collaborators.length === 0) {
                 setCollaborators([
-                    <Collaborator defaultCreator={user.walletAddress} defaultProfit={100} principle={true} id={0} key={0} />
+                    <Collaborator defaultCreator={user.displayName} defaultWallet={user.walletAddress} defaultProfit={100} principle={true} id={0} key={0} />
                 ])
             }
         }
