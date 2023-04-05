@@ -8,6 +8,7 @@ import Profile from './pages/Profile.tsx';
 import Story from './pages/Story.tsx';
 import Episode from './pages/Episode.tsx';
 import Art from './pages/Art.tsx';
+import WorkGallery from "./pages/WorkGallery";
 import Collection from './pages/Collection.tsx';
 import {ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib} from '@reach-sh/stdlib';
 import {v4 as uuidv4} from 'uuid';
@@ -18,11 +19,7 @@ import {CssVarsProvider} from "@mui/joy";
 import GlobalStyle from "./utils/globalStyles.ts";
 import {PeraWalletConnect} from "@perawallet/connect";
 import {ConnectType} from './utils/enums.ts';
-<<<<<<< HEAD
-import WorkGallery from "./pages/WorkGallery";
-=======
 import { theme } from './utils/globalStyles.ts';
->>>>>>> dev
 
 const reach = loadStdlib('ALGO');
 reach.setWalletFallback(reach.walletFallback({
