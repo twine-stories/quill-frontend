@@ -12,6 +12,12 @@ declare module '@mui/joy/Button' {
     }
 }
 
+declare module '@mui/joy/Input' {
+    interface InputPropsColorOverrides {
+        brown: true;
+    }
+}
+
 export const theme = extendTheme({
     components: {
         JoyButton: {
@@ -29,6 +35,16 @@ export const theme = extendTheme({
                         color: '#9E9FEB',
                         backgroundColor: '#4546AB',
                     }),
+                }),
+            },
+        },
+        JoyInput: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    ...(ownerState.color === 'brown' && {
+                        border: '0.5px #241D19 solid',
+                        color: '#E4E5FF'
+                    })
                 }),
             },
         },

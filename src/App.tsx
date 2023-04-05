@@ -125,14 +125,14 @@ function App() {
 
     const enterBeta = (code: string) => {
         if (code === accessCode) {
-            setCookie('betaSession', 'beta session');
+            setCookie('betaSession', 'active');
             setBeta(false);
         }
     }
 
     useEffect(() => {
         const cookie = getCookie('betaSession');
-        if (cookie === 'beta session') {
+        if (cookie === 'active') {
             setBeta(false);
         }
 
