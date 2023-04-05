@@ -2,6 +2,7 @@ import React, { BaseSyntheticEvent, useContext, useState } from 'react';
 import { Input, Grid } from '@mui/joy';
 import TwineButton from '../components/TwineButton.tsx';
 import { UserContext } from '../App.tsx';
+import TwineInput from '../components/TwineInput.tsx';
 
 
 function Beta() {
@@ -20,11 +21,10 @@ function Beta() {
                 <img src='icons/twine.svg' width='50%' />
                 <Grid container rowSpacing={3} direction='column' xs={5}>
                     <Grid>
-                        <Input color='brown' id='betaAccess' placeholder='Enter passcode...' slotProps={{
-                            input: {
-                                type: 'password',
-                                onKeyDown: submitInput
-                            }
+                        <TwineInput placeholder='Enter passcode...' inputAttrs={{
+                            type: 'password',
+                            onKeyDown: submitInput,
+                            id: 'betaAccess'
                         }} />
                     </Grid>
                     <Grid>

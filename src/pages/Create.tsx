@@ -3,6 +3,7 @@ import { UserContext } from '../App.tsx';
 import Navbar from "../components/Navbar.tsx";
 import Collaborator from '../components/Collaborator.tsx';
 import TwineButton from '../components/TwineButton.tsx';
+import TwineInput from '../components/TwineInput.tsx';
 import { Genre } from '../utils/enums.ts';
 import { User, Work, Artwork, NFTCollection, ProfitSplit } from '../utils/types.ts';
 import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, callApplicationSign, paySign, signTxns } from '../utils/blockchain/transactionRepository.ts';
@@ -360,9 +361,15 @@ function Create() {
 
                 <p>create nft</p>
                 <div>
-                    <input type='text' id='unitName' name='unitNme' placeholder='unit name' />
-                    <input type='text' id='assetName' name='assetName' placeholder='asset name' />
-                    <input type='text' id='assetUrl' name='assetUrl' placeholder='asset url' />
+                    <TwineInput placeholder='Unit name' inputAttrs={{
+                        id: 'unitName'
+                    }} />
+                    <TwineInput placeholder='Asset name' inputAttrs={{
+                        id: 'assetName'
+                    }} />
+                    <TwineInput placeholder='Asset url' inputAttrs={{
+                        id: 'assetUrl'
+                    }} />
                     <TwineButton name='Mint NFT' action={(e) => {
                         const unitName: HTMLInputElement = document.getElementById('unitName') as HTMLInputElement;
                         const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;

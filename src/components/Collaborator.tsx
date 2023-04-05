@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
-import { Input, IconButton, Grid } from '@mui/joy';
+import { IconButton, Grid } from '@mui/joy';
 import { CollaboratorContext } from '../pages/Create.tsx';
+import TwineInput from './TwineInput.tsx';
 
 interface CollaboratorProps {
     defaultCreator: string;
@@ -27,10 +28,16 @@ function Collaborator(props: CollaboratorProps) {
             <Grid container direction='row' justifyContent='space-around' alignItems='center' rowSpacing={2} xs={10}>
                 <Grid xs={10 + offset}>
                     <Grid container direction='row' justifyContent='space-between' alignItems='center' columnSpacing={1}>
-                        <Grid xs={6}><Input className='topLeftCollab' placeholder={creatorName} defaultValue={props.defaultCreator}/></Grid>
-                        <Grid xs={6}><Input className='topRightCollab' placeholder={topRightField} defaultValue={props.defaultProfit}/></Grid>
+                        <Grid xs={6}><TwineInput placeholder={creatorName} defaultValue={props.defaultCreator} inputAttrs={{
+                            className: 'topLeftCollab'
+                        }} /></Grid>
+                        <Grid xs={6}><TwineInput placeholder={topRightField} defaultValue={props.defaultProfit} inputAttrs={{
+                            className: 'topRightCollab'
+                        }} /></Grid>
                     </Grid>
-                    <Grid><Input className='bottomCollab' placeholder={bottomField} defaultValue={props.defaultWallet}/></Grid>
+                    <Grid><TwineInput placeholder={bottomField} defaultValue={props.defaultWallet} inputAttrs={{
+                        className: 'bottomCollab'
+                    }} /></Grid>
                 </Grid>
                 <Grid xs={2 - offset}>
                     {!props.principle && <IconButton sx={{ '&:hover': {
