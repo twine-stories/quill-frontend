@@ -163,14 +163,18 @@ function Create() {
             return;
         }
 
-        const collabElements: HTMLCollectionOf<Element> = document.getElementsByClassName('collaborators');
+        const collabAddrs: HTMLCollectionOf<Element> = document.getElementsByClassName('bottomCollab');
+        const collabVals: HTMLCollectionOf<Element> = document.getElementsByClassName('topRightCollab');
         let addrs: string[] = [];
         let vals: number[] = [];
 
-        Array.from(collabElements).forEach(elem => {
-            addrs.push((elem.children[0].children[0] as HTMLInputElement).value);
-            vals.push(parseInt((elem.children[1].children[0] as HTMLInputElement).value));
+        Array.from(collabAddrs).forEach((elem: Element) => {
+            addrs.push((elem.children[0] as HTMLInputElement).value);
         });
+
+        Array.from(collabVals).forEach((elem: Element) => {
+            vals.push(parseInt((elem.children[0] as HTMLInputElement).value));
+        })
 
         const sum: number = vals.reduce((partial, curr) => partial + curr, 0);
         if (sum !== 100) {

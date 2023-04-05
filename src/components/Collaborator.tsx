@@ -27,10 +27,10 @@ function Collaborator(props: CollaboratorProps) {
             <Grid container direction='row' justifyContent='space-around' alignItems='center' rowSpacing={2} xs={10}>
                 <Grid xs={10 + offset}>
                     <Grid container direction='row' justifyContent='space-between' alignItems='center' columnSpacing={1}>
-                        <Grid xs={6}><Input placeholder={creatorName} defaultValue={props.defaultCreator}/></Grid>
-                        <Grid xs={6}><Input placeholder={topRightField} defaultValue={props.defaultProfit}/></Grid>
+                        <Grid xs={6}><Input className='topLeftCollab' placeholder={creatorName} defaultValue={props.defaultCreator}/></Grid>
+                        <Grid xs={6}><Input className='topRightCollab' placeholder={topRightField} defaultValue={props.defaultProfit}/></Grid>
                     </Grid>
-                    <Grid><Input placeholder={bottomField} defaultValue={props.defaultWallet}/></Grid>
+                    <Grid><Input className='bottomCollab' placeholder={bottomField} defaultValue={props.defaultWallet}/></Grid>
                 </Grid>
                 <Grid xs={2 - offset}>
                     {!props.principle && <IconButton sx={{ '&:hover': {
