@@ -14,10 +14,11 @@ import {v4 as uuidv4} from 'uuid';
 import {getCookie, setCookie, deleteCookie} from './utils/cookies.ts';
 import {User} from './utils/types.ts';
 import {cookieSet, userGet, userUpdate, userAdd, cookieGet} from './utils/api.ts';
-import {CssVarsProvider, extendTheme} from "@mui/joy";
+import {CssVarsProvider} from "@mui/joy";
 import GlobalStyle from "./utils/globalStyles.ts";
 import {PeraWalletConnect} from "@perawallet/connect";
 import {ConnectType} from './utils/enums.ts';
+import { theme } from './utils/globalStyles.ts';
 
 const reach = loadStdlib('ALGO');
 reach.setWalletFallback(reach.walletFallback({
@@ -29,26 +30,6 @@ const peraWallet = new PeraWalletConnect();
 
 // probably move to secrets manager but this doesn't really need to be that secure
 const accessCode: string = 'twinebeta!!';
-
-declare module '@mui/joy/Button' {
-    interface ButtonPropsColorOverrides {
-        green: true;
-    }
-}
-const theme = extendTheme({
-    components: {
-        JoyButton: {
-            styleOverrides: {
-                root: ({ ownerState, theme }) => ({
-                    ...(ownerState.color === 'green' && {
-                        color: '#5C720D',
-                        backgroundColor: '#A3B832',
-                    }),
-                }),
-            },
-        },
-    },
-});
 
 function App() {
     const [user, setUser] = useState<User>();

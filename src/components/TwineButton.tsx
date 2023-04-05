@@ -10,7 +10,7 @@ interface ButtonProps {
 }
 
 function TwineButton(props: ButtonProps) {
-    const color: string = props.color ? props.color : 'info';
+    const color: string = props.color ? props.color : 'light';
     return (
         props.enabled === undefined || props.enabled ?
             <Button color={color} startDecorator={props.icon && <img src={props.icon} />} onClick={props.action}>{props.name}</Button>
