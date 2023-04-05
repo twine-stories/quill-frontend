@@ -1,20 +1,50 @@
 @font-face {
     font-family: Twine;
-    src: url("../../public/Twine.otf") format("opentype");
-  }
+    src: url("../../public/fonts/Twine.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Oxanium;
+    src: url('../../public/fonts/Oxanium/Oxanium-Regular.ttf');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: Oxanium;
+    src: url('../../public/fonts/Oxanium/Oxanium-Bold.ttf');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: Oxanium;
+    src: url('../../public/fonts/Oxanium/Oxanium-ExtraBold.ttf');
+    font-weight: 900;
+}
+
+@font-face {
+    font-family: Oxanium;
+    src: url('../../public/fonts/Oxanium/Oxanium-Light.ttf');
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: Oxanium;
+    src: url('../../public/fonts/Oxanium/Oxanium-ExtraLight.ttf');
+    font-weight: 100;
+}
   
-  body {
+body {
     margin: 0;
     padding: 0;
     background: #0d0603;
-    font-family: 'Twine', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    font-family: 'Oxanium', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
     color: #ffffff;
     display: flex;
     justify-content: space-around;
-  }
+}
 
-  .App {
+.App {
     width: 75vw;
-  }
+}

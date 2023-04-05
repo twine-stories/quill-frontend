@@ -359,7 +359,9 @@ function Create() {
                 {/*I DIDN"T TOUCH ANYTHING BELOW THIS*/}
 
 
-                <p>create nft</p>
+                <Typography level="h2" sx={{color: "#A5BB2D"}}>
+                    Create NFT
+                </Typography>
                 <div>
                     <TwineInput placeholder='Unit name' inputAttrs={{
                         id: 'unitName'
