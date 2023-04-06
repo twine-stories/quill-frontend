@@ -8,7 +8,7 @@ import Profile from './pages/Profile.tsx';
 import Story from './pages/Story.tsx';
 import Episode from './pages/Episode.tsx';
 import Art from './pages/Art.tsx';
-import WorkGallery from "./pages/WorkGallery";
+import Gallery from "./pages/Gallery.tsx";
 import Collection from './pages/Collection.tsx';
 import {ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib} from '@reach-sh/stdlib';
 import {v4 as uuidv4} from 'uuid';
@@ -207,6 +207,7 @@ function App() {
                             <Route path="/episode/*" element={<Episode/>}></Route>
                             <Route path="/collection/*" element={<Collection />}></Route>
                             {/*<Route path="/" element={<Episode/>}></Route>*/}
+                            {/*<Route path="/" element={<Gallery/>}></Route>*/}
                             <Route path="/" element={<Home />}></Route>
                         </Routes>
                     }
