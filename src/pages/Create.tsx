@@ -1,8 +1,9 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, createContext } from 'react';
 import { UserContext } from '../App.tsx';
 import Navbar from "../components/Navbar.tsx";
 import Collaborator from '../components/Collaborator.tsx';
 import TwineButton from '../components/TwineButton.tsx';
+import TwineInput from '../components/TwineInput.tsx';
 import { Genre } from '../utils/enums.ts';
 import { User, Work, Artwork, NFTCollection, ProfitSplit } from '../utils/types.ts';
 import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, callApplicationSign, paySign, signTxns } from '../utils/blockchain/transactionRepository.ts';
@@ -16,7 +17,7 @@ import {Typography} from "@mui/joy";
 import { CollectionType } from '../utils/enums.ts';
 
 const axios = require('axios').default;
-const encoder = new TextEncoder();
+export const CollaboratorContext = createContext(null as any);
 
 type AssetInfo = {
     appId: number;
@@ -48,6 +49,20 @@ function Create() {
     const user: User = context['user'];
     const cname: string = 'nftCheckboxes';
 
+    const removeCollaborator = (id: number): void => {
+        let newCollaborators: JSX.Element[] = [];
+        console.log(collaborators);
+        collaborators.forEach((collaborator: JSX.Element) => {
+            console.log(collaborator.props.id);
+            console.log(id);
+            if (collaborator.props.id !== id) {
+                newCollaborators.push(collaborator);
+            }
+        });
+
+        setCollaborators(newCollaborators);
+    };
+
     useEffect(() => {
         if (user) {
             let worksObj: Record<number, Work> = {};
@@ -68,7 +83,7 @@ function Create() {
 
             if (collaborators.length === 0) {
                 setCollaborators([
-                    <Collaborator defaultCreator={user.walletAddress} defaultProfit={100} key={0} />
+                    <Collaborator profitSplit={true} defaultCreator={user.displayName} defaultWallet={user.walletAddress} defaultProfit={100} principle={true} id={0} key={0} />
                 ])
             }
         }
@@ -149,14 +164,18 @@ function Create() {
             return;
         }
 
-        const collabElements: HTMLCollectionOf<Element> = document.getElementsByClassName('collaborators');
+        const collabAddrs: HTMLCollectionOf<Element> = document.getElementsByClassName('bottomCollab');
+        const collabVals: HTMLCollectionOf<Element> = document.getElementsByClassName('topRightCollab');
         let addrs: string[] = [];
         let vals: number[] = [];
 
-        Array.from(collabElements).forEach(elem => {
-            addrs.push((elem.children[0].children[0] as HTMLInputElement).value);
-            vals.push(parseInt((elem.children[1].children[0] as HTMLInputElement).value));
+        Array.from(collabAddrs).forEach((elem: Element) => {
+            addrs.push((elem.children[0] as HTMLInputElement).value);
         });
+
+        Array.from(collabVals).forEach((elem: Element) => {
+            vals.push(parseInt((elem.children[0] as HTMLInputElement).value));
+        })
 
         const sum: number = vals.reduce((partial, curr) => partial + curr, 0);
         if (sum !== 100) {
@@ -293,7 +312,9 @@ function Create() {
                 <Typography level="h2" sx={{color: "#A5BB2D"}}>
                     Create Story
                 </Typography>
-                <TwineButton name="Good Luck" />
+                <TwineButton name="New Story" />
+                <TwineButton name="Published Stories" />
+                <TwineButton name="Story Drafts" />
 
                 <div>
                     <input type='text' id='title' name='title' placeholder='enter title' />
@@ -340,11 +361,19 @@ function Create() {
                 {/*I DIDN"T TOUCH ANYTHING BELOW THIS*/}
 
 
-                <p>create nft</p>
+                <Typography level="h2" sx={{color: "#A5BB2D"}}>
+                    Create NFT
+                </Typography>
                 <div>
-                    <input type='text' id='unitName' name='unitNme' placeholder='unit name' />
-                    <input type='text' id='assetName' name='assetName' placeholder='asset name' />
-                    <input type='text' id='assetUrl' name='assetUrl' placeholder='asset url' />
+                    <TwineInput placeholder='Unit name' inputAttrs={{
+                        id: 'unitName'
+                    }} />
+                    <TwineInput placeholder='Asset name' inputAttrs={{
+                        id: 'assetName'
+                    }} />
+                    <TwineInput placeholder='Asset url' inputAttrs={{
+                        id: 'assetUrl'
+                    }} />
                     <TwineButton name='Mint NFT' action={(e) => {
                         const unitName: HTMLInputElement = document.getElementById('unitName') as HTMLInputElement;
                         const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;
@@ -366,17 +395,22 @@ function Create() {
                     {workOptions}
                 </select>
                 <input type='text' id='collName' name='collName' placeholder='enter collection name' />
-                <div>
-                    {collaborators}
-                    <TwineButton name='Add Collaborator' action={(e) => {
-                        if (collaborators.length < MAX_COLLABORATORS) {
-                            setCollaborators([
-                                ...collaborators,
-                                <Collaborator key={collaborators.length} />
-                            ])
-                        }
-                    }} />
-                </div>
+                <CollaboratorContext.Provider value={{
+                    'remove': removeCollaborator
+                }}>
+                    <div>
+                        {collaborators}
+                        <TwineButton name='Add Collaborator' enabled={collaborators.length < MAX_COLLABORATORS} action={(e) => {
+                            if (collaborators.length < MAX_COLLABORATORS) {
+                                const id: number = collaborators[collaborators.length - 1].props.id + 1;
+                                setCollaborators([
+                                    ...collaborators,
+                                    <Collaborator profitSplit={true} principle={false} id={id} key={id} />
+                                ])
+                            }
+                        }} />
+                    </div>
+                </CollaboratorContext.Provider>
                 <div>
                     <TwineButton name='Generate Contract(s)' action={confirmNFTs} />
                     <TwineButton name='Post NFT(s) for Sale' enabled={enableSell} action={(e) => makeSellOffer()} />

@@ -1,6 +1,7 @@
 import {useEffect, useState, createContext} from 'react';
 import './App.css';
 import {Routes, Route} from "react-router-dom";
+import Beta from './pages/Beta.tsx';
 import Home from './pages/Home.tsx';
 import Create from './pages/Create.tsx';
 import Profile from './pages/Profile.tsx';
@@ -9,6 +10,7 @@ import GenericProfile from './pages/GenericProfile.tsx';
 import Story from './pages/Story.tsx';
 import Episode from './pages/Episode.tsx';
 import Art from './pages/Art.tsx';
+import Gallery from "./pages/Gallery.tsx";
 import Collection from './pages/Collection.tsx';
 import {ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib} from '@reach-sh/stdlib';
 import {v4 as uuidv4} from 'uuid';
@@ -19,6 +21,7 @@ import {CssVarsProvider} from "@mui/joy";
 import GlobalStyle from "./utils/globalStyles.ts";
 import {PeraWalletConnect} from "@perawallet/connect";
 import {ConnectType} from './utils/enums.ts';
+import { theme } from './utils/globalStyles.ts';
 
 const reach = loadStdlib('ALGO');
 reach.setWalletFallback(reach.walletFallback({
@@ -28,6 +31,9 @@ reach.setWalletFallback(reach.walletFallback({
 export const UserContext = createContext(null as any);
 const peraWallet = new PeraWalletConnect();
 
+// probably move to secrets manager but this doesn't really need to be that secure
+const accessCode: string = 'twinebeta!!';
+
 function App() {
     const [user, setUser] = useState<User>();
     const [address, setAddress] = useState<string>();
@@ -35,6 +41,8 @@ function App() {
     const [getUserToggle, setGetUserToggle] = useState<boolean>(false);
     const [initUserLoad, setInitUserLoad] = useState<boolean>(false);
     const [connType, setConnType] = useState<ConnectType>();
+    const [beta, setBeta] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const logOut = (): void => {
         if (user.connectType === ConnectType.PERA) {
@@ -118,6 +126,22 @@ function App() {
         setAddress("");
     }
 
+    const enterBeta = (code: string) => {
+        if (code === accessCode) {
+            setCookie('betaSession', 'active');
+            setBeta(false);
+        }
+    }
+
+    useEffect(() => {
+        const cookie = getCookie('betaSession');
+        if (cookie === 'active') {
+            setBeta(false);
+        }
+
+        setLoading(false);
+    }, []);
+
     useEffect(() => {
         const cookie = getCookie('session');
         if (cookie === "") {
@@ -151,9 +175,12 @@ function App() {
         }
     }, [user]);
 
+    if (loading) {
+        return (<div className='App'></div>);
+    }
     return (
         <div className="App">
-            <CssVarsProvider defaultMode="dark">
+            <CssVarsProvider defaultMode="dark" theme={theme}>
                 <GlobalStyle />
                 <UserContext.Provider value={{
                     'userLoaded': initUserLoad,
@@ -166,20 +193,27 @@ function App() {
                     'openLogin': openLogin,
                     'closeLogin': cancelLogin,
                     'addUser': addUser,
-                    'updateUser': updateUser
+                    'updateUser': updateUser,
+                    'enterBeta': enterBeta
                 }}>
-                    <Routes>
-                        <Route path="/art" element={<Art/>}></Route>
-                        <Route path="/create" element={<Create/>}></Route>
-                        <Route path="/profile" element={<Profile/>}></Route>
-                        <Route path="/edit-profile" element={<EditProfile/>}></Route>
-                        <Route path="/profile/:username" element={<GenericProfile/>}></Route>
-                        <Route path="/story/*" element={<Story/>}></Route>
-                        <Route path="/episode/*" element={<Episode/>}></Route>
-                        <Route path="/collection/*" element={<Collection />}></Route>
-                        {/*<Route path="/" element={<Episode/>}></Route>*/}
-                        <Route path="/" element={<Home />}></Route>
-                    </Routes>
+                    {beta ?
+                        <Routes>
+                            <Route path="/*" element={<Beta />}></Route>
+                        </Routes>
+                        :
+                        <Routes>
+                            <Route path="/art" element={<Art/>}></Route>
+                            <Route path="/create" element={<Create/>}></Route>
+                            <Route path="/profile" element={<Profile/>}></Route>
+                            <Route path="/edit-profile" element={<EditProfile/>}></Route>
+                            <Route path="/profile/:username" element={<GenericProfile/>}></Route>
+                            <Route path="/story/*" element={<Story/>}></Route>
+                            <Route path="/episode/*" element={<Episode/>}></Route>
+                            <Route path="/collection/*" element={<Collection />}></Route>
+                            {/*<Route path="/" element={<Episode/>}></Route>*/}
+                            <Route path="/" element={<Home />}></Route>
+                        </Routes>
+                    }
                 </UserContext.Provider>
             </CssVarsProvider>
         </div>

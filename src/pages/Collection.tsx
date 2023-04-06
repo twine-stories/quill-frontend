@@ -6,9 +6,9 @@ import { collectionGetByUrl } from '../utils/api.ts';
 import { Asset } from '../utils/blockchain/types.ts';
 import { getEscrowProgram, genericGet, genericPost } from '../utils/api.ts';
 import { optIn, buyAsset, getAssetById, getApplicationById, buySign, callApplicationSign } from '../utils/blockchain/transactionRepository.ts';
+import TwineButton from '../components/TwineButton.tsx';
 import algosdk, { encodeAddress, encodeUint64, getApplicationAddress, Transaction } from 'algosdk';
 import { nameMapping, MAKE_PAYMENTS, STOP_SELL_OFFER } from '../utils/blockchain/constants.ts';
-import Button from '../components/TwineButton.tsx';
 import { CollectionType } from '../utils/enums.ts';
 import { adminAddr } from '../utils/blockchain/credentials.ts';
 
@@ -52,7 +52,7 @@ function Collection() {
             skip = false;
             const assetId: number = elem.id;
             const appId: number = elem.appId;
-            
+
             await getAssetById(assetId);
             const app = await getApplicationById(appId);
             const globalState: object[] = app['params']['global-state'];
@@ -192,8 +192,8 @@ function Collection() {
             const currAsset: Asset = assets[elem.id];
             listings.push(<div key={elem.id}>
                 <p>{elem.id}</p>
-                <Button action={() => {buyArtwork(elem)}} name="Buy" enabled={initLoad} />
-                {user && user.walletAddress && currAsset.asaOwner === user.walletAddress && <Button action={() => {stopSellOffer(elem)}} name="Remove Listing" enabled={initLoad} />}
+                <TwineButton action={() => {buyArtwork(elem)}} name="Buy" enabled={initLoad} />
+                {user && user.walletAddress && currAsset.asaOwner === user.walletAddress && <TwineButton action={() => {stopSellOffer(elem)}} name="Remove Listing" enabled={initLoad} />}
             </div>);
         });
     }
@@ -207,7 +207,7 @@ function Collection() {
                     {listings}
                     {
                         coll.collType === CollectionType.SHUFFLE &&
-                        <Button action={buyShuffle} name="Buy Shuffle" enabled={initLoad} />
+                        <TwineButton action={buyShuffle} name="Buy Shuffle" enabled={initLoad} />
                     }
                 </div>
             }
