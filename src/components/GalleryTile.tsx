@@ -4,14 +4,14 @@ import {AspectRatio, Card, Typography} from "@mui/joy";
 
 interface GalleryTileProps {
     work: Work;
-    art: NFTCollection;
+    coll: NFTCollection;
     story: boolean;
 }
 
 function GalleryTile(props: GalleryTileProps) {
     if (props.story) {
         return (
-            <Card variant="outlined" sx={{backgroundColor: "#14100E"}} onClick={() => {window.location.href = '/story/' + props.work['url'];}}>
+            <Card variant="outlined" sx={{backgroundColor: "#14100E"}} onClick={() => {window.location.href = '/story/' + props.work['url']}}>
                 <AspectRatio minHeight="120px" maxHeight="200px" sx={{my: 2}}>
                     <img
                         src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
@@ -32,11 +32,27 @@ function GalleryTile(props: GalleryTileProps) {
             </Card>
         );
     } else {
-        // TODO: RITHIK FIX THIS for art
+        console.log(props.coll);
         return (
-            <div>
-                {props.art && <a href={'/art/' + props.work['url']}>{props.work['title']}</a>}
-            </div>
+            <Card variant="outlined" sx={{backgroundColor: "#14100E"}} onClick={() => {window.location.href = '/collection/' + props.coll.url}}>
+                <AspectRatio minHeight="120px" maxHeight="200px" sx={{my: 2}}>
+                    <img
+                        src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
+                        srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
+                        loading="lazy"
+                        alt=""
+                    />
+                </AspectRatio>
+                <Typography level="h2" sx={{color: "#9E9FEB"}}>
+                    {props.coll && props.coll.name}
+                </Typography>
+                <Typography level="h6" sx={{color: "#E4E5FF"}}>
+                    Total:
+                </Typography>
+                <Typography level="h6" sx={{color: "#E4E5FF"}}>
+                    Published on {props.coll && props.coll.publishStamp.toString()}
+                </Typography>
+            </Card>
         );
     }
 }

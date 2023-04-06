@@ -210,7 +210,7 @@ function App() {
                             <Route path="/story/*" element={<Story/>}></Route>
                             <Route path="/episode/*" element={<Episode/>}></Route>
                             <Route path="/collection/*" element={<Collection />}></Route>
-                            {/*<Route path="/" element={<Episode/>}></Route>*/}
+                            {/* <Route path="/" element={<Gallery art={true} />}></Route> */}
                             <Route path="/" element={<Home />}></Route>
                         </Routes>
                     }
