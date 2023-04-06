@@ -5,6 +5,8 @@ import Beta from './pages/Beta.tsx';
 import Home from './pages/Home.tsx';
 import Create from './pages/Create.tsx';
 import Profile from './pages/Profile.tsx';
+import EditProfile from './pages/EditProfile.tsx';
+import GenericProfile from './pages/GenericProfile.tsx';
 import Story from './pages/Story.tsx';
 import Episode from './pages/Episode.tsx';
 import Art from './pages/Art.tsx';
@@ -203,11 +205,12 @@ function App() {
                             <Route path="/art" element={<Art/>}></Route>
                             <Route path="/create" element={<Create/>}></Route>
                             <Route path="/profile" element={<Profile/>}></Route>
+                            <Route path="/edit-profile" element={<EditProfile/>}></Route>
+                            <Route path="/profile/:username" element={<GenericProfile/>}></Route>
                             <Route path="/story/*" element={<Story/>}></Route>
                             <Route path="/episode/*" element={<Episode/>}></Route>
                             <Route path="/collection/*" element={<Collection />}></Route>
                             {/*<Route path="/" element={<Episode/>}></Route>*/}
-                            {/*<Route path="/" element={<Gallery/>}></Route>*/}
                             <Route path="/" element={<Home />}></Route>
                         </Routes>
                     }
