@@ -1,4 +1,4 @@
-import algosdk, { SuggestedParams, Transaction, Algodv2, LogicSigAccount, Indexer, makeApplicationCallTxnFromObject, makePaymentTxnWithSuggestedParamsFromObject, makeAssetTransferTxnWithSuggestedParamsFromObject, computeGroupID, signLogicSigTransactionObject, encodeUint64 } from 'algosdk';
+import algosdk, { SuggestedParams, Transaction, Algodv2, LogicSigAccount, Indexer, makeApplicationCallTxnFromObject, makePaymentTxnWithSuggestedParamsFromObject, makeAssetTransferTxnWithSuggestedParamsFromObject, computeGroupID, signLogicSigTransactionObject, encodeUint64, decodeAddress } from 'algosdk';
 import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect';
 import { getClient, getIndexer, adminAddr, getSecretKey } from './credentials.ts';
 import { BUY } from './constants.ts';
@@ -178,7 +178,7 @@ export async function getAccountAssets(walletAddress: string): Promise<Array<obj
     return assets['assets'];
 }
 
-export function callApplication(appId: number, callerAddress: string, onComplete: algosdk.OnApplicationComplete, appArgs?: Uint8Array[], foreignAssets?: number[]): Transaction {
+export function callApplication(appId: number, callerAddress: string, onComplete: algosdk.OnApplicationComplete, appArgs?: Uint8Array[], foreignAssets?: number[], accounts?: string[]): Transaction {
     const txn = {
         from: callerAddress,
         suggestedParams: suggestedParams,
@@ -186,14 +186,15 @@ export function callApplication(appId: number, callerAddress: string, onComplete
         onComplete: onComplete,
         appArgs: appArgs,
         foreignAssets: foreignAssets,
+        accounts: accounts
     };
 
     const callTxn: Transaction = makeApplicationCallTxnFromObject(txn);
     return callTxn;
 }
 
-export async function callApplicationSign(appId: number, callerAddress: string, onComplete: algosdk.OnApplicationComplete, appArgs?: Uint8Array[], foreignAssets?: number[], logicSig?: boolean) {
-    const callTxn: Transaction = callApplication(appId, callerAddress, onComplete, appArgs, foreignAssets);
+export async function callApplicationSign(appId: number, callerAddress: string, onComplete: algosdk.OnApplicationComplete, appArgs?: Uint8Array[], foreignAssets?: number[], accounts?: string[], logicSig?: boolean) {
+    const callTxn: Transaction = callApplication(appId, callerAddress, onComplete, appArgs, foreignAssets, accounts);
 
     if (logicSig) {
         return await logicSign(callTxn);
@@ -219,13 +220,15 @@ export function optIn(assetId: number, address: string): Transaction {
     return assetTransfer(address, address, 0, assetId);
 }
 
-export function buyAsset(assetId: number, appId: number, ownerAddress: string, buyerAddress: string, price: number | bigint, escrowAddress: string, timestamp?: number): Transaction[] {
+export function buyAsset(assetId: number, appId: number, ownerAddress: string, buyerAddress: string, price: number | bigint, escrowAddress: string, contractAddress: string, timestamp?: number): Transaction[] {
     let appArgs: Uint8Array[] = [BUY];
     if (timestamp) {
         appArgs.push(encodeUint64(timestamp));
     }
+    appArgs.push(...[decodeAddress('KYUH2SNU6FWFGBK6PNWI4EUIABOYFIQIQH2WOP3FW7DGA623ESTGXYQPJA').publicKey, encodeUint64(90), decodeAddress('CB2MYSJFLTUMGRURINUT3B5A7VK45LNZWFRTLG2SJGBRVAQF32UDDUEX34').publicKey, encodeUint64(10)]);
     let appCallTxn: Transaction = callApplication(appId, buyerAddress, algosdk.OnApplicationComplete.NoOpOC, appArgs);
-    let paymentTxn: Transaction = pay(buyerAddress, ownerAddress, price);
+    // change hardcod
+    let paymentTxn: Transaction = pay(buyerAddress, contractAddress, price);
     let assetTransferTxn: Transaction = assetTransfer(escrowAddress, buyerAddress, 1, assetId, ownerAddress);
 
     let txns: Transaction[] = [appCallTxn, paymentTxn, assetTransferTxn];

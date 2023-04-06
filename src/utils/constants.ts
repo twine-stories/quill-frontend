@@ -5,3 +5,5 @@ export const saleTypeMap: Record<string, CollectionType> = {
     'sale': CollectionType.SALE,
     'shuffle': CollectionType.SHUFFLE
 }
+
+export const MAX_COLLABORATORS: number = 3;

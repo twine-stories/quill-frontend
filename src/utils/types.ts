@@ -60,12 +60,18 @@ export type NFTCollection = {
     collType: CollectionType;
     url: string;
     active: boolean;
-    soldMask: number;
 }
 
 export type Artwork = {
-    id?: number;
-    collection: NFTCollection;
-    assetId: number;
+    id: number;
+    origColl: NFTCollection;
+    currColl?: NFTCollection;
     appId?: number;
+}
+
+export type ProfitSplit = {
+    id?: number;
+    creator: User;
+    collection: NFTCollection;
+    percentage: number;
 }
