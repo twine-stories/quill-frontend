@@ -40,7 +40,8 @@ function EditProfile() {
     let navigate = useNavigate();
 
     const handleSave = () => {
-        let name: string = document.getElementsByClassName("name")[0].getElementsByTagName("textarea")[0].value;
+        let firstname: string = document.getElementsByClassName("firstname")[0].getElementsByTagName("textarea")[0].value;
+        let lastname: string = document.getElementsByClassName("lastname")[0].getElementsByTagName("textarea")[0].value;
         let username: string = document.getElementsByClassName("username")[0].getElementsByTagName("textarea")[0].value;
         let description: string = document.getElementsByClassName("desc")[0].getElementsByTagName("textarea")[0].value;
         let walletAddress: string = document.getElementsByClassName("wallet")[0].getElementsByTagName("textarea")[0].value;
@@ -50,15 +51,14 @@ function EditProfile() {
         let reddit: string = document.getElementsByClassName("reddit")[0].getElementsByTagName("textarea")[0].value;
         let discord: string = document.getElementsByClassName("discord")[0].getElementsByTagName("textarea")[0].value;
 
-        let firstName: string = name.split(" ")[0];
-        let lastName: string = name.split(" ")[1];
+        
         if ("@" == username[0]) {
             username = username.substring(1);
         }
 
 
-        user.firstName = firstName;
-        user.lastName = lastName;
+        user.firstName = firstname;
+        user.lastName = lastname;
         user.displayName = username;
         user.description = description;
         user.walletAddress = walletAddress;
@@ -91,7 +91,8 @@ function EditProfile() {
                     <div className="about-profile">
                         <h2>About Profile</h2>
                         <div className="name-info">
-                            <Textarea className="name" defaultValue={user && user.firstName + " " + user.lastName} maxRows={1} />
+                            <Textarea className="firstname" defaultValue={user && user.firstName} maxRows={1} />
+                            <Textarea className="lastname" defaultValue={user && user.lastName} maxRows={1} />
                             <Textarea className="username" defaultValue={(user && ("@" + user.displayName))} maxRows={1} />
                         </div>
                         <div className="description-info">
