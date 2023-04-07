@@ -1,20 +1,22 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Navbar from "../components/Navbar.tsx";
 import { UserContext } from "../App.tsx";
 import { User } from '../utils/types.ts';
 import ProfileWork from '../components/ProfileWork.tsx';
-import './Profile.css';
 import "../components/ProfileSidebar.tsx"
 import ProfileSidebar from '../components/ProfileSidebar.tsx';
 import {Button} from "@mui/joy";
 
 const axios = require('axios').default;
 
-function Profile() {
+function GenericProfile() {
     const [works, setWorks] = useState<Array<ProfileWork>>();
     const context: object = useContext(UserContext);
-    const user: User = context['user'];
+    const { username } = useParams();
+    // Get user from params
+    // const user: User = context['user'];
+
 
     useEffect(() => {
         if (user && user.creator && user.walletAddress) {
@@ -73,4 +75,4 @@ function Profile() {
       );
 }
 
-export default Profile;
+export default GenericProfile;

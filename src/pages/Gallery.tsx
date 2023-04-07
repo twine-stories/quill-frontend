@@ -3,7 +3,6 @@ import useState from 'react-usestateref'
 import Navbar from "../components/Navbar.tsx";
 import {UserContext} from "../App.tsx";
 import {User, Episode} from '../utils/types.ts';
-import styled from "styled-components";
 import {AspectRatio, Box, Button, Card, Grid, IconButton, Input, Stack, Textarea, Typography} from "@mui/joy";
 import {useImmer} from "use-immer";
 import {enableMapSet} from "immer";
@@ -12,6 +11,8 @@ import ProfileWork from '../components/ProfileWork.tsx';
 import {default as axios} from "axios";
 import TwineButton from "../components/TwineButton.tsx";
 import GalleryTile from "../components/GalleryTile.tsx";
+import { genericGet } from '../utils/api.ts';
+import { NFTCollection, Work } from '../utils/types.ts';
 
 interface WorkGalleryProps {
     art: boolean;
@@ -26,25 +27,30 @@ function Gallery(props: WorkGalleryProps) {
 
     const [view, setView] = useState(false);
 
-    const [works, setWorks] = useState<Array<GalleryTile>>([]);
+    const [galleryItems, setGalleryItems] = useState<Array<GalleryTile>>([]);
 
     useEffect(() => {
         if (user && user.creator && user.walletAddress) {
-            axios.get('/api/work/creator/' + user.walletAddress)
-                .then(response => {
-                    if (response.data) {
-                        var profileWorks: JSX.Element[] = [];
-                        var i = 0;
-                        response.data.forEach(element => {
-                            profileWorks.push(<GalleryTile story={true} work={element} key={i}/>);
-                            i += 1;
-                        });
-                        setWorks(profileWorks);
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+            let profileWorks: JSX.Element[] = [];
+            let i = 0;
+            const fetchAndSet = async () => {
+                if (props.art) {
+                    const response: NFTCollection[] = await genericGet('/api/collection/active/creator/' + user.walletAddress);
+                    response.forEach((elem: NFTCollection) => {
+                        profileWorks.push(<GalleryTile story={false} coll={elem} key={1} />)
+                    });
+                } else {
+                    const response: Work[] = await genericGet('/api/work/creator/' + user.walletAddress);
+                    response.forEach((element: Work) => {
+                        profileWorks.push(<GalleryTile story={true} work={element} key={i}/>);
+                        i += 1;
+                    });
+                }
+            }
+
+            fetchAndSet().then(() => {
+                setGalleryItems(profileWorks);
+            });
         }
     }, [context['user']]);
 
@@ -52,11 +58,11 @@ function Gallery(props: WorkGalleryProps) {
         <div>
             <Navbar/>
             <Typography level="h2" sx={{color: "#9E9FEB"}}>
-                {props.episodeName ? props.episodeName : (props.draft ? "Draft" : "Published").concat(props.art ? " Art" : " Stories")}
+                {props.episodeName ? props.episodeName : (props.draft ? "Draft" : "Published").concat(props.art ? " Collections" : " Stories")}
             </Typography>
             <Box sx={{backgroundColor: "#14100E", borderRadius: 20}}>
                 <Typography level="h5" sx={{color: "#9E9FEB"}}>
-                    {works.length} {props.art ? "Art" : "Stories"}
+                    {galleryItems.length} {galleryItems.length === 1 ? (props.art ? "Collection" : "Story") : (props.art ? "Collections" : "Stories")}
                 </Typography>
 
                 <Grid
@@ -65,19 +71,35 @@ function Gallery(props: WorkGalleryProps) {
                     columns={{xs: 12}}
                     sx={{flexGrow: 1}}
                 >
-                    {works.map((work, index) => (
+                    {galleryItems.map((work, index) => (
                         <Grid xs={4} key={index}>
                             {work}
                         </Grid>
                     ))}
                 </Grid>
             </Box>
-            <div>
-                <TwineButton color='green' size='lg' icon='icons/green_plus.svg' name='Create New Story' />
-            </div>
-            <div>
-                <TwineButton size='lg' icon='icons/paper.svg' name={"Open " + props.draft ? "Draft" : "Published"} />
-            </div>
+            {props.art ?
+                <div>
+                    <div>
+                        <TwineButton color='green' size='lg' icon='icons/green_plus.svg' name='Create One Art' />
+                    </div>
+                    <div>
+                        <TwineButton color='green' size='lg' icon='icons/green_plus.svg' name='Publish Art Collection' />
+                    </div>
+                    <div>
+                        <TwineButton size='lg' icon='icons/paper.svg' name={"Open " + props.draft ? "Draft" : "Published"} />
+                    </div>
+                </div>
+                :
+                <div>
+                    <div>
+                        <TwineButton color='green' size='lg' icon='icons/green_plus.svg' name='Create New Stories' />
+                    </div>
+                    <div>
+                        <TwineButton size='lg' icon='icons/paper.svg' name={"Open " + props.draft ? "Draft" : "Published"} />
+                    </div>
+                </div>
+            }
         </div>
     )
 }

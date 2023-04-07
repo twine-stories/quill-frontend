@@ -13,6 +13,7 @@ export const genericGet = async (endpoint: string): Promise<object | null> => {
         return response.data;
     }
 
+    console.error('get request to ' + endpoint + ' failed');
     return null;
 }
 
@@ -21,6 +22,8 @@ export const genericPost = async (endpoint: string, requestBody: object): Promis
     if (response.status === 200) {
         return response.data;
     }
+    
+    console.error('post request to ' + endpoint + ' failed');
     return null;
 }
 

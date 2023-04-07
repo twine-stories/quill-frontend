@@ -14,6 +14,12 @@ export type User = {
     suspended: boolean;
     userCookie?: string;
     connectType: ConnectType;
+    description?: string;
+    website?: string;
+    twitter?: string;
+    instagram?: string;
+    reddit?: string;
+    discord?: string;
 }
 
 export type Work = {
