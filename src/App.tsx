@@ -207,8 +207,8 @@ function App() {
                             <Route path="/episode/*" element={<Episode/>}></Route>
                             <Route path="/collection/*" element={<Collection />}></Route>
                             {/*<Route path="/" element={<Episode/>}></Route>*/}
-                            {/*<Route path="/" element={<Gallery/>}></Route>*/}
-                            <Route path="/" element={<Home />}></Route>
+                            <Route path="/" element={<Gallery/>}></Route>
+                            {/*<Route path="/" element={<Home />}></Route>*/}
                         </Routes>
                     }
                 </UserContext.Provider>
