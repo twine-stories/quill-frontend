@@ -312,9 +312,9 @@ function Create() {
                 <Typography level="h2" sx={{color: "#A5BB2D"}}>
                     Create Story
                 </Typography>
-                <TwineButton name="New Story" />
-                <TwineButton name="Published Stories" />
-                <TwineButton name="Story Drafts" />
+                <TwineButton name="New Story" action={() => {window.location.href = '/create/story/'}}/>
+                <TwineButton name="Published Stories" action={() => {window.location.href = '/gallery/story/published'}}/>
+                <TwineButton name="Story Drafts" action={() => {window.location.href = '/gallery/story/draft'}}/>
 
                 <div>
                     <input type='text' id='title' name='title' placeholder='enter title' />

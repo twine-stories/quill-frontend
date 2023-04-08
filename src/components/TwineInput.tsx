@@ -1,10 +1,11 @@
 import React from 'react';
-import {Input} from "@mui/joy";
+import {FormControl, FormLabel, Input} from "@mui/joy";
 
 interface InputProps {
     action: () => Promise<void>;
-    placeholder: string;
-    inputAttrs: Record<string, any>;
+    label: string;
+    placeholder?: string;
+    inputAttrs?: Record<string, any>;
     defaultValue?: string;
     startDecorator?: string;
     endDecorator?: string;
@@ -13,15 +14,17 @@ interface InputProps {
 
 function TwineInput(props: InputProps) {
     return (
-        <Input
+        <FormControl>
+            <FormLabel>{props.label}</FormLabel>
+            <Input
             color='brown'
-            startDecorator={props.startDecorator && <img src={props.startDecorator} />}
-            endDecorator={props.endDecorator && <img src={props.endDecorator} />}
+            startDecorator={props.startDecorator && <img src={props.startDecorator}/>}
+            endDecorator={props.endDecorator && <img src={props.endDecorator}/>}
             placeholder={props.placeholder} defaultValue={props.defaultValue}
             slotProps={{
                 input: props.inputAttrs
-            }}
-        />
+            }}/>
+        </FormControl>
     )
 }
 

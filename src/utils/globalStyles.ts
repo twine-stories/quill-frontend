@@ -69,6 +69,26 @@ export const theme = extendTheme({
                 }),
             },
         },
+        JoyFormLabel: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    ...({
+                        fontFamily: 'Oxanium',
+                        color: '#E4E5FF'
+                    }),
+                }),
+            },
+        },
+        JoyTextarea: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    ...({
+                        fontFamily: 'Oxanium',
+                        color: '#E4E5FF'
+                    }),
+                }),
+            },
+        },
     },
 });
 
