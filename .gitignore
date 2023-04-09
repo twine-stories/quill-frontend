@@ -12,7 +12,7 @@
 /build
 
 # src
-src/config.json
+src/config.ts
 
 # misc
 .DS_Store
