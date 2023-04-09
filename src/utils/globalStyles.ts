@@ -44,6 +44,14 @@ export const theme = extendTheme({
                     ...(ownerState.color === 'green' && {
                         color: '#5C720D',
                         backgroundColor: '#A3B832',
+                        // '&:hover': {
+                        //     color: '#A3B832',
+                        //     backgroundColor: '#5C720D',
+                        // },
+                    }),
+                    ...(ownerState.color === 'blackgreen' && {
+                        color: '#A3B832',
+                        backgroundColor: '#14100E',
                     }),
                     ...(ownerState.color === 'light' && {
                         color: '#373867',
@@ -75,6 +83,18 @@ export const theme = extendTheme({
                     ...({
                         fontFamily: 'Oxanium',
                         color: '#E4E5FF'
+                    }),
+                }),
+            },
+        },
+        JoySheet: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    ...(ownerState.color === 'green_dashed' && {
+                        border: '1px #A3B832 dashed',
+                    }),
+                    ...(ownerState.variant === 'rounded' && {
+                        borderRadius: '10px',
                     }),
                 }),
             },

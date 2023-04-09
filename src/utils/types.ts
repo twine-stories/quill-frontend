@@ -35,6 +35,7 @@ export type Work = {
     genre3?: Genre;
     medium: WorkType;
     url: string;
+    hook: string;
 }
 
 export type Episode = {

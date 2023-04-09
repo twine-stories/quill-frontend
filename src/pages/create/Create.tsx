@@ -1,20 +1,37 @@
-import React, { useContext, useState, useEffect, createContext } from 'react';
-import { UserContext } from '../App.tsx';
-import Navbar from "../components/Navbar.tsx";
-import Collaborator from '../components/Collaborator.tsx';
-import TwineButton from '../components/TwineButton.tsx';
-import TwineInput from '../components/TwineInput.tsx';
-import { Genre } from '../utils/enums.ts';
-import { User, Work, Artwork, NFTCollection, ProfitSplit } from '../utils/types.ts';
-import { createNFT, createApplication, changeAssetManagement, escrowProgramToAddress, getAccountAssets, callApplication, callApplicationSign, paySign, signTxns } from '../utils/blockchain/transactionRepository.ts';
-import { workAdd, worksGetByCreator, collectionCreateWithArt, getEscrowProgram, genericPost, genericGet } from '../utils/api.ts'
-import algosdk, { decodeAddress, encodeUint64, getApplicationAddress, Transaction } from 'algosdk';
-import NFTCheckbox from '../components/NFTCheckbox.tsx';
-import { adminAddr } from '../utils/blockchain/credentials.ts';
-import { INIT_ESCROW, MAKE_SELL_OFFER } from '../utils/blockchain/constants.ts';
-import { saleTypeMap, MAX_COLLABORATORS } from '../utils/constants.ts';
-import {Typography} from "@mui/joy";
-import { CollectionType } from '../utils/enums.ts';
+import React, {useContext, useState, useEffect, createContext} from 'react';
+import {UserContext} from '../../App.tsx';
+import Navbar from "../../components/Navbar.tsx";
+import Collaborator from '../../components/Collaborator.tsx';
+import TwineButton from '../../components/TwineButton.tsx';
+import TwineInput from '../../components/TwineInput.tsx';
+import {Genre} from '../../utils/enums.ts';
+import {User, Work, Artwork, NFTCollection, ProfitSplit} from '../../utils/types.ts';
+import {
+    createNFT,
+    createApplication,
+    changeAssetManagement,
+    escrowProgramToAddress,
+    getAccountAssets,
+    callApplication,
+    callApplicationSign,
+    paySign,
+    signTxns
+} from '../../utils/blockchain/transactionRepository.ts';
+import {
+    workAdd,
+    worksGetByCreator,
+    collectionCreateWithArt,
+    getEscrowProgram,
+    genericPost,
+    genericGet
+} from '../../utils/api.ts'
+import algosdk, {decodeAddress, encodeUint64, getApplicationAddress, Transaction} from 'algosdk';
+import NFTCheckbox from '../../components/NFTCheckbox.tsx';
+import {adminAddr} from '../../utils/blockchain/credentials.ts';
+import {INIT_ESCROW, MAKE_SELL_OFFER} from '../../utils/blockchain/constants.ts';
+import {saleTypeMap, MAX_COLLABORATORS} from '../../utils/constants.ts';
+import {Typography, Sheet, Stack} from "@mui/joy";
+import {CollectionType} from '../../utils/enums.ts';
 
 const axios = require('axios').default;
 export const CollaboratorContext = createContext(null as any);
@@ -83,7 +100,9 @@ function Create() {
 
             if (collaborators.length === 0) {
                 setCollaborators([
-                    <Collaborator profitSplit={true} defaultCreator={user.displayName} defaultWallet={user.walletAddress} defaultProfit={100} principle={true} id={0} key={0} />
+                    <Collaborator profitSplit={true} defaultCreator={user.displayName}
+                                  defaultWallet={user.walletAddress} defaultProfit={100} principle={true} id={0}
+                                  key={0}/>
                 ])
             }
         }
@@ -95,7 +114,7 @@ function Create() {
                 let nfts: JSX.Element[] = [];
                 response.forEach(element => {
                     const id: number = element['index'];
-                    nfts.push(<NFTCheckbox cname={cname} assetId={id} name={element['params']['name']} key={id} />)
+                    nfts.push(<NFTCheckbox cname={cname} assetId={id} name={element['params']['name']} key={id}/>)
                 });
                 setAllAssets(nfts);
             });
@@ -116,12 +135,6 @@ function Create() {
         window.location.href = '/';
     }
 
-    const genreOptions: JSX.Element[] = [];
-    const genres: object = Object.keys(Genre);
-    for (let i in Object.values(Genre)) {
-        let val: string = genres[i];
-        genreOptions.push(<option key={val.toLowerCase()} value={val.toLowerCase()}>{val.toLowerCase()}</option>);
-    }
 
     const mintNFT = async (walletAddress: string, unitName: string, assetName: string, assetUrl: string) => {
         const response: object = await createNFT(walletAddress, unitName, assetName, assetUrl);
@@ -201,7 +214,12 @@ function Create() {
                         paySign(adminAddr, escrowAddress, 100000 + (100000 * nftList.length), true)
                     ])
                     for (const assetId of nftList) {
-                        contractInfo[assetId] = {appId: id, assetId: assetId, escrowAddress: escrowAddress, price: 1000000};
+                        contractInfo[assetId] = {
+                            appId: id,
+                            assetId: assetId,
+                            escrowAddress: escrowAddress,
+                            price: 1000000
+                        };
                     }
                 }
             } else {
@@ -216,7 +234,7 @@ function Create() {
                     }
                 });
             }
-            
+
             setSmartContractInfo(contractInfo);
             setSelectedNFTs(nftList);
         }
@@ -235,7 +253,7 @@ function Create() {
 
             txns.push(changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, info.escrowAddress, false));
         }
-        
+
         if (contractType === CollectionType.SHUFFLE) {
             const nftIds: number[] = Object.keys(smartContractInfo).map((elem: string) => parseInt(elem));
             const dummyInfo: AssetInfo = smartContractInfo[nftIds[0]];
@@ -288,7 +306,7 @@ function Create() {
                 appId: smartContractInfo[assetId].appId
             });
         }
-        
+
         const coll: NFTCollection = await collectionCreateWithArt(collection, artworks);
         let profitSplitsWithAddrs: object[] = [];
         for (let i = 0; i < profitSplitAddrs.length; i++) {
@@ -307,113 +325,101 @@ function Create() {
 
     return (
         <div>
-            <Navbar />
+            <Navbar/>
             <div className='pageContent'>
                 <Typography level="h2" sx={{color: "#A5BB2D"}}>
                     Create Story
                 </Typography>
-                <TwineButton name="New Story" action={() => {window.location.href = '/create/story/'}}/>
-                <TwineButton name="Published Stories" action={() => {window.location.href = '/gallery/story/published'}}/>
-                <TwineButton name="Story Drafts" action={() => {window.location.href = '/gallery/story/draft'}}/>
-
-                <div>
-                    <input type='text' id='title' name='title' placeholder='enter title' />
-                    <input type='text' id='description' name='description' placeholder='description' />
-                    <input type='text' id='url' name='url' placeholder='url' />
-                    <select name='genre1' id='genre1'>
-                        {genreOptions}
-                    </select>
-                    <select name='genre2' id='genre2'>
-                        {genreOptions}
-                    </select>
-                    <select name='genre3' id='genre3'>
-                        {genreOptions}
-                    </select>
-                    <TwineButton name='Create!' action={(e) => {
-                        const title: HTMLInputElement = document.getElementById('title') as HTMLInputElement;
-                        const description: HTMLInputElement = document.getElementById('description') as HTMLInputElement;
-                        const url: HTMLInputElement = document.getElementById('url') as HTMLInputElement;
-                        const genre1: HTMLInputElement = document.getElementById('genre1') as HTMLInputElement;
-                        const genre2: HTMLInputElement = document.getElementById('genre2') as HTMLInputElement;
-                        const genre3: HTMLInputElement = document.getElementById('genre3') as HTMLInputElement;
-                        if (title && description && url && genre1 && genre2 && genre3) {
-                            let newWork: Work = {
-                                creator: user,
-                                title: title.value,
-                                description: description.value,
-                                cover: 'cover',
-                                banner: 'banner',
-                                genre1: genre1.value.toUpperCase(),
-                                genre2: genre2.value.toUpperCase(),
-                                genre3: genre3.value.toUpperCase(),
-                                medium: "WRITTEN",
-                                url: url.value
-                            };
-
-                            workAdd(newWork, (work) => {
-                                console.log("url taken");
-                            });
-                        }
-                    }} />
-                </div>
-
+                <Stack
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={2}
+                    height="250px"
+                >
+                <Sheet sx={{height: "100%"}} color="green_dashed" variant="rounded">
+                    <TwineButton icon="icons/green_plus.svg" color="green" name="New Story" action={() => {
+                        window.location.href = '/create/story/'
+                    }}/>
+                </Sheet>
+                <Sheet sx={{height: "100%"}} color="green_dashed" variant="rounded">
+                    <TwineButton icon="icons/green_paper.svg" color="blackgreen" name="Published Stories"
+                                 action={() => {
+                                     window.location.href = '/gallery/story/published'
+                                 }}/>
+                </Sheet>
+                <Sheet sx={{height: "100%"}} color="green_dashed" variant="rounded">
+                    <TwineButton icon="icons/green_paper.svg" color="blackgreen" name="Story Drafts" action={() => {
+                        window.location.href = '/gallery/story/draft'
+                    }}/>
+                </Sheet>
+                </Stack>
 
                 {/*I DIDN"T TOUCH ANYTHING BELOW THIS*/}
 
 
-                <Typography level="h2" sx={{color: "#A5BB2D"}}>
-                    Create NFT
+                <Typography level="h2" sx={{color: "#9E9FEB"}}>
+                    Create Art
+                </Typography>
+                <Typography level="h3" sx={{color: "#9E9FEB"}}>
+                    Coming Soon!
                 </Typography>
                 <div>
-                    <TwineInput placeholder='Unit name' inputAttrs={{
-                        id: 'unitName'
-                    }} />
-                    <TwineInput placeholder='Asset name' inputAttrs={{
-                        id: 'assetName'
-                    }} />
-                    <TwineInput placeholder='Asset url' inputAttrs={{
-                        id: 'assetUrl'
-                    }} />
-                    <TwineButton name='Mint NFT' action={(e) => {
-                        const unitName: HTMLInputElement = document.getElementById('unitName') as HTMLInputElement;
-                        const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;
-                        const assetUrl: HTMLInputElement = document.getElementById('assetUrl') as HTMLInputElement;
-                        if (unitName && assetName && assetUrl) {
-                            mintNFT(user.walletAddress, unitName.value, assetName.value, assetUrl.value);
-                        }
-                    }} />
-                </div>
-                {allAssets}
-                <label htmlFor="saleType">Choose a sale type:</label>
-                <select name="saleType" id="saleType" onChange={(e) => {setContractType(saleTypeMap[e.target.value])}}>
-                    <option value={"sale"}>sale</option>
-                    <option value={"rev_auction"}>reverse auction</option>
-                    <option value={"shuffle"}>shuffle</option>
-                </select>
-                <label htmlFor="works">Choose a work:</label>
-                <select name="works" id="works">
-                    {workOptions}
-                </select>
-                <input type='text' id='collName' name='collName' placeholder='enter collection name' />
-                <CollaboratorContext.Provider value={{
-                    'remove': removeCollaborator
-                }}>
                     <div>
-                        {collaborators}
-                        <TwineButton name='Add Collaborator' enabled={collaborators.length < MAX_COLLABORATORS} action={(e) => {
-                            if (collaborators.length < MAX_COLLABORATORS) {
-                                const id: number = collaborators[collaborators.length - 1].props.id + 1;
-                                setCollaborators([
-                                    ...collaborators,
-                                    <Collaborator profitSplit={true} principle={false} id={id} key={id} />
-                                ])
+                        <TwineInput placeholder='Unit name' inputAttrs={{
+                            id: 'unitName'
+                        }}/>
+                        <TwineInput placeholder='Asset name' inputAttrs={{
+                            id: 'assetName'
+                        }}/>
+                        <TwineInput placeholder='Asset url' inputAttrs={{
+                            id: 'assetUrl'
+                        }}/>
+                        <TwineButton name='Mint NFT' action={(e) => {
+                            const unitName: HTMLInputElement = document.getElementById('unitName') as HTMLInputElement;
+                            const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;
+                            const assetUrl: HTMLInputElement = document.getElementById('assetUrl') as HTMLInputElement;
+                            if (unitName && assetName && assetUrl) {
+                                mintNFT(user.walletAddress, unitName.value, assetName.value, assetUrl.value);
                             }
-                        }} />
+                        }}/>
                     </div>
-                </CollaboratorContext.Provider>
-                <div>
-                    <TwineButton name='Generate Contract(s)' action={confirmNFTs} />
-                    <TwineButton name='Post NFT(s) for Sale' enabled={enableSell} action={(e) => makeSellOffer()} />
+                    {allAssets}
+                    <label htmlFor="saleType">Choose a sale type:</label>
+                    <select name="saleType" id="saleType" onChange={(e) => {
+                        setContractType(saleTypeMap[e.target.value])
+                    }}>
+                        <option value={"sale"}>sale</option>
+                        <option value={"rev_auction"}>reverse auction</option>
+                        <option value={"shuffle"}>shuffle</option>
+                    </select>
+                    <label htmlFor="works">Choose a work:</label>
+                    <select name="works" id="works">
+                        {workOptions}
+                    </select>
+                    <input type='text' id='collName' name='collName' placeholder='enter collection name'/>
+                    <CollaboratorContext.Provider value={{
+                        'remove': removeCollaborator
+                    }}>
+                        <div>
+                            {collaborators}
+                            <TwineButton name='Add Collaborator' enabled={collaborators.length < MAX_COLLABORATORS}
+                                         action={(e) => {
+                                             if (collaborators.length < MAX_COLLABORATORS) {
+                                                 const id: number = collaborators[collaborators.length - 1].props.id + 1;
+                                                 setCollaborators([
+                                                     ...collaborators,
+                                                     <Collaborator profitSplit={true} principle={false} id={id}
+                                                                   key={id}/>
+                                                 ])
+                                             }
+                                         }}/>
+                        </div>
+                    </CollaboratorContext.Provider>
+                    <div>
+                        <TwineButton name='Generate Contract(s)' action={confirmNFTs}/>
+                        <TwineButton name='Post NFT(s) for Sale' enabled={enableSell} action={(e) => makeSellOffer()}/>
+                    </div>
                 </div>
             </div>
         </div>

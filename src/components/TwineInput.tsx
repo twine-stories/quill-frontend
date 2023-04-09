@@ -10,6 +10,7 @@ interface InputProps {
     startDecorator?: string;
     endDecorator?: string;
     size?: string;
+    id?: string;
 }
 
 function TwineInput(props: InputProps) {
@@ -17,13 +18,14 @@ function TwineInput(props: InputProps) {
         <FormControl>
             <FormLabel>{props.label}</FormLabel>
             <Input
-            color='brown'
-            startDecorator={props.startDecorator && <img src={props.startDecorator}/>}
-            endDecorator={props.endDecorator && <img src={props.endDecorator}/>}
-            placeholder={props.placeholder} defaultValue={props.defaultValue}
-            slotProps={{
-                input: props.inputAttrs
-            }}/>
+                id={props.id}
+                color='brown'
+                startDecorator={props.startDecorator && <img src={props.startDecorator}/>}
+                endDecorator={props.endDecorator && <img src={props.endDecorator}/>}
+                placeholder={props.placeholder} defaultValue={props.defaultValue}
+                slotProps={{
+                    input: props.inputAttrs
+                }}/>
         </FormControl>
     )
 }

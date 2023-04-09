@@ -42,6 +42,7 @@ function Gallery(props: WorkGalleryProps) {
                 } else {
                     const response: Work[] = await genericGet('/api/work/creator/' + user.walletAddress);
                     response.forEach((element: Work) => {
+                        if (element.publishStamp)
                         profileWorks.push(<GalleryTile story={true} work={element} key={i}/>);
                         i += 1;
                     });
@@ -71,9 +72,9 @@ function Gallery(props: WorkGalleryProps) {
                     columns={{xs: 12}}
                     sx={{flexGrow: 1}}
                 >
-                    {galleryItems.map((work, index) => (
+                    {galleryItems.map((galleryTile, index) => (
                         <Grid xs={4} key={index}>
-                            {work}
+                            {galleryTile}
                         </Grid>
                     ))}
                 </Grid>

@@ -1,8 +1,8 @@
 import React, {useContext} from 'react';
 import useState from 'react-usestateref'
-import Navbar from "../components/Navbar.tsx";
-import {UserContext} from "../App.tsx";
-import {User, Episode} from '../utils/types.ts';
+import Navbar from "../../components/Navbar.tsx";
+import {UserContext} from "../../App.tsx";
+import {User, Episode} from '../../utils/types.ts';
 import styled from "styled-components";
 import {
     AspectRatio,
@@ -20,9 +20,9 @@ import {
 import {useImmer} from "use-immer";
 import {enableMapSet} from "immer";
 import Sheet from '@mui/joy/Sheet';
-import TwineInput from "../components/TwineInput.tsx";
-import TwoColumnLayout from "../components/TwoColumnLayout.tsx";
-import TwineButton from "../components/TwineButton.tsx";
+import TwineInput from "../../components/TwineInput.tsx";
+import TwoColumnLayout from "../../components/TwoColumnLayout.tsx";
+import TwineButton from "../../components/TwineButton.tsx";
 
 enableMapSet();
 
@@ -207,10 +207,10 @@ function CreateEpisode() {
                         <div>
                             <Box
                                 sx={{
-                                    py: 2,
+                                    py: 1,
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    gap: 2,
+                                    gap: 1,
                                     alignItems: 'center',
                                     flexWrap: 'wrap',
                                 }}
@@ -239,10 +239,10 @@ function CreateEpisode() {
                     <div style={{display: view ? 'none' : null}}>
                         <Box
                             sx={{
-                                py: 2,
+                                py: 1,
                                 display: 'flex',
                                 flexDirection: 'column',
-                                gap: 2,
+                                gap: 1,
                                 alignItems: 'center',
                                 flexWrap: 'wrap',
                             }}
@@ -281,7 +281,20 @@ function CreateEpisode() {
                 </div>
             }
                              rightComponent={
-                                 <TwineButton name="Publish"></TwineButton>
+                                 <Box
+                                     sx={{
+                                         py: 2,
+                                         display: 'flex',
+                                         flexDirection: 'column',
+                                         gap: 1,
+                                         alignItems: 'center',
+                                         flexWrap: 'wrap',
+                                     }}
+                                 >
+                                     <TwineButton name="Save Draft"
+                                                icon="icons/purple_checkmark.svg"></TwineButton>
+                                     <TwineButton name="Create Chapter" icon="icons/green_plus.svg" color="green"></TwineButton>
+                                 </Box>
                              }
             />
         </div>

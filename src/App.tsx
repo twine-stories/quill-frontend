@@ -3,15 +3,15 @@ import './App.css';
 import {Routes, Route} from "react-router-dom";
 import Beta from './pages/Beta.tsx';
 import Home from './pages/Home.tsx';
-import Create from './pages/Create.tsx';
+import Create from './pages/create/Create.tsx';
 import Profile from './pages/Profile.tsx';
 import EditProfile from './pages/EditProfile.tsx';
 import GenericProfile from './pages/GenericProfile.tsx';
 import Story from './pages/Story.tsx';
-import Episode from './pages/Episode.tsx';
 import Art from './pages/Art.tsx';
 import Gallery from "./pages/Gallery.tsx";
 import Collection from './pages/Collection.tsx';
+import CreateStory from "./pages/create/CreateStory.tsx";
 import {ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib} from '@reach-sh/stdlib';
 import {v4 as uuidv4} from 'uuid';
 import {getCookie, setCookie, deleteCookie} from './utils/cookies.ts';
@@ -22,6 +22,7 @@ import GlobalStyle from "./utils/globalStyles.ts";
 import {PeraWalletConnect} from "@perawallet/connect";
 import {ConnectType} from './utils/enums.ts';
 import { theme } from './utils/globalStyles.ts';
+import CreateEpisode from "./pages/create/CreateChapter.tsx";
 
 const reach = loadStdlib('ALGO');
 reach.setWalletFallback(reach.walletFallback({
@@ -204,13 +205,13 @@ function App() {
                         <Routes>
                             <Route path="/art" element={<Art/>}></Route>
                             <Route path="/create" element={<Create/>}></Route>
+                            <Route path="/create/story" element={<CreateStory/>}></Route>
                             <Route path="/profile" element={<Profile/>}></Route>
                             <Route path="/edit-profile" element={<EditProfile/>}></Route>
                             <Route path="/profile/:username" element={<GenericProfile/>}></Route>
                             <Route path="/story/*" element={<Story/>}></Route>
-                            <Route path="/episode/*" element={<Episode/>}></Route>
+                            <Route path="/episode/*" element={<CreateEpisode/>}></Route>
                             <Route path="/collection/*" element={<Collection />}></Route>
-                            {/*<Route path="/" element={<Episode/>}></Route>*/}
                             <Route path="/gallery/story/draft" element={<Gallery art={false} draft={true}/>}></Route>
                             <Route path="/gallery/story/published" element={<Gallery art={false} draft={false}/>}></Route>
                             <Route path="/" element={<Home />}></Route>

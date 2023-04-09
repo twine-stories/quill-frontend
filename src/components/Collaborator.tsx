@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { IconButton, Grid } from '@mui/joy';
-import { CollaboratorContext } from '../pages/Create.tsx';
+import { CollaboratorContext } from '../pages/create/Create.tsx';
 import TwineInput from './TwineInput.tsx';
 
 interface CollaboratorProps {
