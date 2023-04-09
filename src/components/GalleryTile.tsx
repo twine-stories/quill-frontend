@@ -32,7 +32,6 @@ function GalleryTile(props: GalleryTileProps) {
             </Card>
         );
     } else {
-        console.log(props.coll);
         return (
             <Card variant="outlined" sx={{backgroundColor: "#14100E"}} onClick={() => {window.location.href = '/collection/' + props.coll.url}}>
                 <AspectRatio minHeight="120px" maxHeight="200px" sx={{my: 2}}>

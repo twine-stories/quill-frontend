@@ -39,7 +39,10 @@ export const theme = extendTheme({
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({
                     ...({
-                        fontFamily: 'Oxanium'
+                        fontFamily: 'Oxanium',
+                        '&:hover': {
+                            cursor: 'pointer'
+                        }
                     }),
                     ...(ownerState.color === 'green' && {
                         color: '#5C720D',
@@ -53,13 +56,25 @@ export const theme = extendTheme({
                         color: '#A3B832',
                         backgroundColor: '#14100E',
                     }),
+                    ...(ownerState.color === 'green' && ownerState.disabled === true && {
+                        color: '#404626',
+                        backgroundColor: '#A3B83280',
+                    }),
                     ...(ownerState.color === 'light' && {
                         color: '#373867',
                         backgroundColor: '#9E9FEB',
                     }),
+                    ...(ownerState.color === 'light' && ownerState.disabled === true && {
+                        color: '#7A7BAF',
+                        backgroundColor: '#9E9FEB80',
+                    }),
                     ...(ownerState.color === 'dark' && {
                         color: '#9E9FEB',
                         backgroundColor: '#4546AB',
+                    }),
+                    ...(ownerState.color === 'dark' && ownerState.disabled === true && {
+                        color: '#4546AB',
+                        backgroundColor: '#23232E',
                     }),
                 }),
             },
