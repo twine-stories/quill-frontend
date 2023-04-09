@@ -47,6 +47,14 @@ export const theme = extendTheme({
                     ...(ownerState.color === 'green' && {
                         color: '#5C720D',
                         backgroundColor: '#A3B832',
+                        // '&:hover': {
+                        //     color: '#A3B832',
+                        //     backgroundColor: '#5C720D',
+                        // },
+                    }),
+                    ...(ownerState.color === 'blackgreen' && {
+                        color: '#A3B832',
+                        backgroundColor: '#14100E',
                     }),
                     ...(ownerState.color === 'green' && ownerState.disabled === true && {
                         color: '#404626',
@@ -81,6 +89,38 @@ export const theme = extendTheme({
                         border: '0.5px #241D19 solid',
                         color: '#E4E5FF'
                     })
+                }),
+            },
+        },
+        JoyFormLabel: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    ...({
+                        fontFamily: 'Oxanium',
+                        color: '#E4E5FF'
+                    }),
+                }),
+            },
+        },
+        JoySheet: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    ...(ownerState.color === 'green_dashed' && {
+                        border: '1px #A3B832 dashed',
+                    }),
+                    ...(ownerState.variant === 'rounded' && {
+                        borderRadius: '10px',
+                    }),
+                }),
+            },
+        },
+        JoyTextarea: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    ...({
+                        fontFamily: 'Oxanium',
+                        color: '#E4E5FF'
+                    }),
                 }),
             },
         },
