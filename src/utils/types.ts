@@ -27,30 +27,29 @@ export type Work = {
     creator: User;
     title: string;
     description: string;
+    medium: WorkType;
+    url: string;
+    hook: string;
+    mature: boolean;
     cover?: string;
     banner?: string;
     publishStamp?: Date;
     genre1: Genre;
     genre2?: Genre;
     genre3?: Genre;
-    medium: WorkType;
-    url: string;
-    hook: string;
 }
 
 export type Episode = {
     id?: number;
-    creator: User;
+    work: Work;
     title: string;
-    description: string;
+    content: string;
     cover?: string;
-    banner?: string;
+    endOfChapterMessage?: string;
     publishStamp?: Date;
-    genre1: Genre;
-    genre2?: Genre;
-    genre3?: Genre;
-    medium: WorkType;
+    flags: number;
     url: string;
+    mature: boolean;
 }
 
 export type NFTCollection = {

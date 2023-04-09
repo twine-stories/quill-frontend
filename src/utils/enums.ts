@@ -7,7 +7,8 @@ export const enum Genre {
     COMEDY = 'COMEDY',
     SLICE_OF_LIFE = 'SLICE_OF_LIFE',
     SUPERNATURAL = 'SUPERNATURAL',
-    HORROR = 'HORROR'
+    HORROR = 'HORROR',
+    NONE = "NONE"
 }
 
 export const enum WorkType {

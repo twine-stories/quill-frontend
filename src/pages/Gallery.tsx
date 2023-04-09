@@ -42,8 +42,9 @@ function Gallery(props: WorkGalleryProps) {
                 } else {
                     const response: Work[] = await genericGet('/api/work/creator/' + user.walletAddress);
                     response.forEach((element: Work) => {
-                        if (element.publishStamp)
-                        profileWorks.push(<GalleryTile story={true} work={element} key={i}/>);
+                        if ((element.publishStamp && !props.draft) || (!element.publishStamp && props.draft)) {
+                            profileWorks.push(<GalleryTile story={true} work={element} key={i}/>);
+                        }
                         i += 1;
                     });
                 }

@@ -15,10 +15,9 @@ interface InputProps {
 
 function TwineInput(props: InputProps) {
     return (
-        <FormControl>
+        <FormControl id={props.id}>
             <FormLabel>{props.label}</FormLabel>
             <Input
-                id={props.id}
                 color='brown'
                 startDecorator={props.startDecorator && <img src={props.startDecorator}/>}
                 endDecorator={props.endDecorator && <img src={props.endDecorator}/>}

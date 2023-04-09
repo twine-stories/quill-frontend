@@ -13,7 +13,7 @@ import {
     FormLabel,
     IconButton,
     Input,
-    Stack,
+    Stack, Switch,
     Textarea,
     Typography
 } from "@mui/joy";
@@ -291,9 +291,15 @@ function CreateEpisode() {
                                          flexWrap: 'wrap',
                                      }}
                                  >
+                                     <Typography sx={{backgroundColor: "#14100E", borderRadius: "10px", p:"10px"}} level="h6" endDecorator={<Switch sx={{ ml: 1 }} />}>
+                                         Mature
+                                     </Typography>
+
                                      <TwineButton name="Save Draft"
                                                 icon="icons/purple_checkmark.svg"></TwineButton>
                                      <TwineButton name="Create Chapter" icon="icons/green_plus.svg" color="green"></TwineButton>
+
+
                                  </Box>
                              }
             />
