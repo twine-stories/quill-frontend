@@ -206,6 +206,7 @@ function App() {
                             <Route path="/art" element={<Art/>}></Route>
                             <Route path="/create" element={<Create/>}></Route>
                             <Route path="/create/story" element={<CreateStory/>}></Route>
+                            <Route path="/create/episode/*" element={<CreateEpisode/>}></Route>
                             <Route path="/profile" element={<Profile/>}></Route>
                             <Route path="/edit-profile" element={<EditProfile/>}></Route>
                             <Route path="/profile/:username" element={<GenericProfile/>}></Route>
@@ -215,8 +216,6 @@ function App() {
                             <Route path="/gallery/story/draft" element={<Gallery art={false} draft={true}/>}></Route>
                             <Route path="/gallery/story/published" element={<Gallery art={false} draft={false}/>}></Route>
                             <Route path="/" element={<Home />}></Route>
-                            {/* <Route path="/" element={<Gallery art={true} />}></Route> */}
-                            {/*<Route path="/" element={<Home />}></Route>*/}
                         </Routes>
                     }
                 </UserContext.Provider>

@@ -44,6 +44,14 @@ export const theme = extendTheme({
                             cursor: 'pointer'
                         }
                     }),
+                    ...(ownerState.color === 'blackgreen' && {
+                        color: '#A3B832',
+                        backgroundColor: '#14100E',
+                    }),
+                    ...(ownerState.color === 'blackpurple' && {
+                        color: '#9E9FEB',
+                        backgroundColor: '#14100E',
+                    }),
                     ...(ownerState.color === 'green' && {
                         color: '#5C720D',
                         backgroundColor: '#A3B832',
@@ -52,27 +60,23 @@ export const theme = extendTheme({
                         //     backgroundColor: '#5C720D',
                         // },
                     }),
-                    ...(ownerState.color === 'blackgreen' && {
-                        color: '#A3B832',
-                        backgroundColor: '#14100E',
-                    }),
                     ...(ownerState.color === 'green' && ownerState.disabled === true && {
                         color: '#404626',
                         backgroundColor: '#A3B83280',
                     }),
-                    ...(ownerState.color === 'light' && {
+                    ...(ownerState.color === 'purple' && {
                         color: '#373867',
                         backgroundColor: '#9E9FEB',
                     }),
-                    ...(ownerState.color === 'light' && ownerState.disabled === true && {
+                    ...(ownerState.color === 'purple' && ownerState.disabled === true && {
                         color: '#7A7BAF',
                         backgroundColor: '#9E9FEB80',
                     }),
-                    ...(ownerState.color === 'dark' && {
+                    ...(ownerState.color === 'darkpurple' && {
                         color: '#9E9FEB',
                         backgroundColor: '#4546AB',
                     }),
-                    ...(ownerState.color === 'dark' && ownerState.disabled === true && {
+                    ...(ownerState.color === 'darkpurple' && ownerState.disabled === true && {
                         color: '#4546AB',
                         backgroundColor: '#23232E',
                     }),

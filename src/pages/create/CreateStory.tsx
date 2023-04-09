@@ -96,7 +96,7 @@ function CreateStory() {
                                                           };
 
                                                           workAdd(newWork, (work) => {
-                                                              console.log("url taken");
+                                                              console.log("Your title is the same as one of your existing titles. Please choose a different title.");
                                                           });
                                                       }
                                                   }}/>

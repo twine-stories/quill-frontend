@@ -110,15 +110,15 @@ function CreateEpisode() {
                     <Box sx={{ml: 'auto'}}>
                         <IconButton onClick={function () {
                             moveItemUp(counter)
-                        }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="icons/purple_arrow_up.svg"
+                        }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_up.svg"
                                                                                   width="30px" height="30px"/></IconButton>
                         <IconButton onClick={function () {
                             moveItemDown(counter)
-                        }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="icons/purple_arrow_down.svg"
+                        }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_down.svg"
                                                                                   width="30px" height="30px"/></IconButton>
                         <IconButton onClick={function () {
                             removeItem(counter)
-                        }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="icons/remove.svg" width="30px"
+                        }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/remove.svg" width="30px"
                                                                                   height="30px"/></IconButton>
                     </Box>
                 }
@@ -145,15 +145,15 @@ function CreateEpisode() {
                 <Box sx={{ml: 'auto'}}>
                     <IconButton onClick={function () {
                         moveItemUp(counter)
-                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="icons/purple_arrow_up.svg"
+                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_up.svg"
                                                                               width="30px" height="30px"/></IconButton>
                     <IconButton onClick={function () {
                         moveItemDown(counter)
-                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="icons/purple_arrow_down.svg"
+                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_down.svg"
                                                                               width="30px" height="30px"/></IconButton>
                     <IconButton onClick={function () {
                         removeItem(counter)
-                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="icons/remove.svg" width="30px"
+                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/remove.svg" width="30px"
                                                                               height="30px"/></IconButton>
                 </Box>
             </Card>
@@ -296,8 +296,8 @@ function CreateEpisode() {
                                      </Typography>
 
                                      <TwineButton name="Save Draft"
-                                                icon="icons/purple_checkmark.svg"></TwineButton>
-                                     <TwineButton name="Create Chapter" icon="icons/green_plus.svg" color="green"></TwineButton>
+                                                icon="/icons/purple_checkmark.svg"></TwineButton>
+                                     <TwineButton name="Create Chapter" icon="/icons/green_plus.svg" color="green"></TwineButton>
 
 
                                  </Box>
