@@ -2,6 +2,7 @@ import {useEffect, useState, createContext} from 'react';
 import './App.css';
 import {Routes, Route} from "react-router-dom";
 import Beta from './pages/Beta.tsx';
+import Feedback from './pages/Feedback.tsx';
 import Home from './pages/Home.tsx';
 import Create from './pages/create/Create.tsx';
 import Profile from './pages/Profile.tsx';
@@ -129,13 +130,13 @@ function App() {
 
     const enterBeta = (code: string) => {
         if (code === accessCode) {
-            setCookie('betaSession', 'active');
+            setCookie('beta_session', 'active');
             setBeta(false);
         }
     }
 
     useEffect(() => {
-        const cookie = getCookie('betaSession');
+        const cookie = getCookie('beta_session');
         if (cookie === 'active') {
             setBeta(false);
         }
@@ -203,6 +204,7 @@ function App() {
                         </Routes>
                         :
                         <Routes>
+                            <Route path="/feedback" element={<Feedback/>}></Route>
                             <Route path="/art" element={<Art/>}></Route>
                             <Route path="/create" element={<Create/>}></Route>
                             <Route path="/create/story" element={<CreateStory/>}></Route>

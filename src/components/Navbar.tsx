@@ -54,7 +54,7 @@ function Navbar() {
     }
 
     return (
-        <div>
+        <div style={{marginBottom: '25px'}}>
             <FirstLogin />
             {context['user'] && context['user']['walletAddress'] ?
                 <>

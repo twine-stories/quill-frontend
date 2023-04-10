@@ -53,12 +53,14 @@ export const theme = extendTheme({
                         fontFamily: 'Twine',
                         fontWeight: 'normal',
                         margin: '20px 10px',
+                        textAlign: 'left'
                         
                     }),
                     ...((ownerState.level === 'h3' || ownerState.level === 'h4' || ownerState.level === 'h5' || ownerState.level === 'h6') && {
                         fontFamily: 'Oxanium',
                         fontWeight: 'normal',
                         margin: '10px 20px',
+                        textAlign: 'left'
                     }),
                 })
             }
@@ -152,7 +154,8 @@ export const theme = extendTheme({
                 root: ({ ownerState, theme }) => ({
                     ...({
                         fontFamily: 'Oxanium',
-                        color: '#E4E5FF'
+                        color: '#E4E5FF',
+                        border: '0.5px #241D19 solid'
                     }),
                 }),
             },
