@@ -1,0 +1,2 @@
+export const ACCESS_KEY_ID = "AKIARFCL4FMGVVPHRYYJ";
+export const SECRET_ACCESS_KEY = "rAEVfCPHH2IRrgps4PGcd4NGx";

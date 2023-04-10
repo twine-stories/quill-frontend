@@ -4,6 +4,8 @@ import React, {useContext, useState} from 'react';
 import { UserContext } from "../App.tsx";
 import UploadImage from "./UploadImage.tsx";
 import TwineButton from "./TwineButton.tsx";
+import { PROFILE_IMGS_BUCKET } from "../config.ts";
+import { ACCESS_KEY_ID, SECRET_ACCESS_KEY } from "../utils/secrets.ts";
 
 
 
@@ -52,10 +54,10 @@ const EditSidebar = ({handleSave, handleCancel}) => {
             <TwineButton name={"Cancel Edit"} action={cancelEdit}/>
             <TwineButton name={"Upload Image"} action={showUploadImage}/>
             {uploadImageVisible && <UploadImage 
-                bucketName = "test"
-                accessKeyId = "test"
-                secretAccessKey = "test"
-                region = "test"
+                bucketName = {PROFILE_IMGS_BUCKET}
+                accessKeyId = {ACCESS_KEY_ID}
+                secretAccessKey = {SECRET_ACCESS_KEY}
+                region = "us-east-1"
                 hideComponent = {hideUploadImage}
             /> }
             

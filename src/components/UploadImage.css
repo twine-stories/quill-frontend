@@ -24,6 +24,8 @@
 
   .popup-content img {
     object-fit: contain;
+    padding-top: 10px;
+    padding-bottom: -10px;
   }
   
   .popup-content h2 {

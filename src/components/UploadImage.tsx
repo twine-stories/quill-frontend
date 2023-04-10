@@ -70,7 +70,7 @@ function UploadImage({
         <div className="popup-content">
           <h2>Upload Image</h2>
           <div>
-            <input type="file" onChange={handleFileChange} />
+            <input type="file" onChange={handleFileChange} accept=".jpg,.jpeg,.png"/>
           </div>
           <div>
             {(imgsrc != null) && <img src={imgsrc as string} width="128" height="128"/>}
