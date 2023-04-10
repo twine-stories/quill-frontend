@@ -42,7 +42,7 @@ function Story() {
                             <Typography level="h1" sx={{color: "#E4E5FF"}}>{work['title']}</Typography>
                             <Typography level="h6" sx={{color: "#E4E5FF"}}>{work['description']}</Typography>
 
-                            <TwineButton icon="icons/purple_plus.svg" color="purple" name="New Episode" action={() => {
+                            <TwineButton icon="/icons/purple_plus.svg" color="purple" name="New Episode" action={() => {
                                 window.location.href = '/create/episode/' + work['url'];
                             }}/>
 

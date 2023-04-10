@@ -271,7 +271,7 @@ function CreateEpisode() {
                                 {/*    console.log(inputList)*/}
                                 {/*}} sx={{ml: 'auto'}}>✅</IconButton>*/}
                                 <Button startDecorator={<img
-                                    src="icons/add_image.svg"
+                                    src="/icons/add_image.svg"
                                     width="20px" height="20px"
                                 />} variant="outlined" color="neutral" onClick={onAddImageButtonClick}>Add
                                     Image</Button>

@@ -70,8 +70,8 @@ function CreateStory() {
                                      }}
                                  >
                                      <TwineButton name="Save Draft"
-                                                  icon="icons/purple_checkmark.svg"></TwineButton>
-                                     <TwineButton name='Create Story' color="green" icon="icons/green_plus.svg"
+                                                  icon="/icons/purple_checkmark.svg"></TwineButton>
+                                     <TwineButton name='Create Story' color="green" icon="/icons/green_plus.svg"
                                                   action={(e) => {
                                                       const title: HTMLInputElement = document.getElementById("title") as HTMLInputElement;
                                                       const description: HTMLInputElement = document.getElementById('description') as HTMLInputElement;

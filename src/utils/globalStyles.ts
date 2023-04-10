@@ -5,6 +5,13 @@ import { fontWeight } from '@mui/system';
 
 const GlobalStyle = createGlobalStyle `${styles.toString()}`;
 
+declare module '@mui/joy/Typography' {
+    interface TypographyPropsColorOverrides {
+        green: true;
+        purple: true;
+    }
+}
+
 declare module '@mui/joy/Button' {
     interface ButtonPropsColorOverrides {
         green: true;
@@ -21,18 +28,37 @@ declare module '@mui/joy/Input' {
     }
 }
 
+declare module '@mui/joy/Sheet' {
+    interface SheetPropsColorOverrides {
+        green_dashed: true;
+    }
+
+    interface SheetPropsVariantOverrides {
+        rounded: true;
+    }
+}
+
 export const theme = extendTheme({
     components: {
         JoyTypography: {
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({
+                    ...((ownerState.color === 'green') && {
+                        color: '#A5BB2D'
+                    }),
+                    ...((ownerState.color === 'purple') && {
+                        color: '#9E9FEB'
+                    }),
                     ...((ownerState.level === 'h1' || ownerState.level === 'h2') && {
                         fontFamily: 'Twine',
-                        fontWeight: 'normal'
+                        fontWeight: 'normal',
+                        margin: '20px 10px',
+                        
                     }),
                     ...((ownerState.level === 'h3' || ownerState.level === 'h4' || ownerState.level === 'h5' || ownerState.level === 'h6') && {
                         fontFamily: 'Oxanium',
-                        fontWeight: 'normal'
+                        fontWeight: 'normal',
+                        margin: '10px 20px',
                     }),
                 })
             }
@@ -42,6 +68,7 @@ export const theme = extendTheme({
                 root: ({ ownerState, theme }) => ({
                     ...({
                         fontFamily: 'Oxanium',
+                        margin: '5px',
                         '&:hover': {
                             cursor: 'pointer'
                         }
@@ -57,10 +84,6 @@ export const theme = extendTheme({
                     ...(ownerState.color === 'green' && {
                         color: '#5C720D',
                         backgroundColor: '#A3B832',
-                        // '&:hover': {
-                        //     color: '#A3B832',
-                        //     backgroundColor: '#5C720D',
-                        // },
                     }),
                     ...(ownerState.color === 'green' && ownerState.disabled === true && {
                         color: '#404626',
@@ -113,6 +136,10 @@ export const theme = extendTheme({
                 root: ({ ownerState, theme }) => ({
                     ...(ownerState.color === 'green_dashed' && {
                         border: '1px #A3B832 dashed',
+                        padding: '0px 20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
                     }),
                     ...(ownerState.variant === 'rounded' && {
                         borderRadius: '10px',

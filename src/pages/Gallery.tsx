@@ -83,22 +83,22 @@ function Gallery(props: WorkGalleryProps) {
             {props.art ?
                 <div>
                     <div>
-                        <TwineButton color='green' size='lg' icon='icons/green_plus.svg' name='Create One Art' />
+                        <TwineButton color='green' size='lg' icon='/icons/green_plus.svg' name='Create One Art' />
                     </div>
                     <div>
-                        <TwineButton color='green' size='lg' icon='icons/green_plus.svg' name='Publish Art Collection' />
+                        <TwineButton color='green' size='lg' icon='/icons/green_plus.svg' name='Publish Art Collection' />
                     </div>
                     <div>
-                        <TwineButton size='lg' icon='icons/paper.svg' name={"Open " + props.draft ? "Draft" : "Published"} />
+                        <TwineButton size='lg' icon='/icons/paper.svg' name={"Open " + props.draft ? "Draft" : "Published"} />
                     </div>
                 </div>
                 :
                 <div>
                     <div>
-                        <TwineButton color='green' size='lg' icon='icons/green_plus.svg' name='Create New Stories' />
+                        <TwineButton color='green' size='lg' icon='/icons/green_plus.svg' name='Create New Stories' />
                     </div>
                     <div>
-                        <TwineButton size='lg' icon='icons/paper.svg' name={"Open " + props.draft ? "Draft" : "Published"} />
+                        <TwineButton size='lg' icon='/icons/paper.svg' name={"Open " + props.draft ? "Draft" : "Published"} />
                     </div>
                 </div>
             }
