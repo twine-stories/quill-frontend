@@ -75,3 +75,13 @@ export type ProfitSplit = {
     collection: NFTCollection;
     percentage: number;
 }
+
+export type Feedback = {
+    id?: number;
+    submitter: User;
+    beta: boolean;
+    subject: string;
+    description: string;
+    images?: string;
+    stamp?: Date;
+}
