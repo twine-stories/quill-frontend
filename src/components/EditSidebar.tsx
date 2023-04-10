@@ -1,7 +1,9 @@
 import {Button} from "@mui/joy";
 import './EditSidebar.css';
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import { UserContext } from "../App.tsx";
+import UploadImage from "./UploadImage.tsx";
+import TwineButton from "./TwineButton.tsx";
 
 
 
@@ -9,18 +11,29 @@ import { UserContext } from "../App.tsx";
 
 const EditSidebar = ({handleSave, handleCancel}) => {
 
-    const saveEdit = () => {
+    
+
+    const [uploadImageVisible, setUploadImageVisible] = useState(false);
+
+    const showUploadImage = async () => {
+        setUploadImageVisible(true);
+    }
+
+    const hideUploadImage = async () => {
+        setUploadImageVisible(false);
+    }
+
+    const saveEdit = async () => {
         handleSave();
     }
     
-    const cancelEdit = () => {
+    
+    const cancelEdit = async () => {
         handleCancel();
     }
 
     const context: object = useContext(UserContext);
     const user: User = context['user'];
-
-    const buttonStyle = {maxWidth: '150px', maxHeight: '40px', minWidth: '150px', minHeight: '40px', margin: '5px'}
 
 
     return (
@@ -35,12 +48,17 @@ const EditSidebar = ({handleSave, handleCancel}) => {
                     }}
                 />
             </div>
-            <Button style = {buttonStyle} onClick={function () {
-                saveEdit();
-            }}>Save Edit</Button>
-            <Button style = {buttonStyle} onClick={function () {
-                cancelEdit();
-            }}>Cancel Edit</Button>
+            <TwineButton name={"Save Edit"} action={saveEdit}/>
+            <TwineButton name={"Cancel Edit"} action={cancelEdit}/>
+            <TwineButton name={"Upload Image"} action={showUploadImage}/>
+            {uploadImageVisible && <UploadImage 
+                bucketName = "test"
+                accessKeyId = "test"
+                secretAccessKey = "test"
+                region = "test"
+                hideComponent = {hideUploadImage}
+            /> }
+            
         </div>
     )
 }
