@@ -8,8 +8,10 @@ const GlobalStyle = createGlobalStyle `${styles.toString()}`;
 declare module '@mui/joy/Button' {
     interface ButtonPropsColorOverrides {
         green: true;
-        light: true;
-        dark: true;
+        purple: true;
+        darkpurple: true;
+        blackgreen: true;
+        blackpurple: true;
     }
 }
 
