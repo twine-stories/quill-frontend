@@ -338,18 +338,18 @@ function Create() {
                     flexWrap='wrap'
                 >
                     <Sheet sx={{height: "250px", width: '150px', margin: '10px'}} color="green_dashed" variant="rounded">
-                        <TwineButton icon="/icons/green_plus.svg" color="green" name="New Story" action={() => {
+                        <TwineButton sx={{paddingBlock:"2rem", paddingInline:"2.5rem"}} icon="/icons/green_plus.svg" color="green" name="Create Story" action={() => {
                             window.location.href = '/create/story/'
                         }}/>
                     </Sheet>
                     <Sheet sx={{height: "250px", width: '150px', margin: '10px'}} color="green_dashed" variant="rounded">
-                        <TwineButton icon="/icons/green_paper.svg" color="blackgreen" name="Published Stories"
+                        <TwineButton sx={{paddingBlock:"2rem", paddingInline:"2.5rem"}} icon="/icons/green_paper.svg" color="blackgreen" name="Published Stories"
                                     action={() => {
                                         window.location.href = '/gallery/story/published'
                                     }}/>
                     </Sheet>
                     <Sheet sx={{height: "250px", width: '150px', margin: '10px'}} color="green_dashed" variant="rounded">
-                        <TwineButton icon="/icons/green_paper.svg" color="blackgreen" name="Story Drafts" action={() => {
+                        <TwineButton sx={{paddingBlock:"2rem", paddingInline:"2.5rem"}} icon="/icons/green_paper.svg" color="blackgreen" name="Story Drafts" action={() => {
                             window.location.href = '/gallery/story/draft'
                         }}/>
                     </Sheet>
