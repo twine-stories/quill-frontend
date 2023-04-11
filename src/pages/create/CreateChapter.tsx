@@ -344,7 +344,7 @@ function CreateChapter() {
         const guidelines: HTMLInputElement = document.getElementById("guidelines") as HTMLInputElement;
         const endOfChapterMessage: HTMLInputElement = document.getElementById("endOfChapterMessage") as HTMLInputElement;
         const publishStamp = published ? new Date() : null;
-        if (title.value && mature.checked && guidelines.checked) {
+        if (title.value && guidelines.checked) {
             let newEpisode: Episode = {
                 work: work,
                 title: title.value,
