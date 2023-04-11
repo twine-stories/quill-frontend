@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-// import Popup from 'reactjs-popup';
 import { UserContext } from "../App.tsx";
 import TwineButton from './TwineButton.tsx';
 import TwineInput from './TwineInput.tsx';
