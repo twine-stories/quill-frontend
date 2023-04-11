@@ -6,9 +6,10 @@ export type User = {
     creator: boolean;
     accountCreationDate?: Date;
     email?: string;
+    phoneNumber?: string;
     firstName: string;
     lastName: string;
-    displayName?: string;
+    displayName: string;
     profileImg: string;
     illustrator: boolean;
     suspended: boolean;

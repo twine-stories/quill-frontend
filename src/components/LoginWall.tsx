@@ -1,5 +1,6 @@
 import React from 'react';
-import Popup from 'reactjs-popup';
+import { Modal, Sheet, Typography } from '@mui/joy';
+import TwineButton from './TwineButton.tsx';
 
 interface LoginWallProps {
     open: boolean;
@@ -8,10 +9,18 @@ interface LoginWallProps {
 
 function LoginWall(props: LoginWallProps) {
     return (
-        <Popup open={props.open} modal onClose={props.closeWall}>
-            Must Login
-            <button className='close' onClick={props.closeWall}>close</button>
-        </Popup>
+        <Modal open={props.open} onClose={props.closeWall}>
+            <Sheet variant="outlined"
+            sx={{
+                maxWidth: '200px',
+                borderRadius: 'md',
+                p: 3,
+                boxShadow: 'lg',
+            }}>
+                <Typography>Must Login</Typography>
+                <TwineButton className='close' action={props.closeWall} name='Close' />
+            </Sheet>
+        </Modal>
     )
 }
 

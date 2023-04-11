@@ -25,6 +25,7 @@ import {ConnectType} from './utils/enums.ts';
 import { theme } from './utils/globalStyles.ts';
 import CreateChapter from "./pages/create/CreateChapter.tsx";
 import Chapter from "./pages/Chapter.tsx";
+import FirstLogin from './components/FirstLogin.tsx';
 
 const reach = loadStdlib('ALGO');
 reach.setWalletFallback(reach.walletFallback({
@@ -48,12 +49,15 @@ function App() {
     const [loading, setLoading] = useState<boolean>(true);
 
     const logOut = (): void => {
-        if (user.connectType === ConnectType.PERA) {
+        if (user && user.connectType === ConnectType.PERA) {
             peraWallet.disconnect();
         }
         deleteCookie('session');
-        // change this redirect
-        window.location.replace('/');
+        // can do better than this
+        if (window.location.pathname !== '/') {
+            window.location.replace('/');
+        }
+        setUser(null);
     }
 
     const updateUser = (newUser: User) => {
@@ -75,10 +79,6 @@ function App() {
         setUserCookie(addr, uuidv4());
         setAddress(addr);
     };
-
-    const mockConnectToMyAlgo = (): void => {
-        onComplete('KYUH2SNU6FWFGBK6PNWI4EUIABOYFIQIQH2WOP3FW7DGA623ESTGXYQPJA');
-    }
 
     const connectToMyAlgo = async (): Promise<void> => {
         try {
@@ -105,7 +105,7 @@ function App() {
         userGet(addr, setUser);
     }
 
-    const addUser = (walletAddress: string, firstName: string, lastName: string): void => {
+    const addUser = (walletAddress: string, firstName: string, lastName: string, username: string): void => {
         const cookie = uuidv4();
         const newUser: User = {
             walletAddress: walletAddress,
@@ -114,7 +114,8 @@ function App() {
             lastName: lastName,
             profileImg: 'temp',
             userCookie: cookie,
-            connectType: connType
+            connectType: connType,
+            displayName: username
         }
         userAdd(newUser, (user) => {
             getAndSetUser(user.walletAddress);
@@ -125,6 +126,9 @@ function App() {
     }
 
     const cancelLogin = (): void => {
+        if (connType === ConnectType.PERA) {
+            peraWallet.disconnect();
+        }
         setOpenLogin(false);
         setAddress("");
     }
@@ -191,7 +195,6 @@ function App() {
                     'user': user,
                     'connectToPera': connectToPera,
                     'connectToMyAlgo': connectToMyAlgo,
-                    'mockConnectToMyAlgo': mockConnectToMyAlgo,
                     'logOut': logOut,
                     'openLogin': openLogin,
                     'closeLogin': cancelLogin,
@@ -199,27 +202,39 @@ function App() {
                     'updateUser': updateUser,
                     'enterBeta': enterBeta
                 }}>
+                    <FirstLogin />
                     {beta ?
                         <Routes>
                             <Route path="/*" element={<Beta />}></Route>
                         </Routes>
                         :
-                        <Routes>
-                            <Route path="/feedback" element={<FeedbackPage/>}></Route>
-                            <Route path="/art" element={<Art/>}></Route>
-                            <Route path="/create" element={<Create/>}></Route>
-                            <Route path="/create/story" element={<CreateStory/>}></Route>
-                            <Route path="/create/episode/*" element={<CreateChapter/>}></Route>
-                            <Route path="/profile" element={<Profile/>}></Route>
-                            <Route path="/edit-profile" element={<EditProfile/>}></Route>
-                            <Route path="/profile/:username" element={<GenericProfile/>}></Route>
-                            <Route path="/story/*" element={<Story/>}></Route>
-                            <Route path="/episode/*" element={<Chapter/>}></Route>
-                            <Route path="/collection/*" element={<Collection />}></Route>
-                            <Route path="/gallery/story/draft" element={<Gallery art={false} draft={true}/>}></Route>
-                            <Route path="/gallery/story/published" element={<Gallery art={false} draft={false}/>}></Route>
-                            <Route path="/" element={<Home />}></Route>
-                        </Routes>
+                        user ?
+                            <Routes>
+                                <Route path="/feedback" element={<FeedbackPage/>}></Route>
+                                <Route path="/art" element={<Art/>}></Route>
+                                <Route path="/create" element={<Create/>}></Route>
+                                <Route path="/create/story" element={<CreateStory/>}></Route>
+                                <Route path="/create/episode/*" element={<CreateChapter/>}></Route>
+                                <Route path="/profile" element={<Profile/>}></Route>
+                                <Route path="/edit-profile" element={<EditProfile/>}></Route>
+                                <Route path="/profile/:username" element={<GenericProfile/>}></Route>
+                                <Route path="/story/*" element={<Story/>}></Route>
+                                <Route path="/episode/*" element={<Chapter/>}></Route>
+                                <Route path="/collection/*" element={<Collection />}></Route>
+                                <Route path="/gallery/story/draft" element={<Gallery art={false} draft={true}/>}></Route>
+                                <Route path="/gallery/story/published" element={<Gallery art={false} draft={false}/>}></Route>
+                                <Route path="/" element={<Home />}></Route>
+                            </Routes>
+                            :
+                            <Routes>
+                                <Route path="/feedback" element={<FeedbackPage/>}></Route>
+                                <Route path="/art" element={<Art/>}></Route>
+                                <Route path="/profile/:username" element={<GenericProfile/>}></Route>
+                                <Route path="/story/*" element={<Story/>}></Route>
+                                <Route path="/episode/*" element={<Chapter/>}></Route>
+                                <Route path="/collection/*" element={<Collection />}></Route>
+                                <Route path="/" element={<Home />}></Route>
+                            </Routes>
                     }
                 </UserContext.Provider>
             </CssVarsProvider>
