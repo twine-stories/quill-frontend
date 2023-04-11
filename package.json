@@ -13,6 +13,7 @@
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "algosdk": "^1.9.1",
+    "aws-sdk": "^2.1353.0",
     "axios": "^0.27.2",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",

@@ -9,6 +9,7 @@ import EditSidebar from '../components/EditSidebar.tsx';
 import {Button, FormControl, Textarea} from "@mui/joy";
 import { useNavigate } from 'react-router-dom';
 import { genericPost } from '../utils/api.ts'; 
+import { TwoColoumnLayout } from '../components/TwoColoumnLayout.tsx';
 
 const axios = require('axios').default;
 
