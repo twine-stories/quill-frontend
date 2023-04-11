@@ -9,7 +9,7 @@ import Sheet from "@mui/joy/Sheet";
 import TwineInput from "../components/TwineInput.tsx";
 import TwineButton from "../components/TwineButton.tsx";
 
-function Story() {
+function Chapter() {
 
     const [work, setWork] = useState<Work>(null);
     const [episodes, setEpisodes] = useState<Array<Episode>>( []);
@@ -111,4 +111,4 @@ function Story() {
     );
 }
 
-export default Story;
+export default Chapter;

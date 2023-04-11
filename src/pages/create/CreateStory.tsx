@@ -102,7 +102,6 @@ function CreateStory() {
                 medium: "WRITTEN",
                 url: user.displayName + '-' + title.value.replace(/\s/g, "-").toLowerCase(),
                 hook: hook.value,
-                mature: false,
                 publishStamp: publishStamp,
             };
 

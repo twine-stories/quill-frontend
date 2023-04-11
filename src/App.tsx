@@ -23,7 +23,8 @@ import GlobalStyle from "./utils/globalStyles.ts";
 import {PeraWalletConnect} from "@perawallet/connect";
 import {ConnectType} from './utils/enums.ts';
 import { theme } from './utils/globalStyles.ts';
-import CreateEpisode from "./pages/create/CreateChapter.tsx";
+import CreateChapter from "./pages/create/CreateChapter.tsx";
+import Chapter from "./pages/Chapter.tsx";
 
 const reach = loadStdlib('ALGO');
 reach.setWalletFallback(reach.walletFallback({
@@ -208,12 +209,12 @@ function App() {
                             <Route path="/art" element={<Art/>}></Route>
                             <Route path="/create" element={<Create/>}></Route>
                             <Route path="/create/story" element={<CreateStory/>}></Route>
-                            <Route path="/create/episode/*" element={<CreateEpisode/>}></Route>
+                            <Route path="/create/episode/*" element={<CreateChapter/>}></Route>
                             <Route path="/profile" element={<Profile/>}></Route>
                             <Route path="/edit-profile" element={<EditProfile/>}></Route>
                             <Route path="/profile/:username" element={<GenericProfile/>}></Route>
                             <Route path="/story/*" element={<Story/>}></Route>
-                            <Route path="/episode/*" element={<CreateEpisode/>}></Route>
+                            <Route path="/episode/*" element={<Chapter/>}></Route>
                             <Route path="/collection/*" element={<Collection />}></Route>
                             <Route path="/gallery/story/draft" element={<Gallery art={false} draft={true}/>}></Route>
                             <Route path="/gallery/story/published" element={<Gallery art={false} draft={false}/>}></Route>

@@ -1,14 +1,14 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import useState from 'react-usestateref'
 import Navbar from "../../components/Navbar.tsx";
 import {UserContext} from "../../App.tsx";
-import {User, Episode} from '../../utils/types.ts';
+import {User, Episode, Work} from '../../utils/types.ts';
 import styled from "styled-components";
 import {
     AspectRatio,
     Box,
     Button,
-    Card,
+    Card, Checkbox,
     FormControl, FormHelperText,
     FormLabel,
     IconButton,
@@ -23,10 +23,15 @@ import Sheet from '@mui/joy/Sheet';
 import TwineInput from "../../components/TwineInput.tsx";
 import TwoColumnLayout from "../../components/TwoColumnLayout.tsx";
 import TwineButton from "../../components/TwineButton.tsx";
+import {episodeAdd, workAdd, workGetByUrl} from "../../utils/api.ts";
+import ReactMarkdown from 'https://esm.sh/react-markdown@7'
+import { v4 as uuidv4 } from 'uuid';
 
 enableMapSet();
 
-function CreateEpisode() {
+const DELIMITER = "🗿³¤";
+
+function CreateChapter() {
 
     const [episode, setEpisode] = useState<Episode>();
 
@@ -37,6 +42,15 @@ function CreateEpisode() {
     const [resultMap, setResultMap] = useImmer(new Map());
     const [counter, setCounter] = useState(0);
     const [view, setView] = useState(false);
+    const [work, setWork] = useState<Work>(null);
+
+    useEffect(() => {
+        if (user) {
+            workGetByUrl(window.location.href.split('/')[5], setWork, () => {
+                console.log('fail');
+            });
+        }
+    }, [user]);
 
     function removeItem(index: number) {
         //TODO: Fix this later 💀
@@ -161,39 +175,6 @@ function CreateEpisode() {
         setCounter(counter + 1);
     }
 
-    // useEffect(() => {
-    //     if (user) {
-    //         workGetByUrl(window.location.href.split('/')[4], setEpisode, () => {
-    //             console.log('fail');
-    //         });
-    //     }
-    // }, [user]);
-
-    if (view) {
-        var compoundedElements = []
-        for (let i = 0; i < inputListRef.current.length; i++) {
-            // to convert string to number, use + in front of it for some reason 💀
-            let content = resultMap.get(+inputListRef.current[i]["key"])
-            if (content === "!BAD!") {
-                // THIS SHOULD NEVER HAPPEN
-                // IF IT DOES, GOOD LUCK
-                console.log("good luck");
-            } else if (content.indexOf("img") !== -1) {
-                compoundedElements.push(
-                    <AspectRatio variant="plain" minHeight="120px" maxHeight="300px" objectFit="contain" sx={{my: 2}}>
-                        <img
-                            src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-                            srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
-                            loading="lazy"
-                            alt=""
-                        />
-                    </AspectRatio>)
-            } else {
-                compoundedElements.push(<Typography level="h6" sx={{color: "#9E9FEB"}}>{content}</Typography>)
-            }
-        }
-    }
-
     return (
         <div>
             <Navbar/>
@@ -218,7 +199,7 @@ function CreateEpisode() {
                                 <Sheet sx={{width: '50%', my: 1, borderRadius: "20px",}} color="neutral"
                                        variant="outlined">
                                     {
-                                        compoundedElements
+                                        parseContent(true)
                                     }
                                 </Sheet>
 
@@ -243,39 +224,44 @@ function CreateEpisode() {
                                 display: 'flex',
                                 flexDirection: 'column',
                                 gap: 1,
-                                alignItems: 'center',
-                                flexWrap: 'wrap',
+                                // alignItems: 'center',
+                                // flexWrap: 'wrap',
                             }}
                         >
-                            <TwineInput label="Chapter Title" placeholder="Enter Chapter Title..."/>
+                            <FormControl>
+                                <FormLabel>Story Name</FormLabel>
+                                <Typography level="h4" sx={{color: "#9E9FEB"}}>
+                                    {work && work.title}
+                                </Typography>
+                            </FormControl>
+
+
+                            <TwineInput id="title" label="Chapter Title" placeholder="Enter Chapter Title..."/>
 
                             <Stack
                                 alignItems="center"
-                                spacing={0.25}
+                                spacing={0.5}
                                 sx={{width: "100%"}}>
                                 {inputList}
                             </Stack>
 
                             <Stack
                                 direction="row"
-                                spacing={2}
+                                // spacing={2}
                                 justifyContent="center"
                                 sx={{width: '100%'}}>
-                                <Button variant="outlined" color="neutral" onClick={onAddTextButtonClick}>Add
-                                    Text</Button>
-                                <Button variant="outlined" color="neutral" onClick={function () {
-                                    setView(true);
-                                }
-                                }>Preview</Button>
-                                {/*<IconButton variant="outlined" color="info" onClick={function () {*/}
-                                {/*    console.log(inputList)*/}
-                                {/*}} sx={{ml: 'auto'}}>✅</IconButton>*/}
+                                <Button startDecorator={<img
+                                    src="/icons/white_text.svg"
+                                    width="20px" height="20px"
+                                />} variant="outlined" color="neutral" onClick={onAddTextButtonClick}>Add Text</Button>
                                 <Button startDecorator={<img
                                     src="/icons/add_image.svg"
                                     width="20px" height="20px"
                                 />} variant="outlined" color="neutral" onClick={onAddImageButtonClick}>Add
                                     Image</Button>
                             </Stack>
+
+                            <TwineInput id="endOfChapterMessage" label="End of Chapter Message" placeholder="(Optional) Enter End of Chapter Message..." multiline={true}/>
                         </Box>
                     </div>
                 </div>
@@ -286,18 +272,27 @@ function CreateEpisode() {
                                          py: 2,
                                          display: 'flex',
                                          flexDirection: 'column',
-                                         gap: 1,
+                                         gap: 0.5,
                                          alignItems: 'center',
                                          flexWrap: 'wrap',
                                      }}
                                  >
-                                     <Typography sx={{backgroundColor: "#14100E", borderRadius: "10px", p:"10px"}} level="h6" endDecorator={<Switch sx={{ ml: 1 }} />}>
+                                     {/*FIX THIS LATER*/}
+                                     <Typography sx={{backgroundColor: "#14100E", borderRadius: "10px", p: "10px"}}
+                                                 level="h6" endDecorator={<Switch id="mature" sx={{ml: 1}}/>}>
                                          Mature
                                      </Typography>
 
+                                     {/*FIX THIS LATER TOO*/}
+                                     <Checkbox id="guidelines" color="info" label="I Verify This Work is Mine and Follows Community Guidelines." />
+
+                                     <Button variant="outlined" color="neutral" onClick={() => {
+                                         setView(true);
+                                     }}>Preview</Button>
                                      <TwineButton name="Save Draft"
-                                                icon="/icons/purple_checkmark.svg"></TwineButton>
-                                     <TwineButton name="Create Chapter" icon="/icons/green_plus.svg" color="green"></TwineButton>
+                                                  icon="/icons/purple_checkmark.svg" action={(e) => {makeEpisode(false)}}></TwineButton>
+                                     <TwineButton name="Create Chapter" icon="/icons/green_plus.svg"
+                                                  color="green" action={(e) => {makeEpisode(true)}}></TwineButton>
 
 
                                  </Box>
@@ -306,6 +301,67 @@ function CreateEpisode() {
         </div>
 
     );
+
+    function parseContent(display: boolean) {
+        var compoundedElements = []
+        for (let i = 0; i < inputListRef.current.length; i++) {
+            // to convert string to number, use + in front of it for some reason 💀🗿
+            let content = resultMap.get(+inputListRef.current[i]["key"])
+            if (content === "!BAD!") {
+                // THIS SHOULD NEVER HAPPEN
+                // IF IT DOES, GOOD LUCK
+                console.log("good luck");
+            } else if (content.indexOf("img") !== -1) {
+                if (!display) {
+                    compoundedElements.push("https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286")
+                } else {
+                    compoundedElements.push(
+                        <AspectRatio variant="plain" minHeight="120px" maxHeight="300px" objectFit="contain"
+                                     sx={{my: 2}}>
+                            <img
+                                src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
+                                srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
+                                loading="lazy"
+                                alt=""
+                            />
+                        </AspectRatio>)
+                }
+            } else {
+                if (!display) {
+                    compoundedElements.push(content)
+                } else {
+                    compoundedElements.push(<Typography level="h6"
+                                                        sx={{color: "#9E9FEB"}}><ReactMarkdown>{content}</ReactMarkdown></Typography>)
+                }
+            }
+        }
+        return compoundedElements;
+    }
+
+    function makeEpisode(published: boolean) {
+        const title: HTMLInputElement = document.getElementById("title") as HTMLInputElement;
+        const mature: HTMLInputElement = document.getElementById("mature") as HTMLInputElement;
+        const guidelines: HTMLInputElement = document.getElementById("guidelines") as HTMLInputElement;
+        const endOfChapterMessage: HTMLInputElement = document.getElementById("endOfChapterMessage") as HTMLInputElement;
+        const publishStamp = published ? new Date() : null;
+        if (title.value && mature.checked && guidelines.checked) {
+            let newEpisode: Episode = {
+                work: work,
+                title: title.value,
+                cover: 'cover',
+                content: parseContent(false).join(DELIMITER),
+                url: title.value + "-" + uuidv4(),
+                endOfChapterMessage: endOfChapterMessage.value,
+                mature: mature.checked,
+                flags: 0,
+                publishStamp: publishStamp,
+            };
+
+            episodeAdd(newEpisode, (episode) => {
+                console.log("Your title is the same as one of your existing chapters. Please choose a different chapter name.");
+            });
+        }
+    }
 }
 
-export default CreateEpisode;
+export default CreateChapter;

@@ -160,6 +160,15 @@ export const theme = extendTheme({
                 }),
             },
         },
+        JoyCheckbox: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    ...({
+                        fontFamily: 'Oxanium',
+                    }),
+                }),
+            },
+        },
     },
 });
 

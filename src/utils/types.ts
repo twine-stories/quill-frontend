@@ -30,7 +30,6 @@ export type Work = {
     medium: WorkType;
     url: string;
     hook: string;
-    mature: boolean;
     cover?: string;
     banner?: string;
     publishStamp?: Date;
