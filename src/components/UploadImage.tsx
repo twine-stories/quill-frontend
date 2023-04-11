@@ -48,6 +48,7 @@ function UploadImage({
         accessKeyId,
         secretAccessKey,
         region,
+        signatureVersion: 'v4',
       });
 
       const params = {
