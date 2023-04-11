@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Sheet, Typography } from '@mui/joy';
+import { Modal, Sheet, Typography, Grid } from '@mui/joy';
 import TwineButton from './TwineButton.tsx';
 
 interface LoginWallProps {
@@ -10,15 +10,19 @@ interface LoginWallProps {
 function LoginWall(props: LoginWallProps) {
     return (
         <Modal open={props.open} onClose={props.closeWall}>
-            <Sheet variant="outlined"
+            <Sheet
+            variant="outlined"
             sx={{
-                maxWidth: '200px',
+                maxWidth: '600px',
+                width: '50vw',
                 borderRadius: 'md',
-                p: 3,
+                p: 2,
                 boxShadow: 'lg',
             }}>
-                <Typography>Must Login</Typography>
-                <TwineButton className='close' action={props.closeWall} name='Close' />
+                <Grid container direction='column' alignItems='center' justifyContent='space-around'>
+                    <Typography level='h4' sx={{textAlign: 'center'}}>Please login to access this page</Typography>
+                    <TwineButton className='close' action={props.closeWall} name='Close' />
+                </Grid>
             </Sheet>
         </Modal>
     )

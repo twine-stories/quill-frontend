@@ -1,7 +1,6 @@
 import {createGlobalStyle} from 'styled-components';
 import styles from './globalStyles.css';
 import {extendTheme} from "@mui/joy";
-import { fontWeight } from '@mui/system';
 
 const GlobalStyle = createGlobalStyle `${styles.toString()}`;
 
@@ -9,6 +8,7 @@ declare module '@mui/joy/Typography' {
     interface TypographyPropsColorOverrides {
         green: true;
         purple: true;
+        white: true;
     }
 }
 
@@ -35,6 +35,12 @@ declare module '@mui/joy/Sheet' {
 
     interface SheetPropsVariantOverrides {
         rounded: true;
+    }
+}
+
+declare module '@mui/joy/Checkbox' {
+    interface CheckboxPropsColorOverrides {
+        green: true;
     }
 }
 
@@ -146,6 +152,11 @@ export const theme = extendTheme({
         JoySheet: {
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({
+                    ...({
+                        '&:focus': {
+                            outline: '0'
+                        }
+                    }),
                     ...(ownerState.color === 'green_dashed' && {
                         border: '1px #A3B832 dashed',
                         padding: '0px 20px',
@@ -175,10 +186,31 @@ export const theme = extendTheme({
                 root: ({ ownerState, theme }) => ({
                     ...({
                         fontFamily: 'Oxanium',
+                        color: '#E4E5FF'
+                    }),
+                    ...(ownerState.color === 'green' && {
+                        '& .MuiCheckbox-checkbox': {
+                            border: '1px solid #A3B832',
+                        },
+                        '& .MuiCheckbox-checkbox.Joy-checked': {
+                            background: '#A3B832',
+                            color: '#5C720D'
+                        }
                     }),
                 }),
             },
         },
+        JoyModal: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    ...({
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    })
+                })
+            }
+        }
     },
 });
 

@@ -61,7 +61,8 @@ function App() {
     }
 
     const updateUser = (newUser: User) => {
-        userUpdate(newUser, setUser);
+        setUser(newUser);
+        // userUpdate(newUser, setUser);
     }
 
     const setUserCookie = (walletAddress: string, cookie: string) => {
