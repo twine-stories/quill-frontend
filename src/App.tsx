@@ -2,7 +2,7 @@ import {useEffect, useState, createContext} from 'react';
 import './App.css';
 import {Routes, Route} from "react-router-dom";
 import Beta from './pages/Beta.tsx';
-import Feedback from './pages/Feedback.tsx';
+import FeedbackPage from './pages/FeedbackPage.tsx';
 import Home from './pages/Home.tsx';
 import Create from './pages/create/Create.tsx';
 import Profile from './pages/Profile.tsx';
@@ -205,7 +205,7 @@ function App() {
                         </Routes>
                         :
                         <Routes>
-                            <Route path="/feedback" element={<Feedback/>}></Route>
+                            <Route path="/feedback" element={<FeedbackPage/>}></Route>
                             <Route path="/art" element={<Art/>}></Route>
                             <Route path="/create" element={<Create/>}></Route>
                             <Route path="/create/story" element={<CreateStory/>}></Route>

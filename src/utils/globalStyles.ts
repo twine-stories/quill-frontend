@@ -56,14 +56,21 @@ export const theme = extendTheme({
                         fontFamily: 'Twine',
                         fontWeight: 'normal',
                         margin: '20px 10px',
-                        textAlign: 'left'
-                        
+                        textAlign: 'left',
+                        color: '#E4E5FF'
                     }),
                     ...((ownerState.level === 'h3' || ownerState.level === 'h4' || ownerState.level === 'h5' || ownerState.level === 'h6') && {
                         fontFamily: 'Oxanium',
                         fontWeight: 'normal',
                         margin: '10px 20px',
-                        textAlign: 'left'
+                        textAlign: 'left',
+                        color: '#E4E5FF'
+                    }),
+                    ...((ownerState.color === 'green') && {
+                        color: '#A5BB2D'
+                    }),
+                    ...((ownerState.color === 'purple') && {
+                        color: '#9E9FEB'
                     }),
                 })
             }
