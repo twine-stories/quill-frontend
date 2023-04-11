@@ -31,6 +31,7 @@ declare module '@mui/joy/Input' {
 declare module '@mui/joy/Sheet' {
     interface SheetPropsColorOverrides {
         green_dashed: true;
+        home: true;
     }
 
     interface SheetPropsVariantOverrides {
@@ -58,14 +59,14 @@ export const theme = extendTheme({
                     ...((ownerState.color === 'white') && {
                         color: '#E4E5FF'
                     }),
-                    ...((ownerState.level === 'h1' || ownerState.level === 'h2') && {
+                    ...((ownerState.level === 'h1' || ownerState.level === 'h2' || ownerState.level === 'h3') && {
                         fontFamily: 'Twine',
                         fontWeight: 'normal',
                         margin: '20px 10px',
                         textAlign: 'left',
                         color: '#E4E5FF'
                     }),
-                    ...((ownerState.level === 'h3' || ownerState.level === 'h4' || ownerState.level === 'h5' || ownerState.level === 'h6') && {
+                    ...((ownerState.level === 'h4' || ownerState.level === 'h5' || ownerState.level === 'h6') && {
                         fontFamily: 'Oxanium',
                         fontWeight: 'normal',
                         margin: '10px 20px',
@@ -167,6 +168,14 @@ export const theme = extendTheme({
                     ...(ownerState.variant === 'rounded' && {
                         borderRadius: '10px',
                     }),
+                    ...(ownerState.color === 'home' && {
+                        border: '0.5px #241D19 solid',
+                        background: '#0d0603',
+                        '&:hover': {
+                            border: 'none',
+                            background: '#14100E'
+                        }
+                    })
                 }),
             },
         },

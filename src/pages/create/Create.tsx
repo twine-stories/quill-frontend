@@ -359,7 +359,7 @@ function Create() {
                 <Typography level="h2" color='purple'>
                     Create Art
                 </Typography>
-                <Typography level="h3" color='purple'>
+                <Typography level="h4" color='purple'>
                     Coming Soon!
                 </Typography>
                 {env === 'dev' &&
