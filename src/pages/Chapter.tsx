@@ -2,42 +2,35 @@ import React, {useState, useContext, useEffect} from 'react';
 import Navbar from "../components/Navbar.tsx";
 import {UserContext} from "../App.tsx";
 import {Episode, User, Work} from '../utils/types.ts';
-import {episodesGetByWorkId, workGetByUrl} from '../utils/api.ts';
+import {episodeGetByUrl, episodesGetByWorkId, workGetByUrl} from '../utils/api.ts';
 import TwoColumnLayout from "../components/TwoColumnLayout.tsx";
-import {Box, Button, Stack, Switch, Typography} from "@mui/joy";
+import {AspectRatio, Box, Button, Stack, Switch, Typography} from "@mui/joy";
 import Sheet from "@mui/joy/Sheet";
 import TwineInput from "../components/TwineInput.tsx";
 import TwineButton from "../components/TwineButton.tsx";
+import ReactMarkdown from 'https://esm.sh/react-markdown@7'
+const DELIMITER = "🗿³¤";
 
 function Chapter() {
 
-    const [work, setWork] = useState<Work>(null);
-    const [episodes, setEpisodes] = useState<Array<Episode>>( []);
+    const [episode, setEpisode] = useState<Episode>([]);
     const context: object = useContext(UserContext);
     const user: User = context['user'];
 
     useEffect(() => {
         if (user) {
-            workGetByUrl(window.location.href.split('/')[4], setWork, () => {
+            episodeGetByUrl(window.location.href.split('/')[4], setEpisode, () => {
                 console.log('fail');
             });
         }
     }, [user]);
-
-    useEffect(() => {
-        if (work) {
-            episodesGetByWorkId(work['id'], () => {
-                console.log('fail');
-            }).then((response) => {setEpisodes(response)})
-        }
-    }, [episodes, work]);
 
     return (
         <div>
             <Navbar/>
             <TwoColumnLayout leftComponent={
                 <div>
-                    {work &&
+                    {episode && episode['content'] &&
                         <Box
                             sx={{
                                 py: 2,
@@ -48,39 +41,13 @@ function Chapter() {
                                 flexWrap: 'wrap',
                             }}
                         >
-                            <Typography level="h1" sx={{color: "#E4E5FF"}}>{work['title']}</Typography>
-                            <Typography level="h6" sx={{color: "#E4E5FF"}}>{work['description']}</Typography>
-
-                            <TwineButton icon="/icons/purple_plus.svg" color="purple" name="New Episode" action={() => {
-                                window.location.href = '/create/episode/' + work['url'];
-                            }}/>
-
-                            <Typography level="h2" sx={{color: "#9E9FEB"}}>Published Chapters</Typography>
-                            {episodes.map((episode) => {
-                                if (episode['publishStamp']) {
-                                    return (
-                                        <TwineButton icon="/icons/purple_plus.svg" color="purple"
-                                                     name={episode['title']}
-                                                     action={() => {
-                                                         window.location.href = '/episode/' + episode['url'];
-                                                     }}/>
-                                    )
+                            <Typography level="h1" sx={{color: "#E4E5FF"}}>{episode['title']}</Typography>
+                            <Sheet sx={{width: '50%', my: 1, borderRadius: "20px",}} color="neutral"
+                                   variant="outlined">
+                                {
+                                    loadEpisodeContent(episode['content'])
                                 }
-                            })}
-
-                            <Typography level="h2" sx={{color: "#9E9FEB"}}>Draft Chapters</Typography>
-                            {episodes.map((episode) => {
-                                if (!episode['publishStamp']) {
-                                    return (
-                                        <TwineButton icon="/icons/purple_plus.svg" color="purple"
-                                                     name={episode['title']}
-                                                     action={() => {
-                                                         window.location.href = '/episode/' + episode['url'];
-                                                     }}/>
-                                    )
-                                }
-                            })}
-
+                            </Sheet>
 
                         </Box>
                     }
@@ -88,7 +55,7 @@ function Chapter() {
             }
                              rightComponent={
                                  <div>
-                                     {work &&
+                                     {episode && episode['work'] && episode['work']['creator'] &&
                                          <Box
                                              sx={{
                                                  py: 2,
@@ -101,7 +68,7 @@ function Chapter() {
                                          >
                                              <Typography level="h5" sx={{color: "#9E9FEB"}}>Creators</Typography>
                                              <Typography level="h6"
-                                                         sx={{color: "#E4E5FF"}}>{work['creator']['displayName']}</Typography>
+                                                         sx={{color: "#E4E5FF"}}>{episode['work']['creator']['displayName']}</Typography>
                                          </Box>
                                      }
                                  </div>
@@ -109,6 +76,31 @@ function Chapter() {
             />
         </div>
     );
+
+    function loadEpisodeContent(content: string) {
+        console.log(content)
+        let rawContentArray = content.split(DELIMITER);
+        console.log(rawContentArray)
+        var compoundedElements = [];
+        for (let i = 0; i < rawContentArray.length; i++) {
+            if (rawContentArray[i].includes("https")) {
+                compoundedElements.push(
+                    <AspectRatio variant="plain" minHeight="120px" maxHeight="300px" objectFit="contain"
+                                 sx={{my: 2}}>
+                        <img
+                            src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
+                            srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
+                            loading="lazy"
+                            alt=""
+                        />
+                    </AspectRatio>)
+            } else {
+                compoundedElements.push(<Typography level="h6"
+                                                    sx={{color: "#9E9FEB"}}><ReactMarkdown>{rawContentArray[i]}</ReactMarkdown></Typography>)
+            }
+        }
+        return compoundedElements;
+    }
 }
 
 export default Chapter;

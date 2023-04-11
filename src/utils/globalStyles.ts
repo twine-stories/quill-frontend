@@ -49,6 +49,9 @@ export const theme = extendTheme({
                     ...((ownerState.color === 'purple') && {
                         color: '#9E9FEB'
                     }),
+                    ...((ownerState.color === 'white') && {
+                        color: '#E4E5FF'
+                    }),
                     ...((ownerState.level === 'h1' || ownerState.level === 'h2') && {
                         fontFamily: 'Twine',
                         fontWeight: 'normal',

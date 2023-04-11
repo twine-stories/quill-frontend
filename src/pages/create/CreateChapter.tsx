@@ -199,7 +199,7 @@ function CreateChapter() {
                                 <Sheet sx={{width: '50%', my: 1, borderRadius: "20px",}} color="neutral"
                                        variant="outlined">
                                     {
-                                        parseContent(true)
+                                        reformatContent(true)
                                     }
                                 </Sheet>
 
@@ -302,7 +302,7 @@ function CreateChapter() {
 
     );
 
-    function parseContent(display: boolean) {
+    function reformatContent(display: boolean) {
         var compoundedElements = []
         for (let i = 0; i < inputListRef.current.length; i++) {
             // to convert string to number, use + in front of it for some reason 💀🗿
@@ -349,7 +349,7 @@ function CreateChapter() {
                 work: work,
                 title: title.value,
                 cover: 'cover',
-                content: parseContent(false).join(DELIMITER),
+                content: reformatContent(false).join(DELIMITER),
                 url: title.value + "-" + uuidv4(),
                 endOfChapterMessage: endOfChapterMessage.value,
                 mature: mature.checked,

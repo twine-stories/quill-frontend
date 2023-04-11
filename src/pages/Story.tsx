@@ -8,6 +8,7 @@ import {Box, Button, Stack, Switch, Typography} from "@mui/joy";
 import Sheet from "@mui/joy/Sheet";
 import TwineInput from "../components/TwineInput.tsx";
 import TwineButton from "../components/TwineButton.tsx";
+import EpisodeTile from "../components/EpisodeTile.tsx";
 
 function Story() {
 
@@ -59,11 +60,7 @@ function Story() {
                             {episodes.map((episode) => {
                                 if (episode['publishStamp']) {
                                     return (
-                                        <TwineButton icon="/icons/purple_plus.svg" color="purple"
-                                                     name={episode['title']}
-                                                     action={() => {
-                                                         window.location.href = '/episode/' + episode['url'];
-                                                     }}/>
+                                        <EpisodeTile episode={episode}/>
                                     )
                                 }
                             })}
@@ -72,11 +69,7 @@ function Story() {
                             {episodes.map((episode) => {
                                 if (!episode['publishStamp']) {
                                     return (
-                                        <TwineButton icon="/icons/purple_plus.svg" color="purple"
-                                                     name={episode['title']}
-                                                     action={() => {
-                                                         window.location.href = '/episode/' + episode['url'];
-                                                     }}/>
+                                        <EpisodeTile episode={episode}/>
                                     )
                                 }
                             })}
