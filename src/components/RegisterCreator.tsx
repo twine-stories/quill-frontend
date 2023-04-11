@@ -55,7 +55,7 @@ function RegisterCreator(props: RegisterCreatorProps) {
 
                             newUser.phoneNumber = phoneNumber;
 
-                            genericPost('/api/user/update', newUser).then((response) => {
+                            genericPost('/api/user/update', newUser).then((response: User) => {
                                 props.updateUser(response);
                                 props.navigate();  
                             });

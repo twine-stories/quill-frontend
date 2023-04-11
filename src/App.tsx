@@ -17,7 +17,7 @@ import {ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib} from '@reach-sh/stdlib'
 import {v4 as uuidv4} from 'uuid';
 import {getCookie, setCookie, deleteCookie} from './utils/cookies.ts';
 import {User} from './utils/types.ts';
-import {cookieSet, userGet, userUpdate, userAdd, cookieGet} from './utils/api.ts';
+import {cookieSet, userGet, userAdd, cookieGet, genericPost} from './utils/api.ts';
 import {CssVarsProvider} from "@mui/joy";
 import GlobalStyle from "./utils/globalStyles.ts";
 import {PeraWalletConnect} from "@perawallet/connect";
@@ -58,11 +58,6 @@ function App() {
             window.location.replace('/');
         }
         setUser(null);
-    }
-
-    const updateUser = (newUser: User) => {
-        setUser(newUser);
-        // userUpdate(newUser, setUser);
     }
 
     const setUserCookie = (walletAddress: string, cookie: string) => {
@@ -166,7 +161,9 @@ function App() {
                     if (newUser.connectType !== connType) {
                         newUser.connectType = connType;
                         setCookie('session', newUser.userCookie);
-                        updateUser(newUser)
+                        genericPost('/api/user/update', newUser).then((response: User) => {
+                            setUser(response);
+                        });
                     } else {
                         setUser(newUser);
                     }
@@ -200,7 +197,7 @@ function App() {
                     'openLogin': openLogin,
                     'closeLogin': cancelLogin,
                     'addUser': addUser,
-                    'updateUser': updateUser,
+                    'updateUser': setUser,
                     'enterBeta': enterBeta
                 }}>
                     <FirstLogin />
