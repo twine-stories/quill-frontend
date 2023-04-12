@@ -22,6 +22,19 @@
     
   }
 
+  .loading { 
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(128, 128, 128, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* Ensures that the popup is positioned above everything else */
+  }
+
   .popup-content img {
     object-fit: contain;
     padding-top: 10px;

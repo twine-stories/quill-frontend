@@ -5,6 +5,7 @@ import { UserContext } from "../App.tsx";
 import { useNavigate } from 'react-router-dom';
 import { String } from 'aws-sdk/clients/cloudhsm';
 import TwineButton from './TwineButton.tsx';
+import { PROFILE_IMGS_BUCKET } from '../config.ts';
 
 
 export default function ClickProfile({ isLoggedIn, logOutFunc, connectAlgoFunc, connectPeraFunc} ) {
@@ -40,10 +41,17 @@ export default function ClickProfile({ isLoggedIn, logOutFunc, connectAlgoFunc, 
         <div>
             {isLoggedIn ? (
             <div>
-                <img 
-                    src = "https://placehold.co/64x64"
-                    onClick={handleClick}
-                />
+                <img
+                        src = {user && 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/'+user.profileImg}
+                        alt = ""
+                        width = "64"
+                        height = "64"
+                        style = {{borderRadius: "50%"}}
+                        onError={e => {
+                            e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg'
+                        }}
+                        onClick={handleClick}
+                    />
                 <Menu
                     id="basic-menu"
                     anchorEl={anchorEl}

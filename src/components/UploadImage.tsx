@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { UserContext } from "../App.tsx";
 import AWS from "aws-sdk";
 import "./UploadImage.css"
 import TwineButton from "./TwineButton.tsx";
+import {v4 as uuidv4} from 'uuid';
+import { CircularProgress } from "@mui/joy";
 
 interface UploaderProps {
   bucketName: string;
@@ -17,8 +20,13 @@ function UploadImage({
   region,
   hideComponent,
 }: UploaderProps) {
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imgsrc, setImgSrc] = useState<string | ArrayBuffer | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const context: object = useContext(UserContext);
+  const user: User = context['user'];
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
@@ -51,17 +59,25 @@ function UploadImage({
         signatureVersion: 'v4',
       });
 
+      let imgName = uuidv4() + "." + selectedFile.name.split('.').pop();
+
       const params = {
         Bucket: bucketName,
-        Key: selectedFile.name,
+        Key: imgName,
         Body: selectedFile,
       };
 
+      user.profileImg = imgName ;
+
+      setLoading(true);
       await s3.upload(params).promise();
-      alert("File uploaded successfully!");
+      setLoading(false);
+      hideComponent();
     } catch (error) {
       console.error("Error uploading file:", error);
       alert("Failed to upload file. Please try again later.");
+      setLoading(false);
+      hideComponent();
     }
   };
 
@@ -80,11 +96,16 @@ function UploadImage({
             <TwineButton name={"Upload"} action={handleUpload} />
             <TwineButton name={"Close"} action={hideComponent} />
           </div>
+          {loading && 
+          <div className="loading">
+          <CircularProgress />
+          </div>}
           
+        </div>
+        
         </div>
       </div>
       
-    </div>
   );
 }
 

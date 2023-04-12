@@ -1,6 +1,6 @@
 import {Button} from "@mui/joy";
 import './EditSidebar.css';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { UserContext } from "../App.tsx";
 import UploadImage from "./UploadImage.tsx";
 import TwineButton from "./TwineButton.tsx";
@@ -35,7 +35,7 @@ const EditSidebar = ({handleSave, handleCancel}) => {
     }
 
     const context: object = useContext(UserContext);
-    const user: User = context['user'];
+    let user: User = context['user'];
 
 
     return (
@@ -43,16 +43,19 @@ const EditSidebar = ({handleSave, handleCancel}) => {
             <div className="avatar">
                 <h3 align="left">Avatar</h3>
                 <img
-                    src = {user && user.profileImg}
+                    src = {user && 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/'+user.profileImg}
                     alt = ""
+                    width = "128"
+                    height = "128"
+                    style = {{cursor: "pointer", borderRadius: "50%", objectFit: "cover"}}
+                    onClick = {showUploadImage}
                     onError={e => {
-                        e.currentTarget.src = "https://placehold.co/100x100"
+                        e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg';
                     }}
                 />
             </div>
             <TwineButton name={"Save Edit"} action={saveEdit}/>
             <TwineButton name={"Cancel Edit"} action={cancelEdit}/>
-            <TwineButton name={"Upload Image"} action={showUploadImage}/>
             {uploadImageVisible && <UploadImage 
                 bucketName = {PROFILE_IMGS_BUCKET}
                 accessKeyId = {ACCESS_KEY_ID}

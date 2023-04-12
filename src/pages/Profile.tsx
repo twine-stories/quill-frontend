@@ -8,6 +8,7 @@ import './Profile.css';
 import "../components/ProfileSidebar.tsx"
 import ProfileSidebar from '../components/ProfileSidebar.tsx';
 import {Button} from "@mui/joy";
+import { PROFILE_IMGS_BUCKET } from '../config.ts';
 
 const axios = require('axios').default;
 
@@ -49,10 +50,12 @@ function Profile() {
             <div className="profile-page">
                 <div className="profile-info">
                     <img
-                        src = {user && user.profileImg}
+                        src = {user && 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/'+user.profileImg}
                         alt = ""
+                        width = "128"
+                        height = "128"
                         onError={e => {
-                            e.currentTarget.src = "https://placehold.co/128x128"
+                            e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg'
                         }}
                     />
                     <div className="name-username">

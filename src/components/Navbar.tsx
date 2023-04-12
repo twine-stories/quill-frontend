@@ -33,6 +33,10 @@ const NavDiv = styled.div`
         cursor: pointer;
     }
 
+    img { 
+        cursor: pointer;
+    }
+
     #navbarLogo {
         min-width: 120px;
     }
