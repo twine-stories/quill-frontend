@@ -48,3 +48,8 @@ body {
 .App {
     width: 75vw;
 }
+
+#pera-wallet-connect-modal-wrapper {
+    position: fixed;
+    z-index: 99999; /* Ensures that the popup is positioned above everything else */
+}

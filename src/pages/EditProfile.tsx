@@ -17,6 +17,7 @@ function EditProfile() {
     const [works, setWorks] = useState<Array<ProfileWork>>();
     const context: object = useContext(UserContext);
     const user: User = context['user'];
+    const updateUser: (user: User) => void = context['updateUser'];
 
     useEffect(() => {
         if (user && user.creator && user.walletAddress) {
@@ -70,7 +71,9 @@ function EditProfile() {
         user.discord = discord;
 
 
-        genericPost('/api/user/update', user);
+        genericPost('/api/user/update', user).then((response: User) => {
+            updateUser(response);
+        });
 
         navigate('/profile/')
 
