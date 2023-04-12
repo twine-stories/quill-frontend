@@ -52,7 +52,7 @@ function Profile() {
                         src = {user && user.profileImg}
                         alt = ""
                         onError={e => {
-                            e.currentTarget.src = "https://placehold.co/100x100"
+                            e.currentTarget.src = "https://placehold.co/128x128"
                         }}
                     />
                     <div className="name-username">
