@@ -10,6 +10,9 @@ import {Button, FormControl, Textarea} from "@mui/joy";
 import { useNavigate } from 'react-router-dom';
 import { genericPost } from '../utils/api.ts'; 
 import { TwoColoumnLayout } from '../components/TwoColoumnLayout.tsx';
+import { PROFILE_IMGS_BUCKET } from "../config.ts";
+import { ACCESS_KEY_ID, SECRET_ACCESS_KEY } from "../utils/secrets.ts";
+import AWS from "aws-sdk";
 
 const axios = require('axios').default;
 
@@ -71,6 +74,32 @@ function EditProfile() {
 
 
         genericPost('/api/user/update', user);
+
+
+        try {
+
+            if (originalImage != user.profileImg && originalImage != "default.jpeg") {
+                const s3 = new AWS.S3({
+                    accessKeyId: ACCESS_KEY_ID as string,
+                    secretAccessKey: SECRET_ACCESS_KEY as string,
+                    region: "us-east-1",
+                    signatureVersion: 'v4',
+                });
+                
+                const params = {
+                    Bucket: PROFILE_IMGS_BUCKET as string,
+                    Key: originalImage,
+                }
+    
+                s3.deleteObject(params, function(err, data) {
+                    if (err) console.log(err, err.stack);  // error
+                });
+            }
+            
+        } catch (error) {
+            console.error("Error deleting file:", error);
+        }
+
 
         navigate('/profile/')
 
