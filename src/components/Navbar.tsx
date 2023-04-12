@@ -19,23 +19,21 @@ const NavDiv = styled.div`
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid #241d19;
-    
-
-    img {
-        margin-right: 10px;
-    }
+    padding-top: 1rem;
 
     a {
         font-family: 'Twine';
         font-style: normal;
         font-weight: 400;
-        font-size: 34px;
+        font-size: 36px;
         line-height: 100%;
         color: #a3b832;
         margin: 0 1rem;
         text-decoration: none;
+    }
+
+    #navbarLogo {
+        min-width: 120px;
     }
 `;
 
@@ -76,8 +74,8 @@ function Navbar() {
             {context['user'] && context['user']['walletAddress'] ?
                 <>
                     <NavDiv>
-                        <a href="/">
-                            <img src="icons/twine_logo_2.svg" width="90%" />
+                        <a href="/" id='navbarLogo'>
+                            <img src="/icons/twine_logo_2.svg" width="80%" />
                         </a>
                         <a href="/art">art</a>
                         <a href="/collab">collab</a>
@@ -95,10 +93,10 @@ function Navbar() {
                 :
                 <>
                     <NavDiv>
-                        <a href="/">
+                        <a href="/" id='navbarLogo'>
                             <img src="icons/twine_logo_2.svg" width="90%" />
                         </a>
-                        <a onClick={blockAccess}>art</a>
+                        <a href="/art">art</a>
                         <a onClick={blockAccess}>collab</a>
                         <a onClick={blockAccess}>create</a>
                         <ClickProfile
