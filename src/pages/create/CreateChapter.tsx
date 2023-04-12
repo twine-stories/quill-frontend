@@ -137,7 +137,7 @@ function CreateChapter(props: CreateChapterProps) {
                                                                                   width="30px" height="30px"/></IconButton>
                         <IconButton onClick={function () {
                             removeItem(counter)
-                        }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/remove.svg" width="30px"
+                        }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg" width="30px"
                                                                                   height="30px"/></IconButton>
                     </Box>
                 }
@@ -172,7 +172,7 @@ function CreateChapter(props: CreateChapterProps) {
                                                                               width="30px" height="30px"/></IconButton>
                     <IconButton onClick={function () {
                         removeItem(counter)
-                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/remove.svg" width="30px"
+                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg" width="30px"
                                                                               height="30px"/></IconButton>
                 </Box>
             </Card>

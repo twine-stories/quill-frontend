@@ -208,20 +208,29 @@ function App() {
                         :
                         user ?
                             <Routes>
+                                <Route path="/" element={<Home />}></Route>
+
                                 <Route path="/feedback" element={<FeedbackPage/>}></Route>
                                 <Route path="/art" element={<Art/>}></Route>
+
                                 <Route path="/create" element={<Create/>}></Route>
                                 <Route path="/create/story" element={<CreateStory/>}></Route>
                                 <Route path="/create/episode/*" element={<CreateChapter/>}></Route>
+
+                                <Route path="/edit/story/*" element={<CreateStory edit={true}/>}></Route>
+                                <Route path="/edit/episode/*" element={<CreateChapter edit={true}/>}></Route>
+
+                                <Route path="/story/*" element={<Story/>}></Route>
+                                <Route path="/episode/*" element={<Chapter/>}></Route>
+
+                                <Route path="/gallery/story/draft" element={<Gallery art={false} draft={true}/>}></Route>
+                                <Route path="/gallery/story/published" element={<Gallery art={false} draft={false}/>}></Route>
+
                                 <Route path="/profile" element={<Profile/>}></Route>
                                 <Route path="/edit-profile" element={<EditProfile/>}></Route>
                                 <Route path="/profile/:username" element={<GenericProfile/>}></Route>
-                                <Route path="/story/*" element={<Story/>}></Route>
-                                <Route path="/episode/*" element={<Chapter/>}></Route>
+
                                 <Route path="/collection/*" element={<Collection />}></Route>
-                                <Route path="/gallery/story/draft" element={<Gallery art={false} draft={true}/>}></Route>
-                                <Route path="/gallery/story/published" element={<Gallery art={false} draft={false}/>}></Route>
-                                <Route path="/" element={<Home />}></Route>
                             </Routes>
                             :
                             <Routes>

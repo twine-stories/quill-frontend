@@ -52,6 +52,9 @@ function Story() {
                             <Typography level="h1" sx={{color: "#E4E5FF"}}>{work['title']}</Typography>
                             <Typography level="h6" sx={{color: "#E4E5FF"}}>{work['description']}</Typography>
 
+                            <TwineButton icon="/icons/purple_settings.svg" color="blackpurple" name="Edit Story" action={() => {
+                                window.location.href = '/edit/story/' + work['url'];
+                            }}/>
                             <TwineButton icon="/icons/purple_plus.svg" color="purple" name="New Episode" action={() => {
                                 window.location.href = '/create/episode/' + work['url'];
                             }}/>
