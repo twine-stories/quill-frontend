@@ -18,7 +18,11 @@ import TwineSelect from "../../components/TwineSelect.tsx";
 
 enableMapSet();
 
-function CreateStory() {
+interface CreateStoryProps {
+    edit?: boolean;
+}
+
+function CreateStory(props: CreateStoryProps) {
 
     const [episode, setEpisode] = useState<Episode>();
 

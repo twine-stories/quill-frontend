@@ -30,8 +30,13 @@ import { v4 as uuidv4 } from 'uuid';
 enableMapSet();
 
 const DELIMITER = "🗿³¤";
+const IMG_DELIMITER = "ïmg¦";
 
-function CreateChapter() {
+interface CreateChapterProps {
+    edit?: boolean;
+}
+
+function CreateChapter(props: CreateChapterProps) {
 
     const [episode, setEpisode] = useState<Episode>();
 
