@@ -26,12 +26,18 @@ import { theme } from './utils/globalStyles.ts';
 import CreateChapter from "./pages/create/CreateChapter.tsx";
 import Chapter from "./pages/Chapter.tsx";
 import FirstLogin from './components/FirstLogin.tsx';
-import { PROFILE_IMGS_BUCKET } from './config.ts';
+import { env, PROFILE_IMGS_BUCKET } from './config.ts';
 
 const reach = loadStdlib('ALGO');
-reach.setWalletFallback(reach.walletFallback({
-    providerEnv: 'TestNet', MyAlgoConnect
-}));
+if (env === 'dev') {
+    reach.setWalletFallback(reach.walletFallback({
+        providerEnv: 'TestNet', MyAlgoConnect
+    }));
+} else {
+    reach.setWalletFallback(reach.walletFallback({
+        providerEnv: 'MainNet', MyAlgoConnect
+    }));
+}
 
 export const UserContext = createContext(null as any);
 const peraWallet = new PeraWalletConnect();
@@ -45,7 +51,7 @@ function App() {
     const [openLogin, setOpenLogin] = useState<boolean>(false);
     const [getUserToggle, setGetUserToggle] = useState<boolean>(false);
     const [initUserLoad, setInitUserLoad] = useState<boolean>(false);
-    const [connType, setConnType] = useState<ConnectType>();
+    const [connType, setConnType] = useState<ConnectType>(ConnectType.PERA);
     const [beta, setBeta] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -79,8 +85,8 @@ function App() {
 
     const connectToMyAlgo = async (): Promise<void> => {
         try {
-            const accounts = await reach.getDefaultAccount();
             setConnType(ConnectType.MY_ALGO);
+            const accounts = await reach.getDefaultAccount();
             onComplete(accounts['networkAccount']['addr']);
         } catch (err) {
             console.error(err);
@@ -89,9 +95,9 @@ function App() {
 
     const connectToPera = async (): Promise<void> => {
         try {
+            setConnType(ConnectType.PERA);
             const newAccounts = await peraWallet.connect();
             peraWallet.connector?.on('disconnect', logOut);
-            setConnType(ConnectType.PERA);
             onComplete(newAccounts[0]);
         } catch (err) {
             console.error(err);
@@ -149,6 +155,12 @@ function App() {
     useEffect(() => {
         const cookie = getCookie('session');
         if (cookie === "") {
+            peraWallet.reconnectSession().then((accounts) => {
+                peraWallet.connector?.on('disconnect', logOut);
+                if (accounts.length) {
+                    onComplete(accounts[0]);
+                }
+            })
             setInitUserLoad(true);
             return;
         }
