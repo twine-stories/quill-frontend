@@ -18,7 +18,7 @@ function Beta() {
     return (
         <Grid container height='100vh' alignItems='center' justifyContent='space-around'>
             <Grid container direction='column' alignItems='center' justifyContent='space-around' height='75vh' xs={12}>
-                <img src='icons/twine.svg' width='50%' />
+                <img src='/icons/twine.svg' width='50%' />
                 <Grid container rowSpacing={3} direction='column' xs={5}>
                     <Grid>
                         <TwineInput placeholder='Enter passcode...' inputAttrs={{
@@ -28,7 +28,7 @@ function Beta() {
                         }} />
                     </Grid>
                     <Grid>
-                        <TwineButton color='green' size='lg' icon='icons/twine_logo.svg' name='Enter Beta' action={() => {
+                        <TwineButton color='green' size='lg' icon='/icons/twine_logo.svg' name='Enter Beta' action={() => {
                             enterBeta((document.getElementById('betaAccess') as HTMLInputElement).value);
                         }} />
                     </Grid>

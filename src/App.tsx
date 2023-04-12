@@ -2,6 +2,7 @@ import {useEffect, useState, createContext} from 'react';
 import './App.css';
 import {Routes, Route} from "react-router-dom";
 import Beta from './pages/Beta.tsx';
+import FeedbackPage from './pages/FeedbackPage.tsx';
 import Home from './pages/Home.tsx';
 import Create from './pages/create/Create.tsx';
 import Profile from './pages/Profile.tsx';
@@ -16,13 +17,15 @@ import {ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib} from '@reach-sh/stdlib'
 import {v4 as uuidv4} from 'uuid';
 import {getCookie, setCookie, deleteCookie} from './utils/cookies.ts';
 import {User} from './utils/types.ts';
-import {cookieSet, userGet, userUpdate, userAdd, cookieGet} from './utils/api.ts';
+import {cookieSet, userGet, userAdd, cookieGet, genericPost} from './utils/api.ts';
 import {CssVarsProvider} from "@mui/joy";
 import GlobalStyle from "./utils/globalStyles.ts";
 import {PeraWalletConnect} from "@perawallet/connect";
 import {ConnectType} from './utils/enums.ts';
 import { theme } from './utils/globalStyles.ts';
-import CreateEpisode from "./pages/create/CreateChapter.tsx";
+import CreateChapter from "./pages/create/CreateChapter.tsx";
+import Chapter from "./pages/Chapter.tsx";
+import FirstLogin from './components/FirstLogin.tsx';
 
 const reach = loadStdlib('ALGO');
 reach.setWalletFallback(reach.walletFallback({
@@ -46,16 +49,15 @@ function App() {
     const [loading, setLoading] = useState<boolean>(true);
 
     const logOut = (): void => {
-        if (user.connectType === ConnectType.PERA) {
+        if (user && user.connectType === ConnectType.PERA) {
             peraWallet.disconnect();
         }
         deleteCookie('session');
-        // change this redirect
-        window.location.replace('/');
-    }
-
-    const updateUser = (newUser: User) => {
-        userUpdate(newUser, setUser);
+        // can do better than this
+        if (window.location.pathname !== '/') {
+            window.location.replace('/');
+        }
+        setUser(null);
     }
 
     const setUserCookie = (walletAddress: string, cookie: string) => {
@@ -73,10 +75,6 @@ function App() {
         setUserCookie(addr, uuidv4());
         setAddress(addr);
     };
-
-    const mockConnectToMyAlgo = (): void => {
-        onComplete('KYUH2SNU6FWFGBK6PNWI4EUIABOYFIQIQH2WOP3FW7DGA623ESTGXYQPJA');
-    }
 
     const connectToMyAlgo = async (): Promise<void> => {
         try {
@@ -103,7 +101,7 @@ function App() {
         userGet(addr, setUser);
     }
 
-    const addUser = (walletAddress: string, firstName: string, lastName: string): void => {
+    const addUser = (walletAddress: string, firstName: string, lastName: string, username: string): void => {
         const cookie = uuidv4();
         const newUser: User = {
             walletAddress: walletAddress,
@@ -112,7 +110,8 @@ function App() {
             lastName: lastName,
             profileImg: 'temp',
             userCookie: cookie,
-            connectType: connType
+            connectType: connType,
+            displayName: username
         }
         userAdd(newUser, (user) => {
             getAndSetUser(user.walletAddress);
@@ -123,19 +122,22 @@ function App() {
     }
 
     const cancelLogin = (): void => {
+        if (connType === ConnectType.PERA) {
+            peraWallet.disconnect();
+        }
         setOpenLogin(false);
         setAddress("");
     }
 
     const enterBeta = (code: string) => {
         if (code === accessCode) {
-            setCookie('betaSession', 'active');
+            setCookie('beta_session', 'active');
             setBeta(false);
         }
     }
 
     useEffect(() => {
-        const cookie = getCookie('betaSession');
+        const cookie = getCookie('beta_session');
         if (cookie === 'active') {
             setBeta(false);
         }
@@ -159,7 +161,9 @@ function App() {
                     if (newUser.connectType !== connType) {
                         newUser.connectType = connType;
                         setCookie('session', newUser.userCookie);
-                        updateUser(newUser)
+                        genericPost('/api/user/update', newUser).then((response: User) => {
+                            setUser(response);
+                        });
                     } else {
                         setUser(newUser);
                     }
@@ -189,35 +193,46 @@ function App() {
                     'user': user,
                     'connectToPera': connectToPera,
                     'connectToMyAlgo': connectToMyAlgo,
-                    'mockConnectToMyAlgo': mockConnectToMyAlgo,
                     'logOut': logOut,
                     'openLogin': openLogin,
                     'closeLogin': cancelLogin,
                     'addUser': addUser,
-                    'updateUser': updateUser,
+                    'updateUser': setUser,
                     'enterBeta': enterBeta
                 }}>
+                    <FirstLogin />
                     {beta ?
                         <Routes>
                             <Route path="/*" element={<Beta />}></Route>
                         </Routes>
                         :
-                        <Routes>
-                            <Route path="/art" element={<Art/>}></Route>
-                            <Route path="/create" element={<Create/>}></Route>
-                            <Route path="/create/story" element={<CreateStory/>}></Route>
-                            <Route path="/profile" element={<Profile/>}></Route>
-                            <Route path="/edit-profile" element={<EditProfile/>}></Route>
-                            <Route path="/profile/:username" element={<GenericProfile/>}></Route>
-                            <Route path="/story/*" element={<Story/>}></Route>
-                            <Route path="/episode/*" element={<CreateEpisode/>}></Route>
-                            <Route path="/collection/*" element={<Collection />}></Route>
-                            <Route path="/gallery/story/draft" element={<Gallery art={false} draft={true}/>}></Route>
-                            <Route path="/gallery/story/published" element={<Gallery art={false} draft={false}/>}></Route>
-                            <Route path="/" element={<Home />}></Route>
-                            {/* <Route path="/" element={<Gallery art={true} />}></Route> */}
-                            {/*<Route path="/" element={<Home />}></Route>*/}
-                        </Routes>
+                        user ?
+                            <Routes>
+                                <Route path="/feedback" element={<FeedbackPage/>}></Route>
+                                <Route path="/art" element={<Art/>}></Route>
+                                <Route path="/create" element={<Create/>}></Route>
+                                <Route path="/create/story" element={<CreateStory/>}></Route>
+                                <Route path="/create/episode/*" element={<CreateChapter/>}></Route>
+                                <Route path="/profile" element={<Profile/>}></Route>
+                                <Route path="/edit-profile" element={<EditProfile/>}></Route>
+                                <Route path="/profile/:username" element={<GenericProfile/>}></Route>
+                                <Route path="/story/*" element={<Story/>}></Route>
+                                <Route path="/episode/*" element={<Chapter/>}></Route>
+                                <Route path="/collection/*" element={<Collection />}></Route>
+                                <Route path="/gallery/story/draft" element={<Gallery art={false} draft={true}/>}></Route>
+                                <Route path="/gallery/story/published" element={<Gallery art={false} draft={false}/>}></Route>
+                                <Route path="/" element={<Home />}></Route>
+                            </Routes>
+                            :
+                            <Routes>
+                                <Route path="/feedback" element={<FeedbackPage/>}></Route>
+                                <Route path="/art" element={<Art/>}></Route>
+                                <Route path="/profile/:username" element={<GenericProfile/>}></Route>
+                                <Route path="/story/*" element={<Story/>}></Route>
+                                <Route path="/episode/*" element={<Chapter/>}></Route>
+                                <Route path="/collection/*" element={<Collection />}></Route>
+                                <Route path="/" element={<Home />}></Route>
+                            </Routes>
                     }
                 </UserContext.Provider>
             </CssVarsProvider>

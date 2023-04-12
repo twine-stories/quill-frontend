@@ -1,4 +1,4 @@
-import { User, Work, Artwork, NFTCollection } from './types.ts';
+import {User, Work, Artwork, NFTCollection, Episode} from './types.ts';
 
 const axios = require('axios').default;
 
@@ -120,6 +120,44 @@ export const workAdd = (work: Work, fail: (foundWork: Work) => void) : void => {
                 console.error(error);
             });
     });
+}
+
+export const episodeGetByUrl = (url: string, setter: (episode: Episode) => void, fail: () => void) : void => {
+    axios.get('/api/episode/url/' + url)
+        .then(response => {
+            if (response.data) {
+                setter(response.data);
+            } else {
+                fail();
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
+
+export const episodeAdd = (episode: Episode, fail: (foundEpisode: Episode) => void) : void => {
+    episodeGetByUrl(episode.url, fail, () => {
+        axios.post('/api/episode/add', episode)
+            .then(response => {
+                if (response.status === 200) {
+                    console.log('success');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+}
+
+export const episodesGetByWorkId = async (workId: number, fail: () => void): Promise<Episode[] | null> => {
+    const response = await axios.get('/api/episode/work/id/' + workId);
+    if (response.status === 200) {
+        return response.data;
+    } else {
+        fail();
+    }
+    return null;
 }
 
 export const artworkGetAll = async (): Promise<Artwork[] | null> => {

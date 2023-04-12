@@ -2,7 +2,6 @@ import { Accounts } from '@randlabs/myalgo-connect';
 import React, { useState, useContext } from 'react';
 import styled from "styled-components";
 import TwineButton from './TwineButton.tsx';
-import FirstLogin from './FirstLogin.tsx';
 import { UserContext } from "../App.tsx";
 import LoginWall from './LoginWall.tsx';
 import RegisterCreator from './RegisterCreator.tsx';
@@ -73,8 +72,7 @@ function Navbar() {
     }
 
     return (
-        <div>
-            <FirstLogin />
+        <div style={{marginBottom: '25px'}}>
             {context['user'] && context['user']['walletAddress'] ?
                 <>
                     <NavDiv>

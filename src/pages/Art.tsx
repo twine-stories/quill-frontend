@@ -1,8 +1,9 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from "../components/Navbar.tsx";
 import { NFTCollection } from '../utils/types.ts';
 import { collectionGetAll } from '../utils/api.ts';
-
+import { env } from '../config.ts';
+import { Typography, Grid } from "@mui/joy";
 
 function Art() {
     const [colls, setColls] = useState<NFTCollection[]>();
@@ -24,7 +25,11 @@ function Art() {
     return (
         <div>
             <Navbar />
-            {collListings}
+            <Grid container direction='column' alignItems='center' justifyContent='space-around' height='80vh'>
+                {env === 'dev' ? collListings : 
+                    <Typography level='h2' color='purple'>Digital Art Marketplace Coming Soon!</Typography>
+                }
+            </Grid>
         </div>
     );
 }

@@ -44,7 +44,7 @@ function Collaborator(props: CollaboratorProps) {
                         backgroundColor: 'black',
                     } }} variant='plain' onClick={() => {remove(props.id)}}>
                         <img
-                            src='icons/remove.svg'
+                            src='/icons/remove.svg'
                             alt=''
                         />
                     </IconButton>}

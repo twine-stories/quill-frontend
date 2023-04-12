@@ -27,7 +27,7 @@ function GalleryTile(props: GalleryTileProps) {
                     Episodes:
                 </Typography>
                 <Typography level="h6" sx={{color: "#E4E5FF"}}>
-                    Published on {props.work && props.work['publishStamp'].toString()}
+                    {/*Published on {props.work && props.work['publishStamp'].toString()}*/}
                 </Typography>
             </Card>
         );

@@ -30,8 +30,9 @@ import NFTCheckbox from '../../components/NFTCheckbox.tsx';
 import {adminAddr} from '../../utils/blockchain/credentials.ts';
 import {INIT_ESCROW, MAKE_SELL_OFFER} from '../../utils/blockchain/constants.ts';
 import {saleTypeMap, MAX_COLLABORATORS} from '../../utils/constants.ts';
-import {Typography, Sheet, Stack} from "@mui/joy";
+import {Typography, Sheet, Stack, Grid} from "@mui/joy";
 import {CollectionType} from '../../utils/enums.ts';
+import { env } from '../../config.ts';
 
 const axios = require('axios').default;
 export const CollaboratorContext = createContext(null as any);
@@ -326,44 +327,42 @@ function Create() {
     return (
         <div>
             <Navbar/>
-            <div className='pageContent'>
-                <Typography level="h2" sx={{color: "#A5BB2D"}}>
+            <Grid container direction='column' alignItems='flex-start' justifyContent='space-around'>
+                <Typography level="h2" color='green'>
                     Create Story
                 </Typography>
                 <Stack
                     direction="row"
-                    justifyContent="center"
+                    justifyContent="flex-start"
                     alignItems="center"
-                    spacing={2}
-                    height="250px"
+                    flexWrap='wrap'
                 >
-                <Sheet sx={{height: "100%"}} color="green_dashed" variant="rounded">
-                    <TwineButton icon="icons/green_plus.svg" color="green" name="New Story" action={() => {
-                        window.location.href = '/create/story/'
-                    }}/>
-                </Sheet>
-                <Sheet sx={{height: "100%"}} color="green_dashed" variant="rounded">
-                    <TwineButton icon="icons/green_paper.svg" color="blackgreen" name="Published Stories"
-                                 action={() => {
-                                     window.location.href = '/gallery/story/published'
-                                 }}/>
-                </Sheet>
-                <Sheet sx={{height: "100%"}} color="green_dashed" variant="rounded">
-                    <TwineButton icon="icons/green_paper.svg" color="blackgreen" name="Story Drafts" action={() => {
-                        window.location.href = '/gallery/story/draft'
-                    }}/>
-                </Sheet>
+                    <Sheet sx={{height: "250px", width: '150px', margin: '10px'}} color="green_dashed" variant="rounded">
+                        <TwineButton sx={{paddingBlock:"2rem", paddingInline:"2.5rem"}} icon="/icons/green_plus.svg" color="green" name="Create Story" action={() => {
+                            window.location.href = '/create/story/'
+                        }}/>
+                    </Sheet>
+                    <Sheet sx={{height: "250px", width: '150px', margin: '10px'}} color="green_dashed" variant="rounded">
+                        <TwineButton sx={{paddingBlock:"2rem", paddingInline:"2.5rem"}} icon="/icons/green_paper.svg" color="blackgreen" name="Published Stories"
+                                    action={() => {
+                                        window.location.href = '/gallery/story/published'
+                                    }}/>
+                    </Sheet>
+                    <Sheet sx={{height: "250px", width: '150px', margin: '10px'}} color="green_dashed" variant="rounded">
+                        <TwineButton sx={{paddingBlock:"2rem", paddingInline:"2.5rem"}} icon="/icons/green_paper.svg" color="blackgreen" name="Story Drafts" action={() => {
+                            window.location.href = '/gallery/story/draft'
+                        }}/>
+                    </Sheet>
                 </Stack>
 
-                {/*I DIDN"T TOUCH ANYTHING BELOW THIS*/}
 
-
-                <Typography level="h2" sx={{color: "#9E9FEB"}}>
+                <Typography level="h2" color='purple'>
                     Create Art
                 </Typography>
-                <Typography level="h3" sx={{color: "#9E9FEB"}}>
+                <Typography level="h4" color='purple'>
                     Coming Soon!
                 </Typography>
+                {env === 'dev' &&
                 <div>
                     <div>
                         <TwineInput placeholder='Unit name' inputAttrs={{
@@ -404,16 +403,16 @@ function Create() {
                         <div>
                             {collaborators}
                             <TwineButton name='Add Collaborator' enabled={collaborators.length < MAX_COLLABORATORS}
-                                         action={(e) => {
-                                             if (collaborators.length < MAX_COLLABORATORS) {
-                                                 const id: number = collaborators[collaborators.length - 1].props.id + 1;
-                                                 setCollaborators([
-                                                     ...collaborators,
-                                                     <Collaborator profitSplit={true} principle={false} id={id}
-                                                                   key={id}/>
-                                                 ])
-                                             }
-                                         }}/>
+                                        action={(e) => {
+                                            if (collaborators.length < MAX_COLLABORATORS) {
+                                                const id: number = collaborators[collaborators.length - 1].props.id + 1;
+                                                setCollaborators([
+                                                    ...collaborators,
+                                                    <Collaborator profitSplit={true} principle={false} id={id}
+                                                                key={id}/>
+                                                ])
+                                            }
+                                        }}/>
                         </div>
                     </CollaboratorContext.Provider>
                     <div>
@@ -421,7 +420,9 @@ function Create() {
                         <TwineButton name='Post NFT(s) for Sale' enabled={enableSell} action={(e) => makeSellOffer()}/>
                     </div>
                 </div>
-            </div>
+                }
+                
+            </Grid>
         </div>
     );
 }
