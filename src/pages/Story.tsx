@@ -31,7 +31,7 @@ function Story() {
                 console.log('fail');
             }).then((response) => {setEpisodes(response)})
         }
-    }, [episodes, work]);
+    }, [work]);
 
     return (
         <div>
