@@ -52,11 +52,11 @@ function Profile() {
                         src = {user && user.profileImg}
                         alt = ""
                         onError={e => {
-                            e.currentTarget.src = "https://placehold.co/100x100"
+                            e.currentTarget.src = "https://placehold.co/128x128"
                         }}
                     />
                     <div className="name-username">
-                        <h2 >@{user && user.displayName}</h2>
+                        <h2 >@{user && user.userName}</h2>
                         <h1 >{user && user.firstName} {user && user.lastName}</h1>
                         <div className="edit-notif">
                             <Button href="/edit-profile" className="edit-profile-btn" onClick={editProfile}>Edit Profile</Button>

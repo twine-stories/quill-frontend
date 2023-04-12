@@ -97,7 +97,7 @@ function Story() {
                                          >
                                              <Typography level="h5" sx={{color: "#9E9FEB"}}>Creators</Typography>
                                              <Typography level="h6"
-                                                         sx={{color: "#E4E5FF"}}>{work['creator']['displayName']}</Typography>
+                                                         sx={{color: "#E4E5FF"}}>{work['creator']['userName']}</Typography>
                                          </Box>
                                      }
                                  </div>

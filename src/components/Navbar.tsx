@@ -5,6 +5,7 @@ import TwineButton from './TwineButton.tsx';
 import { UserContext } from "../App.tsx";
 import LoginWall from './LoginWall.tsx';
 import RegisterCreator from './RegisterCreator.tsx';
+import ClickProfile from './ClickProfile.tsx';
 
 interface KonvaTextEventTarget extends EventTarget {
     index: number;
@@ -18,6 +19,23 @@ const NavDiv = styled.div`
     display: flex;
     justify-content: space-around;
     align-items: center;
+    padding-top: 1rem;
+
+    a {
+        font-family: 'Twine';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 36px;
+        line-height: 100%;
+        color: #a3b832;
+        margin: 0 1rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    #navbarLogo {
+        min-width: 120px;
+    }
 `;
 
 function Navbar() {
@@ -57,22 +75,37 @@ function Navbar() {
             {context['user'] && context['user']['walletAddress'] ?
                 <>
                     <NavDiv>
-                        <a href="/">Twine</a>
-                        <a href="/art">Art</a>
-                        <a onClick={createNav}>Create</a>
-                        <a href="/profile">Profile</a>
-                        <TwineButton name="Log Out" action={context['logOut']} />
+                        <a href="/" id='navbarLogo'>
+                            <img src="/icons/twine_logo_2.svg" width="80%" />
+                        </a>
+                        <a href="/art">art</a>
+                        <a href="/collab">collab</a>
+                        <a onClick={createNav}>create</a>
+
+                        <ClickProfile
+                            isLoggedIn={true}
+                            logOutFunc={context['logOut']}
+                            connectAlgoFunc={() => {}}
+                            connectPeraFunc={() => {}}
+                         />
                     </NavDiv>
                     <RegisterCreator open={openCreator} close={closeCreator} updateUser={context['updateUser']} navigate={navToCreate} />
                 </>
                 :
                 <>
                     <NavDiv>
-                        <a href="/">Twine</a>
-                        <a href="/art">Art</a>
-                        <a onClick={blockAccess}>Create</a>
-                        <TwineButton name="Connect" action={context['connectToMyAlgo']} />
-                        <TwineButton name="Connect Pera" action={context['connectToPera']} />
+                        <a href="/" id='navbarLogo'>
+                            <img src="icons/twine_logo_2.svg" width="90%" />
+                        </a>
+                        <a href="/art">art</a>
+                        <a onClick={blockAccess}>collab</a>
+                        <a onClick={blockAccess}>create</a>
+                        <ClickProfile
+                            isLoggedIn={false}
+                            logOutFunc={() => {}}
+                            connectAlgoFunc={context['connectToMyAlgo']}
+                            connectPeraFunc={context['connectToPera']}
+                         />
                     </NavDiv>
                     <LoginWall open={open} closeWall={closeWall} />
                 </>

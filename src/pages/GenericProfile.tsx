@@ -58,7 +58,7 @@ function GenericProfile() {
                         }}
                     />
                     <div className="name-username">
-                        <h2 >@{user && user.displayName}</h2>
+                        <h2 >@{user && user.userName}</h2>
                         <h1 >{user && user.firstName} {user && user.lastName}</h1>
                         <div className="edit-notif">
                             <Button href="/edit-profile" className="edit-profile-btn" onClick={editProfile}>Edit Profile</Button>

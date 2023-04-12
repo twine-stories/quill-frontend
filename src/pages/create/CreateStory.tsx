@@ -151,7 +151,7 @@ function CreateStory(props: CreateStoryProps) {
                 genre2: genre2.textContent.toUpperCase(),
                 genre3: genre3.textContent.toUpperCase(),
                 medium: "WRITTEN",
-                url: user.displayName + '-' + title.value.replace(/\s/g, "-").toLowerCase(),
+                url: user.userName + '-' + title.value.replace(/\s/g, "-").toLowerCase(),
                 hook: hook.value,
                 publishStamp: publishStamp,
             }

@@ -101,7 +101,7 @@ function Create() {
 
             if (collaborators.length === 0) {
                 setCollaborators([
-                    <Collaborator profitSplit={true} defaultCreator={user.displayName}
+                    <Collaborator profitSplit={true} defaultCreator={user.userName}
                                   defaultWallet={user.walletAddress} defaultProfit={100} principle={true} id={0}
                                   key={0}/>
                 ])
