@@ -83,7 +83,7 @@ function Navbar() {
                             <img src="/icons/twine_logo_2.svg" width="80%" />
                         </a>
                         <a href="/art">art</a>
-                        <a href="/collab">collab</a>
+                        <a href="https://discord.gg/HKrvJrRUwJ" target = "_blank">collab</a>
                         <a onClick={createNav}>create</a>
 
                         <ClickProfile
