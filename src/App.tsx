@@ -111,7 +111,7 @@ function App() {
             profileImg: 'temp',
             userCookie: cookie,
             connectType: connType,
-            displayName: username
+            userName: username
         }
         userAdd(newUser, (user) => {
             getAndSetUser(user.walletAddress);
