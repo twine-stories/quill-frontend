@@ -17,6 +17,7 @@ function EditProfile() {
     const [works, setWorks] = useState<Array<ProfileWork>>();
     const context: object = useContext(UserContext);
     const user: User = context['user'];
+    const originalImage: string = user.profileImg;
 
     useEffect(() => {
         if (user && user.creator && user.walletAddress) {
@@ -62,7 +63,6 @@ function EditProfile() {
         user.lastName = lastname;
         user.userName = username;
         user.description = description;
-        user.walletAddress = walletAddress;
         user.website = website;
         user.twitter = twitter;
         user.instagram = instagram;
@@ -78,7 +78,20 @@ function EditProfile() {
     }
 
     const handleCancel = () => {
+        user.profileImg = originalImage;
         navigate('/profile/');
+    }
+
+    const handleKeyPress = () => {
+        let username: string = document.getElementsByClassName("username")[0].getElementsByTagName("textarea")[0].value;
+        if (username.length == 0) {
+            document.getElementsByClassName("username")[0].getElementsByTagName("textarea")[0].value = "@";
+        } else if ("@" != username[0]) {
+
+            let atIdx = username.indexOf("@");
+            let afterAt = username.substring(atIdx+1, username.length);
+            document.getElementsByClassName("username")[0].getElementsByTagName("textarea")[0].value = "@" + afterAt;
+        }
     }
 
 
@@ -94,7 +107,7 @@ function EditProfile() {
                         <div className="name-info">
                             <Textarea className="firstname" defaultValue={user && user.firstName} maxRows={1} />
                             <Textarea className="lastname" defaultValue={user && user.lastName} maxRows={1} />
-                            <Textarea className="username" defaultValue={(user && ("@" + user.userName))} maxRows={1} />
+                            <Textarea className="username" defaultValue={(user && ("@" + user.userName))} maxRows={1} onChange={handleKeyPress} />
                         </div>
                         <div className="description-info">
                             <Textarea className = "desc" defaultValue={user && user.description} placeholder="Add a description..." minRows={4} maxRows={4}/>
@@ -103,7 +116,7 @@ function EditProfile() {
                     <div className="your-wallet">
                         <h2>Your Wallet</h2>
                         <div className="wallet-info">
-                            <Textarea className = "wallet" defaultValue={user && user.walletAddress} maxRows={1} />
+                            <Textarea className = "wallet" defaultValue={user && user.walletAddress} maxRows={1} disabled />
                         </div>
                     </div>
                     <div className="social-media">

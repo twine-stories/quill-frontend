@@ -26,6 +26,7 @@ import { theme } from './utils/globalStyles.ts';
 import CreateChapter from "./pages/create/CreateChapter.tsx";
 import Chapter from "./pages/Chapter.tsx";
 import FirstLogin from './components/FirstLogin.tsx';
+import { PROFILE_IMGS_BUCKET } from './config.ts';
 
 const reach = loadStdlib('ALGO');
 reach.setWalletFallback(reach.walletFallback({
@@ -108,7 +109,7 @@ function App() {
             email: null,
             firstName: firstName,
             lastName: lastName,
-            profileImg: 'temp',
+            profileImg: 'default.jpeg',
             userCookie: cookie,
             connectType: connType,
             userName: username

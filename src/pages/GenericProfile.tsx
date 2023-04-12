@@ -7,6 +7,7 @@ import ProfileWork from '../components/ProfileWork.tsx';
 import "../components/ProfileSidebar.tsx"
 import ProfileSidebar from '../components/ProfileSidebar.tsx';
 import {Button} from "@mui/joy";
+import { genericGet } from '../utils/api.ts';
 
 const axios = require('axios').default;
 
@@ -15,7 +16,13 @@ function GenericProfile() {
     const context: object = useContext(UserContext);
     const { username } = useParams();
     // Get user from params
-    // const user: User = context['user'];
+    const [user, setUser] = useState<User>();
+
+    useEffect(() => {
+        genericGet('/api/user/name/' + username).then((response: User) => {
+            setUser(response);
+        });
+    }, []);
 
 
     useEffect(() => {
@@ -36,7 +43,7 @@ function GenericProfile() {
                     console.error(error);
                 });
         }
-    }, [context['user']]);
+    }, [user]);
 
     let navigate = useNavigate();
 
