@@ -36,6 +36,7 @@ declare module '@mui/joy/Sheet' {
 
     interface SheetPropsVariantOverrides {
         rounded: true;
+        purpleDashed: true;
     }
 }
 
@@ -134,7 +135,7 @@ export const theme = extendTheme({
                         fontFamily: 'Oxanium'
                     }),
                     ...(ownerState.color === 'brown' && {
-                        border: '0.5px #241D19 solid',
+                        border: '1px #241D19 solid',
                         color: '#E4E5FF'
                     })
                 }),
@@ -169,13 +170,20 @@ export const theme = extendTheme({
                         borderRadius: '10px',
                     }),
                     ...(ownerState.color === 'home' && {
-                        border: '0.5px #241D19 solid',
+                        border: '1px #241D19 solid',
                         background: '#0d0603',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
                         '&:hover': {
-                            border: 'none',
-                            background: '#14100E'
+                            border: '1px #0d0603 solid',
+                            background: '#14100E',
+                            cursor: 'pointer'
                         }
-                    })
+                    }),
+                    ...(ownerState.variant === 'purpleDashed' && {
+                        border: '1px #9E9FEB dashed'
+                    }),
                 }),
             },
         },
@@ -185,7 +193,7 @@ export const theme = extendTheme({
                     ...({
                         fontFamily: 'Oxanium',
                         color: '#E4E5FF',
-                        border: '0.5px #241D19 solid'
+                        border: '1px #241D19 solid'
                     }),
                 }),
             },
