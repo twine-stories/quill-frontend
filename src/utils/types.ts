@@ -37,6 +37,7 @@ export type Work = {
     genre1: Genre;
     genre2?: Genre;
     genre3?: Genre;
+    published: boolean;
 }
 
 export type Episode = {
@@ -50,6 +51,7 @@ export type Episode = {
     flags: number;
     url: string;
     mature: boolean;
+    published: boolean;
 }
 
 export type NFTCollection = {

@@ -93,14 +93,10 @@ function CreateStory(props: CreateStoryProps) {
                                      {!props.edit &&
                                          <>
                                              <TwineButton name="Save Draft" icon="/icons/purple_checkmark.svg"
-                                                          action={(e) => workAdd(getStory(false), (work) => {
-                                                              console.log("Your title is the same as one of your existing titles. Please choose a different title.");
-                                                          })}></TwineButton>
+                                                          action={(e) => postStory(getStory(false))}></TwineButton>
                                              <TwineButton
                                                  name='Publish Story' color="green" icon="/icons/green_plus.svg"
-                                                 action={(e) => workAdd(getStory(true), (work) => {
-                                                     console.log("Your title is the same as one of your existing titles. Please choose a different title.");
-                                                 })}/>
+                                                 action={(e) => postStory(getStory(true))}/>
                                          </>
                                      }
                                      {props.edit &&
@@ -108,7 +104,7 @@ function CreateStory(props: CreateStoryProps) {
                                              {returnTransferButton()}
                                              <TwineButton
                                                  name='Save Story' color="green" icon="/icons/green_checkmark.svg"
-                                                 action={(e) => getStory(true)}/>
+                                                 action={(e) => postStory(getStory(true, work))}/>
                                              <TwineButton
                                                  name='Cancel Edit Story' color="blackgreen" icon="/icons/green_x.svg"
                                                  action={(e) => goBack()}/>
@@ -121,17 +117,17 @@ function CreateStory(props: CreateStoryProps) {
 
     );
 
-    function returnTransferButton(work: Work) {
+    function returnTransferButton() {
         if (work && work['publishStamp']) {
             return <TwineButton name="Transfer to Draft" icon="/icons/purple_paper.svg"
-                                action={(e) => postStory(getStory(true, work['id']))}></TwineButton>
+                                action={(e) => postStory(getStory(false, work))}></TwineButton>
         } else {
             return <TwineButton name="Transfer to Published" icon="/icons/purple_paper.svg"
-                                action={(e) => postStory(getStory(false, work['id']))}></TwineButton>
+                                action={(e) => postStory(getStory(true, work))}></TwineButton>
         }
     }
 
-    function getStory(published: boolean, id?: number): Work {
+    function getStory(published: boolean, currentWork?: Work): Work {
         const title: HTMLInputElement = document.getElementById("title") as HTMLInputElement;
         const description: HTMLInputElement = document.getElementById('description') as HTMLInputElement;
         const hook: HTMLInputElement = document.getElementById('hook') as HTMLInputElement;
@@ -139,6 +135,9 @@ function CreateStory(props: CreateStoryProps) {
         const genre2: HTMLInputElement = document.getElementById('genre2') as HTMLInputElement;
         const genre3: HTMLInputElement = document.getElementById('genre3') as HTMLInputElement;
         const publishStamp = published ? new Date() : null;
+        const id = currentWork ? currentWork['id'] : null;
+        console.log("help")
+        console.log(published)
         if (title.value && description.value && hook.value && genre1.textContent) {
             let newWork: Work = {
                 id: id,
@@ -154,7 +153,10 @@ function CreateStory(props: CreateStoryProps) {
                 url: user.userName + '-' + title.value.replace(/\s/g, "-").toLowerCase(),
                 hook: hook.value,
                 publishStamp: publishStamp,
+                published: published,
             }
+
+            console.log(newWork)
 
             return newWork;
         }
@@ -163,9 +165,9 @@ function CreateStory(props: CreateStoryProps) {
 
     function postStory(work: Work) {
         if (work) {
-            let urlModifier = props.edit ? "/update" : "/add";
-            genericPost("/api/work/" + urlModifier, work).then((res) => {
-                if (res) {
+            let urlModifier = props.edit ? "update" : "add";
+            genericPost("/api/work/" + urlModifier, work).then((response) => {
+                if (response) {
                     navigate("/story/" + work.url);
                 } else {
                     console.log("Your title is the same as one of your existing titles. Please choose a different title.");
