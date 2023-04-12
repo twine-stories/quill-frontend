@@ -60,7 +60,7 @@ function EditProfile() {
 
         user.firstName = firstname;
         user.lastName = lastname;
-        user.displayName = username;
+        user.userName = username;
         user.description = description;
         user.walletAddress = walletAddress;
         user.website = website;
@@ -94,7 +94,7 @@ function EditProfile() {
                         <div className="name-info">
                             <Textarea className="firstname" defaultValue={user && user.firstName} maxRows={1} />
                             <Textarea className="lastname" defaultValue={user && user.lastName} maxRows={1} />
-                            <Textarea className="username" defaultValue={(user && ("@" + user.displayName))} maxRows={1} />
+                            <Textarea className="username" defaultValue={(user && ("@" + user.userName))} maxRows={1} />
                         </div>
                         <div className="description-info">
                             <Textarea className = "desc" defaultValue={user && user.description} placeholder="Add a description..." minRows={4} maxRows={4}/>

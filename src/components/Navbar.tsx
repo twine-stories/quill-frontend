@@ -30,6 +30,7 @@ const NavDiv = styled.div`
         color: #a3b832;
         margin: 0 1rem;
         text-decoration: none;
+        cursor: pointer;
     }
 
     #navbarLogo {

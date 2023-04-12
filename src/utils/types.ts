@@ -9,7 +9,7 @@ export type User = {
     phoneNumber?: string;
     firstName: string;
     lastName: string;
-    displayName: string;
+    userName: string;
     profileImg: string;
     illustrator: boolean;
     suspended: boolean;

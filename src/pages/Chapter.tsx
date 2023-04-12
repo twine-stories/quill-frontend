@@ -68,7 +68,7 @@ function Chapter() {
                                          >
                                              <Typography level="h5" sx={{color: "#9E9FEB"}}>Creators</Typography>
                                              <Typography level="h6"
-                                                         sx={{color: "#E4E5FF"}}>{episode['work']['creator']['displayName']}</Typography>
+                                                         sx={{color: "#E4E5FF"}}>{episode['work']['creator']['userName']}</Typography>
                                          </Box>
                                      }
                                  </div>
