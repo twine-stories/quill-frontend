@@ -4,7 +4,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background-color: rgba(128, 128, 128, 0.5); /* Semi-transparent background */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,9 +14,9 @@
   .popup-content {
     display: flex;
     flex-direction: column;
-    background-color: white;
+    background-color: #0d0603;
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 20px;
     max-width: 400px;
     text-align: center;
     
@@ -30,7 +30,7 @@
   
   .popup-content h2 {
     margin-top: 0;
-    color: black;
+    color: #9da1e9;
   }
   
   .popup-content button {
@@ -45,4 +45,15 @@
     color: black;
     margin: auto;
     width: 75%;
+  }
+
+  input[type="file"]::file-selector-button {
+    border: #4546ab;
+    width: 130px;
+    height: 40px;
+    background-color: #4546ab;
+    border-radius: 12px;
+    font-family: Oxanium;
+    src: url('../../public/fonts/Oxanium/Oxanium-Regular.ttf');
+    font-weight: 700;
   }
