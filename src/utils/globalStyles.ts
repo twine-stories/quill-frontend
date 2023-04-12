@@ -227,6 +227,17 @@ export const theme = extendTheme({
                     })
                 })
             }
+        },
+        JoyMenuItem: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    ...({
+                        '&:focus': {
+                            outline: '0'
+                        }
+                    }),
+                })
+            }
         }
     },
 });
