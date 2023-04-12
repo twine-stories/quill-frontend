@@ -30,8 +30,13 @@ import { v4 as uuidv4 } from 'uuid';
 enableMapSet();
 
 const DELIMITER = "🗿³¤";
+const IMG_DELIMITER = "ïmg¦";
 
-function CreateChapter() {
+interface CreateChapterProps {
+    edit?: boolean;
+}
+
+function CreateChapter(props: CreateChapterProps) {
 
     const [episode, setEpisode] = useState<Episode>();
 
@@ -132,7 +137,7 @@ function CreateChapter() {
                                                                                   width="30px" height="30px"/></IconButton>
                         <IconButton onClick={function () {
                             removeItem(counter)
-                        }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/remove.svg" width="30px"
+                        }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg" width="30px"
                                                                                   height="30px"/></IconButton>
                     </Box>
                 }
@@ -167,7 +172,7 @@ function CreateChapter() {
                                                                               width="30px" height="30px"/></IconButton>
                     <IconButton onClick={function () {
                         removeItem(counter)
-                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/remove.svg" width="30px"
+                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg" width="30px"
                                                                               height="30px"/></IconButton>
                 </Box>
             </Card>

@@ -327,10 +327,8 @@ function Create() {
     return (
         <div>
             <Navbar/>
+            <Typography level="h2" color='green'>Create Story</Typography>
             <Grid container direction='column' alignItems='flex-start' justifyContent='space-around'>
-                <Typography level="h2" color='green'>
-                    Create Story
-                </Typography>
                 <Stack
                     direction="row"
                     justifyContent="flex-start"

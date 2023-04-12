@@ -17,7 +17,6 @@ import { NFTCollection, Work } from '../utils/types.ts';
 interface WorkGalleryProps {
     art: boolean;
     draft: boolean;
-    episodeName: string;
 }
 
 function Gallery(props: WorkGalleryProps) {
