@@ -6,7 +6,7 @@ import ProfileWork from '../components/ProfileWork.tsx';
 import './EditProfile.css';
 import "../components/EditSidebar.tsx"
 import EditSidebar from '../components/EditSidebar.tsx';
-import {Button, FormControl, Modal, Textarea, ModalDialog, ModalClose, Typography} from "@mui/joy";
+import {Grid, Textarea, Typography} from "@mui/joy";
 import { useNavigate } from 'react-router-dom';
 import { genericPost, genericGet } from '../utils/api.ts'; 
 import { TwoColoumnLayout } from '../components/TwoColoumnLayout.tsx';
@@ -144,43 +144,40 @@ function EditProfile() {
     return (
         <div>
             <Navbar />
-            <div className="entire-page">
-                <div className="edit-profile-page">
-                    <h1>Edit Profile</h1>
-                    <div className="about-profile">
-                        <h2>About Profile</h2>
-                        <div className="name-info">
-                            <Textarea className="firstname" defaultValue={user && user.firstName} maxRows={1} />
-                            <Textarea className="lastname" defaultValue={user && user.lastName} maxRows={1} />
-                            <Textarea className="username" defaultValue={(user && ("@" + user.userName))} maxRows={1} onChange={handleKeyPress} />
-                        </div>
-                        <div className="description-info">
+            <Typography color='purple' level='h2'>Edit Profile</Typography>
+            <Grid container alignItems='flex-start' justifyContent='space-between' className="edit-profile">
+                <Grid xs={8}>
+                    <Typography color='purple' level='h3'>About Profile</Typography>
+                    <Grid container direction='column' rowSpacing={3} className="edit-inner">
+                        <Grid container columnSpacing={1} alignItems='center' justifyContent='space-between'>
+                            <Grid xs={4}><Textarea className="firstname" defaultValue={user && user.firstName} maxRows={1} /></Grid>
+                            <Grid xs={4}><Textarea className="lastname" defaultValue={user && user.lastName} maxRows={1} /></Grid>
+                            <Grid xs={4}><Textarea className="username" defaultValue={(user && ("@" + user.userName))} maxRows={1} onChange={handleKeyPress} /></Grid>
+                        </Grid>
+                        <Grid>
                             <Textarea className = "desc" defaultValue={user && user.description} placeholder="Add a description..." minRows={4} maxRows={4}/>
-                        </div>
-                    </div>
-                    <div className="your-wallet">
-                        <h2>Your Wallet</h2>
-                        <div className="wallet-info">
+                        </Grid>
+                    </Grid>
+                    <Grid>
+                        <Typography color='green' level='h3'>Your Wallet</Typography>
+                        <Grid className="edit-inner">
                             <Textarea className = "wallet" defaultValue={user && user.walletAddress} maxRows={1} disabled />
-                        </div>
-                    </div>
-                    <div className="social-media">
-                        <h2>Your Social Media</h2>
-                        <div className="social-info">
-                            <Textarea className = "website" defaultValue={user && user.website} placeholder="Add personal website..." />
-                            <Textarea className = "twitter" defaultValue={user && user.twitter} placeholder="Add twitter..."/>
-                            <Textarea className = "instagram" defaultValue={user && user.instagram} placeholder="Add instagram..."/>
-                            <Textarea className = "reddit" defaultValue={user && user.reddit} placeholder="Add reddit..."/>
-                            <Textarea className = "discord" defaultValue={user && user.discord} placeholder="Add discord..."/>
-                        </div>
-                    </div>
-                </div>
+                        </Grid>
+                    </Grid>
+                    <Grid>
+                        <Typography color='purple' level='h3'>Your Social Media</Typography>
+                        <Grid container direction='column' rowSpacing={3} className="edit-inner">
+                            <Grid><Textarea className = "website" defaultValue={user && user.website} placeholder="Add personal website..." /></Grid>
+                            <Grid><Textarea className = "twitter" defaultValue={user && user.twitter} placeholder="Add twitter..."/></Grid>
+                            <Grid><Textarea className = "instagram" defaultValue={user && user.instagram} placeholder="Add instagram..."/></Grid>
+                            <Grid><Textarea className = "reddit" defaultValue={user && user.reddit} placeholder="Add reddit..."/></Grid>
+                            <Grid><Textarea className = "discord" defaultValue={user && user.discord} placeholder="Add discord..."/></Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
                 <EditSidebar handleCancel={handleCancel} handleSave={handleSave} />
-                <ErrorPopup isOpen={isFailure} onClose={() => setIsFailure(false)} message={"that username is already taken, please choose another!"}/>
-            </div>
-            
-
-            
+            </Grid>
+            <ErrorPopup isOpen={isFailure} onClose={() => setIsFailure(false)} message={"that username is already taken, please choose another!"}/>
         </div>
       );
 

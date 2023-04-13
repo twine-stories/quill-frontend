@@ -1,50 +1,7 @@
-.entire-page {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
+.edit-profile h3 {
+    font-size: 22px;
 }
 
-.edit-profile-page {
-    display: flex;
-    flex-direction: column;
-    margin-left: 7%;
-    margin-top: 30px;
-    width: 100%;
-    padding-bottom: 50px;
+.edit-inner {
+    margin-bottom: 25px !important;
 }
-
-.edit-profile-page h1 {
-    text-align: left;
-}
-
-.edit-profile-page h2 {
-    text-align: left;
-}
-
-
-.name-info {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.username {
-    margin-left: 3%;
-    width: 50%;
-}
-
-.name {
-    width: 50%;
-}
-
-.description-info {
-    margin-top: 20px;
-}
-
-.social-info {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-

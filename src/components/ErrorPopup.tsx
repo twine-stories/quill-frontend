@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal, ModalDialog, ModalClose, Typography} from "@mui/joy";
+import {Modal, ModalDialog, ModalClose} from "@mui/joy";
 import './ErrorPopup.css';
 
 export default function ErrorPopup({isOpen, onClose, message}) {

@@ -2,10 +2,13 @@ import React, { useState, useContext } from 'react';
 import { UserContext } from "../App.tsx";
 import TwineButton from './TwineButton.tsx';
 import TwineInput from './TwineInput.tsx';
+import ErrorPopup from './ErrorPopup.tsx';
 import { Modal, Sheet, Typography, Grid, Checkbox } from '@mui/joy';
+import { genericGet } from '../utils/api.ts';
 
 function FirstLogin() {
     const [canSubmit, setCanSubmit] = useState<boolean>(false);
+    const [openUserTaken, setOpenUserTaken] = useState<boolean>(false);
 
     const context: object = useContext(UserContext);
     const sendRequest = context['addUser'];
@@ -28,6 +31,7 @@ function FirstLogin() {
                 boxShadow: 'lg',
             }}
             >
+                <ErrorPopup isOpen={openUserTaken} onClose={() => setOpenUserTaken(false)} message='Username is taken!' />
                 <Typography level='h2' color='green'>Create an Account</Typography>
                 <Grid sx={{marginLeft: '30px', marginBottom: '30px'}}>
                     <TwineInput label='first name' placeholder='Enter first name...' inputAttrs={{id: 'firstNameInput'}} />
@@ -49,8 +53,14 @@ function FirstLogin() {
                         const first = document.getElementById('firstNameInput') as HTMLInputElement;
                         const last = document.getElementById('lastNameInput') as HTMLInputElement;
                         const username = document.getElementById('usernameInput') as HTMLInputElement;
-                        if (first && last && username) {
-                            sendRequest(context['address'], first.value, last.value, username.value);
+                        if (first && last && username && first.value.length > 0 && last.value.length > 0 && username.value.length > 0) {
+                            genericGet('/api/user/taken/' + username.value).then(response => {
+                                if (!response) {
+                                    sendRequest(context['address'], first.value, last.value, username.value);
+                                } else {
+                                    setOpenUserTaken(true);
+                                }
+                            });
                         }
                     }} name='Create Account' />
                 </Grid>

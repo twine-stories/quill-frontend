@@ -26,6 +26,7 @@ import { theme } from './utils/globalStyles.ts';
 import CreateChapter from "./pages/create/CreateChapter.tsx";
 import Chapter from "./pages/Chapter.tsx";
 import FirstLogin from './components/FirstLogin.tsx';
+import ErrorPopup from './components/ErrorPopup.tsx';
 import { env, PROFILE_IMGS_BUCKET } from './config.ts';
 
 const reach = loadStdlib('ALGO');
@@ -54,6 +55,8 @@ function App() {
     const [connType, setConnType] = useState<ConnectType>(ConnectType.PERA);
     const [beta, setBeta] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
+    const [usePera, setUsePera] = useState<boolean>(false);
+    const [useMyAlgo, setUseMyAlgo] = useState<boolean>(false);
 
     const logOut = (): void => {
         if (user && user.connectType === ConnectType.PERA) {
@@ -99,7 +102,7 @@ function App() {
             if (shouldContinue) {
                 onComplete(accounts['networkAccount']['addr']);
             } else {
-                console.log('failed');
+                setUsePera(true);
             }
         } catch (err) {
             console.error(err);
@@ -116,7 +119,7 @@ function App() {
                 onComplete(newAccounts[0]);
             } else {
                 peraWallet.disconnect();
-                console.log('failed');
+                setUseMyAlgo(true);
             }
         } catch (err) {
             console.error(err);
@@ -233,6 +236,8 @@ function App() {
                     'enterBeta': enterBeta
                 }}>
                     <FirstLogin />
+                    <ErrorPopup isOpen={usePera} onClose={() => {setUsePera(false)}} message='Your account is associated with Pera Wallet. Please log in with Pera Wallet instead.' />
+                    <ErrorPopup isOpen={useMyAlgo} onClose={() => {setUseMyAlgo(false)}} message='Your account is associated with MyAlgo Wallet. Please log in with MyAlgo Wallet instead.' />
                     {beta ?
                         <Routes>
                             <Route path="/*" element={<Beta />}></Route>
