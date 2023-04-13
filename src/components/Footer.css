@@ -1,0 +1,20 @@
+#footer {
+    position: absolute;
+    bottom: 20px;
+    width: 75vw;
+}
+
+#footer-links {
+    margin-top: 10px;
+}
+
+#footer-links a {
+    text-decoration: none;
+    font-family: 'Oxanium';
+    color: #E4E5FF;
+    font-size: 16px;
+}
+
+#footer-links a:hover {
+    color: #9E9FEB;
+}

@@ -15,9 +15,9 @@ function FeedbackPage() {
         <div>
             <Navbar />
             {user ?
-            <Grid container direction='column' alignItems='flex-start' justifyContent='space-around'>
-                <Typography color='purple' level='h2'>Send Us Your Feedback</Typography>
-                <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' xs={12} rowSpacing={3}>
+            <Grid container direction='column' alignItems='center' justifyContent='space-around'>
+                <Grid xs={11}><Typography color='purple' level='h2'>Send Us Your Feedback</Typography></Grid>
+                <Grid container direction='column' alignItems='center' justifyContent='space-around' xs={11} rowSpacing={3}>
                     <Grid xs={11}>
                         <TwineInput label='Subject' placeholder='Enter a title for the issue...' inputAttrs={{id: 'feedbackSubj'}} />
                     </Grid>
@@ -53,9 +53,9 @@ function FeedbackPage() {
                 </Grid>
             </Grid>
             :
-            <Grid container direction='column' alignItems='flex-start' justifyContent='space-around'>
-                <Typography color='purple' level='h2'>Send Us Your Feedback</Typography>
-                <Typography color='purple' level='h6'>Please login to share your feedback!</Typography>
+            <Grid container direction='column' alignItems='center' justifyContent='space-around'>
+                <Grid xs={11}><Typography color='purple' level='h2'>Send Us Your Feedback</Typography></Grid>
+                <Grid xs={11}><Typography color='purple' level='h6'>Please login to share your feedback!</Typography></Grid>
             </Grid>
             }
         </div>

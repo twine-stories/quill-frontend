@@ -13,6 +13,7 @@ import Art from './pages/Art.tsx';
 import Gallery from "./pages/Gallery.tsx";
 import Collection from './pages/Collection.tsx';
 import CreateStory from "./pages/create/CreateStory.tsx";
+import Footer from './components/Footer.tsx';
 import {ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib} from '@reach-sh/stdlib';
 import {v4 as uuidv4} from 'uuid';
 import {getCookie, setCookie, deleteCookie} from './utils/cookies.ts';
@@ -243,7 +244,9 @@ function App() {
                             <Route path="/*" element={<Beta />}></Route>
                         </Routes>
                         :
-                        user ?
+                        <>
+                        <div id='content-wrapper'>
+                        {user ?
                             <Routes>
                                 <Route path="/" element={<Home />}></Route>
 
@@ -278,7 +281,10 @@ function App() {
                                 <Route path="/episode/*" element={<Chapter/>}></Route>
                                 <Route path="/collection/*" element={<Collection />}></Route>
                                 <Route path="/" element={<Home />}></Route>
-                            </Routes>
+                            </Routes>}
+                        </div>
+                        <Footer />
+                        </>
                     }
                 </UserContext.Provider>
             </CssVarsProvider>

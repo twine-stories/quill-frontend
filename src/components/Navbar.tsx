@@ -1,20 +1,10 @@
-import { Accounts } from '@randlabs/myalgo-connect';
 import React, { useState, useContext } from 'react';
 import styled from "styled-components";
-import TwineButton from './TwineButton.tsx';
 import CollabPopup from './CollabPopup.tsx';
 import { UserContext } from "../App.tsx";
 import LoginWall from './LoginWall.tsx';
 import RegisterCreator from './RegisterCreator.tsx';
 import ClickProfile from './ClickProfile.tsx';
-
-interface KonvaTextEventTarget extends EventTarget {
-    index: number;
-}
-  
-interface KonvaMouseEvent extends React.MouseEvent<HTMLElement> {
-    target: KonvaTextEventTarget;
-}
 
 const NavDiv = styled.div`
     display: flex;

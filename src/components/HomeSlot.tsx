@@ -10,10 +10,6 @@ interface HomeProps {
 
 function HomeSlot(props: HomeProps) {
 
-    if (props.work) {
-        console.log(props.work.cover);
-    }
-
     return (
         <Grid onClick={() => {if (props.work) {window.location.href = '/story/' + props.work['url']}}}>
             <Typography level='h2' color='purple' sx={{textAlign: 'center'}}>{props.title}</Typography>
