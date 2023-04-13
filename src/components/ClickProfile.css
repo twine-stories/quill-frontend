@@ -1,0 +1,37 @@
+#loginPopupHeader {
+    margin-left: 0px;
+}
+
+#loginPopupTop, #loginPopupBottom {
+    text-align: center;
+}
+
+#loginPopupTop {
+    font-size: 16px;
+}
+
+#loginPopupBottom {
+    font-size: 20px;
+}
+
+#loginPopup {
+    background-color: #14100E;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+#loginPopup img {
+    margin-bottom: 7px;
+}
+
+.loginPopupWallet {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+}
+
+.walletLogo {
+    height: 40px;
+    width: 40px;
+}
