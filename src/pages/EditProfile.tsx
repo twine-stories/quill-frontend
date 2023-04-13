@@ -6,18 +6,21 @@ import ProfileWork from '../components/ProfileWork.tsx';
 import './EditProfile.css';
 import "../components/EditSidebar.tsx"
 import EditSidebar from '../components/EditSidebar.tsx';
-import {Button, FormControl, Textarea} from "@mui/joy";
+import {Button, FormControl, Modal, Textarea, ModalDialog, ModalClose, Typography} from "@mui/joy";
 import { useNavigate } from 'react-router-dom';
-import { genericPost } from '../utils/api.ts'; 
+import { genericPost, genericGet } from '../utils/api.ts'; 
 import { TwoColoumnLayout } from '../components/TwoColoumnLayout.tsx';
 import { PROFILE_IMGS_BUCKET } from "../config.ts";
 import { ACCESS_KEY_ID, SECRET_ACCESS_KEY } from "../utils/secrets.ts";
 import AWS from "aws-sdk";
+import ErrorPopup from '../components/ErrorPopup.tsx';
 
 const axios = require('axios').default;
 
 function EditProfile() {
     const [works, setWorks] = useState<Array<ProfileWork>>();
+    const [isFailure, setIsFailure] = useState<boolean>(false);
+    const [failureMessage, setFailureMessage] = useState<string>("");
     const context: object = useContext(UserContext);
     const user: User = context['user'];
     const originalImage: string = user.profileImg;
@@ -45,7 +48,9 @@ function EditProfile() {
 
     let navigate = useNavigate();
 
-    const handleSave = () => {
+    const handleSave = async () => {
+
+
         let firstname: string = document.getElementsByClassName("firstname")[0].getElementsByTagName("textarea")[0].value;
         let lastname: string = document.getElementsByClassName("lastname")[0].getElementsByTagName("textarea")[0].value;
         let username: string = document.getElementsByClassName("username")[0].getElementsByTagName("textarea")[0].value;
@@ -57,11 +62,19 @@ function EditProfile() {
         let reddit: string = document.getElementsByClassName("reddit")[0].getElementsByTagName("textarea")[0].value;
         let discord: string = document.getElementsByClassName("discord")[0].getElementsByTagName("textarea")[0].value;
 
+
         
-        if ("@" == username[0]) {
+        if ("@" === username[0]) {
             username = username.substring(1);
         }
+        
+        const response = await genericGet('/api/user/taken/' + username);
 
+        if (response && username !== user.userName) {
+            setIsFailure(true);
+            setFailureMessage("Username is already taken");
+            return;
+        }
 
         user.firstName = firstname;
         user.lastName = lastname;
@@ -81,7 +94,7 @@ function EditProfile() {
 
         try {
 
-            if (originalImage != user.profileImg && originalImage != "default.jpeg") {
+            if (originalImage !== user.profileImg && originalImage !== "default.jpeg") {
                 const s3 = new AWS.S3({
                     accessKeyId: ACCESS_KEY_ID as string,
                     secretAccessKey: SECRET_ACCESS_KEY as string,
@@ -116,9 +129,9 @@ function EditProfile() {
 
     const handleKeyPress = () => {
         let username: string = document.getElementsByClassName("username")[0].getElementsByTagName("textarea")[0].value;
-        if (username.length == 0) {
+        if (username.length === 0) {
             document.getElementsByClassName("username")[0].getElementsByTagName("textarea")[0].value = "@";
-        } else if ("@" != username[0]) {
+        } else if ("@" !== username[0]) {
 
             let atIdx = username.indexOf("@");
             let afterAt = username.substring(atIdx+1, username.length);
@@ -163,6 +176,7 @@ function EditProfile() {
                     </div>
                 </div>
                 <EditSidebar handleCancel={handleCancel} handleSave={handleSave} />
+                <ErrorPopup isOpen={isFailure} onClose={() => setIsFailure(false)} message={"that username is already taken, please choose another!"}/>
             </div>
             
 

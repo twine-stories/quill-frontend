@@ -1,0 +1,21 @@
+
+.data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.data h2 {
+    font-family: 'Twine';
+    font-style: normal;
+    color: #9E9FEB;
+}
+
+.data p {
+    font-family: 'Oxanium';
+    font-style: normal;
+    color: #FFFFFF;
+    width: 75%;
+    text-align: center;
+    margin-top: -10px;
+}
