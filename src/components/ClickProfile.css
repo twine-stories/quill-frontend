@@ -39,3 +39,12 @@
     height: 40px;
     width: 40px;
 }
+
+#walkthroughLink {
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#walkthroughLink img {
+    margin-left: 5px;
+}

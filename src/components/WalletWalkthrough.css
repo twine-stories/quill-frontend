@@ -1,0 +1,23 @@
+#wallet-help iframe {
+    height: 400px;
+    width: 50vw;
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid #241D19;
+    margin-top: 20px;
+}
+
+#wallet-help-content {
+    margin-bottom: 20px;
+}
+
+#wallet-help-content h5 {
+    font-size: 18px;
+    margin-top: 30px;
+    margin-bottom: 0px;
+}
+
+#wallet-help-content h6 {
+    font-size: 14px;
+    margin-top: 5px;
+}

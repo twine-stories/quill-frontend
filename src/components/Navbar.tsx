@@ -89,7 +89,7 @@ function Navbar() {
                 <>
                     <NavDiv>
                         <a href="/" id='navbarLogo'>
-                            <img src="icons/twine_logo_2.svg" width="100%" />
+                            <img src="/icons/twine_logo_2.svg" width="100%" />
                         </a>
                         <a href="/art">art</a>
                         <a onClick={() => setOpenCollab(true)}>collab</a>
