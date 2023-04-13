@@ -15,6 +15,7 @@ import Collection from './pages/Collection.tsx';
 import CreateStory from "./pages/create/CreateStory.tsx";
 import Footer from './components/Footer.tsx';
 import WalletWalkthrough from './components/WalletWalkthrough.tsx';
+import Terms from './components/Terms.tsx';
 import {ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib} from '@reach-sh/stdlib';
 import {v4 as uuidv4} from 'uuid';
 import {getCookie, setCookie, deleteCookie} from './utils/cookies.ts';
@@ -252,6 +253,7 @@ function App() {
                                 <Route path="/" element={<Home />}></Route>
 
                                 <Route path="/feedback" element={<FeedbackPage/>}></Route>
+                                <Route path="/terms" element={<Terms/>}></Route>
                                 <Route path="/help/wallet" element={<WalletWalkthrough/>}></Route>
                                 <Route path="/art" element={<Art/>}></Route>
 
@@ -277,6 +279,7 @@ function App() {
                             :
                             <Routes>
                                 <Route path="/feedback" element={<FeedbackPage/>}></Route>
+                                <Route path="/terms" element={<Terms/>}></Route>
                                 <Route path="/help/wallet" element={<WalletWalkthrough/>}></Route>
                                 <Route path="/art" element={<Art/>}></Route>
                                 <Route path="/profile/:username" element={<GenericProfile/>}></Route>
