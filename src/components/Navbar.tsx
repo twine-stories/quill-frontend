@@ -17,33 +17,25 @@ interface KonvaMouseEvent extends React.MouseEvent<HTMLElement> {
 
 const NavDiv = styled.div`
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    padding-top: 2rem;
+    margin-top: 20px;
 
     a {
         font-family: 'Twine';
+        text-decoration: none;
         font-style: normal;
         font-weight: 400;
+        cursor: pointer;
         font-size: 36px;
         line-height: 100%;
         color: #a3b832;
-        margin: 0 1rem;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    img { 
-        cursor: pointer;
-    }
-
-    #navbarLogo {
-        min-width: 120px;
+        max-width: 15vw;
     }
 
     #navbarLogin {
         color: #9E9FEB;
-    }
+    }  
 `;
 
 function Navbar() {
@@ -84,18 +76,20 @@ function Navbar() {
                 <>
                     <NavDiv>
                         <a href="/" id='navbarLogo'>
-                            <img src="/icons/twine_logo_2.svg" width="80%" />
+                            <img src="/icons/twine_logo_2.svg" width="100%" />
                         </a>
                         <a href="/art">art</a>
                         <a href="https://discord.gg/HKrvJrRUwJ" target = "_blank">collab</a>
                         <a onClick={createNav}>create</a>
 
-                        <ClickProfile
-                            isLoggedIn={true}
-                            logOutFunc={context['logOut']}
-                            connectAlgoFunc={() => {}}
-                            connectPeraFunc={() => {}}
-                         />
+                        <a>
+                            <ClickProfile
+                                isLoggedIn={true}
+                                logOutFunc={context['logOut']}
+                                connectAlgoFunc={() => {}}
+                                connectPeraFunc={() => {}}
+                            />
+                        </a>
                     </NavDiv>
                     <RegisterCreator open={openCreator} close={closeCreator} updateUser={context['updateUser']} navigate={navToCreate} />
                 </>
@@ -103,17 +97,19 @@ function Navbar() {
                 <>
                     <NavDiv>
                         <a href="/" id='navbarLogo'>
-                            <img src="icons/twine_logo_2.svg" width="80%" />
+                            <img src="icons/twine_logo_2.svg" width="100%" />
                         </a>
                         <a href="/art">art</a>
                         <a onClick={blockAccess}>collab</a>
                         <a onClick={blockAccess}>create</a>
-                        <ClickProfile
-                            isLoggedIn={false}
-                            logOutFunc={() => {}}
-                            connectAlgoFunc={context['connectToMyAlgo']}
-                            connectPeraFunc={context['connectToPera']}
-                         />
+                        <a>
+                            <ClickProfile
+                                isLoggedIn={false}
+                                logOutFunc={() => {}}
+                                connectAlgoFunc={context['connectToMyAlgo']}
+                                connectPeraFunc={context['connectToPera']}
+                            />
+                        </a>
                     </NavDiv>
                     <LoginWall open={open} closeWall={closeWall} />
                 </>
