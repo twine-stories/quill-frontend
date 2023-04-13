@@ -29,7 +29,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 enableMapSet();
 
-const DELIMITER = "🗿³¤";
+const DELIMITER = "³¤³";
 const IMG_DELIMITER = "ïmg¦";
 
 interface CreateChapterProps {
@@ -360,6 +360,7 @@ function CreateChapter(props: CreateChapterProps) {
                 mature: mature.checked,
                 flags: 0,
                 publishStamp: publishStamp,
+                published: published,
             };
 
             episodeAdd(newEpisode, (episode) => {
