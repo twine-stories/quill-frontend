@@ -40,6 +40,10 @@ const NavDiv = styled.div`
     #navbarLogo {
         min-width: 120px;
     }
+
+    #navbarLogin {
+        color: #9E9FEB;
+    }
 `;
 
 function Navbar() {
@@ -99,7 +103,7 @@ function Navbar() {
                 <>
                     <NavDiv>
                         <a href="/" id='navbarLogo'>
-                            <img src="icons/twine_logo_2.svg" width="90%" />
+                            <img src="icons/twine_logo_2.svg" width="80%" />
                         </a>
                         <a href="/art">art</a>
                         <a onClick={blockAccess}>collab</a>

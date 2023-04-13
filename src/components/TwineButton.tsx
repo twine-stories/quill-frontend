@@ -18,7 +18,7 @@ function TwineButton(props: ButtonProps) {
         props.enabled === undefined || props.enabled ?
             <Button sx={props.sx} size={size} color={color} startDecorator={props.icon && <img width="18px" height="18px" src={props.icon} />} onClick={props.action}>{props.name}</Button>
             :
-            <Button sx={props.sx} size={size} color={color} startDecorator={props.icon && <img src={props.icon} />} onClick={props.action} disabled>{props.name}</Button>
+            <Button sx={props.sx} size={size} color={color} startDecorator={props.icon && <img width="18px" height="18px" src={props.icon} />} onClick={props.action} disabled>{props.name}</Button>
     )
 }
 

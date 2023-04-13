@@ -89,9 +89,6 @@ export const theme = extendTheme({
                     ...({
                         fontFamily: 'Oxanium',
                         margin: '5px',
-                        '&:hover': {
-                            cursor: 'pointer'
-                        }
                     }),
                     ...(ownerState.color === 'blackgreen' && {
                         color: '#A3B832',
@@ -125,6 +122,14 @@ export const theme = extendTheme({
                         color: '#4546AB',
                         backgroundColor: '#23232E',
                     }),
+                    ...((ownerState.disabled) && {
+                        cursor: 'not-allowed'
+                    }),
+                    ...((!ownerState.disabled) && {
+                        '&:hover': {
+                            cursor: 'pointer'
+                        }
+                    })
                 }),
             },
         },
@@ -228,12 +233,27 @@ export const theme = extendTheme({
                 })
             }
         },
+        JoyMenu: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    ...({
+                        background: '#14100E',
+                        border: 'none',
+                    }),
+                })
+            }
+        },
         JoyMenuItem: {
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({
                     ...({
+                        fontFamily: 'Oxanium',
+                        color: '#E4E5FF',
                         '&:focus': {
                             outline: '0'
+                        },
+                        '&:hover': {
+                            background: '#0D0603'
                         }
                     }),
                 })

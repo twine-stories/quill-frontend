@@ -17,7 +17,7 @@ import {ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib} from '@reach-sh/stdlib'
 import {v4 as uuidv4} from 'uuid';
 import {getCookie, setCookie, deleteCookie} from './utils/cookies.ts';
 import {User} from './utils/types.ts';
-import {cookieSet, userGet, userAdd, cookieGet, genericPost} from './utils/api.ts';
+import {cookieSet, userGet, userAdd, cookieGet, genericGet, genericPost} from './utils/api.ts';
 import {CssVarsProvider} from "@mui/joy";
 import GlobalStyle from "./utils/globalStyles.ts";
 import {PeraWalletConnect} from "@perawallet/connect";
@@ -83,11 +83,24 @@ function App() {
         setAddress(addr);
     };
 
+    const isCorrectType = async (addr: string, expected: ConnectType): Promise<boolean> => {
+        const response: User = await genericGet('/api/user/' + addr);
+        if (!response || response.connectType === expected) {
+            return true;
+        }
+        return false;
+    }
+
     const connectToMyAlgo = async (): Promise<void> => {
         try {
             setConnType(ConnectType.MY_ALGO);
             const accounts = await reach.getDefaultAccount();
-            onComplete(accounts['networkAccount']['addr']);
+            const shouldContinue: boolean = await isCorrectType(accounts['networkAccount']['addr'], ConnectType.MY_ALGO);
+            if (shouldContinue) {
+                onComplete(accounts['networkAccount']['addr']);
+            } else {
+                console.log('failed');
+            }
         } catch (err) {
             console.error(err);
         }
@@ -98,7 +111,13 @@ function App() {
             setConnType(ConnectType.PERA);
             const newAccounts = await peraWallet.connect();
             peraWallet.connector?.on('disconnect', logOut);
-            onComplete(newAccounts[0]);
+            const shouldContinue: boolean = await isCorrectType(newAccounts[0], ConnectType.PERA);
+            if (shouldContinue) {
+                onComplete(newAccounts[0]);
+            } else {
+                peraWallet.disconnect();
+                console.log('failed');
+            }
         } catch (err) {
             console.error(err);
         }
