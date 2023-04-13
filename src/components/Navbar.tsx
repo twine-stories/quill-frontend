@@ -19,7 +19,7 @@ const NavDiv = styled.div`
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding-top: 1rem;
+    padding-top: 2rem;
 
     a {
         font-family: 'Twine';
