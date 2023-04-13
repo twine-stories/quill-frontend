@@ -17,7 +17,7 @@ function FeedbackPage() {
             {user ?
             <Grid container direction='column' alignItems='flex-start' justifyContent='space-around'>
                 <Typography color='purple' level='h2'>Send Us Your Feedback</Typography>
-                <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' xs={12} rowSpacing={3} sx={{marginLeft: '20px'}}>
+                <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' xs={12} rowSpacing={3}>
                     <Grid xs={11}>
                         <TwineInput label='Subject' placeholder='Enter a title for the issue...' inputAttrs={{id: 'feedbackSubj'}} />
                     </Grid>

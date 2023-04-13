@@ -1,10 +1,11 @@
-import { Menu, MenuItem } from '@mui/joy';
+import './ClickProfile.css';
+import { Menu, MenuItem, Modal, Sheet, Grid, ModalClose, Typography } from '@mui/joy';
 import React, { useContext, useState, } from 'react';
 import { User } from '../types';
 import { UserContext } from "../App.tsx";
 import { useNavigate } from 'react-router-dom';
 import { String } from 'aws-sdk/clients/cloudhsm';
-import TwineButton from './TwineButton.tsx';
+import IconButton from './IconButton.tsx';
 import { PROFILE_IMGS_BUCKET } from '../config.ts';
 
 
@@ -64,16 +65,40 @@ export default function ClickProfile({ isLoggedIn, logOutFunc, connectAlgoFunc, 
             </div>
         ) : (
             <div>
-                <TwineButton name = "Login" action={handleClick} />
-                <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={() => handleClose("")}
-                >
-                    <MenuItem onClick={() => handleClose("algo")}>Login with MyAlgo</MenuItem>
-                    <MenuItem onClick={() => handleClose("pera")}>Login with Pera</MenuItem>
-                </Menu>
+                <a id='navbarLogin' onClick={handleClick}>Login</a>
+                <Modal open={open} onClose={() => handleClose("")}>
+                    <Sheet
+                    variant="outlined"
+                    sx={{
+                        maxWidth: '650px',
+                        width: '50vw',
+                        borderRadius: 'md',
+                        p: 4,
+                        boxShadow: 'lg',
+                    }}>
+                        <Typography id='loginPopupHeader' color='green' level='h2'>Select Wallet</Typography>
+                        <ModalClose />
+                        <Grid id='loginPopup'>
+                            <Typography id='loginPopupTop' color='white' level='h3'>
+                                to tip, buy art, get tipped on your comments, become a creator or interact with the site, create or link a wallet.
+                            </Typography>
+                            <Grid sx={{marginBottom: '20px'}} className='loginPopupWallet' onClick={() => handleClose("pera")}>
+                                <img className='walletLogo' src='/icons/pera.svg' alt='pera' />
+                                <Typography level='h5'>Pera Wallet (Recommended)</Typography>
+                            </Grid>
+                            <Grid className='loginPopupWallet' onClick={() => handleClose("algo")}>
+                                <img className='walletLogo' src='/icons/myalgo.svg' alt='myalgo' />
+                                <Typography level='h5'>My Algo Wallet</Typography>
+                            </Grid>
+                            <Grid container justifyContent='center'>
+                                <Grid container alignItems='center' justifyContent='center'>
+                                    <Typography id='loginPopupBottom' color='green' level='h3'> how to set up a wallet video:</Typography>
+                                    <img src='/icons/green_arrow_top_right.svg' alt='arrow' height='25px' width='25px' />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Sheet>
+                </Modal>
             </div>
             )}
         </div>

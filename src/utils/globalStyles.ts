@@ -63,14 +63,14 @@ export const theme = extendTheme({
                     ...((ownerState.level === 'h1' || ownerState.level === 'h2' || ownerState.level === 'h3') && {
                         fontFamily: 'Twine',
                         fontWeight: 'normal',
-                        margin: '20px 10px',
+                        margin: '15px 0px',
                         textAlign: 'left',
                         color: '#E4E5FF'
                     }),
                     ...((ownerState.level === 'h4' || ownerState.level === 'h5' || ownerState.level === 'h6') && {
                         fontFamily: 'Oxanium',
                         fontWeight: 'normal',
-                        margin: '10px 20px',
+                        margin: '15px 0px',
                         textAlign: 'left',
                         color: '#E4E5FF'
                     }),
@@ -89,21 +89,30 @@ export const theme = extendTheme({
                     ...({
                         fontFamily: 'Oxanium',
                         margin: '5px',
-                        '&:hover': {
-                            cursor: 'pointer'
-                        }
                     }),
                     ...(ownerState.color === 'blackgreen' && {
                         color: '#A3B832',
                         backgroundColor: '#14100E',
+                        '&:active': {
+                            color: '#14100E',
+                            backgroundColor: '#A3B832'
+                        }
                     }),
                     ...(ownerState.color === 'blackpurple' && {
                         color: '#9E9FEB',
                         backgroundColor: '#14100E',
+                        '&:active': {
+                            color: '#14100E',
+                            backgroundColor: '#9E9FEB'
+                        }
                     }),
                     ...(ownerState.color === 'green' && {
                         color: '#5C720D',
                         backgroundColor: '#A3B832',
+                        '&:active': {
+                            color: '#A3B832',
+                            backgroundColor: '#5C720D'
+                        }
                     }),
                     ...(ownerState.color === 'green' && ownerState.disabled === true && {
                         color: '#404626',
@@ -112,6 +121,10 @@ export const theme = extendTheme({
                     ...(ownerState.color === 'purple' && {
                         color: '#373867',
                         backgroundColor: '#9E9FEB',
+                        '&:active': {
+                            color: '#9E9FEB',
+                            backgroundColor: '#373867'
+                        }
                     }),
                     ...(ownerState.color === 'purple' && ownerState.disabled === true && {
                         color: '#7A7BAF',
@@ -120,11 +133,23 @@ export const theme = extendTheme({
                     ...(ownerState.color === 'darkpurple' && {
                         color: '#9E9FEB',
                         backgroundColor: '#4546AB',
+                        '&:active': {
+                            color: '#4546AB',
+                            backgroundColor: '#9E9FEB'
+                        }
                     }),
                     ...(ownerState.color === 'darkpurple' && ownerState.disabled === true && {
                         color: '#4546AB',
                         backgroundColor: '#23232E',
                     }),
+                    ...((ownerState.disabled) && {
+                        cursor: 'not-allowed'
+                    }),
+                    ...((!ownerState.disabled) && {
+                        '&:hover': {
+                            cursor: 'pointer'
+                        }
+                    })
                 }),
             },
         },
@@ -132,7 +157,10 @@ export const theme = extendTheme({
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({
                     ...({
-                        fontFamily: 'Oxanium'
+                        fontFamily: 'Oxanium',
+                        background: '#0d0603',
+                        borderRadius: '15px',
+                        padding: '15px'
                     }),
                     ...(ownerState.color === 'brown' && {
                         border: '1px #241D19 solid',
@@ -193,7 +221,10 @@ export const theme = extendTheme({
                     ...({
                         fontFamily: 'Oxanium',
                         color: '#E4E5FF',
-                        border: '1px #241D19 solid'
+                        border: '1px #241D19 solid',
+                        background: '#0d0603',
+                        borderRadius: '15px',
+                        padding: '13px'
                     }),
                 }),
             },
@@ -228,12 +259,27 @@ export const theme = extendTheme({
                 })
             }
         },
+        JoyMenu: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    ...({
+                        background: '#14100E',
+                        border: 'none',
+                    }),
+                })
+            }
+        },
         JoyMenuItem: {
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({
                     ...({
+                        fontFamily: 'Oxanium',
+                        color: '#E4E5FF',
                         '&:focus': {
                             outline: '0'
+                        },
+                        '&:hover': {
+                            background: '#0D0603'
                         }
                     }),
                 })

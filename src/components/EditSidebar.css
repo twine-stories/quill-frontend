@@ -1,13 +1,11 @@
-.sidebar {
-    margin-left: auto;  
-    margin-right: 4%;
-    display: "flex";
-    flex-direction: "column";
-    min-width: 150px;
-    max-width: 150px;
-    margin-top: 50px;
+#sidebar {
+    margin-right: 0px;
 }
 
-.avatar {
+#avatar {
     margin-bottom: 10px;
+    background: #14100E;
+    border-radius: 20px;
+    padding: 25px;
+    padding-top: 10px;
 }

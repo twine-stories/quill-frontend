@@ -19,7 +19,7 @@ const NavDiv = styled.div`
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding-top: 1rem;
+    padding-top: 2rem;
 
     a {
         font-family: 'Twine';
@@ -39,6 +39,10 @@ const NavDiv = styled.div`
 
     #navbarLogo {
         min-width: 120px;
+    }
+
+    #navbarLogin {
+        color: #9E9FEB;
     }
 `;
 
@@ -83,7 +87,7 @@ function Navbar() {
                             <img src="/icons/twine_logo_2.svg" width="80%" />
                         </a>
                         <a href="/art">art</a>
-                        <a href="/collab">collab</a>
+                        <a href="https://discord.gg/HKrvJrRUwJ" target = "_blank">collab</a>
                         <a onClick={createNav}>create</a>
 
                         <ClickProfile
@@ -99,7 +103,7 @@ function Navbar() {
                 <>
                     <NavDiv>
                         <a href="/" id='navbarLogo'>
-                            <img src="icons/twine_logo_2.svg" width="90%" />
+                            <img src="icons/twine_logo_2.svg" width="80%" />
                         </a>
                         <a href="/art">art</a>
                         <a onClick={blockAccess}>collab</a>

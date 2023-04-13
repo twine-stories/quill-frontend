@@ -1,6 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import Navbar from "../components/Navbar.tsx";
 import HomeSlot from '../components/HomeSlot.tsx';
+import IconButton from '../components/IconButton.tsx';
+import TwineButton from '../components/TwineButton.tsx';
 import { genericGet } from '../utils/api.ts';
 import { Work } from '../utils/types.ts';
 import { Grid } from '@mui/joy';
@@ -8,21 +10,26 @@ import { Grid } from '@mui/joy';
 function Home() {
 
     const [homeWorks, setHomeWorks] = useState<Work[]>([]);
+    const [toggle, setToggle] = useState<boolean>(false);
 
     useEffect(() => {
         genericGet('/api/work/random/3').then((response: Work[]) => {
             setHomeWorks(response);
         });
-    }, []);
+    }, [toggle]);
 
     // change titles to Featured, Hot, and, Discover once real algos are implemented
     return (
         <div>
             <Navbar />
-            <Grid container alignItems='flex-start' justifyContent='space-around'>
+            <Grid container alignItems='flex-end' justifyContent='space-between'>
                 <HomeSlot work={homeWorks.length > 0 ? homeWorks[0] : null} title='' />
                 <HomeSlot work={homeWorks.length > 1 ? homeWorks[1] : null} title='' />
                 <HomeSlot work={homeWorks.length > 2 ? homeWorks[2] : null} title='' />
+            </Grid>
+            <Grid sx={{marginTop: '20px'}} container alignItems='center' justifyContent='space-between'>
+                <TwineButton icon='/icons/filter.svg' enabled={false} name='Filter' />
+                <IconButton sx={{borderRadius: '50%', height: '45px', width: '45px'}} icon='/icons/shuffle.svg' action={() => {setToggle(!toggle)}} />
             </Grid>
         </div>
     );
