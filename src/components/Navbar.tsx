@@ -2,6 +2,7 @@ import { Accounts } from '@randlabs/myalgo-connect';
 import React, { useState, useContext } from 'react';
 import styled from "styled-components";
 import TwineButton from './TwineButton.tsx';
+import CollabPopup from './CollabPopup.tsx';
 import { UserContext } from "../App.tsx";
 import LoginWall from './LoginWall.tsx';
 import RegisterCreator from './RegisterCreator.tsx';
@@ -42,6 +43,7 @@ function Navbar() {
     const context: object = useContext(UserContext);
     const [open, setOpen] = useState<boolean>(false);
     const [openCreator, setOpenCreator] = useState<boolean>(false);
+    const [openCollab, setOpenCollab] = useState<boolean>(false);
 
     const blockAccess = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         e.preventDefault();
@@ -79,7 +81,7 @@ function Navbar() {
                             <img src="/icons/twine_logo_2.svg" width="100%" />
                         </a>
                         <a href="/art">art</a>
-                        <a href="https://discord.gg/HKrvJrRUwJ" target = "_blank">collab</a>
+                        <a onClick={() => setOpenCollab(true)}>collab</a>
                         <a onClick={createNav}>create</a>
 
                         <a>
@@ -100,7 +102,7 @@ function Navbar() {
                             <img src="icons/twine_logo_2.svg" width="100%" />
                         </a>
                         <a href="/art">art</a>
-                        <a onClick={blockAccess}>collab</a>
+                        <a onClick={() => setOpenCollab(true)}>collab</a>
                         <a onClick={blockAccess}>create</a>
                         <a>
                             <ClickProfile
@@ -114,6 +116,7 @@ function Navbar() {
                     <LoginWall open={open} closeWall={closeWall} />
                 </>
             }
+            <CollabPopup open={openCollab} close={() => setOpenCollab(false)} />
         </div>
     );
 }
