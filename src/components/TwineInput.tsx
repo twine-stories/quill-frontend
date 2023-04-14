@@ -11,6 +11,8 @@ interface InputProps {
     size?: string;
     id?: string;
     multiline?: boolean;
+    sx?: object;
+    onChange?: (elem: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 function TwineInput(props: InputProps) {
@@ -22,6 +24,8 @@ function TwineInput(props: InputProps) {
                     startDecorator={props.startDecorator && <img src={props.startDecorator}/>}
                     endDecorator={props.endDecorator && <img src={props.endDecorator}/>}
                     placeholder={props.placeholder} defaultValue={props.defaultValue}/>
+                    sx={props.sx}
+                    onChange={props.onChange}
             </FormControl>
         )
     } else {
@@ -33,6 +37,8 @@ function TwineInput(props: InputProps) {
                     startDecorator={props.startDecorator && <img src={props.startDecorator}/>}
                     endDecorator={props.endDecorator && <img src={props.endDecorator}/>}
                     placeholder={props.placeholder} defaultValue={props.defaultValue}
+                    sx={props.sx}
+                    onChange={props.onChange}
                     slotProps={{
                         input: props.inputAttrs
                     }}/>

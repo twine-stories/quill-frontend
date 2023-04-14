@@ -117,14 +117,14 @@ function EditProfile() {
         }
 
 
-        navigate('/profile/')
+        navigate('/profile')
 
 
     }
 
     const handleCancel = () => {
         user.profileImg = originalImage;
-        navigate('/profile/');
+        navigate('/profile');
     }
 
     const handleKeyPress = () => {
@@ -150,8 +150,8 @@ function EditProfile() {
                     <Typography color='purple' level='h3'>About Profile</Typography>
                     <Grid container direction='column' rowSpacing={3} className="edit-inner">
                         <Grid container columnSpacing={1} alignItems='center' justifyContent='space-between'>
-                            <Grid xs={4}><Textarea className="firstname" defaultValue={user && user.firstName} maxRows={1} /></Grid>
                             <Grid xs={4}><Textarea className="lastname" defaultValue={user && user.lastName} maxRows={1} /></Grid>
+                            <Grid xs={4}><Textarea className="firstname" defaultValue={user && user.firstName} maxRows={1}  /></Grid>
                             <Grid xs={4}><Textarea className="username" defaultValue={(user && ("@" + user.userName))} maxRows={1} onChange={handleKeyPress} /></Grid>
                         </Grid>
                         <Grid>

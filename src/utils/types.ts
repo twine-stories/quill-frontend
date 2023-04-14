@@ -87,3 +87,9 @@ export type Feedback = {
     images?: string;
     stamp?: Date;
 }
+
+export type Follow = {
+    id?: number;
+    follower: User;
+    followee: User;
+}

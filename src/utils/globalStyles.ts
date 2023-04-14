@@ -46,19 +46,25 @@ declare module '@mui/joy/Checkbox' {
     }
 }
 
+declare module '@mui/joy/CircularProgress' {
+    interface CircularProgressPropsColorOverrides {
+        darkpurple: true;
+    }
+}
+
 export const theme = extendTheme({
     components: {
         JoyTypography: {
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({
                     ...((ownerState.color === 'green') && {
-                        color: '#A5BB2D'
+                        color: '#A5BB2D',
                     }),
                     ...((ownerState.color === 'purple') && {
-                        color: '#9E9FEB'
+                        color: '#9E9FEB',
                     }),
                     ...((ownerState.color === 'white') && {
-                        color: '#E4E5FF'
+                        color: '#E4E5FF',
                     }),
                     ...((ownerState.level === 'h1' || ownerState.level === 'h2' || ownerState.level === 'h3') && {
                         fontFamily: 'Twine',
@@ -232,6 +238,7 @@ export const theme = extendTheme({
                         padding: '13px',
                     }),
                 }),
+                
             },
         },
         JoyCheckbox: {
@@ -287,6 +294,15 @@ export const theme = extendTheme({
                             background: '#0D0603'
                         }
                     }),
+                })
+            }
+        },
+        JoyCircularProgress: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    ...(ownerState.color === 'darkpurple' && {
+                        '--CircularProgress-progressColor': '#373867'
+                    })
                 })
             }
         }

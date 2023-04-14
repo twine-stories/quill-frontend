@@ -47,6 +47,12 @@ body {
 
 .App {
     width: 75vw;
+    min-height: 95vh;
+    position: relative;
+}
+
+#content-wrapper {
+    padding-bottom: 110px;
 }
 
 #pera-wallet-connect-modal-wrapper {

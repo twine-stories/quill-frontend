@@ -91,8 +91,8 @@ export default function ClickProfile({ isLoggedIn, logOutFunc, connectAlgoFunc, 
                                 <Typography level='h5'>My Algo Wallet</Typography>
                             </Grid>
                             <Grid container justifyContent='center'>
-                                <Grid container alignItems='center' justifyContent='center'>
-                                    <Typography id='loginPopupBottom' color='green' level='h3'> how to set up a wallet video:</Typography>
+                                <Grid container alignItems='center' justifyContent='space-around' id='walkthroughLink' onClick={() => window.open('/help/wallet', '_blank')}>
+                                    <Typography id='loginPopupBottom' color='green' level='h3'>how to set up a wallet:</Typography>
                                     <img src='/icons/green_arrow_top_right.svg' alt='arrow' height='25px' width='25px' />
                                 </Grid>
                             </Grid>

@@ -1,0 +1,8 @@
+#terms-links a {
+    text-decoration: none;
+}
+
+#terms-links a:hover {
+    text-decoration: underline;
+    text-decoration-color: #E4E5FF;
+}
