@@ -164,7 +164,12 @@ export const theme = extendTheme({
                     }),
                     ...(ownerState.color === 'brown' && {
                         border: '1px #241D19 solid',
-                        color: '#E4E5FF'
+                        color: '#E4E5FF',
+                        // TODO: fix focus (not suer why it's not working)
+                        '&:focus': {
+                            border: '1px #dc9a76 solid',
+                            // color: '#dc9a76'
+                        }
                     })
                 }),
             },
@@ -224,7 +229,7 @@ export const theme = extendTheme({
                         border: '1px #241D19 solid',
                         background: '#0d0603',
                         borderRadius: '15px',
-                        padding: '13px'
+                        padding: '13px',
                     }),
                 }),
             },
