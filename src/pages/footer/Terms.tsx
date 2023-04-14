@@ -1,6 +1,6 @@
 import React from 'react';
 import './Terms.css';
-import Navbar from './Navbar.tsx';
+import Navbar from '../../components/Navbar.tsx';
 import { Grid, Typography } from '@mui/joy';
 
 function Terms() {

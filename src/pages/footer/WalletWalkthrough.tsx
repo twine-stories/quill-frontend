@@ -1,6 +1,6 @@
 import React from 'react';
 import './WalletWalkthrough.css';
-import Navbar from './Navbar.tsx';
+import Navbar from '../../components/Navbar.tsx';
 import { Grid, Typography } from '@mui/joy';
 
 function WalletWalkthrough() {
