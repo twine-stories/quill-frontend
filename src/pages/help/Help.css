@@ -7,17 +7,26 @@
     margin-top: 20px;
 }
 
-#wallet-help-content {
+.help-content {
     margin-bottom: 20px;
 }
 
-#wallet-help-content h5 {
+.help-content h5 {
     font-size: 18px;
     margin-top: 30px;
     margin-bottom: 0px;
 }
 
-#wallet-help-content h6 {
+.help-content h6 {
     font-size: 14px;
     margin-top: 5px;
+}
+
+.help-content a {
+    color: #A5BB2D;
+    text-decoration: none;
+}
+
+.help-content a:hover {
+    text-decoration: underline;
 }

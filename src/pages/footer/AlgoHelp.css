@@ -1,8 +1,9 @@
-#terms-links a {
+#algo-help-links a {
     text-decoration: none;
+    text-decoration-color: inherit;
 }
 
-#terms-links a:hover {
+#algo-help-links a:hover {
     text-decoration: underline;
     text-decoration-color: #E4E5FF;
 }

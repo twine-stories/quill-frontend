@@ -18,7 +18,7 @@ function Terms() {
             <Navbar />
             <Grid container direction='column' alignItems='center' justifyContent='space-around'>
                 <Grid xs={11}><Typography level='h2' color='purple'>Terms</Typography></Grid>
-                <Grid xs={10} id='termsLinks'>
+                <Grid xs={10} id='terms-links'>
                     <a href={legalUrl + docMapping['tos'] + '.pdf'} target='_blank'>
                         <Typography level='h4'>Terms of Use</Typography> 
                     </a>

@@ -1,5 +1,5 @@
 import React from 'react';
-import './WalletWalkthrough.css';
+import './Help.css';
 import Navbar from '../../components/Navbar.tsx';
 import { Grid, Typography } from '@mui/joy';
 
@@ -12,7 +12,7 @@ function WalletWalkthrough() {
                 <Grid xs={11}><Typography level='h2' color='purple'>Getting Started with Pera</Typography></Grid>
                 <iframe src="https://www.youtube.com/embed/GxuSRKfeeFM">
                 </iframe>
-                <Grid xs={10} id='wallet-help-content'>
+                <Grid xs={10} className='help-content'>
                     <Grid>
                         <Typography level='h5'>Step 1: Download Pera Algo Wallet from the app store on your phone.</Typography>
                     </Grid>
@@ -41,6 +41,10 @@ function WalletWalkthrough() {
                     <Grid>
                         <Typography level='h5'>Step 7: Whenever you attempt a transaction on the website, you should receive a popup in-app on the pera mobile app. Confirm this request to complete the transaction on the website.</Typography>
                         <Typography color='purple' level='h6'>Important: when you confirm a transaction on the pera mobile app, <u>it is final</u>. You should only confirm transactions that you request.</Typography>
+                    </Grid>
+
+                    <Grid>
+                        <Typography level='h5'>Now you're ready to <a href='/help/fund'>fund your wallet with a debit card!</a></Typography>
                     </Grid>
                 </Grid>
             </Grid>

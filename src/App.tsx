@@ -14,8 +14,12 @@ import Gallery from "./pages/Gallery.tsx";
 import Collection from './pages/Collection.tsx';
 import CreateStory from "./pages/create/CreateStory.tsx";
 import Footer from './components/Footer.tsx';
-import WalletWalkthrough from './pages/footer/WalletWalkthrough.tsx';
+import WalletWalkthrough from './pages/help/WalletWalkthrough.tsx';
+import FundHelp from './pages/help/FundHelp.tsx';
+import SwapHelp from './pages/help/SwapHelp.tsx';
 import Terms from './pages/footer/Terms.tsx';
+import About from './pages/footer/About.tsx';
+import AlgoHelp from './pages/footer/AlgoHelp.tsx';
 import {ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib} from '@reach-sh/stdlib';
 import {v4 as uuidv4} from 'uuid';
 import {getCookie, setCookie, deleteCookie} from './utils/cookies.ts';
@@ -252,9 +256,13 @@ function App() {
                             <Routes>
                                 <Route path="/" element={<Home />}></Route>
 
+                                <Route path="/about" element={<About/>}></Route>
                                 <Route path="/feedback" element={<FeedbackPage/>}></Route>
                                 <Route path="/terms" element={<Terms/>}></Route>
                                 <Route path="/help/wallet" element={<WalletWalkthrough/>}></Route>
+                                <Route path="/help/fund" element={<FundHelp/>}></Route>
+                                <Route path="/help/swap" element={<SwapHelp/>}></Route>
+                                <Route path="/help/*" element={<AlgoHelp/>}></Route>
                                 <Route path="/art" element={<Art/>}></Route>
 
                                 <Route path="/create" element={<Create/>}></Route>
@@ -278,9 +286,13 @@ function App() {
                             </Routes>
                             :
                             <Routes>
+                                <Route path="/about" element={<About/>}></Route>
                                 <Route path="/feedback" element={<FeedbackPage/>}></Route>
                                 <Route path="/terms" element={<Terms/>}></Route>
                                 <Route path="/help/wallet" element={<WalletWalkthrough/>}></Route>
+                                <Route path="/help/fund" element={<FundHelp/>}></Route>
+                                <Route path="/help/swap" element={<SwapHelp/>}></Route>
+                                <Route path="/help/*" element={<AlgoHelp/>}></Route>
                                 <Route path="/art" element={<Art/>}></Route>
                                 <Route path="/profile/:username" element={<GenericProfile/>}></Route>
                                 <Route path="/story/*" element={<Story/>}></Route>

@@ -52,13 +52,13 @@ export const theme = extendTheme({
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({
                     ...((ownerState.color === 'green') && {
-                        color: '#A5BB2D'
+                        color: '#A5BB2D',
                     }),
                     ...((ownerState.color === 'purple') && {
-                        color: '#9E9FEB'
+                        color: '#9E9FEB',
                     }),
                     ...((ownerState.color === 'white') && {
-                        color: '#E4E5FF'
+                        color: '#E4E5FF',
                     }),
                     ...((ownerState.level === 'h1' || ownerState.level === 'h2' || ownerState.level === 'h3') && {
                         fontFamily: 'Twine',
