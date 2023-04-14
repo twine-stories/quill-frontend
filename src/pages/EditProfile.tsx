@@ -117,14 +117,14 @@ function EditProfile() {
         }
 
 
-        navigate('/profile/')
+        navigate('/profile')
 
 
     }
 
     const handleCancel = () => {
         user.profileImg = originalImage;
-        navigate('/profile/');
+        navigate('/profile');
     }
 
     const handleKeyPress = () => {

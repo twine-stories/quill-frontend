@@ -1,72 +1,39 @@
-.popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(128, 128, 128, 0.5); /* Semi-transparent background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999; /* Ensures that the popup is positioned above everything else */
-  }
-  
-  .popup-content {
-    display: flex;
-    flex-direction: column;
-    background-color: #0d0603;
-    padding: 20px;
-    border-radius: 20px;
-    max-width: 400px;
-    text-align: center;
-    
-  }
+#profile-file-upload {
+    width: 130px;
+}
 
-  .loading { 
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(128, 128, 128, 0.5); /* Semi-transparent background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000; /* Ensures that the popup is positioned above everything else */
-  }
-
-  .popup-content img {
-    object-fit: contain;
-    padding-top: 10px;
-    padding-bottom: -10px;
-  }
-  
-  .popup-content h2 {
-    margin-top: 0;
-    color: #9da1e9;
-  }
-  
-  .popup-content button {
-    margin-top: 20px;
-  }
-
-  .popup-content p { 
-    color: black;
-  }
-
-  .popup-content input {
-    color: black;
-    margin: auto;
-    width: 75%;
-  }
-
-  input[type="file"]::file-selector-button {
+#profile-file-upload::file-selector-button {
     border: #4546ab;
     width: 130px;
     height: 40px;
     background-color: #4546ab;
+    color: #9E9FEB;
     border-radius: 12px;
     font-family: Oxanium;
     src: url('../../public/fonts/Oxanium/Oxanium-Regular.ttf');
     font-weight: 700;
-  }
+    margin-right: 10px;
+}
+
+#profile-upload-preview {
+    background: #14100E;
+    padding: 15px 25px;
+    margin: 20px;
+    border-radius: 20px;
+}
+
+#profile-upload-preview h3 {
+    font-size: 20px;
+}
+
+#profile-preview-wrapper {
+    width: 250px;
+    height: 250px;
+    border: 1px #241D19 solid;
+    border-radius: 15px;
+    margin: 10px;
+}
+
+#profile-preview-wrapper img {
+    border-radius: 50%;
+}

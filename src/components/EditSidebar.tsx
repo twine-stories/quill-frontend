@@ -11,15 +11,15 @@ import {User} from '../utils/types.ts';
 
 const EditSidebar = ({handleSave, handleCancel}) => {
 
-    const [uploadImageVisible, setUploadImageVisible] = useState(false);
+    const [uploadImageOpen, setUploadImageOpen] = useState<boolean>(false);
 
-    const showUploadImage = async () => {
-        setUploadImageVisible(true);
-    }
+    // const showUploadImage = async () => {
+    //     setUploadImageVisible(true);
+    // }
 
-    const hideUploadImage = async () => {
-        setUploadImageVisible(false);
-    }
+    // const hideUploadImage = async () => {
+    //     setUploadImageVisible(false);
+    // }
 
     const saveEdit = async () => {
         handleSave();
@@ -45,7 +45,7 @@ const EditSidebar = ({handleSave, handleCancel}) => {
                         width = "128"
                         height = "128"
                         style = {{cursor: "pointer", borderRadius: "50%", objectFit: "cover"}}
-                        onClick = {showUploadImage}
+                        onClick = {() => setUploadImageOpen(true)}
                         onError={e => {
                             e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg';
                         }}
@@ -54,13 +54,14 @@ const EditSidebar = ({handleSave, handleCancel}) => {
             </Grid>
             <Grid xs={12}><TwineButton icon='/icons/purple_check.svg' sx={{width: '100%'}} name={"Save Edit"} action={saveEdit}/></Grid>
             <Grid xs={12}><TwineButton icon='/icons/dark_green_x.svg' color='green' sx={{width: '100%'}} name={"Cancel Edit"} action={cancelEdit}/></Grid>
-            {uploadImageVisible && <UploadImage 
+            <UploadImage 
                 bucketName = {PROFILE_IMGS_BUCKET}
                 accessKeyId = {ACCESS_KEY_ID}
                 secretAccessKey = {SECRET_ACCESS_KEY}
                 region = "us-east-1"
-                hideComponent = {hideUploadImage}
-            /> }
+                open = {uploadImageOpen}
+                close = {() => {setUploadImageOpen(false)}}
+            />
             
         </Grid>
     )
