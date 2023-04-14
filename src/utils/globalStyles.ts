@@ -227,6 +227,7 @@ export const theme = extendTheme({
                         padding: '13px'
                     }),
                 }),
+                
             },
         },
         JoyCheckbox: {
@@ -284,7 +285,7 @@ export const theme = extendTheme({
                     }),
                 })
             }
-        }
+        }, 
     },
 });
 
