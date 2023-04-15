@@ -9,13 +9,19 @@ interface UploaderProps {
     loading: boolean;
     open: boolean;
     close: () => Promise<void>;
-    handleUpload: (file: FIle) => Promise<void>;
+    handleUpload: (file: File) => Promise<void>;
+    circle: boolean;
+    width: string;
+    height: string;
 }
 function UploadImage({
     loading,
     open,
     close,
-    handleUpload
+    handleUpload,
+    circle,
+    width,
+    height
 }: UploaderProps) {
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -63,8 +69,16 @@ function UploadImage({
                     }}/>
                     <Grid id='profile-upload-preview'>
                         <Typography level='h3' color='purple'>Preview Image</Typography>
-                        <Grid container alignItems='center' justifyContent='center' id='profile-preview-wrapper'>
-                            {imgsrc != null && <img src={imgsrc as string} width="200" height="200"/>}
+                        <Grid container alignItems='center' justifyContent='center' id='profile-preview-wrapper' style={{
+                            width: (parseInt(width.substring(0, width.length - 2)) + 30) + 'px',
+                            height: (parseInt(height.substring(0, height.length - 2)) + 30) + 'px'
+                        }}>
+                            {imgsrc != null && <img src={imgsrc as string} style={{
+                                borderRadius: circle ? '50%' : '15px',
+                                width: width,
+                                height: height,
+                                objectFit: 'cover'
+                            }}/>}
                         </Grid>
                     </Grid>
                     <Grid>
