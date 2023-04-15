@@ -1,7 +1,7 @@
 import {useEffect, useState, createContext} from 'react';
 import './App.css';
 import {Routes, Route} from "react-router-dom";
-import NotFound from './pages/NotFound.tsx';
+import RouteNotFound from './pages/RouteNotFound.tsx';
 import Beta from './pages/Beta.tsx';
 import FeedbackPage from './pages/footer/FeedbackPage.tsx';
 import Home from './pages/Home.tsx';
@@ -284,7 +284,7 @@ function App() {
                                 <Route path="/collection/*" element={<Collection />}></Route>
 
                                 <Route path="/" element={<Home />}></Route>
-                                <Route path="*" element={<NotFound />}></Route>
+                                <Route path="*" element={<RouteNotFound />}></Route>
                             </Routes>
                             :
                             <Routes>
@@ -301,7 +301,7 @@ function App() {
                                 <Route path="/episode/*" element={<Chapter/>}></Route>
                                 <Route path="/collection/*" element={<Collection />}></Route>
                                 <Route path="/" element={<Home />}></Route>
-                                <Route path="*" element={<NotFound />}></Route>
+                                <Route path="*" element={<RouteNotFound />}></Route>
                             </Routes>}
                         </div>
                         <Footer />

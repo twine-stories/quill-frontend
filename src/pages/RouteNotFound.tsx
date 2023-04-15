@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Typography } from '@mui/joy';
 import Navbar from '../components/Navbar.tsx';
 
-function NotFound() {
+function RouteNotFound() {
 
     return (
         <div>
@@ -17,4 +17,4 @@ function NotFound() {
     );
 }
 
-export default NotFound;
+export default RouteNotFound;
