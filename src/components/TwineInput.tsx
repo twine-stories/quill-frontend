@@ -23,9 +23,9 @@ function TwineInput(props: InputProps) {
                 <Textarea
                     startDecorator={props.startDecorator && <img src={props.startDecorator}/>}
                     endDecorator={props.endDecorator && <img src={props.endDecorator}/>}
-                    placeholder={props.placeholder} defaultValue={props.defaultValue}/>
+                    placeholder={props.placeholder} defaultValue={props.defaultValue}
                     sx={props.sx}
-                    onChange={props.onChange}
+                    onChange={props.onChange}/>
             </FormControl>
         )
     } else {
