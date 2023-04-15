@@ -9,7 +9,7 @@ import Sheet from "@mui/joy/Sheet";
 import TwineInput from "../components/TwineInput.tsx";
 import TwineButton from "../components/TwineButton.tsx";
 import ReactMarkdown from 'https://esm.sh/react-markdown@7'
-const DELIMITER = "🗿³¤";
+import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants";
 
 function Chapter() {
 
@@ -78,12 +78,11 @@ function Chapter() {
     );
 
     function loadEpisodeContent(content: string) {
-        console.log(content)
-        let rawContentArray = content.split(DELIMITER);
-        console.log(rawContentArray)
+        let rawContentArray = content.split(CHAPTER_DELIMETER);
         var compoundedElements = [];
         for (let i = 0; i < rawContentArray.length; i++) {
-            if (rawContentArray[i].includes("https")) {
+            if (rawContentArray[i].includes(CHAPTER_IMG_DELIMETER)) {
+                let imgSrc = rawContentArray[i].split(CHAPTER_IMG_DELIMETER)[1];
                 compoundedElements.push(
                     <AspectRatio variant="plain" minHeight="120px" maxHeight="300px" objectFit="contain"
                                  sx={{my: 2}}>

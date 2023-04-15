@@ -7,3 +7,6 @@ export const saleTypeMap: Record<string, CollectionType> = {
 }
 
 export const MAX_COLLABORATORS: number = 3;
+
+export const CHAPTER_DELIMETER: string = "³¤³";
+export const CHAPTER_IMG_DELIMETER: string = "ïmg¦";

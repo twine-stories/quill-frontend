@@ -74,7 +74,8 @@ export type Artwork = {
 export type ProfitSplit = {
     id?: number;
     creator: User;
-    collection: NFTCollection;
+    collection?: NFTCollection;
+    work?: Work;
     percentage: number;
 }
 
