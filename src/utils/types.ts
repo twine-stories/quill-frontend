@@ -108,3 +108,10 @@ export type Like = {
     liker: User;
     episode: Episode;
 }
+
+export type Comment {
+    id?: number;
+    commenter: User;
+    episode: Episode;
+    content: string;
+}
