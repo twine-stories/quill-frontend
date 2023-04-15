@@ -10,7 +10,7 @@ import TwineInput from "../components/TwineInput.tsx";
 import TwineButton from "../components/TwineButton.tsx";
 import IconButton from "../components/IconButton.tsx";
 import ReactMarkdown from 'https://esm.sh/react-markdown@7'
-const DELIMITER = "🗿³¤";
+import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants.ts";
 
 
 function Chapter() {
@@ -19,6 +19,7 @@ function Chapter() {
     const context: object = useContext(UserContext);
     const user: User = context['user'];
     const [liked, setLiked] = useState<boolean>(false);
+    const [numLikes, setNumLikes] = useState<number>(0);
 
     useEffect(() => {
         if (user) {
@@ -34,8 +35,6 @@ function Chapter() {
 
     useEffect(() => {
         if (episode && user && episode.id) {
-            console.log(episode);
-            console.log(user);
             const episode_str: string = String(episode.id);
             genericGet('/api/like/isLikedByUser/' + user.userName + '/' + episode_str).then((response: any) => {
                 setLiked(response);
@@ -43,11 +42,19 @@ function Chapter() {
         }
     }, [episode, user]);
 
+    useEffect(() => {
+        if (episode && episode.id) {
+            const episode_str: string = String(episode.id);
+            genericGet('/api/like/numLikes/' + episode_str).then((response: any) => {
+                setNumLikes(response);
+            });
+        }
+    });
+
     const likeAction = () => {
-        console.log('like');
         if (user) {
             const likeObj: Like = {
-                user: user,
+                liker: user,
                 episode: episode
             }
             if (liked) {
@@ -81,15 +88,16 @@ function Chapter() {
                             }}
                         >
                             <Typography level="h1" sx={{color: "#E4E5FF"}}>{episode['title']}</Typography>
-                            <IconButton action = {likeAction} icon='/icons/heart.svg' color = "purple"/>
-                            
+                            <div style={{display: "flex", flexDirection: "row", gap: "10px"}}>
+                                <IconButton action = {likeAction} icon={liked ? '/icons/heart-red.svg' : '/icons/heart.svg'} color = "purple"/>
+                                <p>{numLikes}</p>
+                            </div>
                             <Sheet sx={{width: '50%', my: 1, borderRadius: "20px",}} color="neutral"
                                    variant="outlined">
                                 {
                                     loadEpisodeContent(episode['content'])
                                 }
                             </Sheet>
-                            <p>{String(liked)}</p>
 
                         </Box>
                         
@@ -122,10 +130,11 @@ function Chapter() {
     );
 
     function loadEpisodeContent(content: string) {
-        let rawContentArray = content.split(DELIMITER);
+        let rawContentArray = content.split(CHAPTER_DELIMETER);
         var compoundedElements = [];
         for (let i = 0; i < rawContentArray.length; i++) {
-            if (rawContentArray[i].includes("https")) {
+            if (rawContentArray[i].includes(CHAPTER_IMG_DELIMETER)) {
+                let imgSrc = rawContentArray[i].split(CHAPTER_IMG_DELIMETER)[1];
                 compoundedElements.push(
                     <AspectRatio variant="plain" minHeight="120px" maxHeight="300px" objectFit="contain"
                                  sx={{my: 2}}>

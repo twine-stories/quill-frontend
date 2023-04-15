@@ -74,7 +74,8 @@ export type Artwork = {
 export type ProfitSplit = {
     id?: number;
     creator: User;
-    collection: NFTCollection;
+    collection?: NFTCollection;
+    work?: Work;
     percentage: number;
 }
 
@@ -96,6 +97,6 @@ export type Follow = {
 
 export type Like = {
     id?: number;
-    user: User;
+    liker: User;
     episode: Episode;
 }

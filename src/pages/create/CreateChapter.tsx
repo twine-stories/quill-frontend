@@ -26,11 +26,9 @@ import TwineButton from "../../components/TwineButton.tsx";
 import {episodeAdd, workAdd, workGetByUrl} from "../../utils/api.ts";
 import ReactMarkdown from 'https://esm.sh/react-markdown@7'
 import { v4 as uuidv4 } from 'uuid';
+import {CHAPTER_DELIMETER} from "../../utils/constants.ts";
 
 enableMapSet();
-
-const DELIMITER = "³¤³";
-const IMG_DELIMITER = "ïmg¦";
 
 interface CreateChapterProps {
     edit?: boolean;
@@ -354,7 +352,7 @@ function CreateChapter(props: CreateChapterProps) {
                 work: work,
                 title: title.value,
                 cover: 'cover',
-                content: reformatContent(false).join(DELIMITER),
+                content: reformatContent(false).join(CHAPTER_DELIMETER),
                 url: title.value + "-" + uuidv4(),
                 endOfChapterMessage: endOfChapterMessage.value,
                 mature: mature.checked,
