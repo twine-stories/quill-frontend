@@ -11,6 +11,7 @@ import TwineButton from "../components/TwineButton.tsx";
 import IconButton from "../components/IconButton.tsx";
 import ReactMarkdown from 'https://esm.sh/react-markdown@7'
 import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants.ts";
+import CommentSection from '../components/CommentSection.tsx';
 
 
 function Chapter() {
@@ -100,8 +101,9 @@ function Chapter() {
                             </Sheet>
 
                         </Box>
-                        
+                        <CommentSection episode={episode} />
                         </div>
+                        
                     }
                 </div>
             }
