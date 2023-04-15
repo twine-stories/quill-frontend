@@ -7,19 +7,22 @@ import TwineButton from "./TwineButton.tsx";
 import { PROFILE_IMGS_BUCKET } from "../config.ts";
 import { ACCESS_KEY_ID, SECRET_ACCESS_KEY } from "../utils/secrets.ts";
 import {User} from '../utils/types.ts';
+import AWS from "aws-sdk";
+import {v4 as uuidv4} from 'uuid';
 
 
 const EditSidebar = ({handleSave, handleCancel}) => {
 
     const [uploadImageOpen, setUploadImageOpen] = useState<boolean>(false);
+    const [uploadLoading, setUploadLoading] = useState<boolean>(false);
 
-    // const showUploadImage = async () => {
-    //     setUploadImageVisible(true);
-    // }
+    const context: object = useContext(UserContext);
+    let user: User = context['user'];
 
-    // const hideUploadImage = async () => {
-    //     setUploadImageVisible(false);
-    // }
+    const bucketName: string = PROFILE_IMGS_BUCKET;
+    const accessKeyId: string = ACCESS_KEY_ID;
+    const secretAccessKey: string = SECRET_ACCESS_KEY;
+    const region: string = "us-east-1";
 
     const saveEdit = async () => {
         handleSave();
@@ -30,8 +33,37 @@ const EditSidebar = ({handleSave, handleCancel}) => {
         handleCancel();
     }
 
-    const context: object = useContext(UserContext);
-    let user: User = context['user'];
+    const handleUpload = async (selectedFile: File) => {
+        try {
+            const s3 = new AWS.S3({
+                accessKeyId,
+                secretAccessKey,
+                region,
+                signatureVersion: 'v4',
+            });
+
+            let imgName = uuidv4() + "." + selectedFile.name.split('.').pop();
+
+            const params = {
+                Bucket: bucketName,
+                Key: imgName,
+                Body: selectedFile,
+            };
+
+            setUploadLoading(true);
+            await s3.upload(params).promise();
+            user.profileImg = imgName;
+            setUploadLoading(false);
+            setUploadImageOpen(false);
+        } catch (error) {
+            console.error("Error uploading file:", error);
+            alert("Failed to upload file. Please try again later.");
+            setUploadLoading(false);
+            setUploadImageOpen(false);
+        }
+    }
+
+    console.log(user.profileImg);
 
 
     return (
@@ -55,12 +87,10 @@ const EditSidebar = ({handleSave, handleCancel}) => {
             <Grid xs={12}><TwineButton icon='/icons/purple_check.svg' sx={{width: '100%'}} name={"Save Edit"} action={saveEdit}/></Grid>
             <Grid xs={12}><TwineButton icon='/icons/dark_green_x.svg' color='green' sx={{width: '100%'}} name={"Cancel Edit"} action={cancelEdit}/></Grid>
             <UploadImage 
-                bucketName = {PROFILE_IMGS_BUCKET}
-                accessKeyId = {ACCESS_KEY_ID}
-                secretAccessKey = {SECRET_ACCESS_KEY}
-                region = "us-east-1"
+                uploadLoading = {uploadLoading}
                 open = {uploadImageOpen}
                 close = {() => {setUploadImageOpen(false)}}
+                handleUpload = {handleUpload}
             />
             
         </Grid>
