@@ -45,6 +45,17 @@ body {
     justify-content: space-around;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
 .App {
     width: 75vw;
     min-height: 95vh;
