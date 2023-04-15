@@ -1,35 +1,25 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../App.tsx";
-import AWS from "aws-sdk";
 import "./UploadImage.css"
 import TwineButton from "./TwineButton.tsx";
 import TwineInput from "./TwineInput.tsx";
-import {v4 as uuidv4} from 'uuid';
 import { Modal, Sheet, Typography, Grid, CircularProgress } from "@mui/joy";
 
 interface UploaderProps {
-    bucketName: string;
-    accessKeyId: string;
-    secretAccessKey: string;
-    region: string;
+    loading: boolean;
     open: boolean;
     close: () => Promise<void>;
+    handleUpload: (file: FIle) => Promise<void>;
 }
 function UploadImage({
-    bucketName,
-    accessKeyId,
-    secretAccessKey,
-    region,
+    loading,
     open,
-    close
+    close,
+    handleUpload
 }: UploaderProps) {
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [imgsrc, setImgSrc] = useState<string | ArrayBuffer | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
-
-    const context: object = useContext(UserContext);
-    const user: User = context['user'];
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0] || null;
@@ -47,42 +37,6 @@ function UploadImage({
         reader.onloadend = () => {
             setImgSrc(reader.result);
         };
-    };
-
-
-    const handleUpload = async () => {
-        if (!selectedFile) {
-            return;
-        }
-
-        try {
-            const s3 = new AWS.S3({
-                accessKeyId,
-                secretAccessKey,
-                region,
-                signatureVersion: 'v4',
-            });
-
-            let imgName = uuidv4() + "." + selectedFile.name.split('.').pop();
-
-            const params = {
-                Bucket: bucketName,
-                Key: imgName,
-                Body: selectedFile,
-            };
-
-            user.profileImg = imgName ;
-
-            setLoading(true);
-            await s3.upload(params).promise();
-            setLoading(false);
-            close();
-        } catch (error) {
-            console.error("Error uploading file:", error);
-            alert("Failed to upload file. Please try again later.");
-            setLoading(false);
-            close();
-        }
     };
 
     return (
@@ -114,7 +68,12 @@ function UploadImage({
                         </Grid>
                     </Grid>
                     <Grid>
-                        <TwineButton sx={{width: '130px'}} name={loading ? <CircularProgress color='darkpurple' variant='plain' /> : 'Upload'} action={handleUpload} enabled={selectedFile !== null} />
+                        <TwineButton sx={{width: '130px'}} name={loading ? <CircularProgress color='darkpurple' variant='plain' /> : 'Upload'} action={() => {
+                            if (!selectedFile) {
+                                return;
+                            }
+                            handleUpload(selectedFile);
+                        }} enabled={selectedFile !== null} />
                     </Grid>
                 </Grid>
             

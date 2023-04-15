@@ -117,7 +117,7 @@ function EditProfile() {
         }
 
 
-        navigate('/profile')
+        navigate('/profile');
 
 
     }
@@ -138,8 +138,6 @@ function EditProfile() {
             document.getElementsByClassName("username")[0].getElementsByTagName("textarea")[0].value = "@" + afterAt;
         }
     }
-
-
 
     return (
         <div>

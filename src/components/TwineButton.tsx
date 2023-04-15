@@ -14,7 +14,7 @@ interface ButtonProps {
 function TwineButton(props: ButtonProps) {
     const color: string = props.color ? props.color : 'purple';
     const size: string = props.size ? props.size : 'md';
-    console.log(!(props.enabled === undefined || props.enabled));
+    
     return (
         <Button
             sx={props.sx}
