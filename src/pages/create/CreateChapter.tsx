@@ -46,9 +46,7 @@ function CreateChapter(props: CreateChapterProps) {
     const [view, setView] = useState(false);
     const [work, setWork] = useState<Work>(null);
 
-    const [collaborators, setCollaborators] = useState<JSX.Element[]>([])
-    const [profitSplitUsers, setProfitSplitUsers] = useState<User[]>([]);
-    const [profitSplits, setProfitSplits] = useState<number[]>([]);
+    const [collaborators, setCollaborators] = useState<JSX.Element[]>([]);
 
     useEffect(() => {
         if (user) {
@@ -387,45 +385,48 @@ function CreateChapter(props: CreateChapterProps) {
         return compoundedElements;
     }
 
-    async function checkCollaborators(): Promise<boolean> {
+    async function checkCollaborators(): Promise<Map<User, number>> {
         const collabUsernames: HTMLCollectionOf<Element> = document.getElementsByClassName('usernameTopLeftCollab');
         const collabValues: HTMLCollectionOf<Element> = document.getElementsByClassName('profitPercentTopRightCollab');
         let usernames: string[] = [];
-        let users: User[] = [];
         let values: number[] = [];
 
         Array.from(collabUsernames).forEach((elem: Element) => {
-            usernames.push((elem.children[0] as HTMLInputElement).value);
+            usernames.push(elem.value);
         });
 
         Array.from(collabValues).forEach((elem: Element) => {
-            values.push(parseInt((elem.children[0] as HTMLInputElement).value));
+            values.push(parseInt(elem.value));
         })
 
         const sum: number = values.reduce((partial, curr) => partial + curr, 0);
         if (sum !== 100) {
             // TODO: Make this a snackbar
             console.log('invalid percent sum');
-            return false;
+            return null;
         }
 
+        let users: User[] = [];
         for (let i = 0; i < usernames.length; i++) {
             if (usernames[i] === '') {
                 console.log('invalid username');
-                return false;
+                return null;
             }
-            const response = await genericGet('/api/users/' + usernames[i])
+            const response = await genericGet('/api/user/name/' + usernames[i])
             if (response) {
                 users.push(response);
             } else {
                 console.log('invalid username');
-                return false;
+                return null;
             }
         }
 
-        setProfitSplitUsers(users);
-        setProfitSplits(values);
-        return true;
+        // Map the users to their respective profit splits
+        let profitSplitMap: Map<User, number> = new Map();
+        for (let i = 0; i < users.length; i++) {
+            profitSplitMap.set(users[i], values[i]);
+        }
+        return profitSplitMap;
     }
 
     async function makeEpisode(published: boolean) {
@@ -434,7 +435,8 @@ function CreateChapter(props: CreateChapterProps) {
         const guidelines: HTMLInputElement = document.getElementById("guidelines") as HTMLInputElement;
         const endOfChapterMessage: HTMLInputElement = document.getElementById("endOfChapterMessage") as HTMLInputElement;
         const publishStamp = published ? new Date() : null;
-        if (title.value && guidelines.checked && await checkCollaborators()) {
+        const profitSplitMap = await checkCollaborators();
+        if (title.value && guidelines.checked && profitSplitMap) {
             let newEpisode: Episode = {
                 work: work,
                 title: title.value,
@@ -448,15 +450,21 @@ function CreateChapter(props: CreateChapterProps) {
                 published: published,
             };
 
-            episodeAdd(newEpisode, (episode) => {
+            let response = await genericPost("/api/episode/add", newEpisode)
+            if (response) {
+                console.log("got response back ", response);
+            } else {
                 console.log("Your title is the same as one of your existing chapters. Please choose a different chapter name.");
-            });
+                return;
+            }
+            newEpisode.id = response;
 
-            for (let i = 0; i < profitSplitUsers.length; i++) {
+            // Iterate through the map and create a profit split for each user
+            profitSplitMap.forEach((value, user) => {
                 let newProfitSplit: ProfitSplit = {
                     episode: newEpisode,
-                    creator: profitSplitUsers[i],
-                    percentage: profitSplits[i],
+                    creator: user,
+                    percentage: value,
                 }
                 genericPost("/api/profitSplit/add", newProfitSplit).then((response) => {
                     if (response) {
@@ -465,7 +473,7 @@ function CreateChapter(props: CreateChapterProps) {
                         console.log("failure");
                     }
                 });
-            }
+            });
         }
     }
 }
