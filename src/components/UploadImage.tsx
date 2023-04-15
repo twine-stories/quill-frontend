@@ -12,6 +12,7 @@ interface UploaderProps {
     circle: boolean;
     width: string;
     height: string;
+    contain?: boolean;
 }
 function UploadImage({
     open,
@@ -19,7 +20,8 @@ function UploadImage({
     handleUpload,
     circle,
     width,
-    height
+    height,
+    contain
 }: UploaderProps) {
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -75,7 +77,7 @@ function UploadImage({
                                 borderRadius: circle ? '50%' : '15px',
                                 width: width,
                                 height: height,
-                                objectFit: 'cover'
+                                objectFit: contain ? 'contain' : 'cover'
                             }}/>}
                         </Grid>
                     </Grid>

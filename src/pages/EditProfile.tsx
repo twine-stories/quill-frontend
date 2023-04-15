@@ -45,8 +45,6 @@ function EditProfile() {
     let navigate = useNavigate();
 
     const handleSave = async () => {
-
-
         let firstname: string = document.getElementsByClassName("firstname")[0].getElementsByTagName("textarea")[0].value;
         let lastname: string = document.getElementsByClassName("lastname")[0].getElementsByTagName("textarea")[0].value;
         let username: string = document.getElementsByClassName("username")[0].getElementsByTagName("textarea")[0].value;
@@ -56,8 +54,6 @@ function EditProfile() {
         let instagram: string = document.getElementsByClassName("instagram")[0].getElementsByTagName("textarea")[0].value;
         let reddit: string = document.getElementsByClassName("reddit")[0].getElementsByTagName("textarea")[0].value;
         let discord: string = document.getElementsByClassName("discord")[0].getElementsByTagName("textarea")[0].value;
-
-
         
         if ("@" === username[0]) {
             username = username.substring(1);

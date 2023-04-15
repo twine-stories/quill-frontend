@@ -2,7 +2,7 @@ import {useEffect, useState, createContext} from 'react';
 import './App.css';
 import {Routes, Route} from "react-router-dom";
 import Beta from './pages/Beta.tsx';
-import FeedbackPage from './pages/FeedbackPage.tsx';
+import FeedbackPage from './pages/footer/FeedbackPage.tsx';
 import Home from './pages/Home.tsx';
 import Create from './pages/create/Create.tsx';
 import Profile from './pages/Profile.tsx';

@@ -109,7 +109,7 @@ export type Like = {
     episode: Episode;
 }
 
-export type Comment {
+export type Comment = {
     id?: number;
     commenter: User;
     episode: Episode;
