@@ -27,13 +27,7 @@
 }
 
 #profile-preview-wrapper {
-    width: 250px;
-    height: 250px;
     border: 1px #241D19 solid;
     border-radius: 15px;
     margin: 10px;
-}
-
-#profile-preview-wrapper img {
-    border-radius: 50%;
 }

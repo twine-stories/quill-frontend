@@ -1,0 +1,43 @@
+.create-image-upload {
+    margin-bottom: 10px;
+    background: #14100E;
+    border-radius: 20px;
+    padding: 25px;
+    padding-top: 10px;
+}
+
+.create-image-upload h3 {
+    font-size: 22px;
+}
+
+#create-cover-wrapper, #create-banner-wrapper {
+    border-radius: 15px;
+    border: 1px #241D19 dashed;
+}
+
+#create-cover-wrapper #create-cover, #create-banner-wrapper #create-banner {
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+#create-cover-wrapper {
+    width: 230px;
+    height: 330px;
+}
+
+#create-cover-wrapper #create-cover {
+    width: 200px;
+    height: 300px;
+}
+
+#create-banner-wrapper {
+    width: 46vw;
+    height: 12vw;
+}
+
+#create-banner-wrapper #create-banner {
+    width: 44vw;
+    height: 10vw;
+}

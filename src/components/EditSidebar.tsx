@@ -6,6 +6,7 @@ import UploadImage from "./UploadImage.tsx";
 import TwineButton from "./TwineButton.tsx";
 import { PROFILE_IMGS_BUCKET } from "../config.ts";
 import { ACCESS_KEY_ID, SECRET_ACCESS_KEY } from "../utils/secrets.ts";
+import {AWS_S3_REGION} from '../utils/constants.ts';
 import {User} from '../utils/types.ts';
 import AWS from "aws-sdk";
 import {v4 as uuidv4} from 'uuid';
@@ -22,7 +23,7 @@ const EditSidebar = ({handleSave, handleCancel}) => {
     const bucketName: string = PROFILE_IMGS_BUCKET;
     const accessKeyId: string = ACCESS_KEY_ID;
     const secretAccessKey: string = SECRET_ACCESS_KEY;
-    const region: string = "us-east-1";
+    const region: string = AWS_S3_REGION;
 
     const saveEdit = async () => {
         handleSave();
@@ -63,9 +64,6 @@ const EditSidebar = ({handleSave, handleCancel}) => {
         }
     }
 
-    console.log(user.profileImg);
-
-
     return (
         <Grid container direction='column' alignItems='center' rowSpacing={2} xs={3} id="sidebar">
             <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' xs={12} id="avatar">
@@ -91,6 +89,9 @@ const EditSidebar = ({handleSave, handleCancel}) => {
                 open = {uploadImageOpen}
                 close = {() => {setUploadImageOpen(false)}}
                 handleUpload = {handleUpload}
+                circle={true}
+                width='200px'
+                height='200px'
             />
             
         </Grid>
