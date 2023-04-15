@@ -1,6 +1,7 @@
 import {useEffect, useState, createContext} from 'react';
 import './App.css';
 import {Routes, Route} from "react-router-dom";
+import NotFound from './pages/NotFound.tsx';
 import Beta from './pages/Beta.tsx';
 import FeedbackPage from './pages/footer/FeedbackPage.tsx';
 import Home from './pages/Home.tsx';
@@ -254,8 +255,6 @@ function App() {
                         <div id='content-wrapper'>
                         {user ?
                             <Routes>
-                                <Route path="/" element={<Home />}></Route>
-
                                 <Route path="/about" element={<About/>}></Route>
                                 <Route path="/feedback" element={<FeedbackPage/>}></Route>
                                 <Route path="/terms" element={<Terms/>}></Route>
@@ -283,6 +282,9 @@ function App() {
                                 <Route path="/profile/:username" element={<GenericProfile/>}></Route>
 
                                 <Route path="/collection/*" element={<Collection />}></Route>
+
+                                <Route path="/" element={<Home />}></Route>
+                                <Route path="*" element={<NotFound />}></Route>
                             </Routes>
                             :
                             <Routes>
@@ -299,6 +301,7 @@ function App() {
                                 <Route path="/episode/*" element={<Chapter/>}></Route>
                                 <Route path="/collection/*" element={<Collection />}></Route>
                                 <Route path="/" element={<Home />}></Route>
+                                <Route path="*" element={<NotFound />}></Route>
                             </Routes>}
                         </div>
                         <Footer />
