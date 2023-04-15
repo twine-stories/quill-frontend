@@ -26,11 +26,12 @@ const EditSidebar = ({handleSave, handleCancel}) => {
 
     const saveEdit = async () => {
         if (!profileImg.name || !profileImg.file) {
-            return;
-        }
-        sendToS3(bucketName, profileImg.name, profileImg.file).then(() => {
             handleSave();
-        });
+        } else {
+            sendToS3(bucketName, profileImg.name, profileImg.file).then(() => {
+                handleSave();
+            });
+        }
     }
     
     
