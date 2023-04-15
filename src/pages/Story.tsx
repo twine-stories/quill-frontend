@@ -18,6 +18,7 @@ function Story() {
     const user: User = context['user'];
 
     useEffect(() => {
+        console.log(window.location.href.split('/'))
         if (user) {
             workGetByUrl(window.location.href.split('/')[4], setWork, () => {
                 console.log('fail');

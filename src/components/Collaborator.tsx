@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { IconButton, Grid } from '@mui/joy';
-import { CollaboratorContext } from '../pages/create/Create.tsx';
+import React, {useContext} from 'react';
+import {IconButton, Grid} from '@mui/joy';
+import {CollaboratorContext} from '../pages/create/Create.tsx';
 import TwineInput from './TwineInput.tsx';
 
 interface CollaboratorProps {
@@ -27,24 +27,41 @@ function Collaborator(props: CollaboratorProps) {
         <Grid className='collaborators' container justifyContent='space-around' alignItems='center'>
             <Grid container direction='row' justifyContent='space-around' alignItems='center' rowSpacing={2} xs={10}>
                 <Grid xs={10 + offset}>
-                    <Grid container direction='row' justifyContent='space-between' alignItems='center' columnSpacing={1}>
-                        <Grid xs={6}><TwineInput placeholder={creatorName} defaultValue={props.defaultCreator} inputAttrs={{
-                            className: 'topLeftCollab'
-                        }} /></Grid>
-                        <Grid xs={6}><TwineInput placeholder={topRightField} defaultValue={props.defaultProfit} inputAttrs={{
-                            className: 'topRightCollab'
-                        }} /></Grid>
+                    <Grid container direction='row' justifyContent='space-between' alignItems='center'
+                          columnSpacing={1}>
+                        <Grid xs={6}>
+                            <TwineInput disabled={props.principle} placeholder={creatorName}
+                                        defaultValue={props.defaultCreator}
+                                        inputAttrs={{
+                                            className: 'usernameTopLeftCollab'
+                                        }}/>
+                        </Grid>
+                        <Grid xs={6}>
+                            <TwineInput type="number" placeholder={topRightField} defaultValue={props.defaultProfit}
+                                        endDecorator={"%"}
+                                        inputAttrs={{
+                                            className: 'profitPercentTopRightCollab',
+                                        }}/>
+                        </Grid>
                     </Grid>
-                    <Grid><TwineInput placeholder={bottomField} defaultValue={props.defaultWallet} inputAttrs={{
-                        className: 'bottomCollab'
-                    }} /></Grid>
+                    {/*<Grid>*/}
+                    {/*    <TwineInput placeholder={bottomField} defaultValue={props.defaultWallet} inputAttrs={{*/}
+                    {/*        className: 'bottomCollab'*/}
+                    {/*    }}/>*/}
+                    {/*</Grid>*/}
                 </Grid>
                 <Grid xs={2 - offset}>
-                    {!props.principle && <IconButton sx={{ '&:hover': {
-                        backgroundColor: 'black',
-                    } }} variant='plain' onClick={() => {remove(props.id)}}>
+                    {!props.principle && <IconButton sx={{
+                        '&:hover': {
+                            backgroundColor: 'black',
+                        }
+                    }} variant='plain' onClick={() => {
+                        remove(props.id)
+                    }}>
                         <img
                             src='/icons/red_remove.svg'
+                            width="40px"
+                            height="40px"
                             alt=''
                         />
                     </IconButton>}

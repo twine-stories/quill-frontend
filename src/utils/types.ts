@@ -75,7 +75,7 @@ export type ProfitSplit = {
     id?: number;
     creator: User;
     collection?: NFTCollection;
-    work?: Work;
+    episode?: Episode;
     percentage: number;
 }
 

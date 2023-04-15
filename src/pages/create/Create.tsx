@@ -29,7 +29,7 @@ import algosdk, {decodeAddress, encodeUint64, getApplicationAddress, Transaction
 import NFTCheckbox from '../../components/NFTCheckbox.tsx';
 import {adminAddr} from '../../utils/blockchain/credentials.ts';
 import {INIT_ESCROW, MAKE_SELL_OFFER} from '../../utils/blockchain/constants.ts';
-import {saleTypeMap, MAX_COLLABORATORS} from '../../utils/constants.ts';
+import {saleTypeMap, MAX_COLLABORATORS_SMART_CONTRACTS} from '../../utils/constants.ts';
 import {Typography, Sheet, Stack, Grid} from "@mui/joy";
 import {CollectionType} from '../../utils/enums.ts';
 import { env } from '../../config.ts';
@@ -400,9 +400,9 @@ function Create() {
                     }}>
                         <div>
                             {collaborators}
-                            <TwineButton name='Add Collaborator' enabled={collaborators.length < MAX_COLLABORATORS}
+                            <TwineButton name='Add Collaborator' enabled={collaborators.length < MAX_COLLABORATORS_SMART_CONTRACTS}
                                         action={(e) => {
-                                            if (collaborators.length < MAX_COLLABORATORS) {
+                                            if (collaborators.length < MAX_COLLABORATORS_SMART_CONTRACTS) {
                                                 const id: number = collaborators[collaborators.length - 1].props.id + 1;
                                                 setCollaborators([
                                                     ...collaborators,

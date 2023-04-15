@@ -66,14 +66,14 @@ export const theme = extendTheme({
                     ...((ownerState.color === 'white') && {
                         color: '#E4E5FF',
                     }),
-                    ...((ownerState.level === 'h1' || ownerState.level === 'h2' || ownerState.level === 'h3') && {
+                    ...((ownerState.level === 'h1' || ownerState.level === 'h2' || ownerState.level === 'h3' || ownerState.level === 'h4' || ownerState.level === 'h5') && {
                         fontFamily: 'Twine',
                         fontWeight: 'normal',
                         margin: '15px 0px',
                         textAlign: 'left',
                         color: '#E4E5FF'
                     }),
-                    ...((ownerState.level === 'h4' || ownerState.level === 'h5' || ownerState.level === 'h6') && {
+                    ...((ownerState.level === 'h6' || ownerState.level === 'body1' || ownerState.level === 'body2' || ownerState.level === 'body3' || ownerState.level === 'body4' || ownerState.level === 'body5') && {
                         fontFamily: 'Oxanium',
                         fontWeight: 'normal',
                         margin: '15px 0px',
@@ -100,25 +100,22 @@ export const theme = extendTheme({
                         color: '#A3B832',
                         backgroundColor: '#14100E',
                         '&:active': {
-                            color: '#14100E',
-                            backgroundColor: '#A3B832'
+                            backgroundColor: '#2B2726'
                         }
                     }),
                     ...(ownerState.color === 'blackpurple' && {
                         color: '#9E9FEB',
                         backgroundColor: '#14100E',
                         '&:active': {
-                            color: '#14100E',
-                            backgroundColor: '#9E9FEB'
+                            backgroundColor: '#2B2726'
                         }
                     }),
                     ...(ownerState.color === 'green' && {
                         color: '#5C720D',
                         backgroundColor: '#A3B832',
                         '&:active': {
-                            color: '#A3B832',
-                            backgroundColor: '#5C720D'
-                        }
+                            backgroundColor: '#92A52D'
+                        },
                     }),
                     ...(ownerState.color === 'green' && ownerState.disabled === true && {
                         color: '#404626',
@@ -128,8 +125,7 @@ export const theme = extendTheme({
                         color: '#373867',
                         backgroundColor: '#9E9FEB',
                         '&:active': {
-                            color: '#9E9FEB',
-                            backgroundColor: '#373867'
+                            backgroundColor: '#8E8FD3'
                         }
                     }),
                     ...(ownerState.color === 'purple' && ownerState.disabled === true && {
@@ -137,11 +133,10 @@ export const theme = extendTheme({
                         backgroundColor: '#9E9FEB80',
                     }),
                     ...(ownerState.color === 'darkpurple' && {
-                        color: '#9E9FEB',
+                        color: "#9E9FEB",
                         backgroundColor: '#4546AB',
                         '&:active': {
-                            color: '#4546AB',
-                            backgroundColor: '#9E9FEB'
+                            backgroundColor: '#5758B3'
                         }
                     }),
                     ...(ownerState.color === 'darkpurple' && ownerState.disabled === true && {

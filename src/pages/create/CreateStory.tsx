@@ -289,7 +289,7 @@ function CreateStory(props: CreateStoryProps) {
         const genre3: HTMLInputElement = document.getElementById('genre3') as HTMLInputElement;
         const publishStamp = published ? new Date() : null;
         const id = currentWork ? currentWork['id'] : null;
-        
+
         if (title.value && description.value && hook.value && genre1.textContent && (cover.name || (work && work.cover))) {
             let newWork: Work = {
                 id: id,
@@ -302,7 +302,7 @@ function CreateStory(props: CreateStoryProps) {
                 genre2: genre2.textContent.toUpperCase(),
                 genre3: genre3.textContent.toUpperCase(),
                 medium: "WRITTEN",
-                url: user.userName + '-' + title.value.replace(/\s/g, "-").toLowerCase(),
+                url: user.userName + '_' + title.value.replace(/\s/g, "-").toLowerCase(),
                 hook: hook.value,
                 publishStamp: publishStamp,
                 published: published,

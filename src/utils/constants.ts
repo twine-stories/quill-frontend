@@ -6,7 +6,13 @@ export const saleTypeMap: Record<string, CollectionType> = {
     'shuffle': CollectionType.SHUFFLE
 }
 
-export const MAX_COLLABORATORS: number = 3;
+export const MAX_COLLABORATORS_SMART_CONTRACTS: number = 3;
+export const MAX_COLLABORATORS: number = 10;
 
 export const CHAPTER_DELIMETER: string = "³¤³";
 export const CHAPTER_IMG_DELIMETER: string = "ïmg¦";
+export const CHAPTER_PATH: string = 'chapter/';
+export const STORY_COVER_PATH: string = 'story/';
+export const STORY_BANNER_PATH: string = 'banner/';
+
+export const AWS_S3_REGION: string = "us-east-1";

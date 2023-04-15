@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from 'react';
 import useState from 'react-usestateref'
 import Navbar from "../../components/Navbar.tsx";
 import {UserContext} from "../../App.tsx";
-import {User, Episode, Work} from '../../utils/types.ts';
+import {User, Episode, Work, ProfitSplit} from '../../utils/types.ts';
 import styled from "styled-components";
 import {
     AspectRatio,
@@ -23,10 +23,12 @@ import Sheet from '@mui/joy/Sheet';
 import TwineInput from "../../components/TwineInput.tsx";
 import TwoColumnLayout from "../../components/TwoColumnLayout.tsx";
 import TwineButton from "../../components/TwineButton.tsx";
-import {episodeAdd, workAdd, workGetByUrl} from "../../utils/api.ts";
+import {episodeAdd, genericGet, genericPost, workAdd, workGetByUrl} from "../../utils/api.ts";
 import ReactMarkdown from 'https://esm.sh/react-markdown@7'
-import { v4 as uuidv4 } from 'uuid';
-import {CHAPTER_DELIMETER} from "../../utils/constants.ts";
+import {v4 as uuidv4} from 'uuid';
+import {CHAPTER_DELIMETER, MAX_COLLABORATORS} from "../../utils/constants.ts";
+import Collaborator from "../../components/Collaborator.tsx";
+import {CollaboratorContext} from "./Create.tsx";
 
 enableMapSet();
 
@@ -35,9 +37,6 @@ interface CreateChapterProps {
 }
 
 function CreateChapter(props: CreateChapterProps) {
-
-    const [episode, setEpisode] = useState<Episode>();
-
     const context: object = useContext(UserContext);
     const user: User = context['user'];
 
@@ -47,13 +46,35 @@ function CreateChapter(props: CreateChapterProps) {
     const [view, setView] = useState(false);
     const [work, setWork] = useState<Work>(null);
 
+    const [collaborators, setCollaborators] = useState<JSX.Element[]>([]);
+
     useEffect(() => {
         if (user) {
             workGetByUrl(window.location.href.split('/')[5], setWork, () => {
                 console.log('fail');
             });
+
+            if (collaborators.length === 0) {
+                setCollaborators([
+                    <Collaborator profitSplit={true} defaultCreator={user.userName}
+                                  defaultWallet={user.walletAddress} defaultProfit={100} principle={true} id={uuidv4()}
+                                  key={uuidv4()}/>
+                ])
+            }
         }
     }, [user]);
+
+
+    const removeCollaborator = (id: number): void => {
+        let newCollaborators: JSX.Element[] = [];
+        collaborators.forEach((collaborator: JSX.Element) => {
+            if (collaborator.props.id !== id) {
+                newCollaborators.push(collaborator);
+            }
+        });
+
+        setCollaborators(newCollaborators);
+    };
 
     function removeItem(index: number) {
         //TODO: Fix this later 💀
@@ -205,17 +226,6 @@ function CreateChapter(props: CreateChapterProps) {
                                         reformatContent(true)
                                     }
                                 </Sheet>
-
-                                <Stack
-                                    direction="row"
-                                    spacing={2}
-                                    justifyContent="center"
-                                    sx={{width: '100%'}}>
-                                    <Button variant="outlined" color="neutral" onClick={function () {
-                                        setView(false);
-                                    }
-                                    }>Edit</Button>
-                                </Stack>
                             </Box>
                         </div>
                     }
@@ -264,8 +274,35 @@ function CreateChapter(props: CreateChapterProps) {
                                     Image</Button>
                             </Stack>
 
-                            <TwineInput id="endOfChapterMessage" label="End of Chapter Message" placeholder="(Optional) Enter End of Chapter Message..." multiline={true}/>
+                            <TwineInput id="endOfChapterMessage" label="End of Chapter Message"
+                                        placeholder="(Optional) Enter End of Chapter Message..." multiline={true}/>
                         </Box>
+
+                        <CollaboratorContext.Provider value={{
+                            'remove': removeCollaborator
+                        }}>
+                            <div>
+                                {/*<Typography level="h5" sx={{color: "#9E9FEB"}}>Principle Creator</Typography>*/}
+                                {/*{user && <Collaborator profitSplit={true} defaultCreator={user.userName}*/}
+                                {/*                       defaultWallet={user.walletAddress} defaultProfit={100}*/}
+                                {/*                       principle={true} id={uuidv4()}*/}
+                                {/*                       key={uuidv4()}/>}*/}
+
+                                <Typography level="h5" sx={{color: "#9E9FEB"}}>Collaborators</Typography>
+                                {collaborators}
+                                <TwineButton name='Add Collaborator' enabled={collaborators.length < MAX_COLLABORATORS}
+                                             action={(e) => {
+                                                 if (collaborators.length < MAX_COLLABORATORS) {
+                                                     const id: number = uuidv4();
+                                                     setCollaborators([
+                                                         ...collaborators,
+                                                         <Collaborator profitSplit={true} principle={false} id={id}
+                                                                       key={id}/>
+                                                     ])
+                                                 }
+                                             }}/>
+                            </div>
+                        </CollaboratorContext.Provider>
                     </div>
                 </div>
             }
@@ -287,15 +324,22 @@ function CreateChapter(props: CreateChapterProps) {
                                      </Typography>
 
                                      {/*FIX THIS LATER TOO*/}
-                                     <Checkbox id="guidelines" color="info" label="I Verify This Work is Mine and Follows Community Guidelines." />
+                                     <Checkbox id="guidelines" color="info"
+                                               label="I Verify This Work is Mine and Follows Community Guidelines."/>
 
-                                     <Button variant="outlined" color="neutral" onClick={() => {
+                                     {!view && <Button variant="outlined" color="neutral" onClick={() => {
                                          setView(true);
-                                     }}>Preview</Button>
+                                     }}>Preview</Button>}
+                                     {view && <Button variant="outlined" color="neutral"
+                                                      onClick={() => setView(false)}>Edit</Button>}
                                      <TwineButton name="Save Draft"
-                                                  icon="/icons/purple_checkmark.svg" action={(e) => {makeEpisode(false)}}></TwineButton>
+                                                  icon="/icons/purple_checkmark.svg" action={(e) => {
+                                         makeEpisode(false)
+                                     }}></TwineButton>
                                      <TwineButton name="Create Chapter" icon="/icons/green_plus.svg"
-                                                  color="green" action={(e) => {makeEpisode(true)}}></TwineButton>
+                                                  color="green" action={(e) => {
+                                         makeEpisode(true)
+                                     }}></TwineButton>
 
 
                                  </Box>
@@ -341,19 +385,64 @@ function CreateChapter(props: CreateChapterProps) {
         return compoundedElements;
     }
 
-    function makeEpisode(published: boolean) {
+    async function checkCollaborators(): Promise<Map<User, number>> {
+        const collabUsernames: HTMLCollectionOf<Element> = document.getElementsByClassName('usernameTopLeftCollab');
+        const collabValues: HTMLCollectionOf<Element> = document.getElementsByClassName('profitPercentTopRightCollab');
+        let usernames: string[] = [];
+        let values: number[] = [];
+
+        Array.from(collabUsernames).forEach((elem: Element) => {
+            usernames.push(elem.value);
+        });
+
+        Array.from(collabValues).forEach((elem: Element) => {
+            values.push(parseInt(elem.value));
+        })
+
+        const sum: number = values.reduce((partial, curr) => partial + curr, 0);
+        if (sum !== 100) {
+            // TODO: Make this a snackbar
+            console.log('invalid percent sum');
+            return null;
+        }
+
+        let users: User[] = [];
+        for (let i = 0; i < usernames.length; i++) {
+            if (usernames[i] === '') {
+                console.log('invalid username');
+                return null;
+            }
+            const response = await genericGet('/api/user/name/' + usernames[i])
+            if (response) {
+                users.push(response);
+            } else {
+                console.log('invalid username');
+                return null;
+            }
+        }
+
+        // Map the users to their respective profit splits
+        let profitSplitMap: Map<User, number> = new Map();
+        for (let i = 0; i < users.length; i++) {
+            profitSplitMap.set(users[i], values[i]);
+        }
+        return profitSplitMap;
+    }
+
+    async function makeEpisode(published: boolean) {
         const title: HTMLInputElement = document.getElementById("title") as HTMLInputElement;
         const mature: HTMLInputElement = document.getElementById("mature") as HTMLInputElement;
         const guidelines: HTMLInputElement = document.getElementById("guidelines") as HTMLInputElement;
         const endOfChapterMessage: HTMLInputElement = document.getElementById("endOfChapterMessage") as HTMLInputElement;
         const publishStamp = published ? new Date() : null;
-        if (title.value && guidelines.checked) {
+        const profitSplitMap = await checkCollaborators();
+        if (title.value && guidelines.checked && profitSplitMap) {
             let newEpisode: Episode = {
                 work: work,
                 title: title.value,
                 cover: 'cover',
                 content: reformatContent(false).join(CHAPTER_DELIMETER),
-                url: title.value + "-" + uuidv4(),
+                url: work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase(),
                 endOfChapterMessage: endOfChapterMessage.value,
                 mature: mature.checked,
                 flags: 0,
@@ -361,8 +450,29 @@ function CreateChapter(props: CreateChapterProps) {
                 published: published,
             };
 
-            episodeAdd(newEpisode, (episode) => {
+            let response = await genericPost("/api/episode/add", newEpisode)
+            if (response) {
+                console.log("got response back ", response);
+            } else {
                 console.log("Your title is the same as one of your existing chapters. Please choose a different chapter name.");
+                return;
+            }
+            newEpisode.id = response;
+
+            // Iterate through the map and create a profit split for each user
+            profitSplitMap.forEach((value, user) => {
+                let newProfitSplit: ProfitSplit = {
+                    episode: newEpisode,
+                    creator: user,
+                    percentage: value,
+                }
+                genericPost("/api/profitSplit/add", newProfitSplit).then((response) => {
+                    if (response) {
+                        console.log("success");
+                    } else {
+                        console.log("failure");
+                    }
+                });
             });
         }
     }

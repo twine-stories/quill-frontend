@@ -13,16 +13,21 @@ interface InputProps {
     multiline?: boolean;
     sx?: object;
     onChange?: (elem: React.ChangeEvent<HTMLInputElement>) => void;
+    disabled?: boolean;
+    type?: string;
 }
 
 function TwineInput(props: InputProps) {
+    let startDecoratorVal = props.startDecorator && (props.startDecorator.includes("/") ? <img src={props.startDecorator}/> : props.startDecorator)
+    let endDecoratorVal = props.endDecorator && (props.endDecorator.includes("/") ? <img src={props.endDecorator}/> : props.endDecorator)
     if (props.multiline) {
         return (
             <FormControl id={props.id}>
                 <FormLabel>{props.label}</FormLabel>
                 <Textarea
-                    startDecorator={props.startDecorator && <img src={props.startDecorator}/>}
-                    endDecorator={props.endDecorator && <img src={props.endDecorator}/>}
+                    disabled={props.disabled}
+                    startDecorator={props.startDecorator && startDecoratorVal}
+                    endDecorator={props.endDecorator && endDecoratorVal}
                     placeholder={props.placeholder} defaultValue={props.defaultValue}
                     sx={props.sx}
                     onChange={props.onChange}/>
@@ -34,8 +39,10 @@ function TwineInput(props: InputProps) {
                 <FormLabel>{props.label}</FormLabel>
                 <Input
                     color='brown'
-                    startDecorator={props.startDecorator && <img src={props.startDecorator}/>}
-                    endDecorator={props.endDecorator && <img src={props.endDecorator}/>}
+                    type={props.type && props.type}
+                    disabled={props.disabled}
+                    startDecorator={props.startDecorator && startDecoratorVal}
+                    endDecorator={props.endDecorator && endDecoratorVal}
                     placeholder={props.placeholder} defaultValue={props.defaultValue}
                     sx={props.sx}
                     onChange={props.onChange}
