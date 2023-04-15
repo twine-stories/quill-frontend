@@ -9,7 +9,7 @@ import Sheet from "@mui/joy/Sheet";
 import TwineInput from "../components/TwineInput.tsx";
 import TwineButton from "../components/TwineButton.tsx";
 import ReactMarkdown from 'https://esm.sh/react-markdown@7'
-import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants";
+import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants.ts";
 
 function Chapter() {
 

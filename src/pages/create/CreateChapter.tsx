@@ -26,7 +26,7 @@ import TwineButton from "../../components/TwineButton.tsx";
 import {episodeAdd, workAdd, workGetByUrl} from "../../utils/api.ts";
 import ReactMarkdown from 'https://esm.sh/react-markdown@7'
 import { v4 as uuidv4 } from 'uuid';
-import {CHAPTER_DELIMETER} from "../../utils/constants";
+import {CHAPTER_DELIMETER} from "../../utils/constants.ts";
 
 enableMapSet();
 
