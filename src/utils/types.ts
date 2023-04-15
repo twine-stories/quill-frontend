@@ -93,3 +93,10 @@ export type Follow = {
     follower: User;
     followee: User;
 }
+
+export type ImageUpload = {
+    name: string;
+    file: File;
+    preview: string;
+    openUpload: boolean;
+}
