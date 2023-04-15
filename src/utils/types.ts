@@ -93,3 +93,9 @@ export type Follow = {
     follower: User;
     followee: User;
 }
+
+export type Like = {
+    id?: number;
+    user: User;
+    episode: Episode;
+}
