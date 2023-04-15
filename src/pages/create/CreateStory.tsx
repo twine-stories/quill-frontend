@@ -74,7 +74,14 @@ function CreateStory(props: CreateStoryProps) {
     }
 
     const prepareAndUpload = async (uploadType: string) => {
-        if ((uploadType !== 'cover' && uploadType !== 'banner') || !banner.file || !cover.file) {
+        if (uploadType !== 'cover' && uploadType !== 'banner') {
+            return;
+        }
+
+        if (uploadType === 'cover' && !cover.file) {
+            return;
+        }
+        if (uploadType === 'banner' && !banner.file) {
             return;
         }
 
@@ -283,14 +290,14 @@ function CreateStory(props: CreateStoryProps) {
         const publishStamp = published ? new Date() : null;
         const id = currentWork ? currentWork['id'] : null;
         
-        if (title.value && description.value && hook.value && genre1.textContent && cover.name) {
+        if (title.value && description.value && hook.value && genre1.textContent && (cover.name || (work && work.cover))) {
             let newWork: Work = {
                 id: id,
                 creator: user,
                 title: title.value,
                 description: description.value,
-                cover: cover.name,
-                banner: banner.name,
+                cover: cover.name ? cover.name : work.cover,
+                banner: banner.name ? banner.name : (work ? work.banner : null),
                 genre1: genre1.textContent.toUpperCase(),
                 genre2: genre2.textContent.toUpperCase(),
                 genre3: genre3.textContent.toUpperCase(),
@@ -315,8 +322,12 @@ function CreateStory(props: CreateStoryProps) {
             setUploading(true);
             const response = await genericPost("/api/work/" + urlModifier, work);
             if (response) {
-                await prepareAndUpload('cover');
-                await prepareAndUpload('banner');
+                if (cover.file) {
+                    await prepareAndUpload('cover');
+                }
+                if (banner.file) {
+                    await prepareAndUpload('banner');
+                }
                 setUploading(false);
                 navigate("/story/" + work.url);
             } else {

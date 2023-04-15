@@ -1,3 +1,17 @@
-.homeGridContainer:hover {
-    justify-content: flex-start;
+.home-slot h6 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+}
+
+.home-slot .full-hook {
+    -webkit-line-clamp: 18;
+}
+
+.home-cover {
+    border-radius: 15px;
+    object-fit: cover;
 }
