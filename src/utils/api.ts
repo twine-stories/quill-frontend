@@ -17,6 +17,7 @@ export const genericGet = async (endpoint: string): Promise<object | null> => {
     return null;
 }
 
+
 export const genericPost = async (endpoint: string, requestBody: object): Promise<object | null> => {
     const response = await axios.post(endpoint, requestBody);
     if (response.status === 200) {
