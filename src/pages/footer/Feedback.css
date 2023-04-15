@@ -1,0 +1,27 @@
+#feedback-upload-wrapper {
+    margin-bottom: 10px;
+    background: #14100E;
+    border-radius: 20px;
+    padding: 25px;
+    padding-top: 10px;
+    padding-bottom: 35px;
+    margin-top: 20px;
+}
+
+#feedback-upload-wrapper h3 {
+    font-size: 22px;
+}
+
+#feedback-image-upload {
+    width: 45vw;
+    height: 35vw;
+    border-radius: 15px;
+    border: 1px #241D19 dashed;
+}
+
+#feedback-image-upload #feedback-upload {
+    width: 42vw;
+    height: 32vw;
+    object-fit: contain;
+    border-radius: 15px;
+}

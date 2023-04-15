@@ -18,6 +18,7 @@ function GenericProfile() {
     const { username } = useParams();
     // Get user from params
     const [user, setUser] = useState<User>();
+    const [isFollowing, setIsFollowing] = useState<boolean>(false);
 
     const viewingUser: User = context['user'];
 
@@ -46,19 +47,39 @@ function GenericProfile() {
                     console.error(error);
                 });
         }
+
+        if (viewingUser && user) {
+            genericGet('/api/follow/isFollowing/' + viewingUser.userName + '/' + user.userName).then((response: any) => {
+                if (response) {
+                    setIsFollowing(true);
+                } else {
+                    setIsFollowing(false);
+                }
+            });
+        }
+
     }, [user]);
 
-    let navigate = useNavigate();
 
     const follow = () => {
         if (user && viewingUser) {
+            
             const follow: Follow = {
                 follower: viewingUser,
                 followee: user
             }
-            genericPost("/api/follow/follow/", follow).then((response: Follow) => {
-                console.log(response);
-            });
+
+            if(isFollowing) {
+
+                genericPost("/api/follow/unfollow/", follow).then((response: any) => {
+                    setIsFollowing(false);
+                });
+            }
+            else {
+                genericPost("/api/follow/follow/", follow).then((response: any) => {
+                    setIsFollowing(true);
+                });
+            }
         }
     }
 
@@ -81,7 +102,7 @@ function GenericProfile() {
                         <h2 >@{user && user.userName}</h2>
                         <h1 >{user && user.firstName} {user && user.lastName}</h1>
                         <div className="edit-notif">
-                            <Button href="/edit-profile" className="edit-profile-btn" onClick={follow}>Follow</Button>
+                            <Button className = "edit-profile-btn" onClick={follow}>{isFollowing ? "Unfollow" : "Follow"}</Button>
                             <Button className="notif-btn">Bell</Button>
                         </div>
                         <p > {user && user.description}</p>

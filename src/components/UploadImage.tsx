@@ -6,22 +6,22 @@ import TwineInput from "./TwineInput.tsx";
 import { Modal, Sheet, Typography, Grid, CircularProgress } from "@mui/joy";
 
 interface UploaderProps {
-    loading: boolean;
     open: boolean;
     close: () => Promise<void>;
     handleUpload: (file: File) => Promise<void>;
     circle: boolean;
     width: string;
     height: string;
+    contain?: boolean;
 }
 function UploadImage({
-    loading,
     open,
     close,
     handleUpload,
     circle,
     width,
-    height
+    height,
+    contain
 }: UploaderProps) {
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -77,12 +77,12 @@ function UploadImage({
                                 borderRadius: circle ? '50%' : '15px',
                                 width: width,
                                 height: height,
-                                objectFit: 'cover'
+                                objectFit: contain ? 'contain' : 'cover'
                             }}/>}
                         </Grid>
                     </Grid>
                     <Grid>
-                        <TwineButton sx={{width: '130px'}} name={loading ? <CircularProgress color='darkpurple' variant='plain' /> : 'Upload'} action={() => {
+                        <TwineButton sx={{width: '130px'}} name='Upload' action={() => {
                             if (!selectedFile) {
                                 return;
                             }

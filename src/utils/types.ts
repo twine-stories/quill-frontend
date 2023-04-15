@@ -94,3 +94,24 @@ export type Follow = {
     follower: User;
     followee: User;
 }
+
+export type ImageUpload = {
+    name: string;
+    file: File;
+    preview: string;
+    openUpload: boolean;
+
+}
+
+export type Like = {
+    id?: number;
+    liker: User;
+    episode: Episode;
+}
+
+export type Comment = {
+    id?: number;
+    commenter: User;
+    episode: Episode;
+    content: string;
+}
