@@ -11,6 +11,8 @@ import { FEEDBACK_IMGS_BUCKET } from "../../config.ts";
 import UploadImage from "../../components/UploadImage.tsx";
 import { User, Feedback, ImageUpload } from '../../utils/types.ts';
 import {v4 as uuidv4} from 'uuid';
+import SuccessPopup from '../../components/SuccessPopup.tsx';
+import ErrorPopup from '../../components/ErrorPopup.tsx';
 
 function FeedbackPage() {
     const [feedbackImg, setFeedbackImg] = useState<ImageUpload>({
@@ -19,6 +21,8 @@ function FeedbackPage() {
         preview: '',
         openUpload: false
     });
+    const [openSuccess, setOpenSuccess] = useState<boolean>(false);
+    const [openFail, setOpenFail] = useState<boolean>(false);
 
     const context: object = useContext(UserContext);
     const user: User = context['user'];
@@ -93,6 +97,7 @@ function FeedbackPage() {
                             const desc: string = (document.getElementById('feedbackDesc') as HTMLInputElement).value;
                             const subj: string = (document.getElementById('feedbackSubj') as HTMLInputElement).value;
                             if (!desc || !subj) {
+                                setOpenFail(true);
                                 return;
                             }
 
@@ -105,7 +110,11 @@ function FeedbackPage() {
                             };
                             genericPost('/api/feedback/submit', feedback).then(response => {
                                 if (feedbackImg.file) {
-                                    sendToS3(FEEDBACK_IMGS_BUCKET, feedbackImg.name, feedbackImg.file);
+                                    sendToS3(FEEDBACK_IMGS_BUCKET, feedbackImg.name, feedbackImg.file).then(() => {
+                                        setOpenSuccess(true);
+                                    });
+                                } else {
+                                    setOpenSuccess(true);
                                 }
                             });
                         }} />
@@ -113,6 +122,8 @@ function FeedbackPage() {
                     <Grid container alignItems='center' justifyContent='space-around' xs={11}>
                         <Typography level='h6' sx={{fontFamily: 'Twine'}}>thank you!</Typography>
                     </Grid>
+                    <SuccessPopup isOpen={openSuccess} onClose={() => setOpenSuccess(false)} />
+                    <ErrorPopup isOpen={openFail} onClose={() => setOpenFail(false)} message='Error submitting feedback. Please ensure you have entered a subject and description.'/>
                 </Grid>
             </Grid>
             :

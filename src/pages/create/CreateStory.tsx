@@ -21,6 +21,7 @@ import UploadImage from '../../components/UploadImage.tsx';
 import { STORY_IMGS_BUCKET } from '../../config.ts';
 import { STORY_COVER_PATH, STORY_BANNER_PATH, sendToS3 } from '../../utils/aws.ts';
 import {v4 as uuidv4} from 'uuid';
+import ErrorPopup from '../../components/ErrorPopup.tsx';
 
 enableMapSet();
 
@@ -52,6 +53,9 @@ function CreateStory(props: CreateStoryProps) {
     const [uploading, setUploading] = useState<boolean>(false);
     const [createClicked, setCreateClicked] = useState<boolean>(false);
     const [draftClicked, setDraftClicked] = useState<boolean>(false);
+
+    const [errorMessage, setErrorMessage] = useState<string>('Error creating story.');
+    const [openError, setOpenError] = useState<boolean>(false);
 
     const context: object = useContext(UserContext);
     const user: User = context['user'];
@@ -242,13 +246,17 @@ function CreateStory(props: CreateStoryProps) {
                                              <TwineButton name={uploading && draftClicked ? <CircularProgress color='darkpurple' variant='plain' /> : "Save Draft"} icon="/icons/purple_checkmark.svg"
                                                           action={(e) => {
                                                             setDraftClicked(true);
-                                                            postStory(getStory(false));
+                                                            postStory(getStory(false)).then(() => {
+                                                                setDraftClicked(false);
+                                                            });
                                                         }}></TwineButton>
                                              <TwineButton
                                                  name={uploading && createClicked ? <CircularProgress color='darkpurple' variant='plain' /> : 'Create Story'} color="green" icon="/icons/green_plus.svg"
                                                  action={(e) => {
                                                     setCreateClicked(true);
-                                                    postStory(getStory(true));
+                                                    postStory(getStory(true)).then(() => {
+                                                        setCreateClicked(false);
+                                                    });
                                                 }}/>
                                          </>
                                      }
@@ -263,6 +271,7 @@ function CreateStory(props: CreateStoryProps) {
                                                  action={(e) => goBack()}/>
                                          </>
                                      }
+                                     <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message={errorMessage} />
                                  </Box>
                              }
             />
@@ -308,10 +317,10 @@ function CreateStory(props: CreateStoryProps) {
                 published: published,
             }
 
-            console.log(newWork)
-
             return newWork;
         }
+        setErrorMessage('Please make sure you have filled out all the fields before submitting.');
+        setOpenError(true);
         return null;
     }
 
@@ -320,19 +329,22 @@ function CreateStory(props: CreateStoryProps) {
             let urlModifier = props.edit ? "update" : "add";
 
             setUploading(true);
-            const response = await genericPost("/api/work/" + urlModifier, work);
-            if (response) {
-                if (cover.file) {
-                    await prepareAndUpload('cover');
+            try {
+                const response = await genericPost("/api/work/" + urlModifier, work);
+                if (response) {
+                    if (cover.file) {
+                        await prepareAndUpload('cover');
+                    }
+                    if (banner.file) {
+                        await prepareAndUpload('banner');
+                    }
+                    setUploading(false);
+                    navigate("/story/" + work.url);
                 }
-                if (banner.file) {
-                    await prepareAndUpload('banner');
-                }
+            } catch (error) {
+                setErrorMessage('Your title is the same as one of your existing titles. Please choose a different title.');
                 setUploading(false);
-                navigate("/story/" + work.url);
-            } else {
-                setUploading(false);
-                console.log("Your title is the same as one of your existing titles. Please choose a different title.");
+                setOpenError(true);
             }
         }
     }
