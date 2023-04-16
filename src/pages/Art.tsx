@@ -26,9 +26,8 @@ function Art() {
         <div>
             <Navbar />
             <Grid container direction='column' alignItems='center' justifyContent='space-around'>
-                {env === 'dev' ? collListings : 
-                    <Typography level='h2' color='purple'>Digital Art Marketplace Coming Soon!</Typography>
-                }
+                <Typography level='h2' color='purple'>Digital Art Marketplace Coming Soon!</Typography>
+                {env === 'dev' && collListings}
             </Grid>
         </div>
     );

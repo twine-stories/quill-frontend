@@ -52,6 +52,12 @@ declare module '@mui/joy/CircularProgress' {
     }
 }
 
+declare module '@mui/joy/Menu' {
+    interface MenuPropsColorOverrides {
+        green: true;
+    }
+}
+
 export const theme = extendTheme({
     components: {
         JoyTypography: {
@@ -270,6 +276,10 @@ export const theme = extendTheme({
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({
                     ...({
+                        background: '#14100E',
+                        border: 'none',
+                    }),
+                    ...(ownerState.color === 'green' && {
                         background: '#14100E',
                         border: 'none',
                     }),
