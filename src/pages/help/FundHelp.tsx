@@ -12,7 +12,7 @@ function FundHelp() {
                 <Grid xs={11}><Typography level='h2' color='purple'>Fund Your Wallet with Debit</Typography></Grid>
                 <Grid xs={10} className='help-content'>
                     <Grid>
-                        <Typography level='h5'>Step 1: Go to <a href='https://global.transak.com/' target='_blank'>https://global.transak.com/</a></Typography>
+                        <Typography level='h5'>Step 1: Go to <a href='https://global.transak.com/' target='_blank'>global.transak.com</a></Typography>
                     </Grid>
 
                     <Grid>
