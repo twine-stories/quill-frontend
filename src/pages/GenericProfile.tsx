@@ -6,9 +6,14 @@ import { User, Follow } from '../utils/types.ts';
 import ProfileWork from '../components/ProfileWork.tsx';
 import "../components/ProfileSidebar.tsx"
 import ProfileSidebar from '../components/ProfileSidebar.tsx';
-import {Button} from "@mui/joy";
+import {Button, Typography, Stack} from "@mui/joy";
 import { genericGet, genericPost } from '../utils/api.ts';
 import { PROFILE_IMGS_BUCKET } from '../config.ts';
+import IconButton from '../components/IconButton.tsx';
+import TwineButton from '../components/TwineButton.tsx';
+import RegisterCreator from '../components/RegisterCreator.tsx';
+import './GenericProfile.css';
+import GalleryTile from '../components/GalleryTile.tsx';
 
 const axios = require('axios').default;
 
@@ -21,6 +26,14 @@ function GenericProfile() {
     const [isFollowing, setIsFollowing] = useState<boolean>(false);
 
     const viewingUser: User = context['user'];
+
+    let navigate = useNavigate();
+
+
+    const goTo = async (link: string): Promise<void> => {
+        window.open(link, '_blank');
+    }
+
 
     useEffect(() => {
         genericGet('/api/user/name/' + username).then((response: User) => {
@@ -89,7 +102,7 @@ function GenericProfile() {
             <Navbar />
             <div className="profile-page">
                 <div className="profile-info">
-                <img
+                    <img
                         src = {user && 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/'+user.profileImg}
                         alt = ""
                         width = "128"
@@ -97,19 +110,42 @@ function GenericProfile() {
                         onError={e => {
                             e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg'
                         }}
+                        className='profile-pic'
                     />
                     <div className="name-username">
-                        <h2 >@{user && user.userName}</h2>
-                        <h1 >{user && user.firstName} {user && user.lastName}</h1>
+                        <Typography color='white' level='h4'>@{user && user.userName}</Typography>
+                        <Typography color='purple' level='h1'>{user && user.firstName} {user && user.lastName}</Typography>
                         <div className="edit-notif">
-                            <Button className = "edit-profile-btn" onClick={follow}>{isFollowing ? "Unfollow" : "Follow"}</Button>
-                            <Button className="notif-btn">Bell</Button>
+                            <TwineButton icon='/icons/Union.svg' action={follow} color="purple" name={isFollowing ? "Unfollow" : "Follow"} sx={{width:'85%', marginLeft:'0px'}} />
+                            <TwineButton icon='/icons/bell.svg' color="darkpurple" name="" sx={{width:'15%'}} name="0" />
                         </div>
-                        <p > {user && user.description}</p>
+                        <Typography color='white' level='h6'>{user && user.description}</Typography>
+                        <div className="socials">
+                        <Stack direction="row" spacing = {2} alignItems= "center" sx={{marginTop: '15px'}} >
+                            {user && user.website && <IconButton color='darkpurple' icon='/icons/socials/website.svg' action={() => goTo(user.website as string)} />}
+                            {user && user.twitter && <IconButton color='darkpurple' icon='/icons/socials/twitter.svg' action={() => goTo(user.twitter as string)} />}
+                            {user && user.instagram && <IconButton color='darkpurple' icon='/icons/socials/instagram.svg' action={() => goTo(user.instagram as string)} />}
+                            {user && user.reddit && <IconButton color='darkpurple' icon='/icons/socials/reddit.svg' action={() => goTo(user.reddit as string)} />}
+                            {user && user.discord && <IconButton color='darkpurple' icon='/icons/socials/discord.svg' action={() => goTo(user.discord as string)} />}
+                        </Stack>
+                        </div>
                     </div>
-                    <ProfileSidebar />
+                    
                 </div>
+                <div className="works">
+                    <div className="works-header">
+                        <Typography color='purple' level='h2'>Works</Typography>
+                    </div>
+                    <div className="works-list">
+                        {works && works.map((work) => {
+                            return <GalleryTile work={work.props.work} story={true} />
+                        })}
+                    </div>
+                </div>
+
+                
             </div>
+
 
             
         </div>
