@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from 'react';
 import useState from 'react-usestateref'
 import Navbar from "../../components/Navbar.tsx";
 import {UserContext} from "../../App.tsx";
-import {User, Episode, Work, ProfitSplit} from '../../utils/types.ts';
+import {User, Episode, Work, ProfitSplit, ImageUpload} from '../../utils/types.ts';
 import styled from "styled-components";
 import {
     AspectRatio,
@@ -10,7 +10,7 @@ import {
     Button,
     Card, Checkbox,
     FormControl, FormHelperText,
-    FormLabel,
+    FormLabel, Grid,
     IconButton,
     Input,
     Stack, Switch,
@@ -29,6 +29,9 @@ import {v4 as uuidv4} from 'uuid';
 import {CHAPTER_DELIMETER, MAX_COLLABORATORS} from "../../utils/constants.ts";
 import Collaborator from "../../components/Collaborator.tsx";
 import {CollaboratorContext} from "./Create.tsx";
+import {STORY_IMGS_BUCKET} from "../../config";
+import {STORY_BANNER_PATH} from "../../utils/aws";
+import UploadImage from "../../components/UploadImage.tsx";
 
 enableMapSet();
 
@@ -132,10 +135,11 @@ function CreateChapter(props: CreateChapterProps) {
         setResultMap(newResultMap => {
             newResultMap.set(counter, "");
         });
-        setInputList(inputList.concat(<Textarea
+        setInputList(inputList.concat(
+            <Textarea
                 key={counter}
                 placeholder="Type in here…"
-                value={resultMap.get(counter)}
+                // value={resultMap.get(counter)}
                 onChange={(event) => {
                     setResultMap(newResultMap => {
                         newResultMap.set(counter, event.target.value);
@@ -168,18 +172,75 @@ function CreateChapter(props: CreateChapterProps) {
 
     function onAddImageButtonClick() {
         setResultMap(newResultMap => {
-            newResultMap.set(counter, "img");
+            newResultMap.set(counter, {
+                name: '',
+                preview: '',
+                file: null,
+                openUpload: false
+            });
         });
         setInputList(inputList.concat(
-            <Card key={counter} variant="outlined" color="neutral" sx={{width: 320}}>
-                <AspectRatio minHeight="120px" maxHeight="200px" sx={{my: 2}}>
-                    <img
-                        src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-                        srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
-                        loading="lazy"
-                        alt=""
+            <Card key={counter} variant="outlined" color="neutral">
+                {/*<AspectRatio minHeight="120px" maxHeight="200px" sx={{my: 2}}>*/}
+                {/*    <img*/}
+                {/*        src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"*/}
+                {/*        srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"*/}
+                {/*        loading="lazy"*/}
+                {/*        alt=""*/}
+                {/*    />*/}
+                {/*</AspectRatio>*/}
+
+                {/*src = {resultMap.get(counter).preview ? resultMap.get(counter).preview : 'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + STORY_BANNER_PATH + (work ? work.banner : banner.name)}*/}
+
+                <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' className='create-image-upload'>
+                    <Typography level="h3" color='purple'>GOOD LUCK TO ME</Typography>
+                    <Grid container alignItems='center' justifyContent='center' xs={12}>
+                        <Grid container alignItems='center' justifyContent='center' id='create-chapter-img-wrapper'>
+                            {(resultMap.get(counter) && resultMap.get(counter).preview) ?
+                                <img
+                                    src = {resultMap.get(counter).preview}
+                                    alt = ""
+                                    onClick = {() => setResultMap(newResultMap => {
+                                        newResultMap.set(counter, {...resultMap.get(counter), openUpload: true});
+                                    })}
+                                    id='create-chapter-img'
+                                />
+                                :
+                                <TwineButton icon='/icons/purple_plus_light.svg' name='Upload' color='darkpurple' action={() => {
+                                    console.log("king kong")
+                                    console.log(resultMap)
+                                    console.log(resultMap.get(counter))
+                                    setResultMap(newResultMap => {
+                                        newResultMap.set(counter, {...resultMap.get(counter), openUpload: true});
+                                    })
+                                }} />
+                            }
+                        </Grid>
+                    </Grid>
+                    <UploadImage
+                        open={resultMap.get(counter) && resultMap.get(counter).openUpload}
+                        close={() => setResultMap(newResultMap => {
+                            newResultMap.set(counter, {...resultMap.get(counter), openUpload: false});
+                        })}
+                        handleUpload={(selectedFile: File) => {
+                            let imgName = uuidv4() + "." + selectedFile.name.split('.').pop();
+
+                            let uploadObj: ImageUpload = {
+                                name: imgName,
+                                preview: URL.createObjectURL(selectedFile),
+                                file: selectedFile,
+                                openUpload: false
+                            };
+
+                            setResultMap(newResultMap => {
+                                newResultMap.set(counter, uploadObj);
+                            })}
+                        }
+                        circle={false}
+                        width='440px'
+                        height='100px'
                     />
-                </AspectRatio>
+                </Grid>
                 <Box sx={{ml: 'auto'}}>
                     <IconButton onClick={function () {
                         moveItemUp(counter)
