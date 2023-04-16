@@ -9,6 +9,7 @@ import { genericGet } from '../utils/api.ts';
 function FirstLogin() {
     const [canSubmit, setCanSubmit] = useState<boolean>(false);
     const [openUserTaken, setOpenUserTaken] = useState<boolean>(false);
+    const [openIncomplete, setOpenIncomplete] = useState<boolean>(false);
 
     const context: object = useContext(UserContext);
     const sendRequest = context['addUser'];
@@ -32,6 +33,7 @@ function FirstLogin() {
             }}
             >
                 <ErrorPopup isOpen={openUserTaken} onClose={() => setOpenUserTaken(false)} message='Username is taken!' />
+                <ErrorPopup isOpen={openIncomplete} onClose={() => setOpenIncomplete(false)} message='Please fill out all fields!' />
                 <Typography level='h2' color='green'>Create an Account</Typography>
                 <Grid sx={{marginLeft: '30px', marginBottom: '30px'}}>
                     <TwineInput label='first name' placeholder='Enter first name...' inputAttrs={{id: 'firstNameInput'}} />
@@ -61,6 +63,8 @@ function FirstLogin() {
                                     setOpenUserTaken(true);
                                 }
                             });
+                        } else {
+                            setOpenIncomplete(true)
                         }
                     }} name='Create Account' />
                 </Grid>
