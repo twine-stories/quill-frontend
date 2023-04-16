@@ -23,7 +23,7 @@ import Sheet from '@mui/joy/Sheet';
 import TwineInput from "../../components/TwineInput.tsx";
 import TwoColumnLayout from "../../components/TwoColumnLayout.tsx";
 import TwineButton from "../../components/TwineButton.tsx";
-import {episodeAdd, genericGet, genericPost, workAdd, workGetByUrl} from "../../utils/api.ts";
+import {episodeAdd, episodeGetByUrl, genericGet, genericPost, workAdd, workGetByUrl} from "../../utils/api.ts";
 import ReactMarkdown from 'https://esm.sh/react-markdown@7'
 import {v4 as uuidv4} from 'uuid';
 import {CHAPTER_DELIMETER, MAX_COLLABORATORS} from "../../utils/constants.ts";
@@ -42,6 +42,7 @@ interface CreateChapterProps {
 function CreateChapter(props: CreateChapterProps) {
     const context: object = useContext(UserContext);
     const user: User = context['user'];
+    const [chapter, setChapter] = useState<Episode>([]);
 
     const [inputList, setInputList, inputListRef] = useState<JSX.Element[]>([]);
     const [resultMap, setResultMap] = useImmer(new Map());
@@ -66,6 +67,14 @@ function CreateChapter(props: CreateChapterProps) {
             }
         }
     }, [user]);
+
+    useEffect(() => {
+        if (user && props.edit) {
+            episodeGetByUrl(window.location.href.split('/')[5], setChapter, () => {
+                console.log('fail');
+            });
+        }
+    }, [props.edit, user]);
 
 
     const removeCollaborator = (id: number): void => {
@@ -265,9 +274,7 @@ function CreateChapter(props: CreateChapterProps) {
             <Navbar/>
             <TwoColumnLayout leftComponent={
                 <div>
-                    <Typography level="h2" sx={{color: "#9E9FEB"}}>
-                        Create Chapter
-                    </Typography>
+                    <Typography level="h2" color='purple'>{props.edit ? "Edit Chapter" : "Create Chapter"}</Typography>
 
                     {view &&
                         <div>
@@ -310,8 +317,8 @@ function CreateChapter(props: CreateChapterProps) {
                             </FormControl>
 
 
-                            <TwineInput id="title" label="Chapter Title" placeholder="Enter Chapter Title..."/>
-
+                            {(!props.edit || chapter) &&
+                                <TwineInput defaultValue={(props.edit) ? chapter['title'] : ""} id="title" label="Chapter Title" placeholder="Enter Chapter Title..."/>}
                             <Stack
                                 alignItems="center"
                                 spacing={0.5}
