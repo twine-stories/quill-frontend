@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, createContext} from 'react';
 import useState from 'react-usestateref'
 import Navbar from "../../components/Navbar.tsx";
 import {UserContext} from "../../App.tsx";
@@ -29,15 +29,17 @@ import {v4 as uuidv4} from 'uuid';
 import {CHAPTER_DELIMETER, MAX_COLLABORATORS} from "../../utils/constants.ts";
 import Collaborator from "../../components/Collaborator.tsx";
 import {CollaboratorContext} from "./Create.tsx";
-import {STORY_IMGS_BUCKET} from "../../config";
-import {STORY_BANNER_PATH} from "../../utils/aws";
-import UploadImage from "../../components/UploadImage.tsx";
+import InputListItem from '../../components/InputListItem.tsx';
+import { sendToS3 } from '../../utils/aws.ts';
+import { CHAPTER_IMGS_BUCKET } from "../../config.ts";
 
 enableMapSet();
 
 interface CreateChapterProps {
     edit?: boolean;
 }
+
+export const ChapterContext = createContext(null as any);
 
 function CreateChapter(props: CreateChapterProps) {
     const context: object = useContext(UserContext);
@@ -50,6 +52,7 @@ function CreateChapter(props: CreateChapterProps) {
     const [work, setWork] = useState<Work>(null);
 
     const [collaborators, setCollaborators] = useState<JSX.Element[]>([]);
+    const [preview, setPreview] = useState<JSX.Element[]>([]);
 
     useEffect(() => {
         if (user) {
@@ -66,6 +69,14 @@ function CreateChapter(props: CreateChapterProps) {
             }
         }
     }, [user]);
+
+    useEffect(() => {
+        if (view) {
+            reformatContent(true).then((response: JSX.Element[]) => {
+                setPreview(response);
+            });
+        }
+    }, [view]);
 
 
     const removeCollaborator = (id: number): void => {
@@ -179,83 +190,9 @@ function CreateChapter(props: CreateChapterProps) {
                 openUpload: false
             });
         });
+
         setInputList(inputList.concat(
-            <Card key={counter} variant="outlined" color="neutral">
-                {/*<AspectRatio minHeight="120px" maxHeight="200px" sx={{my: 2}}>*/}
-                {/*    <img*/}
-                {/*        src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"*/}
-                {/*        srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"*/}
-                {/*        loading="lazy"*/}
-                {/*        alt=""*/}
-                {/*    />*/}
-                {/*</AspectRatio>*/}
-
-                {/*src = {resultMap.get(counter).preview ? resultMap.get(counter).preview : 'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + STORY_BANNER_PATH + (work ? work.banner : banner.name)}*/}
-
-                <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' className='create-image-upload'>
-                    <Typography level="h3" color='purple'>GOOD LUCK TO ME</Typography>
-                    <Grid container alignItems='center' justifyContent='center' xs={12}>
-                        <Grid container alignItems='center' justifyContent='center' id='create-chapter-img-wrapper'>
-                            {(resultMap.get(counter) && resultMap.get(counter).preview) ?
-                                <img
-                                    src = {resultMap.get(counter).preview}
-                                    alt = ""
-                                    onClick = {() => setResultMap(newResultMap => {
-                                        newResultMap.set(counter, {...resultMap.get(counter), openUpload: true});
-                                    })}
-                                    id='create-chapter-img'
-                                />
-                                :
-                                <TwineButton icon='/icons/purple_plus_light.svg' name='Upload' color='darkpurple' action={() => {
-                                    console.log("king kong")
-                                    console.log(resultMap)
-                                    console.log(resultMap.get(counter))
-                                    setResultMap(newResultMap => {
-                                        newResultMap.set(counter, {...resultMap.get(counter), openUpload: true});
-                                    })
-                                }} />
-                            }
-                        </Grid>
-                    </Grid>
-                    <UploadImage
-                        open={resultMap.get(counter) && resultMap.get(counter).openUpload}
-                        close={() => setResultMap(newResultMap => {
-                            newResultMap.set(counter, {...resultMap.get(counter), openUpload: false});
-                        })}
-                        handleUpload={(selectedFile: File) => {
-                            let imgName = uuidv4() + "." + selectedFile.name.split('.').pop();
-
-                            let uploadObj: ImageUpload = {
-                                name: imgName,
-                                preview: URL.createObjectURL(selectedFile),
-                                file: selectedFile,
-                                openUpload: false
-                            };
-
-                            setResultMap(newResultMap => {
-                                newResultMap.set(counter, uploadObj);
-                            })}
-                        }
-                        circle={false}
-                        width='440px'
-                        height='100px'
-                    />
-                </Grid>
-                <Box sx={{ml: 'auto'}}>
-                    <IconButton onClick={function () {
-                        moveItemUp(counter)
-                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_up.svg"
-                                                                              width="30px" height="30px"/></IconButton>
-                    <IconButton onClick={function () {
-                        moveItemDown(counter)
-                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_down.svg"
-                                                                              width="30px" height="30px"/></IconButton>
-                    <IconButton onClick={function () {
-                        removeItem(counter)
-                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg" width="30px"
-                                                                              height="30px"/></IconButton>
-                </Box>
-            </Card>
+            <InputListItem key={counter} counter={counter} />
         ));
         setCounter(counter + 1);
     }
@@ -283,9 +220,7 @@ function CreateChapter(props: CreateChapterProps) {
                             >
                                 <Sheet sx={{width: '50%', my: 1, borderRadius: "20px",}} color="neutral"
                                        variant="outlined">
-                                    {
-                                        reformatContent(true)
-                                    }
+                                    {preview}
                                 </Sheet>
                             </Box>
                         </div>
@@ -312,12 +247,20 @@ function CreateChapter(props: CreateChapterProps) {
 
                             <TwineInput id="title" label="Chapter Title" placeholder="Enter Chapter Title..."/>
 
-                            <Stack
-                                alignItems="center"
-                                spacing={0.5}
-                                sx={{width: "100%"}}>
-                                {inputList}
-                            </Stack>
+                            <ChapterContext.Provider value={{
+                                'resultMap': resultMap,
+                                'setResultMap': setResultMap,
+                                'moveItemUp': moveItemUp,
+                                'moveItemDown': moveItemDown,
+                                'removeItem': removeItem
+                            }}>
+                                <Stack
+                                    alignItems="center"
+                                    spacing={0.5}
+                                    sx={{width: "100%"}}>
+                                    {inputList}
+                                </Stack>
+                            </ChapterContext.Provider>
 
                             <Stack
                                 direction="row"
@@ -410,25 +353,29 @@ function CreateChapter(props: CreateChapterProps) {
 
     );
 
-    function reformatContent(display: boolean) {
-        var compoundedElements = []
+    async function reformatContent(display: boolean) {
+        var compoundedElements: (string | JSX.Element)[] = [];
         for (let i = 0; i < inputListRef.current.length; i++) {
             // to convert string to number, use + in front of it for some reason 💀🗿
             let content = resultMap.get(+inputListRef.current[i]["key"])
+            // some of this logic may need to change for editing to ensure that unchanged images dont get overriden
             if (content === "!BAD!") {
                 // THIS SHOULD NEVER HAPPEN
                 // IF IT DOES, GOOD LUCK
                 console.log("good luck");
-            } else if (content.indexOf("img") !== -1) {
+            } else if (content['name'] !== undefined) {
                 if (!display) {
-                    compoundedElements.push("https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286")
+                    await sendToS3(CHAPTER_IMGS_BUCKET, content['name'], content['file']);
+                    compoundedElements.push(content['name']);
                 } else {
+                    // need to change src to pull from s3 when editing if they havent changed that image
+                    console.log(content['preview']);
                     compoundedElements.push(
                         <AspectRatio variant="plain" minHeight="120px" maxHeight="300px" objectFit="contain"
                                      sx={{my: 2}}>
                             <img
-                                src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-                                srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
+                                src={content['preview']}
+                                srcSet={content['preview'] + ' 2x'}
                                 loading="lazy"
                                 alt=""
                             />
@@ -497,12 +444,14 @@ function CreateChapter(props: CreateChapterProps) {
         const endOfChapterMessage: HTMLInputElement = document.getElementById("endOfChapterMessage") as HTMLInputElement;
         const publishStamp = published ? new Date() : null;
         const profitSplitMap = await checkCollaborators();
+
+        const allContent = await reformatContent(false);
         if (title.value && guidelines.checked && profitSplitMap) {
             let newEpisode: Episode = {
                 work: work,
                 title: title.value,
                 cover: 'cover',
-                content: reformatContent(false).join(CHAPTER_DELIMETER),
+                content: allContent.join(CHAPTER_DELIMETER),
                 url: work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase(),
                 endOfChapterMessage: endOfChapterMessage.value,
                 mature: mature.checked,

@@ -14,9 +14,27 @@ function Home() {
 
     useEffect(() => {
         genericGet('/api/work/random/3').then((response: Work[]) => {
-            setHomeWorks(response);
+            setHomeWorks(shuffle(response));
         });
     }, [toggle]);
+
+    const shuffle = (array: Work[]) => {
+        let currentIndex: number = array.length, randomIndex: number;
+      
+        // While there remain elements to shuffle.
+        while (currentIndex != 0) {
+      
+          // Pick a remaining element.
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+      
+          // And swap it with the current element.
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+        }
+      
+        return array;
+      }
 
     // change titles to Featured, Hot, and, Discover once real algos are implemented
     return (
