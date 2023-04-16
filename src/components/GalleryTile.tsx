@@ -4,7 +4,7 @@ import {AspectRatio, Card, Typography} from "@mui/joy";
 
 interface GalleryTileProps {
     work: Work;
-    coll: NFTCollection;
+    coll?: NFTCollection;
     story: boolean;
 }
 

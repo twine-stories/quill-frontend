@@ -7,8 +7,12 @@ import ProfileWork from '../components/ProfileWork.tsx';
 import './Profile.css';
 import "../components/ProfileSidebar.tsx"
 import ProfileSidebar from '../components/ProfileSidebar.tsx';
-import {Button} from "@mui/joy";
+import {Button, Stack, Typography} from "@mui/joy";
 import { PROFILE_IMGS_BUCKET } from '../config.ts';
+import IconButton from '../components/IconButton.tsx';
+import { String } from 'aws-sdk/clients/cloudhsm.js';
+import TwineButton from '../components/TwineButton.tsx';
+import RegisterCreator from '../components/RegisterCreator.tsx';
 
 const axios = require('axios').default;
 
@@ -16,6 +20,7 @@ function Profile() {
     const [works, setWorks] = useState<Array<ProfileWork>>();
     const context: object = useContext(UserContext);
     const user: User = context['user'];
+    const [openCreator, setOpenCreator] = useState<boolean>(false);
 
     useEffect(() => {
         if (user && user.creator && user.walletAddress) {
@@ -37,12 +42,38 @@ function Profile() {
         }
     }, [context['user']]);
 
+    
+
     let navigate = useNavigate();
+
+    const createNav = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        e.preventDefault();
+        console.log("clicked");
+        if (context['user']['creator']) {
+            navToCreate();
+        } else {
+            setOpenCreator(true);
+        }
+    }
+
+    const navToCreate = () => {
+        setOpenCreator(false);
+        navigate('/gallery/story/draft');
+    }
+
+    const closeCreator = (): void => {
+        setOpenCreator(false);
+    }
+
+
 
     const editProfile = () => {
         navigate('/edit-profile');
     }
 
+    const goTo = async (link: string): Promise<void> => {
+        window.open(link, '_blank');
+    }
 
     return (
         <div>
@@ -57,17 +88,28 @@ function Profile() {
                         onError={e => {
                             e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg'
                         }}
+                        className='profile-pic'
                     />
                     <div className="name-username">
-                        <h2 >@{user && user.userName}</h2>
-                        <h1 >{user && user.firstName} {user && user.lastName}</h1>
+                        <Typography color='white' level='h4'>@{user && user.userName}</Typography>
+                        <Typography color='purple' level='h1'>{user && user.firstName} {user && user.lastName}</Typography>
                         <div className="edit-notif">
-                            <Button href="/edit-profile" className="edit-profile-btn" onClick={editProfile}>Edit Profile</Button>
-                            <Button className="notif-btn">Bell</Button>
+                            <TwineButton icon='/icons/Setting.svg' action={editProfile} color="purple" name="Edit Profile" sx={{width:'85%', marginLeft:'0px'}} />
+                            <TwineButton icon='/icons/bell.svg' color="darkpurple" name="" sx={{width:'15%'}} name="0" />
                         </div>
-                        <p > {user && user.description}</p>
+                        <Typography color='white' level='h6'>{user && user.description}</Typography>
+                        <div className="socials">
+                        <Stack direction="row" spacing = {2} alignItems= "center" sx={{marginTop: '15px'}} >
+                            {user && user.website && <IconButton color='darkpurple' icon='/icons/socials/website.svg' action={() => goTo(user.website as string)} />}
+                            {user && user.twitter && <IconButton color='darkpurple' icon='/icons/socials/twitter.svg' action={() => goTo(user.twitter as string)} />}
+                            {user && user.instagram && <IconButton color='darkpurple' icon='/icons/socials/instagram.svg' action={() => goTo(user.instagram as string)} />}
+                            {user && user.reddit && <IconButton color='darkpurple' icon='/icons/socials/reddit.svg' action={() => goTo(user.reddit as string)} />}
+                            {user && user.discord && <IconButton color='darkpurple' icon='/icons/socials/discord.svg' action={() => goTo(user.discord as string)} />}
+                        </Stack>
+                        </div>
                     </div>
-                    <ProfileSidebar />
+                    <ProfileSidebar goToDrafts={createNav} />
+                    <RegisterCreator open={openCreator} close={closeCreator} updateUser={context['updateUser']} navigate={navToCreate} />
                 </div>
             </div>
 

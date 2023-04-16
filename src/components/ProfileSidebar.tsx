@@ -1,39 +1,23 @@
 import {Button} from "@mui/joy";
 import './ProfileSidebar.css';
+import TwineButton from "./TwineButton.tsx";
+import { useNavigate } from 'react-router-dom';
+    
 
-const settingStory = () => {
-    console.log("Setting Story");
-}
 
-const storyDrafts = () => {
-    console.log("Story Drafts");
-}
 
-const settingArt = () => {
-    console.log("Setting Art");
-}
 
-const artDrafts = () => {
-    console.log("Art Drafts");
-}
+const buttonStyle = {width: "100%"}
 
-const buttonStyle = {maxWidth: '150px', maxHeight: '40px', minWidth: '150px', minHeight: '40px', margin: '5px'}
+const ProfileSidebar = ({goToDrafts}) => {
 
-const ProfileSidebar = () => {
+    let navigate = useNavigate();
+
+
+
     return (
         <div className = "sidebar">
-            <Button style = {buttonStyle} onClick={function () {
-                settingStory();
-            }}>Setting Story</Button>
-            <Button style = {buttonStyle} onClick={function () {
-                storyDrafts();
-            }}>Story Drafts</Button>
-            <Button style = {buttonStyle} onClick={function () {
-                settingArt();
-            }}>Setting Art</Button>
-            <Button style = {buttonStyle} onClick={function () {
-                artDrafts();
-            }}>Art Drafts</Button>
+            <TwineButton icon='/icons/Paper.svg' name = "Drafts" action = {goToDrafts} sx = {buttonStyle} color='green' />
         </div>
     )
 }
