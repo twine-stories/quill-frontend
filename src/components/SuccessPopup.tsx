@@ -1,8 +1,7 @@
 import React from 'react';
 import {Modal, ModalDialog, ModalClose, Typography} from "@mui/joy";
-import './ErrorPopup.css';
 
-export default function ErrorPopup({isOpen, onClose, message}) {
+export default function SuccessPopup({isOpen, onClose}) {
     return (
         <Modal className = "modal" open = {isOpen} onClose = {onClose} >
             <ModalDialog
@@ -12,8 +11,7 @@ export default function ErrorPopup({isOpen, onClose, message}) {
             >
                 <ModalClose />
                 <div className="data">
-                    <Typography level='h2' color='purple'>Uh-Oh</Typography>
-                    <p>{message}</p>
+                    <Typography level='h2' color='green'>Success!</Typography>
                 </div>
                 
             </ModalDialog>

@@ -13,7 +13,6 @@ interface HomeProps {
 function HomeSlot(props: HomeProps) {
 
     const [hovering, setHovering] = useState<boolean>(false);
-    console.log(props.work);
 
     const unHoveredContent = <Grid container direction='column' alignItems='flex-start' justifyContent='flex-start' sx={{width: '250px'}}>
             {props.work && 

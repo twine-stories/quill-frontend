@@ -71,10 +71,6 @@ function App() {
             peraWallet.disconnect();
         }
         deleteCookie('session');
-        // can do better than this
-        if (window.location.pathname !== '/') {
-            window.location.replace('/');
-        }
         setUser(null);
     }
 

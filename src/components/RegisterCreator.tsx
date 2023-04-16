@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { UserContext } from "../App.tsx";
 import { User } from '../utils/types.ts';
 import TwineButton from './TwineButton.tsx';
 import TwineInput from './TwineInput.tsx';
 import { Modal, Sheet, Typography, Grid } from '@mui/joy';
 import { genericPost } from '../utils/api.ts';
+import ErrorPopup from './ErrorPopup.tsx';
 
 interface RegisterCreatorProps {
     open: boolean;
@@ -14,6 +15,7 @@ interface RegisterCreatorProps {
 }
 
 function RegisterCreator(props: RegisterCreatorProps) {
+    const [openError, setOpenError] = useState<boolean>(false);
     const context: object = useContext(UserContext);
 
     return (
@@ -38,19 +40,20 @@ function RegisterCreator(props: RegisterCreatorProps) {
                         const phone = document.getElementById('phoneInput') as HTMLInputElement;
                         if (email && phone) {
                             let newUser: User = JSON.parse(JSON.stringify(context['user']));
+                            if (!(email.value.includes('@') && email.value.includes('.'))) {
+                                setOpenError(true);
+                                return;
+                            }
+
                             newUser.email = email.value;
                             newUser.creator = true;
 
                             let phoneNumber: string = "";
                             const reg = new RegExp('^[0-9]+$');
                             for (let i = 0; i < phone.value.length; i++) {
-                                console.log(phone.value[i] + " " + reg.test(phone.value[i]));
                                 if (reg.test(phone.value[i])) {
                                     phoneNumber += phone.value[i];
                                 }
-                            }
-                            if (phoneNumber.length !== 10) {
-                                return;
                             }
 
                             newUser.phoneNumber = phoneNumber;
@@ -59,9 +62,12 @@ function RegisterCreator(props: RegisterCreatorProps) {
                                 props.updateUser(response);
                                 props.navigate();  
                             });
+                        } else {
+                            setOpenError(true);
                         }
                     }} name='Register' />
                 </Grid>
+                <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message='There was an error with one or more of the fields. Please check them and try again.' />
             </Sheet>
         </Modal>
     )

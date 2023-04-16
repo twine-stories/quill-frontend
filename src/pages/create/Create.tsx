@@ -354,11 +354,8 @@ function Create() {
                 </Stack>
 
 
-                <Typography level="h2" color='purple'>
-                    Create Art
-                </Typography>
-                <Typography level="h4" color='purple'>
-                    Coming Soon!
+                <Typography level="h2" color='purple' marginTop='30px'>
+                    Create Art Coming Soon!
                 </Typography>
                 {env === 'dev' &&
                 <div>

@@ -52,6 +52,12 @@ declare module '@mui/joy/CircularProgress' {
     }
 }
 
+declare module '@mui/joy/Menu' {
+    interface MenuPropsColorOverrides {
+        green: true;
+    }
+}
+
 export const theme = extendTheme({
     components: {
         JoyTypography: {
@@ -66,14 +72,14 @@ export const theme = extendTheme({
                     ...((ownerState.color === 'white') && {
                         color: '#E4E5FF',
                     }),
-                    ...((ownerState.level === 'h1' || ownerState.level === 'h2' || ownerState.level === 'h3' || ownerState.level === 'h4' || ownerState.level === 'h5') && {
+                    ...((ownerState.level === 'h1' || ownerState.level === 'h2' || ownerState.level === 'h3') && {
                         fontFamily: 'Twine',
                         fontWeight: 'normal',
                         margin: '15px 0px',
                         textAlign: 'left',
                         color: '#E4E5FF'
                     }),
-                    ...((ownerState.level === 'h6' || ownerState.level === 'body1' || ownerState.level === 'body2' || ownerState.level === 'body3' || ownerState.level === 'body4' || ownerState.level === 'body5') && {
+                    ...((ownerState.level === 'h4' || ownerState.level === 'h5' || ownerState.level === 'h6' || ownerState.level === 'body1' || ownerState.level === 'body2' || ownerState.level === 'body3' || ownerState.level === 'body4' || ownerState.level === 'body5') && {
                         fontFamily: 'Oxanium',
                         fontWeight: 'normal',
                         margin: '15px 0px',
@@ -270,6 +276,10 @@ export const theme = extendTheme({
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({
                     ...({
+                        background: '#14100E',
+                        border: 'none',
+                    }),
+                    ...(ownerState.color === 'green' && {
                         background: '#14100E',
                         border: 'none',
                     }),
