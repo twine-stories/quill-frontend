@@ -23,14 +23,36 @@
     object-fit: cover;
 }
 
+#create-cover-wrapper-2, #create-banner-wrapper {
+    border-radius: 15px;
+    border: 1px #241D19 dashed;
+}
+
+#create-cover-wrapper-2 #create-cover, #create-banner-wrapper #create-banner {
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
 #create-cover-wrapper {
     width: 230px;
     height: 330px;
 }
 
+#create-cover-wrapper-2 {
+    width: 330px;
+    height: 230px;
+}
+
 #create-cover-wrapper #create-cover {
     width: 200px;
     height: 300px;
+}
+
+#create-cover-wrapper-2 #create-cover-2 {
+    width: 300px;
+    height: 200px;
 }
 
 #create-banner-wrapper {

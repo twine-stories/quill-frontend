@@ -123,7 +123,9 @@ function Story() {
                                  <div style={{backgroundColor: "#150f0e", borderRadius: "32px"}}>
                                     <Typography level="h5" sx={{color: "#9E9FEB", paddingTop: "15px", paddingLeft: "15px", fontFamily: 'Twine', fontStyle: 'normal', fontWeight: '400' }}>Creators</Typography>
                                     <div className="creator-list">
-                                        {Array.from(creators).map((str_json) => {
+                                        {creators && creators.size > 0 &&
+                                        <div>
+                                            {Array.from(creators).map((str_json) => {
                                             const [creator, percentage] = JSON.parse(str_json);
                                             return [creator, percentage];
                                             
@@ -173,6 +175,53 @@ function Story() {
 
                                                 </div>
                                             )})}
+                                            </div>
+                             }
+                             {creators && creators.size === 0 &&
+                                   <div>
+                                    
+                                        <div className="creator">
+                                            { work && work['creator'] &&
+                                                <Box
+                                                sx={{
+                                                    py: 2,
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    gap: 1,
+                                                    alignItems: 'center',
+                                                    flexWrap: 'wrap',
+                                                    marginTop: '-35px',
+                                                    minWidth: '256px'
+                                                }}
+                                            >
+                                                <img
+                                                    src = {work['creator'] && 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/'+work['creator'].profileImg}
+                                                    alt = ""
+                                                    width = "128"
+                                                    height = "128"
+                                                    onError={e => {
+                                                        e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg'
+                                                    }}
+                                                    className='profile-pic'
+                                                />
+                                                <Typography level="h4"
+                                                            sx={{color: "#E4E5FF", margin: "0px", fontFamily: 'Twine', fontStyle: 'normal', fontWeight:'400'}}>{work['creator']['userName']}</Typography>
+                                            
+                                            <Stack direction="row" spacing = {1} alignItems= "center"  >
+                                                {work['creator'].website && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/website.svg' action={() => goTo(work['creator'].website as string)} />}
+                                                {work['creator'].twitter && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/twitter.svg' action={() => goTo(work['creator'].twitter as string)} />}
+                                                {work['creator'].instagram && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/instagram.svg' action={() => goTo(work['creator'].instagram as string)} />}
+                                                {work['creator'].reddit && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/reddit.svg' action={() => goTo(work['creator'].reddit as string)} />}
+                                                {work['creator'].discord && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/discord.svg' action={() => goTo(work['creator'].discord as string)} />}
+                                            </Stack>
+                                            </Box>
+                                            
+                                            }
+
+                                        </div>
+                                    </div>
+
+                             }
                                     </div>
                                  </div>
                              }

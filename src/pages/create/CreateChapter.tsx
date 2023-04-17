@@ -348,7 +348,7 @@ function CreateChapter(props: CreateChapterProps) {
                     <Typography level="h2" color='purple'>{props.edit ? "Edit Chapter" : "Create Chapter"}</Typography>
 
                     {view &&
-                        <div>
+                        <div id='chapter-content'>
                             <Box
                                 sx={{
                                     py: 1,
@@ -359,10 +359,9 @@ function CreateChapter(props: CreateChapterProps) {
                                     flexWrap: 'wrap',
                                 }}
                             >
-                                <Sheet sx={{width: '50%', my: 1, borderRadius: "20px",}} color="neutral"
-                                       variant="outlined">
+                                <Grid>
                                     {preview}
-                                </Sheet>
+                                </Grid>
                             </Box>
                         </div>
                     }
@@ -463,7 +462,7 @@ function CreateChapter(props: CreateChapterProps) {
                                  >
                                      <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' className='create-image-upload'>
                                          <Typography level="h3" color='purple'>Cover Art</Typography>
-                                         <Grid container alignItems='center' justifyContent='center' id='create-cover-wrapper'>
+                                         <Grid container alignItems='center' justifyContent='center' id='create-cover-wrapper-2'>
                                              {((chapter && chapter.cover) || cover.preview) ?
                                                  <img
                                                      src = {cover.preview ? cover.preview : 'https://' + CHAPTER_IMGS_BUCKET + '.s3.amazonaws.com/' + COVER_PATH + (chapter ? chapter.cover : cover.name)}
@@ -472,7 +471,7 @@ function CreateChapter(props: CreateChapterProps) {
                                                          ...cover,
                                                          openUpload: true
                                                      })}
-                                                     id='create-cover'
+                                                     id='create-cover-2'
                                                  />
                                                  :
                                                  <TwineButton icon='/icons/purple_plus_light.svg' name='Upload' color='darkpurple' action={() => setCover({
@@ -489,8 +488,8 @@ function CreateChapter(props: CreateChapterProps) {
                                              })}
                                              handleUpload={(file: File) => handleUpload(file, 'cover')}
                                              circle={false}
-                                             width='160px'
-                                             height='240px'
+                                             width='240px'
+                                             height='160px'
                                          />
                                      </Grid>
 
@@ -594,8 +593,7 @@ function CreateChapter(props: CreateChapterProps) {
                 if (!display) {
                     compoundedElements.push(content)
                 } else {
-                    compoundedElements.push(<Typography level="h6"
-                                                        sx={{color: "#9E9FEB"}}><ReactMarkdown>{content}</ReactMarkdown></Typography>)
+                    compoundedElements.push(<Typography level="h6" color='white'><ReactMarkdown>{content}</ReactMarkdown></Typography>)
                 }
             }
         }
