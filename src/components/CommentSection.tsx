@@ -53,7 +53,7 @@ export default function CommentSection({episode}) {
                 <Textarea
                     className="commentBox"
                     placeholder="Type something here…"
-                    minRows={3}
+                    minRows={1}
                     endDecorator={
                     <Box
                         sx={{
@@ -76,8 +76,8 @@ export default function CommentSection({episode}) {
                 />
             </FormControl>
             <div className='comments'>
-                {comments.map((comment) => (
-                    <div className='comment' style={{display: "flex", alignItems: "center", marginBottom: "1rem"}}>
+                {comments.map((comment, index) => (
+                    <div key={index} className='comment' style={{display: "flex", alignItems: "center", marginBottom: "1rem"}}>
                         <div>
                             <img 
                             src={'https://' + PROFILE_IMGS_BUCKET + '.s3.amazonaws.com/' + comment.commenter.profileImg} 
@@ -91,8 +91,8 @@ export default function CommentSection({episode}) {
                             />
                         </div>
                         <div className='name-comment' style={{marginLeft: "1rem"}}>
-                            <Typography level="h5" sx={{color: "#9e9feb"}}>{comment.commenter.userName}</Typography>
-                            <Typography level="h6" sx={{color: "#FFFFFF"}}>{comment.content}</Typography>
+                            <Typography level="h3" color='purple'>{comment.commenter.userName}</Typography>
+                            <Typography level="h6" color='white'>{comment.content}</Typography>
                         </div>
                         
                     </div>
