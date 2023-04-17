@@ -24,8 +24,8 @@ function Collaborator(props: CollaboratorProps) {
     const offset: number = props.principle ? 2 : 0;
 
     return (
-        <Grid className='collaborators' container justifyContent='space-around' alignItems='center'>
-            <Grid container direction='row' justifyContent='space-around' alignItems='center' rowSpacing={2} xs={10}>
+        <Grid className='collaborators' container justifyContent='space-around' alignItems='center' xs={12}>
+            <Grid container direction='row' justifyContent='space-around' alignItems='center' rowSpacing={2} xs={12}>
                 <Grid xs={10 + offset}>
                     <Grid container direction='row' justifyContent='space-between' alignItems='center'
                           columnSpacing={1}>
