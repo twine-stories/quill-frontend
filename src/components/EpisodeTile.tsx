@@ -3,6 +3,7 @@ import {Episode, NFTCollection, Work} from '../utils/types.ts';
 import {AspectRatio, Card, Stack, Typography} from "@mui/joy";
 import TwineButton from "./TwineButton.tsx";
 import {useNavigate} from "react-router-dom";
+import { CHAPTER_IMGS_BUCKET } from '../config.ts';
 
 interface EpisodeTileProps {
     episode: Episode;
@@ -11,6 +12,11 @@ interface EpisodeTileProps {
 
 function EpisodeTile(props: EpisodeTileProps) {
     let navigate = useNavigate();
+
+    const stringToDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString();
+    }
 
     return (
         <Stack direction="row" spacing ={2} alignItems= "center" sx={{width: "100%"}}>
@@ -24,15 +30,25 @@ function EpisodeTile(props: EpisodeTileProps) {
             }}>
                 {/*<AspectRatio variant="outlined" ratio="16/9">*/}
                     <img
-                        src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-                        srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
+                        src={props.episode && 'https://'+CHAPTER_IMGS_BUCKET+'.s3.amazonaws.com/'+props.episode['cover']}
+                        onError={(e) => {
+                            e.target.src = "https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
+                        }}
                         loading="lazy"
                         alt=""
+                        width="25%"
+                        height="25%"
                     />
                 {/*</AspectRatio>*/}
-                <Typography level="h2" color="white">
-                    {props.episode && props.episode['title']}
-                </Typography>
+                <div className='date-title' style={{display: 'flex', flexDirection: 'column', justifyContent: 'left', alignItems: 'left', width: '100%'}}>
+                    <Typography level="h6" color="white" sx={{marginLeft: "10px", marginTop: "0px", marginBottom: "0px"}}>
+                        {props.episode && stringToDate(props.episode['publishStamp'])}
+                    </Typography>
+                    <Typography level="h2" color="white" sx={{marginLeft: "10px", minWidth: "600px"}}>
+                        {props.episode && props.episode['title']}
+                    </Typography>
+                </div>
+                
             </Card>
             { props.isCreator &&
             <TwineButton icon="/icons/purple_settings.svg" color="blackpurple" name="Edit Chapter" action={() => {
