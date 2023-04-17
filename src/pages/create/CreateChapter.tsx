@@ -104,7 +104,7 @@ function CreateChapter(props: CreateChapterProps) {
             setPopulatedForEdit(true);
 
             var newCounter = 0;
-            var newInputList = [];
+            var newInputList: JSX.Element[] = [];
             var newResultMap = new Map();
 
             let rawContentArray = chapter.content.split(CHAPTER_DELIMETER);
@@ -646,12 +646,12 @@ function CreateChapter(props: CreateChapterProps) {
         const id = currentChapter ? currentChapter['id'] : null;
 
         const allContent = await reformatContent(false);
-        if (title.value && guidelines.checked && profitSplitMap && (cover.name || (work && work.cover)) && allContent.length > 0) {
+        if (title.value && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
             let newEpisode: Episode = {
                 id: id,
                 work: work,
                 title: title.value,
-                cover: 'cover',
+                cover: cover.name ? cover.name : chapter.cover,
                 content: allContent.join(CHAPTER_DELIMETER),
                 url: work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase(),
                 endOfChapterMessage: endOfChapterMessage.value,

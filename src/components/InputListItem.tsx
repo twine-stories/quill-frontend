@@ -88,8 +88,8 @@ function InputListItem(props: InputListItemProps) {
                         })}
                     }
                     circle={false}
-                    width='440px'
-                    height='100px'
+                    width='200px'
+                    height='200px'
                 />
             </Grid>
             <Box sx={{ml: 'auto'}}>
