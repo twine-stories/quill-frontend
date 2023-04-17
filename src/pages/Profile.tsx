@@ -64,8 +64,6 @@ function Profile() {
         setOpenCreator(false);
     }
 
-
-
     const editProfile = () => {
         navigate('/edit-profile');
     }

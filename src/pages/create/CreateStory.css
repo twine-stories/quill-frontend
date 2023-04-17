@@ -1,9 +1,10 @@
 .create-image-upload {
-    margin-bottom: 10px;
+    margin-bottom: 10px !important;
     background: #14100E;
     border-radius: 20px;
     padding: 25px;
     padding-top: 10px;
+    /* margin: 20px !important; */
 }
 
 .create-image-upload h3 {
