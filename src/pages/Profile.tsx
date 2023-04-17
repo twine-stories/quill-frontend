@@ -7,10 +7,9 @@ import ProfileWork from '../components/ProfileWork.tsx';
 import './Profile.css';
 import "../components/ProfileSidebar.tsx"
 import ProfileSidebar from '../components/ProfileSidebar.tsx';
-import {Button, Stack, Typography} from "@mui/joy";
+import { Stack, Typography} from "@mui/joy";
 import { PROFILE_IMGS_BUCKET } from '../config.ts';
 import IconButton from '../components/IconButton.tsx';
-import { String } from 'aws-sdk/clients/cloudhsm.js';
 import TwineButton from '../components/TwineButton.tsx';
 import RegisterCreator from '../components/RegisterCreator.tsx';
 

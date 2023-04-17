@@ -18,7 +18,7 @@ import GalleryTile from '../components/GalleryTile.tsx';
 const axios = require('axios').default;
 
 function GenericProfile() {
-    const [works, setWorks] = useState<Array<ProfileWork>>();
+    const [works, setWorks] = useState<Array<ProfileWork>>([]);
     const context: object = useContext(UserContext);
     const { username } = useParams();
     // Get user from params
@@ -44,7 +44,7 @@ function GenericProfile() {
 
     useEffect(() => {
         if (user && user.creator && user.walletAddress) {
-            axios.get('/api/work/creator/' + user.walletAddress)
+            axios.get('/api/work/creator/published/' + user.walletAddress)
                 .then(response => {
                     if (response.data) {
                         var profileWorks: JSX.Element[] = [];
@@ -134,7 +134,7 @@ function GenericProfile() {
                 </div>
                 <div className="works">
                     <div className="works-header">
-                        <Typography color='purple' level='h2'>Works</Typography>
+                        <Typography color='purple' level='h2'>{works.length + ' ' + (works.length === 1 ? 'Story' : 'Stories')}</Typography>
                     </div>
                     <div className="works-list">
                         {works && works.map((work) => {

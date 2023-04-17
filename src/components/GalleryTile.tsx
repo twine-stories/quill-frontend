@@ -1,4 +1,5 @@
 import React from 'react';
+import './GalleryTile.css';
 import {NFTCollection, Work} from '../utils/types.ts';
 import {AspectRatio, Card, Typography} from "@mui/joy";
 
@@ -33,7 +34,7 @@ function GalleryTile(props: GalleryTileProps) {
         );
     } else {
         return (
-            <Card variant="outlined" sx={{backgroundColor: "#14100E"}} onClick={() => {window.location.href = '/collection/' + props.coll.url}}>
+            <Card variant="outlined" sx={{backgroundColor: "#14100E"}} onClick={() => {window.location.href = '/collection/' + props.coll.url}} className='gallery-tile'>
                 <AspectRatio minHeight="120px" maxHeight="200px" sx={{my: 2}}>
                     <img
                         src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"

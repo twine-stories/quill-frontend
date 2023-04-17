@@ -97,7 +97,7 @@ function Gallery(props: WorkGalleryProps) {
                         <TwineButton color='green' icon='/icons/green_plus.svg' name='Create New Stories' action={() => {window.location.href = '/create/story'}} />
                     </div>
                     <div>
-                        <TwineButton icon='/icons/purple_paper.svg' name={"Open " + (props.draft ? "Published" : "Draft")} action={() => {window.location.href = (props.draft ? '/gallery/story/published' : '/gallery/story/draft')}} />
+                        <TwineButton icon='/icons/purple_paper.svg' name={"Open " + (props.draft ? "Published" : "Drafts")} action={() => {window.location.href = (props.draft ? '/gallery/story/published' : '/gallery/story/draft')}} />
                     </div>
                 </div>
             }
