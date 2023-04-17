@@ -1,7 +1,7 @@
 import React from 'react';
 import './GalleryTile.css';
 import {NFTCollection, Work} from '../utils/types.ts';
-import {AspectRatio, Card, Typography} from "@mui/joy";
+import {AspectRatio, Card, Typography, Grid} from "@mui/joy";
 import {STORY_IMGS_BUCKET} from "../config.ts";
 import {COVER_PATH} from "../utils/aws.ts";
 
@@ -16,13 +16,16 @@ function GalleryTile(props: GalleryTileProps) {
     if (props.story) {
         return (
             <Card variant="outlined" sx={{backgroundColor: "#14100E"}} onClick={() => {window.location.href = '/story/' + props.work['url']}} className='gallery-tile'>
-                <AspectRatio minHeight="120px" maxHeight="200px" sx={{my: 2}}>
-                    <img
-                        src={imgSrc}
-                        loading="lazy"
-                        alt=""
-                    />
-                </AspectRatio>
+                <Grid container alignItems='center' justifyContent='center'>
+                    {/* <AspectRatio sx={{my: 2, height: '150px', width: '100px'}}> */}
+                        <img
+                            className='tile-img'
+                            src={imgSrc}
+                            loading="lazy"
+                            alt=""
+                        />
+                    {/* </AspectRatio> */}
+                </Grid>
                 <Typography level="h2" sx={{color: "#9E9FEB"}}>
                     {props.work && props.work['title']}
                 </Typography>
