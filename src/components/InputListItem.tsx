@@ -34,7 +34,7 @@ function InputListItem(props: InputListItemProps) {
     // for edit episode need to change src for img to pull from s3 (us CHAPTER_IMGS_BUCKET)
     
     return (
-        <Card key={counter} variant="outlined" color="neutral">
+        <Card key={counter} variant="outlined" color="neutral" sx={{border: 'none', width: '100%', background: 'transparent'}}>
             {/*<AspectRatio minHeight="120px" maxHeight="200px" sx={{my: 2}}>*/}
             {/*    <img*/}
             {/*        src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"*/}
