@@ -4,16 +4,13 @@ import Navbar from "../components/Navbar.tsx";
 import {UserContext} from "../App.tsx";
 import {Episode, User, Work, Like, ProfitSplit} from '../utils/types.ts';
 import {episodeGetByUrl, episodesGetByWorkId, genericGet, workGetByUrl, genericPost} from '../utils/api.ts';
-import TwoColumnLayout from "../components/TwoColumnLayout.tsx";
 import {AspectRatio, Box, Button, Stack, Switch, Typography, Grid} from "@mui/joy";
-import Sheet from "@mui/joy/Sheet";
-import TwineInput from "../components/TwineInput.tsx";
-import TwineButton from "../components/TwineButton.tsx";
 import IconButton from "../components/IconButton.tsx";
 import ReactMarkdown from 'https://esm.sh/react-markdown@7'
 import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants.ts";
 import { CHAPTER_IMGS_BUCKET } from '../config.ts';
 import CommentSection from '../components/CommentSection.tsx';
+import ErrorPopup from '../components/ErrorPopup.tsx';
 
 
 function Chapter() {
@@ -24,16 +21,15 @@ function Chapter() {
     const [liked, setLiked] = useState<boolean>(false);
     const [numLikes, setNumLikes] = useState<number>(0);
 
+    const [openError, setOpenError] = useState<boolean>(false);
+
     const [collaborators, setCollaborators] = useState<JSX.Element[]>([]);
 
     useEffect(() => {
-        if (user) {
-            episodeGetByUrl(window.location.href.split('/')[4], setEpisode, () => {
-                console.log('fail');
-            });
-            
-        }
-    }, [user]);
+        episodeGetByUrl(window.location.href.split('/')[4], setEpisode, () => {
+            console.log('fail');
+        });
+    }, []);
 
     useEffect(() => {
         if (episode && user && episode.id) {
@@ -46,7 +42,7 @@ function Chapter() {
                 let collabs: JSX.Element[] = [];
                 let index: number = 0;
                 sortedResp.forEach((item: ProfitSplit) => {
-                    collabs.push(<Typography key={index} level='h6' color='white'>{item.creator.firstName + ' ' + item.creator.lastName}</Typography>)
+                    collabs.push(<Typography key={index} level='h3' color='white' onClick={() => window.location.href = '/profile/' + item.creator.userName} sx={{cursor: 'pointer', fontSize: '18px'}}>{item.creator.firstName + ' ' + item.creator.lastName}</Typography>)
                     index++;
                 })
                 setCollaborators(collabs);
@@ -79,7 +75,9 @@ function Chapter() {
                 });
 
             }
-       }
+        } else {
+            setOpenError(true);
+        }
     }
 
     return (
@@ -118,6 +116,7 @@ function Chapter() {
                         {collaborators}
                     </Grid>
                     <CommentSection episode={episode} />
+                    <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message='Please log in to like or follow.' />
                 </Grid>
             </Grid>
             }

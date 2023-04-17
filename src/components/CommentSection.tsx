@@ -5,7 +5,7 @@ import { User, Comment } from '../utils/types.ts';
 import { genericPost, genericGet } from '../utils/api.ts';
 import { PROFILE_IMGS_BUCKET } from '../config.ts';
 import TwineButton from './TwineButton.tsx';
-
+import ErrorPopup from './ErrorPopup.tsx';
 
 export default function CommentSection({episode}) {
 
@@ -13,11 +13,9 @@ export default function CommentSection({episode}) {
     const user: User = context['user'];
 
     const [comments, setComments] = useState<Comment[]>([]);
-
+    const [openError, setOpenError] = useState<boolean>(false);
 
     const  onComment = async () => {
-        console.log('comment');
-
         if (user && episode) {
             const data: string = document.getElementsByClassName("commentBox")[0].getElementsByTagName("textarea")[0].value;
 
@@ -34,6 +32,8 @@ export default function CommentSection({episode}) {
                 setComments(response);
             });
 
+        } else {
+            setOpenError(true);
         }
         
     }
@@ -98,6 +98,7 @@ export default function CommentSection({episode}) {
                     </div>
                 ))}
             </div>
+            <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message='Please log in to comment.' />
 
         </div>
     )
