@@ -424,7 +424,7 @@ function CreateChapter(props: CreateChapterProps) {
                         <CollaboratorContext.Provider value={{
                             'remove': removeCollaborator
                         }}>
-                            <div>
+                            <Grid container direction='column' justifyContent='flex-start' alignItems='flex-start' xs={12}>
                                 {/*<Typography level="h5" sx={{color: "#9E9FEB"}}>Principle Creator</Typography>*/}
                                 {/*{user && <Collaborator profitSplit={true} defaultCreator={user.userName}*/}
                                 {/*                       defaultWallet={user.walletAddress} defaultProfit={100}*/}
@@ -434,6 +434,7 @@ function CreateChapter(props: CreateChapterProps) {
                                 <Typography level="h5" sx={{color: "#9E9FEB"}}>Collaborators</Typography>
                                 {collaborators}
                                 <TwineButton name='Add Collaborator' enabled={collaborators.length < MAX_COLLABORATORS}
+                                             sx={{marginTop: '20px'}}
                                              action={(e) => {
                                                  if (collaborators.length < MAX_COLLABORATORS) {
                                                      const id: number = uuidv4();
@@ -444,7 +445,7 @@ function CreateChapter(props: CreateChapterProps) {
                                                      ])
                                                  }
                                              }}/>
-                            </div>
+                            </Grid>
                         </CollaboratorContext.Provider>
                     </div>
                 </div>
@@ -655,6 +656,7 @@ function CreateChapter(props: CreateChapterProps) {
         const id = currentChapter ? currentChapter['id'] : null;
 
         const allContent = await reformatContent(false);
+        const url: string = work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase();
         if (title.value && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
             let newEpisode: Episode = {
                 id: id,
@@ -662,7 +664,7 @@ function CreateChapter(props: CreateChapterProps) {
                 title: title.value,
                 cover: cover.name ? cover.name : chapter.cover,
                 content: allContent.join(CHAPTER_DELIMETER),
-                url: work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase(),
+                url: url,
                 endOfChapterMessage: endOfChapterMessage.value,
                 mature: mature.checked,
                 flags: 0,
@@ -692,40 +694,51 @@ function CreateChapter(props: CreateChapterProps) {
             }
 
             // Iterate through the map and create a profit split for each user
-            genericGet('/api/profitSplit/episode/' + chapter.id).then((response: ProfitSplit[]) => {
-                let newSplit: ProfitSplit;
-                let foundEntries: Set<number> = new Set();
-                let i: number;
+            if (chapter) {
+                genericGet('/api/profitSplit/episode/' + chapter.id).then((response: ProfitSplit[]) => {
+                    let newSplit: ProfitSplit;
+                    let foundEntries: Set<number> = new Set();
+                    let i: number;
+                    profitSplitMap.forEach((value, user) => {
+                        newSplit = {
+                            episode: newEpisode,
+                            creator: user,
+                            percentage: value,
+                        };
+    
+                        let found: boolean = false;
+                        for (i = 0; i < response.length; i++) {
+                            if (response[i].creator.userName === user.userName) {
+                                newSplit.id = response[i].id;
+                                genericPost('/api/profitSplit/update', newSplit);
+                                found = true;
+                                foundEntries.add(i);
+                            }
+                        }
+    
+                        if (!found) {
+                            genericPost("/api/profitSplit/add", newSplit);
+                        }
+                    });
+    
+                    for (i = 0; i < response.length; i++) {
+                        if (!foundEntries.has(i)) {
+                            genericPost('/api/profitSplit/delete', response[i]);
+                        }
+                    }
+                });
+            } else {
                 profitSplitMap.forEach((value, user) => {
-                    newSplit = {
+                    let newSplit: ProfitSplit = {
                         episode: newEpisode,
                         creator: user,
                         percentage: value,
                     };
-
-                    let found: boolean = false;
-                    for (i = 0; i < response.length; i++) {
-                        if (response[i].creator.userName === user.userName) {
-                            newSplit.id = response[i].id;
-                            genericPost('/api/profitSplit/update', newSplit);
-                            found = true;
-                            foundEntries.add(i);
-                        }
-                    }
-
-                    if (!found) {
-                        genericPost("/api/profitSplit/add", newSplit);
-                    }
+                    genericPost("/api/profitSplit/add", newSplit);
                 });
+            }
 
-                for (i = 0; i < response.length; i++) {
-                    if (!foundEntries.has(i)) {
-                        genericPost('/api/profitSplit/delete', response[i]);
-                    }
-                }
-            });
-
-            navigate("/episode/" + chapter.url);
+            navigate("/episode/" + url);
         }
         setErrorMessage('Please make sure you have filled out all the fields before submitting.');
         setOpenError(true);
