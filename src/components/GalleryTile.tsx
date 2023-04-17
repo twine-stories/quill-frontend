@@ -12,7 +12,7 @@ interface GalleryTileProps {
 function GalleryTile(props: GalleryTileProps) {
     if (props.story) {
         return (
-            <Card variant="outlined" sx={{backgroundColor: "#14100E"}} onClick={() => {window.location.href = '/story/' + props.work['url']}}>
+            <Card variant="outlined" sx={{backgroundColor: "#14100E"}} onClick={() => {window.location.href = '/story/' + props.work['url']}} className='gallery-tile'>
                 <AspectRatio minHeight="120px" maxHeight="200px" sx={{my: 2}}>
                     <img
                         src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"

@@ -6,7 +6,7 @@ import { User, Follow } from '../utils/types.ts';
 import ProfileWork from '../components/ProfileWork.tsx';
 import "../components/ProfileSidebar.tsx"
 import ProfileSidebar from '../components/ProfileSidebar.tsx';
-import {Button, Typography, Stack} from "@mui/joy";
+import {Button, Typography, Stack, Grid} from "@mui/joy";
 import { genericGet, genericPost } from '../utils/api.ts';
 import { PROFILE_IMGS_BUCKET } from '../config.ts';
 import IconButton from '../components/IconButton.tsx';
@@ -136,11 +136,14 @@ function GenericProfile() {
                     <div className="works-header">
                         <Typography color='purple' level='h2'>{works.length + ' ' + (works.length === 1 ? 'Story' : 'Stories')}</Typography>
                     </div>
-                    <div className="works-list">
-                        {works && works.map((work) => {
-                            return <GalleryTile work={work.props.work} story={true} />
+                    <Grid container
+                        spacing={{xs: 3}}
+                        columns={{xs: 12}}
+                        sx={{flexGrow: 1, padding: '20px'}} className="works-list">
+                        {works && works.map((work, index) => {
+                            return <Grid xs={4} key={index}><GalleryTile work={work.props.work} story={true} /></Grid>
                         })}
-                    </div>
+                    </Grid>
                 </div>
 
                 
