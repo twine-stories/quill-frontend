@@ -37,8 +37,8 @@ function EpisodeTile(props: EpisodeTileProps) {
                         }}
                         loading="lazy"
                         alt=""
-                        width="25%"
-                        height="25%"
+                        style={{aspectRatio: "1.5/1", width: "18%", height: "18%"}}
+
                     />
                 {/*</AspectRatio>*/}
                 <div className='date-title' style={{display: 'flex', flexDirection: 'column', justifyContent: 'left', alignItems: 'left', width: '100%'}}>
