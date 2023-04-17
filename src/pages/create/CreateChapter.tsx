@@ -472,6 +472,7 @@ function CreateChapter(props: CreateChapterProps) {
                                                          openUpload: true
                                                      })}
                                                      id='create-cover-2'
+                                                     style={{objectFit: 'cover'}}
                                                  />
                                                  :
                                                  <TwineButton icon='/icons/purple_plus_light.svg' name='Upload' color='darkpurple' action={() => setCover({

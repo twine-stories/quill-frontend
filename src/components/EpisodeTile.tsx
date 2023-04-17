@@ -37,7 +37,7 @@ function EpisodeTile(props: EpisodeTileProps) {
                         }}
                         loading="lazy"
                         alt=""
-                        style={{aspectRatio: "1.5/1", width: "18%", height: "18%"}}
+                        style={{aspectRatio: "1.5/1", width: "18%", height: "18%", objectFit: 'cover'}}
 
                     />
                 {/*</AspectRatio>*/}
