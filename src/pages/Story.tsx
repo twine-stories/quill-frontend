@@ -55,10 +55,6 @@ function Story() {
             });
         }
     }, [episodes]);
-
-    useEffect(() => {
-        console.log("creators", creators);
-    }, [creators]);
             
 
 

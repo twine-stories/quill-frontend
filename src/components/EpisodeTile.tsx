@@ -4,6 +4,7 @@ import {AspectRatio, Card, Stack, Typography} from "@mui/joy";
 import TwineButton from "./TwineButton.tsx";
 import {useNavigate} from "react-router-dom";
 import { CHAPTER_IMGS_BUCKET } from '../config.ts';
+import { COVER_PATH } from '../utils/aws.ts';
 
 interface EpisodeTileProps {
     episode: Episode;
@@ -30,7 +31,7 @@ function EpisodeTile(props: EpisodeTileProps) {
             }}>
                 {/*<AspectRatio variant="outlined" ratio="16/9">*/}
                     <img
-                        src={props.episode && 'https://'+CHAPTER_IMGS_BUCKET+'.s3.amazonaws.com/'+props.episode['cover']}
+                        src={props.episode && 'https://'+CHAPTER_IMGS_BUCKET+'.s3.amazonaws.com/'+COVER_PATH+props.episode['cover']}
                         onError={(e) => {
                             e.target.src = "https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
                         }}
