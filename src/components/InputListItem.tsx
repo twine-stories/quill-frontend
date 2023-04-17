@@ -46,7 +46,7 @@ function InputListItem(props: InputListItemProps) {
             {/*src = {resultMap.get(counter).preview ? resultMap.get(counter).preview : 'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + STORY_BANNER_PATH + (work ? work.banner : banner.name)}*/}
 
             <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' className='create-image-upload'>
-                <Typography level="h3" color='purple'>GOOD LUCK TO ME</Typography>
+                <Typography level="h3" color='purple'>Upload Image</Typography>
                 <Grid container alignItems='center' justifyContent='center' xs={12}>
                     <Grid container alignItems='center' justifyContent='center' id='create-chapter-img-wrapper'>
                         {(resultMap.get(counter) && resultMap.get(counter).preview) ?

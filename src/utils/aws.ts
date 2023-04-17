@@ -1,7 +1,7 @@
 import { ACCESS_KEY_ID, SECRET_ACCESS_KEY } from "./secrets.ts";
 import AWS from "aws-sdk";
 
-export const STORY_COVER_PATH: string = 'cover/';
+export const COVER_PATH: string = 'cover/';
 export const STORY_BANNER_PATH: string = 'banner/';
 
 export const AWS_S3_REGION: string = "us-east-1";
