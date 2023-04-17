@@ -51,12 +51,6 @@ function EpisodeTile(props: EpisodeTileProps) {
                 </div>
                 
             </Card>
-            { props.isCreator &&
-            <TwineButton icon="/icons/purple_settings.svg" color="blackpurple" name="Edit Chapter" action={() => {
-                navigate('/edit/episode/' + props.episode['url'])
-             }}/>
-            }
-            
         </Stack>
     );
 }

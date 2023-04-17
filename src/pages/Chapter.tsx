@@ -106,8 +106,12 @@ function Chapter() {
                         </Grid>
                         <Grid container alignItems='center' justifyContent='flex-start'>
                             <Typography sx={{marginRight: '20px'}} level="h3" color='white'>{episode.title}</Typography>
-                            {(user.userName === episode.work.creator.userName) && <TwineButton color='purple' name='Edit Episode' action={() => window.location.href = '/edit/episode/' + episode.url} />}
                         </Grid>
+                        {(user.userName === episode.work.creator.userName) &&
+                            <TwineButton sx={{width: "100%"}} icon="/icons/green_setting.svg" color="blackgreen" name="Edit Chapter" action={() => {
+                                window.location.href = '/edit/episode/' + episode.url;
+                            }}/>
+                        }
                         <Grid>
                             {
                                 loadEpisodeContent(episode['content'])

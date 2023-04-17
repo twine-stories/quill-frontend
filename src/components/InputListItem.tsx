@@ -95,7 +95,7 @@ function InputListItem(props: InputListItemProps) {
                     height='200px'
                 />
             </Grid>
-            <Box sx={{ml: 'auto'}}>
+            <Box sx={{ml: 'auto', marginRight: "20px"}}>
                 <IconButton onClick={function () {
                     moveItemUp(counter)
                 }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_up.svg"
