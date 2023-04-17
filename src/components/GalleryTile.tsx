@@ -26,12 +26,12 @@ function GalleryTile(props: GalleryTileProps) {
                 <Typography level="h2" sx={{color: "#9E9FEB"}}>
                     {props.work && props.work['title']}
                 </Typography>
-                <Typography level="h6" sx={{color: "#E4E5FF"}}>
-                    Episodes:
-                </Typography>
-                <Typography level="h6" sx={{color: "#E4E5FF"}}>
-                    {/*Published on {props.work && props.work['publishStamp'].toString()}*/}
-                </Typography>
+                {/*<Typography level="h6" sx={{color: "#E4E5FF"}}>*/}
+                {/*    Episodes:*/}
+                {/*</Typography>*/}
+                {/*<Typography level="h6" sx={{color: "#E4E5FF"}}>*/}
+                {/*    /!*Published on {props.work && props.work['publishStamp'].toString()}*!/*/}
+                {/*</Typography>*/}
             </Card>
         );
     } else {
