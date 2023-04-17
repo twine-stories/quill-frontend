@@ -1,4 +1,5 @@
 import React, {useContext, useEffect, createContext} from 'react';
+import './CreateChapter.css';
 import useState from 'react-usestateref'
 import Navbar from "../../components/Navbar.tsx";
 import {UserContext} from "../../App.tsx";
@@ -104,8 +105,24 @@ function CreateChapter(props: CreateChapterProps) {
             setPopulatedForEdit(true);
 
             var newCounter = 0;
-            var newInputList = [];
+            var newInputList: JSX.Element[] = [];
             var newResultMap = new Map();
+
+            genericGet('/api/profitSplit/episode/' + chapter.id).then((response: ProfitSplit[]) => {
+                let collabs: JSX.Element[] = [<div></div>];
+                response.forEach((item: ProfitSplit) => {
+                    if (item.creator.userName !== chapter.work.creator.userName) {
+                        collabs.push(<Collaborator profitSplit={true} defaultCreator={item.creator.userName}
+                            defaultWallet={item.creator.walletAddress} defaultProfit={item.percentage} principle={false} id={uuidv4()}
+                            key={uuidv4()}/>);
+                    } else {
+                        collabs[0] = <Collaborator profitSplit={true} defaultCreator={item.creator.userName}
+                            defaultWallet={item.creator.walletAddress} defaultProfit={item.percentage} principle={true} id={uuidv4()}
+                            key={uuidv4()}/>
+                    }
+                })
+                setCollaborators(collabs);
+            })
 
             let rawContentArray = chapter.content.split(CHAPTER_DELIMETER);
             for (let i = 0; i < rawContentArray.length; i++) {
@@ -117,7 +134,7 @@ function CreateChapter(props: CreateChapterProps) {
                     let imgSrc = `https://${bucketName}.s3.amazonaws.com/${imgName}`;
                     // onAddImageButtonClick(imgSrc);
                     newResultMap.set(i, {
-                        name: '',
+                        name: imgName,
                         preview: imgSrc,
                         file: null,
                         openUpload: false
@@ -162,9 +179,6 @@ function CreateChapter(props: CreateChapterProps) {
                     );
                 }
             }
-            console.log(newResultMap)
-            console.log(newInputList)
-            console.log(newCounter)
 
             setResultMap(newResultMap);
             setInputList(newInputList);
@@ -256,8 +270,6 @@ function CreateChapter(props: CreateChapterProps) {
         // then swap with the one below it
         let index = -1;
         for (let i = 0; i < inputListRef.current.length; i++) {
-            console.log(inputListRef.current[i]["key"])
-            console.log(counter)
             if (inputListRef.current[i]["key"] == counter) {
                 index = i;
                 break;
@@ -307,7 +319,6 @@ function CreateChapter(props: CreateChapterProps) {
                                                                                   height="30px"/></IconButton>
                     </Box>
                 }
-                sx={{minWidth: "40%"}}
             />
         ));
         setCounter(counter + 1);
@@ -383,9 +394,9 @@ function CreateChapter(props: CreateChapterProps) {
                                 'moveItemDown': moveItemDown,
                                 'removeItem': removeItem
                             }}>
-                                <Stack
+                                <Stack id='create-chapter-stack'
                                     alignItems="center"
-                                    spacing={0.5}
+                                    spacing={3}
                                     sx={{width: "100%"}}>
                                     {inputList}
                                 </Stack>
@@ -393,13 +404,12 @@ function CreateChapter(props: CreateChapterProps) {
 
                             <Stack
                                 direction="row"
-                                // spacing={2}
                                 justifyContent="center"
-                                sx={{width: '100%'}}>
+                                sx={{width: '100%', marginBottom: '20px'}}>
                                 <Button startDecorator={<img
                                     src="/icons/white_text.svg"
                                     width="20px" height="20px"
-                                />} variant="outlined" color="neutral" onClick={() => onAddTextButtonClick()}>Add Text</Button>
+                                />} variant="outlined" color="neutral" onClick={() => onAddTextButtonClick()}>Add Paragraph</Button>
                                 <Button startDecorator={<img
                                     src="/icons/add_image.svg"
                                     width="20px" height="20px"
@@ -407,8 +417,8 @@ function CreateChapter(props: CreateChapterProps) {
                                     Image</Button>
                             </Stack>
 
-                            {(!props.edit || chapter) && <TwineInput defaultValue={(props.edit) ? chapter['endOfChapterMessage'] : ""} id="endOfChapterMessage" label="End of Chapter Message"
-                                                                     placeholder="(Optional) Enter End of Chapter Message..." multiline={true}/>}
+                            {(!props.edit || chapter) && <TwineInput defaultValue={(props.edit) ? chapter['endOfChapterMessage'] : ""} id="endOfChapterMessage" label="End of Chapter Message (Optional)"
+                                                                     placeholder="Enter text..." multiline={true}/>}
                         </Box>
 
                         <CollaboratorContext.Provider value={{
@@ -563,21 +573,17 @@ function CreateChapter(props: CreateChapterProps) {
                 console.log("good luck");
             } else if (content['name'] !== undefined) {
                 if (!display) {
-                    if (content['name'] !== "") {
+                    if (content['file'] !== null) {
                         await sendToS3(CHAPTER_IMGS_BUCKET, content['name'], content['file']);
-                        compoundedElements.push(CHAPTER_IMG_DELIMETER + content['name']);
-                    } else {
-                        compoundedElements.push(CHAPTER_IMG_DELIMETER + content['preview']);
                     }
+                    compoundedElements.push(CHAPTER_IMG_DELIMETER + content['name']);
                 } else {
                     // need to change src to pull from s3 when editing if they havent changed that image
-                    console.log(content['preview']);
                     compoundedElements.push(
                         <AspectRatio variant="plain" minHeight="120px" maxHeight="300px" objectFit="contain"
                                      sx={{my: 2}}>
                             <img
                                 src={content['preview']}
-                                // srcSet={content['preview'] + ' 2x'}
                                 loading="lazy"
                                 alt=""
                             />
@@ -649,12 +655,12 @@ function CreateChapter(props: CreateChapterProps) {
         const id = currentChapter ? currentChapter['id'] : null;
 
         const allContent = await reformatContent(false);
-        if (title.value && guidelines.checked && profitSplitMap && (cover.name || (work && work.cover)) && allContent.length > 0) {
+        if (title.value && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
             let newEpisode: Episode = {
                 id: id,
                 work: work,
                 title: title.value,
-                cover: 'cover',
+                cover: cover.name ? cover.name : chapter.cover,
                 content: allContent.join(CHAPTER_DELIMETER),
                 url: work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase(),
                 endOfChapterMessage: endOfChapterMessage.value,
@@ -663,6 +669,8 @@ function CreateChapter(props: CreateChapterProps) {
                 publishStamp: publishStamp,
                 published: published,
             };
+            console.log(chapter);
+            console.log(newEpisode);
 
             let urlModifier = props.edit ? "update" : "add";
 
@@ -684,19 +692,37 @@ function CreateChapter(props: CreateChapterProps) {
             }
 
             // Iterate through the map and create a profit split for each user
-            profitSplitMap.forEach((value, user) => {
-                let newProfitSplit: ProfitSplit = {
-                    episode: newEpisode,
-                    creator: user,
-                    percentage: value,
-                }
-                genericPost("/api/profitSplit/add", newProfitSplit).then((response) => {
-                    if (response) {
-                        console.log("success");
-                    } else {
-                        console.log("failure");
+            genericGet('/api/profitSplit/episode/' + chapter.id).then((response: ProfitSplit[]) => {
+                let newSplit: ProfitSplit;
+                let foundEntries: Set<number> = new Set();
+                let i: number;
+                profitSplitMap.forEach((value, user) => {
+                    newSplit = {
+                        episode: newEpisode,
+                        creator: user,
+                        percentage: value,
+                    };
+
+                    let found: boolean = false;
+                    for (i = 0; i < response.length; i++) {
+                        if (response[i].creator.userName === user.userName) {
+                            newSplit.id = response[i].id;
+                            genericPost('/api/profitSplit/update', newSplit);
+                            found = true;
+                            foundEntries.add(i);
+                        }
+                    }
+
+                    if (!found) {
+                        genericPost("/api/profitSplit/add", newSplit);
                     }
                 });
+
+                for (i = 0; i < response.length; i++) {
+                    if (!foundEntries.has(i)) {
+                        genericPost('/api/profitSplit/delete', response[i]);
+                    }
+                }
             });
 
             navigate("/episode/" + chapter.url);

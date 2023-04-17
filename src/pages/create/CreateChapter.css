@@ -1,0 +1,8 @@
+#create-chapter-stack {
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+#create-chapter-stack .MuiTextarea-root {
+    width: 100%
+}

@@ -58,6 +58,9 @@ function InputListItem(props: InputListItemProps) {
                                     newResultMap.set(counter, {...resultMap.get(counter), openUpload: true});
                                 })}
                                 id='create-chapter-img'
+                                width='400'
+                                height='400'
+                                style={{objectFit: 'contain'}}
                             />
                             :
                             <TwineButton icon='/icons/purple_plus_light.svg' name='Upload' color='darkpurple' action={() => {
@@ -88,8 +91,8 @@ function InputListItem(props: InputListItemProps) {
                         })}
                     }
                     circle={false}
-                    width='440px'
-                    height='100px'
+                    width='200px'
+                    height='200px'
                 />
             </Grid>
             <Box sx={{ml: 'auto'}}>
