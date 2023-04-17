@@ -17,6 +17,7 @@ import {CHAPTER_IMGS_BUCKET} from "../config.ts";
 
 interface InputListItemProps {
     counter: number;
+    imgSrc?: string;
 }
 enableMapSet();
 

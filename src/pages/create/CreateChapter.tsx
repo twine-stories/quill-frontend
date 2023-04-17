@@ -59,6 +59,7 @@ function CreateChapter(props: CreateChapterProps) {
     const [work, setWork] = useState<Work>(null);
     const [errorMessage, setErrorMessage] = useState<string>('Error creating story.');
     const [openError, setOpenError] = useState<boolean>(false);
+    const [populatedForEdit, setPopulatedForEdit] = useState<boolean>(false);
 
     const [cover, setCover] = useState<ImageUpload>({
         name: '',
@@ -97,8 +98,77 @@ function CreateChapter(props: CreateChapterProps) {
     }, [props.edit, user]);
 
     useEffect(() => {
-        if (user && props.edit && chapter) {
+        if (user && props.edit && chapter && !populatedForEdit) {
             setWork(chapter.work);
+
+            setPopulatedForEdit(true);
+
+            var newCounter = 0;
+            var newInputList = [];
+            var newResultMap = new Map();
+
+            let rawContentArray = chapter.content.split(CHAPTER_DELIMETER);
+            for (let i = 0; i < rawContentArray.length; i++) {
+                let rawContent = rawContentArray[i];
+                console.log(rawContent)
+                if (rawContent.includes(CHAPTER_IMG_DELIMETER)) {
+                    let imgName = rawContent.split(CHAPTER_IMG_DELIMETER)[1];
+                    let imgSrc = `https://${bucketName}.s3.amazonaws.com/${imgName}`;
+                    // onAddImageButtonClick(imgSrc);
+                    newResultMap.set(newCounter, {
+                        name: '',
+                        preview: imgSrc,
+                        file: null,
+                        openUpload: false
+                    });
+
+                    newInputList.push(<InputListItem key={newCounter} counter={newCounter} />)
+                    newCounter += 1
+                } else {
+                    // onAddTextButtonClick(rawContent);
+                    newResultMap.set(newCounter, rawContent);
+                    newInputList.push(
+                        <Textarea
+                            key={newCounter}
+                            placeholder="Type in here…"
+                            defaultValue={rawContent}
+                            // value={defaultValue}
+                            onChange={(event) => {
+                                setResultMap(newResultMap => {
+                                    newResultMap.set(newCounter, event.target.value);
+                                })
+                            }}
+                            minRows={1}
+                            variant="outlined"
+                            color="neutral"
+                            endDecorator={
+                                <Box sx={{ml: 'auto'}}>
+                                    <IconButton onClick={function () {
+                                        moveItemUp(newCounter)
+                                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_up.svg"
+                                                                                              width="30px" height="30px"/></IconButton>
+                                    <IconButton onClick={function () {
+                                        moveItemDown(newCounter)
+                                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_down.svg"
+                                                                                              width="30px" height="30px"/></IconButton>
+                                    <IconButton onClick={function () {
+                                        removeItem(newCounter)
+                                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg" width="30px"
+                                                                                              height="30px"/></IconButton>
+                                </Box>
+                            }
+                            sx={{minWidth: "40%"}}
+                        />
+                    );
+                    newCounter += 1;
+                }
+            }
+            console.log(newResultMap)
+            console.log(newInputList)
+
+            setResultMap(newResultMap);
+            setInputList(newInputList);
+            setCounter(newCounter);
         }
     }, [props.edit, user, chapter]);
 
@@ -111,11 +181,11 @@ function CreateChapter(props: CreateChapterProps) {
     }, [view]);
 
     const prepareAndUpload = async (uploadType: string) => {
-        await sendToS3(bucketName, (uploadType ==='cover' ? COVER_PATH : STORY_BANNER_PATH) + cover.name, cover.file);
+        await sendToS3(bucketName, (COVER_PATH + cover.name), cover.file);
     }
 
     const handleUpload = (selectedFile: File, uploadType: string) => {
-        if (uploadType !== 'cover' && uploadType !== 'banner') {
+        if (uploadType !== 'cover') {
             return;
         }
 
@@ -128,23 +198,13 @@ function CreateChapter(props: CreateChapterProps) {
             openUpload: false
         }
 
-        if (uploadType === 'cover') {
-            if (work) {
-                setWork({
-                    ...work,
-                    cover: imgName
-                });
-            }
-            setCover(uploadObj);
-        } else {
-            if (work) {
-                setWork({
-                    ...work,
-                    banner: imgName
-                });
-            }
-            setBanner(uploadObj);
+        if (chapter) {
+            setChapter({
+                ...chapter,
+                cover: imgName
+            });
         }
+        setCover(uploadObj);
     }
 
     const removeCollaborator = (id: number): void => {
@@ -210,15 +270,16 @@ function CreateChapter(props: CreateChapterProps) {
         }
     }
 
-    function onAddTextButtonClick() {
+    function onAddTextButtonClick(defaultValue = "") {
         setResultMap(newResultMap => {
-            newResultMap.set(counter, "");
+            newResultMap.set(counter, defaultValue);
         });
         setInputList(inputList.concat(
             <Textarea
                 key={counter}
                 placeholder="Type in here…"
-                // value={resultMap.get(counter)}
+                defaultValue={defaultValue}
+                // value={defaultValue}
                 onChange={(event) => {
                     setResultMap(newResultMap => {
                         newResultMap.set(counter, event.target.value);
@@ -249,11 +310,11 @@ function CreateChapter(props: CreateChapterProps) {
         setCounter(counter + 1);
     }
 
-    function onAddImageButtonClick() {
+    function onAddImageButtonClick(defaultImgSrc = "") {
         setResultMap(newResultMap => {
             newResultMap.set(counter, {
                 name: '',
-                preview: '',
+                preview: defaultImgSrc,
                 file: null,
                 openUpload: false
             });
@@ -335,11 +396,11 @@ function CreateChapter(props: CreateChapterProps) {
                                 <Button startDecorator={<img
                                     src="/icons/white_text.svg"
                                     width="20px" height="20px"
-                                />} variant="outlined" color="neutral" onClick={onAddTextButtonClick}>Add Text</Button>
+                                />} variant="outlined" color="neutral" onClick={() => onAddTextButtonClick()}>Add Text</Button>
                                 <Button startDecorator={<img
                                     src="/icons/add_image.svg"
                                     width="20px" height="20px"
-                                />} variant="outlined" color="neutral" onClick={onAddImageButtonClick}>Add
+                                />} variant="outlined" color="neutral" onClick={() => onAddImageButtonClick()}>Add
                                     Image</Button>
                             </Stack>
 
@@ -499,8 +560,12 @@ function CreateChapter(props: CreateChapterProps) {
                 console.log("good luck");
             } else if (content['name'] !== undefined) {
                 if (!display) {
-                    await sendToS3(CHAPTER_IMGS_BUCKET, content['name'], content['file']);
-                    compoundedElements.push(CHAPTER_IMG_DELIMETER + content['name']);
+                    if (content['name'] !== "") {
+                        await sendToS3(CHAPTER_IMGS_BUCKET, content['name'], content['file']);
+                        compoundedElements.push(CHAPTER_IMG_DELIMETER + content['name']);
+                    } else {
+                        compoundedElements.push(CHAPTER_IMG_DELIMETER + content['preview']);
+                    }
                 } else {
                     // need to change src to pull from s3 when editing if they havent changed that image
                     console.log(content['preview']);
