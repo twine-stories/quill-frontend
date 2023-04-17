@@ -46,8 +46,8 @@ function Chapter() {
                 let collabs: JSX.Element[] = [];
                 let index: number = 0;
                 sortedResp.forEach((item: ProfitSplit) => {
-                    collabs.push(<Typography key={i} level='h6' color='white'>{item.creator.firstName + ' ' + item.creator.lastName}</Typography>)
-                    i++;
+                    collabs.push(<Typography key={index} level='h6' color='white'>{item.creator.firstName + ' ' + item.creator.lastName}</Typography>)
+                    index++;
                 })
                 setCollaborators(collabs);
             });
