@@ -110,32 +110,32 @@ function CreateChapter(props: CreateChapterProps) {
             let rawContentArray = chapter.content.split(CHAPTER_DELIMETER);
             for (let i = 0; i < rawContentArray.length; i++) {
                 let rawContent = rawContentArray[i];
-                console.log(rawContent)
+                newCounter += 1;
+
                 if (rawContent.includes(CHAPTER_IMG_DELIMETER)) {
                     let imgName = rawContent.split(CHAPTER_IMG_DELIMETER)[1];
                     let imgSrc = `https://${bucketName}.s3.amazonaws.com/${imgName}`;
                     // onAddImageButtonClick(imgSrc);
-                    newResultMap.set(newCounter, {
+                    newResultMap.set(i, {
                         name: '',
                         preview: imgSrc,
                         file: null,
                         openUpload: false
                     });
 
-                    newInputList.push(<InputListItem key={newCounter} counter={newCounter} />)
-                    newCounter += 1
+                    newInputList.push(<InputListItem key={i} counter={i} />)
                 } else {
                     // onAddTextButtonClick(rawContent);
-                    newResultMap.set(newCounter, rawContent);
+                    newResultMap.set(i, rawContent);
                     newInputList.push(
                         <Textarea
-                            key={newCounter}
+                            key={i}
                             placeholder="Type in here…"
                             defaultValue={rawContent}
                             // value={defaultValue}
                             onChange={(event) => {
                                 setResultMap(newResultMap => {
-                                    newResultMap.set(newCounter, event.target.value);
+                                    newResultMap.set(i, event.target.value);
                                 })
                             }}
                             minRows={1}
@@ -144,15 +144,15 @@ function CreateChapter(props: CreateChapterProps) {
                             endDecorator={
                                 <Box sx={{ml: 'auto'}}>
                                     <IconButton onClick={function () {
-                                        moveItemUp(newCounter)
+                                        moveItemUp(i)
                                     }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_up.svg"
                                                                                               width="30px" height="30px"/></IconButton>
                                     <IconButton onClick={function () {
-                                        moveItemDown(newCounter)
+                                        moveItemDown(i)
                                     }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_down.svg"
                                                                                               width="30px" height="30px"/></IconButton>
                                     <IconButton onClick={function () {
-                                        removeItem(newCounter)
+                                        removeItem(i)
                                     }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg" width="30px"
                                                                                               height="30px"/></IconButton>
                                 </Box>
@@ -160,11 +160,11 @@ function CreateChapter(props: CreateChapterProps) {
                             sx={{minWidth: "40%"}}
                         />
                     );
-                    newCounter += 1;
                 }
             }
             console.log(newResultMap)
             console.log(newInputList)
+            console.log(newCounter)
 
             setResultMap(newResultMap);
             setInputList(newInputList);
@@ -256,11 +256,14 @@ function CreateChapter(props: CreateChapterProps) {
         // then swap with the one below it
         let index = -1;
         for (let i = 0; i < inputListRef.current.length; i++) {
+            console.log(inputListRef.current[i]["key"])
+            console.log(counter)
             if (inputListRef.current[i]["key"] == counter) {
                 index = i;
                 break;
             }
         }
+
         const tempInputList = [...inputListRef.current];
         if (index !== tempInputList.length - 1) {
             const temp = tempInputList[index];
