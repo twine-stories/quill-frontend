@@ -13,7 +13,6 @@
 
 # src
 src/config.ts
-src/setupProxy.js
 
 # misc
 .DS_Store
