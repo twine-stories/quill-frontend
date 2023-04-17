@@ -348,7 +348,7 @@ function CreateChapter(props: CreateChapterProps) {
                     <Typography level="h2" color='purple'>{props.edit ? "Edit Chapter" : "Create Chapter"}</Typography>
 
                     {view &&
-                        <div>
+                        <div id='chapter-content'>
                             <Box
                                 sx={{
                                     py: 1,
@@ -359,10 +359,9 @@ function CreateChapter(props: CreateChapterProps) {
                                     flexWrap: 'wrap',
                                 }}
                             >
-                                <Sheet sx={{width: '50%', my: 1, borderRadius: "20px",}} color="neutral"
-                                       variant="outlined">
+                                <Grid>
                                     {preview}
-                                </Sheet>
+                                </Grid>
                             </Box>
                         </div>
                     }
@@ -594,8 +593,7 @@ function CreateChapter(props: CreateChapterProps) {
                 if (!display) {
                     compoundedElements.push(content)
                 } else {
-                    compoundedElements.push(<Typography level="h6"
-                                                        sx={{color: "#9E9FEB"}}><ReactMarkdown>{content}</ReactMarkdown></Typography>)
+                    compoundedElements.push(<Typography level="h6" color='white'><ReactMarkdown>{content}</ReactMarkdown></Typography>)
                 }
             }
         }
