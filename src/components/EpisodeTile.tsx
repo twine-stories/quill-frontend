@@ -6,6 +6,7 @@ import {useNavigate} from "react-router-dom";
 
 interface EpisodeTileProps {
     episode: Episode;
+    isCreator : boolean;
 }
 
 function EpisodeTile(props: EpisodeTileProps) {
@@ -33,9 +34,12 @@ function EpisodeTile(props: EpisodeTileProps) {
                     {props.episode && props.episode['title']}
                 </Typography>
             </Card>
+            { props.isCreator &&
             <TwineButton icon="/icons/purple_settings.svg" color="blackpurple" name="Edit Chapter" action={() => {
-               navigate('/edit/episode/' + props.episode['url'])
-            }}/>
+                navigate('/edit/episode/' + props.episode['url'])
+             }}/>
+            }
+            
         </Stack>
     );
 }

@@ -78,7 +78,7 @@ function Story() {
                                 display: 'flex',
                                 flexDirection: 'column',
                                 gap: 1,
-                                alignItems: 'center',
+                                alignItems: 'left',
                                 flexWrap: 'wrap',
                             }}
                         >
@@ -86,21 +86,21 @@ function Story() {
                             <Typography level="h6" sx={{color: "#E4E5FF"}}>{work['description']}</Typography>
 
                             {user.walletAddress === work.creator.walletAddress &&
-                                <>
-                                    <TwineButton icon="/icons/purple_settings.svg" color="blackpurple" name="Edit Story" action={() => {
+                                <div style={{display: "flex", gap: "10px"}}>
+                                    <TwineButton sx={{width: "50%"}} icon="/icons/purple_settings.svg" color="blackpurple" name="Edit Story" action={() => {
                                         window.location.href = '/edit/story/' + work['url'];
                                     }}/>
-                                    <TwineButton icon="/icons/purple_plus.svg" color="purple" name="New Episode" action={() => {
+                                    <TwineButton sx={{width: "50%"}}  icon="/icons/purple_plus.svg" color="purple" name="New Episode" action={() => {
                                         window.location.href = '/create/episode/' + work['url'];
                                     }}/>
-                                </>
+                                </div>
                             }
 
                             <Typography level="h2" sx={{color: "#9E9FEB"}}>Published Chapters</Typography>
                             {episodes.map((episode) => {
                                 if (episode['publishStamp']) {
                                     return (
-                                        <EpisodeTile episode={episode}/>
+                                        <EpisodeTile isCreator={user.walletAddress === work.creator.walletAddress} episode={episode}/>
                                     )
                                 }
                             })}
@@ -111,7 +111,7 @@ function Story() {
                                     {episodes.map((episode) => {
                                         if (!episode['publishStamp']) {
                                             return (
-                                                <EpisodeTile episode={episode}/>
+                                                <EpisodeTile isCreator={user.walletAddress === work.creator.walletAddress} episode={episode}/>
                                             )
                                         }
                                     })}
