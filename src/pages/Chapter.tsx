@@ -11,6 +11,7 @@ import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants.ts";
 import { CHAPTER_IMGS_BUCKET } from '../config.ts';
 import CommentSection from '../components/CommentSection.tsx';
 import ErrorPopup from '../components/ErrorPopup.tsx';
+import TwineButton from '../components/TwineButton.tsx';
 
 
 function Chapter() {
@@ -38,7 +39,7 @@ function Chapter() {
                 setLiked(response);
             });
             genericGet('/api/profitSplit/episode/' + episode.id).then((response: ProfitSplit[]) => {
-                const sortedResp: ProfitSplit[] = response.sort((a,b) => a.percentage - b.percentage);
+                const sortedResp: ProfitSplit[] = response.sort((a,b) => b.percentage - a.percentage);
                 let collabs: JSX.Element[] = [];
                 let index: number = 0;
                 sortedResp.forEach((item: ProfitSplit) => {
@@ -103,7 +104,10 @@ function Chapter() {
                                 <Typography level='h6' sx={{marginLeft: '10px'}}>{String(numLikes) + ' like' + (numLikes === 1 ? '' : 's')}</Typography>
                             </Grid>
                         </Grid>
-                        <Typography level="h3" color='white'>{episode.title}</Typography>
+                        <Grid container alignItems='center' justifyContent='flex-start'>
+                            <Typography sx={{marginRight: '20px'}} level="h3" color='white'>{episode.title}</Typography>
+                            {(user.userName === episode.work.creator.userName) && <TwineButton color='purple' name='Edit Episode' action={() => window.location.href = '/edit/episode/' + episode.url} />}
+                        </Grid>
                         <Grid>
                             {
                                 loadEpisodeContent(episode['content'])
