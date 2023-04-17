@@ -61,8 +61,8 @@ function Gallery(props: WorkGalleryProps) {
             <Typography level="h2" sx={{color: "#9E9FEB"}}>
                 {props.episodeName ? props.episodeName : (props.draft ? "Draft" : "Published").concat(props.art ? " Collections" : " Stories")}
             </Typography>
-            <Box sx={{backgroundColor: "#14100E", padding: '10px', marginBottom: '30px'}}>
-                <Typography level="h5" sx={{color: "#9E9FEB"}}>
+            <Box sx={{backgroundColor: "#14100E", padding: '10px', marginBottom: '30px', borderRadius: "20px"}}>
+                <Typography level="h5" sx={{marginTop: '5px', marginBottom: '0px', color: "#9E9FEB"}}>
                     {galleryItems.length} {galleryItems.length === 1 ? (props.art ? "Collection" : "Story") : (props.art ? "Collections" : "Stories")}
                 </Typography>
 
