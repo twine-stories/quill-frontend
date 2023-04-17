@@ -42,7 +42,7 @@ function Chapter() {
                 let collabs: JSX.Element[] = [];
                 let index: number = 0;
                 sortedResp.forEach((item: ProfitSplit) => {
-                    collabs.push(<Typography key={index} level='h3' color='white' onClick={() => window.location.href = '/profile/' + item.creator.userName} sx={{cursor: 'pointer', fontSize: '18px'}}>{item.creator.firstName + ' ' + item.creator.lastName}</Typography>)
+                    collabs.push(<Typography key={index} level='h3' color='white' onClick={() => window.location.href = '/profile/' + item.creator.userName} sx={{cursor: 'pointer', fontSize: '20px'}}>{item.creator.firstName + ' ' + item.creator.lastName}</Typography>)
                     index++;
                 })
                 setCollaborators(collabs);
@@ -112,7 +112,7 @@ function Chapter() {
 
                     </Box>
                     <Grid sx={{marginBottom: '50px'}}>
-                        <Typography level='h3' color='purple'>Creators:</Typography>
+                        <Typography level='h3' color='purple'>{'Creator' + (collaborators.length === 1 ? '' : 's') + ':'}</Typography>
                         {collaborators}
                     </Grid>
                     <CommentSection episode={episode} />
