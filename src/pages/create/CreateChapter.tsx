@@ -25,7 +25,6 @@ import TwineInput from "../../components/TwineInput.tsx";
 import TwoColumnLayout from "../../components/TwoColumnLayout.tsx";
 import TwineButton from "../../components/TwineButton.tsx";
 import {episodeAdd, episodeGetByUrl, genericGet, genericPost, workAdd, workGetByUrl} from "../../utils/api.ts";
-import ReactMarkdown from 'https://esm.sh/react-markdown@7'
 import {v4 as uuidv4} from 'uuid';
 import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER, MAX_COLLABORATORS} from "../../utils/constants.ts";
 import Collaborator from "../../components/Collaborator.tsx";
@@ -594,7 +593,7 @@ function CreateChapter(props: CreateChapterProps) {
                 if (!display) {
                     compoundedElements.push(content)
                 } else {
-                    compoundedElements.push(<Typography level="h6" color='white'><ReactMarkdown>{content}</ReactMarkdown></Typography>)
+                    compoundedElements.push(<Typography level="h6" color='white'>{content}</Typography>)
                 }
             }
         }

@@ -6,7 +6,6 @@ import {Episode, User, Work, Like, ProfitSplit} from '../utils/types.ts';
 import {episodeGetByUrl, episodesGetByWorkId, genericGet, workGetByUrl, genericPost} from '../utils/api.ts';
 import {AspectRatio, Box, Button, Stack, Switch, Typography, Grid} from "@mui/joy";
 import IconButton from "../components/IconButton.tsx";
-import ReactMarkdown from 'https://esm.sh/react-markdown@7'
 import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants.ts";
 import { CHAPTER_IMGS_BUCKET } from '../config.ts';
 import CommentSection from '../components/CommentSection.tsx';
@@ -146,7 +145,7 @@ function Chapter() {
                         />
                     </AspectRatio>)
             } else {
-                compoundedElements.push(<Typography key={i} level="h6"><ReactMarkdown>{rawContentArray[i]}</ReactMarkdown></Typography>)
+                compoundedElements.push(<Typography key={i} level="h6">{rawContentArray[i]}</Typography>)
             }
         }
         return compoundedElements;
