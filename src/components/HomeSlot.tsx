@@ -3,7 +3,7 @@ import './HomeSlot.css';
 import { Sheet, Typography, Grid } from '@mui/joy';
 import { Work } from '../utils/types.ts';
 import { STORY_IMGS_BUCKET } from '../config.ts';
-import { STORY_COVER_PATH } from '../utils/aws.ts';
+import { COVER_PATH } from '../utils/aws.ts';
 
 interface HomeProps {
     title: string;
@@ -17,7 +17,7 @@ function HomeSlot(props: HomeProps) {
     const unHoveredContent = <Grid container direction='column' alignItems='flex-start' justifyContent='flex-start' sx={{width: '250px'}}>
             {props.work && 
                 <Grid>
-                    <img alt='cover' src={'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + STORY_COVER_PATH + props.work.cover} width='250' height='375' className='home-cover' />
+                    <img alt='cover' src={'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + COVER_PATH + props.work.cover} width='250' height='375' className='home-cover' />
                 </Grid>
             }
             <Grid xs={12}>

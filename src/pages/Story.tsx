@@ -85,12 +85,16 @@ function Story() {
                             <Typography level="h1" sx={{color: "#E4E5FF"}}>{work['title']}</Typography>
                             <Typography level="h6" sx={{color: "#E4E5FF"}}>{work['description']}</Typography>
 
-                            <TwineButton icon="/icons/purple_settings.svg" color="blackpurple" name="Edit Story" action={() => {
-                                window.location.href = '/edit/story/' + work['url'];
-                            }}/>
-                            <TwineButton icon="/icons/purple_plus.svg" color="purple" name="New Episode" action={() => {
-                                window.location.href = '/create/episode/' + work['url'];
-                            }}/>
+                            {user.walletAddress === work.creator.walletAddress &&
+                                <>
+                                    <TwineButton icon="/icons/purple_settings.svg" color="blackpurple" name="Edit Story" action={() => {
+                                        window.location.href = '/edit/story/' + work['url'];
+                                    }}/>
+                                    <TwineButton icon="/icons/purple_plus.svg" color="purple" name="New Episode" action={() => {
+                                        window.location.href = '/create/episode/' + work['url'];
+                                    }}/>
+                                </>
+                            }
 
                             <Typography level="h2" sx={{color: "#9E9FEB"}}>Published Chapters</Typography>
                             {episodes.map((episode) => {
@@ -101,14 +105,18 @@ function Story() {
                                 }
                             })}
 
-                            <Typography level="h2" sx={{color: "#9E9FEB"}}>Draft Chapters</Typography>
-                            {episodes.map((episode) => {
-                                if (!episode['publishStamp']) {
-                                    return (
-                                        <EpisodeTile episode={episode}/>
-                                    )
-                                }
-                            })}
+                            {user.walletAddress === work.creator.walletAddress &&
+                                <>
+                                    <Typography level="h2" sx={{color: "#9E9FEB"}}>Draft Chapters</Typography>
+                                    {episodes.map((episode) => {
+                                        if (!episode['publishStamp']) {
+                                            return (
+                                                <EpisodeTile episode={episode}/>
+                                            )
+                                        }
+                                    })}
+                                </>
+                            }
 
 
                         </Box>

@@ -7,7 +7,7 @@ import ProfileWork from '../components/ProfileWork.tsx';
 import './Profile.css';
 import "../components/ProfileSidebar.tsx"
 import ProfileSidebar from '../components/ProfileSidebar.tsx';
-import { Stack, Typography, ProfitSplit} from "@mui/joy";
+import { Stack, Typography} from "@mui/joy";
 import { PROFILE_IMGS_BUCKET } from '../config.ts';
 import IconButton from '../components/IconButton.tsx';
 import TwineButton from '../components/TwineButton.tsx';

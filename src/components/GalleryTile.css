@@ -1,0 +1,11 @@
+.gallery-tile {
+    cursor: pointer;
+}
+
+.gallery-tile h2 {
+    font-size: 24px;
+}
+
+.gallery-tile h6 {
+    font-size: 16px;
+}

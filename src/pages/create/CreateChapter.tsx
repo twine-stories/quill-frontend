@@ -8,7 +8,7 @@ import {
     AspectRatio,
     Box,
     Button,
-    Card, Checkbox,
+    Card, Checkbox, CircularProgress,
     FormControl, FormHelperText,
     FormLabel, Grid,
     IconButton,
@@ -23,15 +23,18 @@ import Sheet from '@mui/joy/Sheet';
 import TwineInput from "../../components/TwineInput.tsx";
 import TwoColumnLayout from "../../components/TwoColumnLayout.tsx";
 import TwineButton from "../../components/TwineButton.tsx";
-import {episodeAdd, genericGet, genericPost, workAdd, workGetByUrl} from "../../utils/api.ts";
+import {episodeAdd, episodeGetByUrl, genericGet, genericPost, workAdd, workGetByUrl} from "../../utils/api.ts";
 import ReactMarkdown from 'https://esm.sh/react-markdown@7'
 import {v4 as uuidv4} from 'uuid';
-import {CHAPTER_DELIMETER, MAX_COLLABORATORS} from "../../utils/constants.ts";
+import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER, MAX_COLLABORATORS} from "../../utils/constants.ts";
 import Collaborator from "../../components/Collaborator.tsx";
 import {CollaboratorContext} from "./Create.tsx";
 import InputListItem from '../../components/InputListItem.tsx';
-import { sendToS3 } from '../../utils/aws.ts';
-import { CHAPTER_IMGS_BUCKET } from "../../config.ts";
+import {sendToS3, COVER_PATH, STORY_BANNER_PATH} from '../../utils/aws.ts';
+import {CHAPTER_IMGS_BUCKET, STORY_IMGS_BUCKET} from "../../config.ts";
+import UploadImage from "../../components/UploadImage.tsx";
+import {useNavigate} from "react-router-dom";
+import ErrorPopup from "../../components/ErrorPopup.tsx";
 
 enableMapSet();
 
@@ -42,20 +45,36 @@ interface CreateChapterProps {
 export const ChapterContext = createContext(null as any);
 
 function CreateChapter(props: CreateChapterProps) {
+    const navigate = useNavigate();
+
     const context: object = useContext(UserContext);
     const user: User = context['user'];
+    const [chapter, setChapter] = useState<Episode>(null);
 
+    const [uploading, setUploading] = useState<boolean>(false);
     const [inputList, setInputList, inputListRef] = useState<JSX.Element[]>([]);
     const [resultMap, setResultMap] = useImmer(new Map());
     const [counter, setCounter] = useState(0);
     const [view, setView] = useState(false);
     const [work, setWork] = useState<Work>(null);
+    const [errorMessage, setErrorMessage] = useState<string>('Error creating story.');
+    const [openError, setOpenError] = useState<boolean>(false);
+    const [populatedForEdit, setPopulatedForEdit] = useState<boolean>(false);
+
+    const [cover, setCover] = useState<ImageUpload>({
+        name: '',
+        preview: '',
+        file: null,
+        openUpload: false
+    });
 
     const [collaborators, setCollaborators] = useState<JSX.Element[]>([]);
     const [preview, setPreview] = useState<JSX.Element[]>([]);
 
+    const bucketName: string = CHAPTER_IMGS_BUCKET;
+
     useEffect(() => {
-        if (user) {
+        if (user && !props.edit) {
             workGetByUrl(window.location.href.split('/')[5], setWork, () => {
                 console.log('fail');
             });
@@ -71,6 +90,89 @@ function CreateChapter(props: CreateChapterProps) {
     }, [user]);
 
     useEffect(() => {
+        if (user && props.edit) {
+            episodeGetByUrl(window.location.href.split('/')[5], setChapter, () => {
+                console.log('fail');
+            });
+        }
+    }, [props.edit, user]);
+
+    useEffect(() => {
+        if (user && props.edit && chapter && !populatedForEdit) {
+            setWork(chapter.work);
+
+            setPopulatedForEdit(true);
+
+            var newCounter = 0;
+            var newInputList = [];
+            var newResultMap = new Map();
+
+            let rawContentArray = chapter.content.split(CHAPTER_DELIMETER);
+            for (let i = 0; i < rawContentArray.length; i++) {
+                let rawContent = rawContentArray[i];
+                newCounter += 1;
+
+                if (rawContent.includes(CHAPTER_IMG_DELIMETER)) {
+                    let imgName = rawContent.split(CHAPTER_IMG_DELIMETER)[1];
+                    let imgSrc = `https://${bucketName}.s3.amazonaws.com/${imgName}`;
+                    // onAddImageButtonClick(imgSrc);
+                    newResultMap.set(i, {
+                        name: '',
+                        preview: imgSrc,
+                        file: null,
+                        openUpload: false
+                    });
+
+                    newInputList.push(<InputListItem key={i} counter={i} />)
+                } else {
+                    // onAddTextButtonClick(rawContent);
+                    newResultMap.set(i, rawContent);
+                    newInputList.push(
+                        <Textarea
+                            key={i}
+                            placeholder="Type in here…"
+                            defaultValue={rawContent}
+                            // value={defaultValue}
+                            onChange={(event) => {
+                                setResultMap(newResultMap => {
+                                    newResultMap.set(i, event.target.value);
+                                })
+                            }}
+                            minRows={1}
+                            variant="outlined"
+                            color="neutral"
+                            endDecorator={
+                                <Box sx={{ml: 'auto'}}>
+                                    <IconButton onClick={function () {
+                                        moveItemUp(i)
+                                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_up.svg"
+                                                                                              width="30px" height="30px"/></IconButton>
+                                    <IconButton onClick={function () {
+                                        moveItemDown(i)
+                                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_down.svg"
+                                                                                              width="30px" height="30px"/></IconButton>
+                                    <IconButton onClick={function () {
+                                        removeItem(i)
+                                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg" width="30px"
+                                                                                              height="30px"/></IconButton>
+                                </Box>
+                            }
+                            sx={{minWidth: "40%"}}
+                        />
+                    );
+                }
+            }
+            console.log(newResultMap)
+            console.log(newInputList)
+            console.log(newCounter)
+
+            setResultMap(newResultMap);
+            setInputList(newInputList);
+            setCounter(newCounter);
+        }
+    }, [props.edit, user, chapter]);
+
+    useEffect(() => {
         if (view) {
             reformatContent(true).then((response: JSX.Element[]) => {
                 setPreview(response);
@@ -78,6 +180,32 @@ function CreateChapter(props: CreateChapterProps) {
         }
     }, [view]);
 
+    const prepareAndUpload = async (uploadType: string) => {
+        await sendToS3(bucketName, (COVER_PATH + cover.name), cover.file);
+    }
+
+    const handleUpload = (selectedFile: File, uploadType: string) => {
+        if (uploadType !== 'cover') {
+            return;
+        }
+
+        let imgName = uuidv4() + "." + selectedFile.name.split('.').pop();
+
+        let uploadObj: ImageUpload = {
+            name: imgName,
+            preview: URL.createObjectURL(selectedFile),
+            file: selectedFile,
+            openUpload: false
+        }
+
+        if (chapter) {
+            setChapter({
+                ...chapter,
+                cover: imgName
+            });
+        }
+        setCover(uploadObj);
+    }
 
     const removeCollaborator = (id: number): void => {
         let newCollaborators: JSX.Element[] = [];
@@ -128,11 +256,14 @@ function CreateChapter(props: CreateChapterProps) {
         // then swap with the one below it
         let index = -1;
         for (let i = 0; i < inputListRef.current.length; i++) {
+            console.log(inputListRef.current[i]["key"])
+            console.log(counter)
             if (inputListRef.current[i]["key"] == counter) {
                 index = i;
                 break;
             }
         }
+
         const tempInputList = [...inputListRef.current];
         if (index !== tempInputList.length - 1) {
             const temp = tempInputList[index];
@@ -142,15 +273,16 @@ function CreateChapter(props: CreateChapterProps) {
         }
     }
 
-    function onAddTextButtonClick() {
+    function onAddTextButtonClick(defaultValue = "") {
         setResultMap(newResultMap => {
-            newResultMap.set(counter, "");
+            newResultMap.set(counter, defaultValue);
         });
         setInputList(inputList.concat(
             <Textarea
                 key={counter}
                 placeholder="Type in here…"
-                // value={resultMap.get(counter)}
+                defaultValue={defaultValue}
+                // value={defaultValue}
                 onChange={(event) => {
                     setResultMap(newResultMap => {
                         newResultMap.set(counter, event.target.value);
@@ -181,11 +313,11 @@ function CreateChapter(props: CreateChapterProps) {
         setCounter(counter + 1);
     }
 
-    function onAddImageButtonClick() {
+    function onAddImageButtonClick(defaultImgSrc = "") {
         setResultMap(newResultMap => {
             newResultMap.set(counter, {
                 name: '',
-                preview: '',
+                preview: defaultImgSrc,
                 file: null,
                 openUpload: false
             });
@@ -202,9 +334,7 @@ function CreateChapter(props: CreateChapterProps) {
             <Navbar/>
             <TwoColumnLayout leftComponent={
                 <div>
-                    <Typography level="h2" sx={{color: "#9E9FEB"}}>
-                        Create Chapter
-                    </Typography>
+                    <Typography level="h2" color='purple'>{props.edit ? "Edit Chapter" : "Create Chapter"}</Typography>
 
                     {view &&
                         <div>
@@ -244,8 +374,7 @@ function CreateChapter(props: CreateChapterProps) {
                                 </Typography>
                             </FormControl>
 
-
-                            <TwineInput id="title" label="Chapter Title" placeholder="Enter Chapter Title..."/>
+                            {(!props.edit || chapter) && <TwineInput defaultValue={(props.edit) ? chapter['title'] : ""} id="title" label="Chapter Title" placeholder="Enter Chapter Title..."/>}
 
                             <ChapterContext.Provider value={{
                                 'resultMap': resultMap,
@@ -270,16 +399,16 @@ function CreateChapter(props: CreateChapterProps) {
                                 <Button startDecorator={<img
                                     src="/icons/white_text.svg"
                                     width="20px" height="20px"
-                                />} variant="outlined" color="neutral" onClick={onAddTextButtonClick}>Add Text</Button>
+                                />} variant="outlined" color="neutral" onClick={() => onAddTextButtonClick()}>Add Text</Button>
                                 <Button startDecorator={<img
                                     src="/icons/add_image.svg"
                                     width="20px" height="20px"
-                                />} variant="outlined" color="neutral" onClick={onAddImageButtonClick}>Add
+                                />} variant="outlined" color="neutral" onClick={() => onAddImageButtonClick()}>Add
                                     Image</Button>
                             </Stack>
 
-                            <TwineInput id="endOfChapterMessage" label="End of Chapter Message"
-                                        placeholder="(Optional) Enter End of Chapter Message..." multiline={true}/>
+                            {(!props.edit || chapter) && <TwineInput defaultValue={(props.edit) ? chapter['endOfChapterMessage'] : ""} id="endOfChapterMessage" label="End of Chapter Message"
+                                                                     placeholder="(Optional) Enter End of Chapter Message..." multiline={true}/>}
                         </Box>
 
                         <CollaboratorContext.Provider value={{
@@ -321,13 +450,47 @@ function CreateChapter(props: CreateChapterProps) {
                                          flexWrap: 'wrap',
                                      }}
                                  >
-                                     {/*FIX THIS LATER*/}
-                                     <Typography sx={{backgroundColor: "#14100E", borderRadius: "10px", p: "10px"}}
-                                                 level="h6" endDecorator={<Switch id="mature" sx={{ml: 1}}/>}>
-                                         Mature
-                                     </Typography>
+                                     <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' className='create-image-upload'>
+                                         <Typography level="h3" color='purple'>Cover Art</Typography>
+                                         <Grid container alignItems='center' justifyContent='center' id='create-cover-wrapper'>
+                                             {((chapter && chapter.cover) || cover.preview) ?
+                                                 <img
+                                                     src = {cover.preview ? cover.preview : 'https://' + CHAPTER_IMGS_BUCKET + '.s3.amazonaws.com/' + COVER_PATH + (chapter ? chapter.cover : cover.name)}
+                                                     alt = ""
+                                                     onClick = {() => setCover({
+                                                         ...cover,
+                                                         openUpload: true
+                                                     })}
+                                                     id='create-cover'
+                                                 />
+                                                 :
+                                                 <TwineButton icon='/icons/purple_plus_light.svg' name='Upload' color='darkpurple' action={() => setCover({
+                                                     ...cover,
+                                                     openUpload: true
+                                                 })} />
+                                             }
+                                         </Grid>
+                                         <UploadImage
+                                             open={cover.openUpload}
+                                             close={() => setCover({
+                                                 ...cover,
+                                                 openUpload: false
+                                             })}
+                                             handleUpload={(file: File) => handleUpload(file, 'cover')}
+                                             circle={false}
+                                             width='160px'
+                                             height='240px'
+                                         />
+                                     </Grid>
 
-                                     {/*FIX THIS LATER TOO*/}
+                                     {/*TODO: FIX THIS LATER*/}
+                                     {(!props.edit || chapter) && <Typography sx={{backgroundColor: "#14100E", borderRadius: "10px", p: "10px"}}
+                                                 level="h6" endDecorator={<Switch checked={props.edit ? chapter['mature'] : false} id="mature" sx={{ml: 1}}/>}>
+                                         Mature
+                                     </Typography>}
+
+
+                                     {/*TODO: FIX THIS LATER TOO*/}
                                      <Checkbox id="guidelines" color="info"
                                                label="I Verify This Work is Mine and Follows Community Guidelines."/>
 
@@ -336,22 +499,57 @@ function CreateChapter(props: CreateChapterProps) {
                                      }}>Preview</Button>}
                                      {view && <Button variant="outlined" color="neutral"
                                                       onClick={() => setView(false)}>Edit</Button>}
-                                     <TwineButton name="Save Draft"
-                                                  icon="/icons/purple_checkmark.svg" action={(e) => {
-                                         makeEpisode(false)
-                                     }}></TwineButton>
-                                     <TwineButton name="Create Chapter" icon="/icons/green_plus.svg"
-                                                  color="green" action={(e) => {
-                                         makeEpisode(true)
-                                     }}></TwineButton>
 
-
+                                     {!props.edit &&
+                                         <>
+                                             <TwineButton name="Save Draft"
+                                                          icon="/icons/purple_checkmark.svg" action={(e) => {
+                                                 postEpisode(false)
+                                             }}></TwineButton>
+                                             <TwineButton name="Create Chapter" icon="/icons/green_plus.svg"
+                                                          color="green" action={(e) => {
+                                                 postEpisode(true)
+                                             }}></TwineButton>
+                                         </>
+                                     }
+                                     {props.edit &&
+                                         <>
+                                             {returnSaveButton()}
+                                             <TwineButton
+                                                 name='Cancel Edit Chapter' color="blackgreen" icon="/icons/green_x.svg"
+                                                 action={(e) => navigate(-1)}/>
+                                         </>
+                                     }
+                                     <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message={errorMessage} />
                                  </Box>
                              }
             />
         </div>
 
     );
+
+    function returnSaveButton() {
+        if (chapter && chapter['publishStamp']) {
+            return (<>
+                <TwineButton
+                    name={uploading ? <CircularProgress color='darkpurple' variant='plain'/> : 'Save Chapter'} color="green"
+                    icon="/icons/green_checkmark.svg"
+                    action={(e) => postEpisode(true, chapter)}/>
+                <TwineButton name="Transfer to Draft" icon="/icons/purple_paper.svg"
+                             action={(e) => postEpisode(false, chapter)}></TwineButton>
+            </>)
+        } else {
+            return (<>
+                <TwineButton
+                    name={uploading ? <CircularProgress color='darkpurple' variant='plain'/> : 'Save Chapter'} color="green"
+                    icon="/icons/green_checkmark.svg"
+                    action={(e) => postEpisode(false, chapter)}/>
+                <TwineButton name="Transfer to Published" icon="/icons/purple_paper.svg"
+                             action={(e) => postEpisode(true, chapter)}></TwineButton>
+            </>)
+        }
+    }
+
 
     async function reformatContent(display: boolean) {
         var compoundedElements: (string | JSX.Element)[] = [];
@@ -365,8 +563,12 @@ function CreateChapter(props: CreateChapterProps) {
                 console.log("good luck");
             } else if (content['name'] !== undefined) {
                 if (!display) {
-                    await sendToS3(CHAPTER_IMGS_BUCKET, content['name'], content['file']);
-                    compoundedElements.push(content['name']);
+                    if (content['name'] !== "") {
+                        await sendToS3(CHAPTER_IMGS_BUCKET, content['name'], content['file']);
+                        compoundedElements.push(CHAPTER_IMG_DELIMETER + content['name']);
+                    } else {
+                        compoundedElements.push(CHAPTER_IMG_DELIMETER + content['preview']);
+                    }
                 } else {
                     // need to change src to pull from s3 when editing if they havent changed that image
                     console.log(content['preview']);
@@ -375,7 +577,7 @@ function CreateChapter(props: CreateChapterProps) {
                                      sx={{my: 2}}>
                             <img
                                 src={content['preview']}
-                                srcSet={content['preview'] + ' 2x'}
+                                // srcSet={content['preview'] + ' 2x'}
                                 loading="lazy"
                                 alt=""
                             />
@@ -437,17 +639,19 @@ function CreateChapter(props: CreateChapterProps) {
         return profitSplitMap;
     }
 
-    async function makeEpisode(published: boolean) {
+    async function postEpisode(published: boolean, currentChapter?: Episode) {
         const title: HTMLInputElement = document.getElementById("title") as HTMLInputElement;
         const mature: HTMLInputElement = document.getElementById("mature") as HTMLInputElement;
         const guidelines: HTMLInputElement = document.getElementById("guidelines") as HTMLInputElement;
         const endOfChapterMessage: HTMLInputElement = document.getElementById("endOfChapterMessage") as HTMLInputElement;
         const publishStamp = published ? new Date() : null;
         const profitSplitMap = await checkCollaborators();
+        const id = currentChapter ? currentChapter['id'] : null;
 
         const allContent = await reformatContent(false);
-        if (title.value && guidelines.checked && profitSplitMap) {
+        if (title.value && guidelines.checked && profitSplitMap && (cover.name || (work && work.cover)) && allContent.length > 0) {
             let newEpisode: Episode = {
+                id: id,
                 work: work,
                 title: title.value,
                 cover: 'cover',
@@ -460,14 +664,24 @@ function CreateChapter(props: CreateChapterProps) {
                 published: published,
             };
 
-            let response = await genericPost("/api/episode/add", newEpisode)
-            if (response) {
-                console.log("got response back ", response);
-            } else {
-                console.log("Your title is the same as one of your existing chapters. Please choose a different chapter name.");
+            let urlModifier = props.edit ? "update" : "add";
+
+            setUploading(true);
+            try {
+                const response = await genericPost("/api/episode/" + urlModifier, newEpisode);
+                if (response) {
+                    if (cover.file) {
+                        await prepareAndUpload('cover');
+                    }
+                    setUploading(false);
+                    newEpisode.id = response;
+                }
+            } catch (error) {
+                setErrorMessage('Your title is the same as one of your existing titles. Please choose a different title.');
+                setUploading(false);
+                setOpenError(true);
                 return;
             }
-            newEpisode.id = response;
 
             // Iterate through the map and create a profit split for each user
             profitSplitMap.forEach((value, user) => {
@@ -484,7 +698,11 @@ function CreateChapter(props: CreateChapterProps) {
                     }
                 });
             });
+
+            navigate("/episode/" + chapter.url);
         }
+        setErrorMessage('Please make sure you have filled out all the fields before submitting.');
+        setOpenError(true);
     }
 }
 

@@ -1,17 +1,16 @@
 import React, {useState, useContext, useEffect} from 'react';
+import './Chapter.css';
 import Navbar from "../components/Navbar.tsx";
 import {UserContext} from "../App.tsx";
-import {Episode, User, Work, Like} from '../utils/types.ts';
+import {Episode, User, Work, Like, ProfitSplit} from '../utils/types.ts';
 import {episodeGetByUrl, episodesGetByWorkId, genericGet, workGetByUrl, genericPost} from '../utils/api.ts';
-import TwoColumnLayout from "../components/TwoColumnLayout.tsx";
-import {AspectRatio, Box, Button, Stack, Switch, Typography} from "@mui/joy";
-import Sheet from "@mui/joy/Sheet";
-import TwineInput from "../components/TwineInput.tsx";
-import TwineButton from "../components/TwineButton.tsx";
+import {AspectRatio, Box, Button, Stack, Switch, Typography, Grid} from "@mui/joy";
 import IconButton from "../components/IconButton.tsx";
 import ReactMarkdown from 'https://esm.sh/react-markdown@7'
 import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants.ts";
+import { CHAPTER_IMGS_BUCKET } from '../config.ts';
 import CommentSection from '../components/CommentSection.tsx';
+import ErrorPopup from '../components/ErrorPopup.tsx';
 
 
 function Chapter() {
@@ -22,23 +21,31 @@ function Chapter() {
     const [liked, setLiked] = useState<boolean>(false);
     const [numLikes, setNumLikes] = useState<number>(0);
 
+    const [openError, setOpenError] = useState<boolean>(false);
+
+    const [collaborators, setCollaborators] = useState<JSX.Element[]>([]);
+
     useEffect(() => {
-        if (user) {
-            episodeGetByUrl(window.location.href.split('/')[4], setEpisode, () => {
-                console.log('fail');
-            });
-            
-            
-            
-            
-        }
-    }, [user]);
+        episodeGetByUrl(window.location.href.split('/')[4], setEpisode, () => {
+            console.log('fail');
+        });
+    }, []);
 
     useEffect(() => {
         if (episode && user && episode.id) {
             const episode_str: string = String(episode.id);
             genericGet('/api/like/isLikedByUser/' + user.userName + '/' + episode_str).then((response: any) => {
                 setLiked(response);
+            });
+            genericGet('/api/profitSplit/episode/' + episode.id).then((response: ProfitSplit[]) => {
+                const sortedResp: ProfitSplit[] = response.sort((a,b) => a.percentage - b.percentage);
+                let collabs: JSX.Element[] = [];
+                let index: number = 0;
+                sortedResp.forEach((item: ProfitSplit) => {
+                    collabs.push(<Typography key={index} level='h3' color='white' onClick={() => window.location.href = '/profile/' + item.creator.userName} sx={{cursor: 'pointer', fontSize: '20px'}}>{item.creator.firstName + ' ' + item.creator.lastName}</Typography>)
+                    index++;
+                })
+                setCollaborators(collabs);
             });
         }
     }, [episode, user]);
@@ -68,88 +75,70 @@ function Chapter() {
                 });
 
             }
-       }
+        } else {
+            setOpenError(true);
+        }
     }
 
     return (
         <div>
             <Navbar/>
-            <TwoColumnLayout leftComponent={
-                <div>
-                    {episode && episode['content'] &&
-                        <div>
-                        <Box
-                            sx={{
-                                py: 2,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 1,
-                                alignItems: 'center',
-                                flexWrap: 'wrap',
-                            }}
-                        >
-                            <Typography level="h1" sx={{color: "#E4E5FF"}}>{episode['title']}</Typography>
-                            <div style={{display: "flex", flexDirection: "row", gap: "10px"}}>
+            {episode && episode['content'] &&
+            <Grid container justifyContent='center'>
+                <Grid id='chapter-content'>
+                    <Box
+                        sx={{
+                            py: 2,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 1,
+                            alignItems: 'flex-start',
+                            flexWrap: 'wrap',
+                        }}
+                    >
+                        <Grid xs={12} container alignItems='center' justifyContent='space-between'>
+                            <Typography level='h1' color='purple'>{episode.work.title}</Typography>
+                            <Grid container direction='row'>
                                 <IconButton action = {likeAction} icon={liked ? '/icons/heart-red.svg' : '/icons/heart.svg'} color = "purple"/>
-                                <p>{numLikes}</p>
-                            </div>
-                            <Sheet sx={{width: '50%', my: 1, borderRadius: "20px",}} color="neutral"
-                                   variant="outlined">
-                                {
-                                    loadEpisodeContent(episode['content'])
-                                }
-                            </Sheet>
+                                <Typography level='h6' sx={{marginLeft: '10px'}}>{String(numLikes) + ' like' + (numLikes === 1 ? '' : 's')}</Typography>
+                            </Grid>
+                        </Grid>
+                        <Typography level="h3" color='white'>{episode.title}</Typography>
+                        <Grid>
+                            {
+                                loadEpisodeContent(episode['content'])
+                            }
+                        </Grid>
 
-                        </Box>
-                        <CommentSection episode={episode} />
-                        </div>
-                        
-                    }
-                </div>
+                    </Box>
+                    <Grid sx={{marginBottom: '50px'}}>
+                        <Typography level='h3' color='purple'>{'Creator' + (collaborators.length === 1 ? '' : 's') + ':'}</Typography>
+                        {collaborators}
+                    </Grid>
+                    <CommentSection episode={episode} />
+                    <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message='Please log in to like or follow.' />
+                </Grid>
+            </Grid>
             }
-                             rightComponent={
-                                 <div>
-                                     {episode && episode['work'] && episode['work']['creator'] &&
-                                         <Box
-                                             sx={{
-                                                 py: 2,
-                                                 display: 'flex',
-                                                 flexDirection: 'column',
-                                                 gap: 1,
-                                                 alignItems: 'center',
-                                                 flexWrap: 'wrap',
-                                             }}
-                                         >
-                                             <Typography level="h5" sx={{color: "#9E9FEB"}}>Creators</Typography>
-                                             <Typography level="h6"
-                                                         sx={{color: "#E4E5FF"}}>{episode['work']['creator']['userName']}</Typography>
-                                         </Box>
-                                     }
-                                 </div>
-                             }
-            />
         </div>
     );
 
     function loadEpisodeContent(content: string) {
         let rawContentArray = content.split(CHAPTER_DELIMETER);
-        var compoundedElements = [];
+        let compoundedElements: JSX.Element[] = [];
         for (let i = 0; i < rawContentArray.length; i++) {
             if (rawContentArray[i].includes(CHAPTER_IMG_DELIMETER)) {
-                let imgSrc = rawContentArray[i].split(CHAPTER_IMG_DELIMETER)[1];
+                let imgSrc: string = rawContentArray[i].split(CHAPTER_IMG_DELIMETER)[1];
                 compoundedElements.push(
-                    <AspectRatio variant="plain" minHeight="120px" maxHeight="300px" objectFit="contain"
-                                 sx={{my: 2}}>
+                    <AspectRatio key={i} variant="plain" minHeight="120px" maxHeight="300px" objectFit="contain">
                         <img
-                            src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-                            srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
+                            src={'https://' + CHAPTER_IMGS_BUCKET + '.s3.amazonaws.com/' + imgSrc}
                             loading="lazy"
                             alt=""
                         />
                     </AspectRatio>)
             } else {
-                compoundedElements.push(<Typography level="h6"
-                                                    sx={{color: "#9E9FEB"}}><ReactMarkdown>{rawContentArray[i]}</ReactMarkdown></Typography>)
+                compoundedElements.push(<Typography key={i} level="h6"><ReactMarkdown>{rawContentArray[i]}</ReactMarkdown></Typography>)
             }
         }
         return compoundedElements;

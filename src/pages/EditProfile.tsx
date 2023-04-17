@@ -124,7 +124,15 @@ function EditProfile() {
                     <Grid>
                         <Typography color='green' level='h3'>Your Wallet</Typography>
                         <Grid className="edit-inner">
-                            <Textarea className = "wallet" defaultValue={user && user.walletAddress} maxRows={1} disabled />
+                            <Textarea className = "wallet" defaultValue={user && user.walletAddress} maxRows={1} disabled slotProps={{
+                                textarea: {
+                                    'style': {
+                                        textOverflow: 'ellipsis',
+                                        overflow: 'hidden',
+                                        whiteSpace: 'nowrap'
+                                    }
+                                }
+                            }} />
                         </Grid>
                     </Grid>
                     <Grid>

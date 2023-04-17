@@ -19,7 +19,7 @@ import TwineSelect from "../../components/TwineSelect.tsx";
 import {useNavigate} from "react-router-dom";
 import UploadImage from '../../components/UploadImage.tsx';
 import { STORY_IMGS_BUCKET } from '../../config.ts';
-import { STORY_COVER_PATH, STORY_BANNER_PATH, sendToS3 } from '../../utils/aws.ts';
+import { COVER_PATH, STORY_BANNER_PATH, sendToS3 } from '../../utils/aws.ts';
 import {v4 as uuidv4} from 'uuid';
 import ErrorPopup from '../../components/ErrorPopup.tsx';
 
@@ -96,7 +96,7 @@ function CreateStory(props: CreateStoryProps) {
             imgName = banner.name;
         }
 
-        await sendToS3(bucketName, (uploadType ==='cover' ? STORY_COVER_PATH : STORY_BANNER_PATH) + imgName, selectedFile);
+        await sendToS3(bucketName, (uploadType ==='cover' ? COVER_PATH : STORY_BANNER_PATH) + imgName, selectedFile);
     }
 
     const handleUpload = (selectedFile: File, uploadType: string) => {
@@ -166,7 +166,7 @@ function CreateStory(props: CreateStoryProps) {
                         <Typography level="h3" color='purple'>Banner (Optional)</Typography>
                         <Grid container alignItems='center' justifyContent='center' xs={12}>
                         <Grid container alignItems='center' justifyContent='center' id='create-banner-wrapper'>
-                            {((work && work.banner) || banner.preview) ? 
+                            {((work && work.banner) || banner.preview) ?
                                 <img
                                     src = {banner.preview ? banner.preview : 'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + STORY_BANNER_PATH + (work ? work.banner : banner.name)}
                                     alt = ""
@@ -212,9 +212,9 @@ function CreateStory(props: CreateStoryProps) {
                                     <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' className='create-image-upload'>
                                         <Typography level="h3" color='purple'>Cover Art</Typography>
                                         <Grid container alignItems='center' justifyContent='center' id='create-cover-wrapper'>
-                                            {((work && work.cover) || cover.preview) ? 
+                                            {((work && work.cover) || cover.preview) ?
                                                 <img
-                                                    src = {cover.preview ? cover.preview : 'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + STORY_COVER_PATH + (work ? work.cover : cover.name)}
+                                                    src = {cover.preview ? cover.preview : 'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + COVER_PATH + (work ? work.cover : cover.name)}
                                                     alt = ""
                                                     onClick = {() => setCover({
                                                         ...cover,
@@ -262,10 +262,7 @@ function CreateStory(props: CreateStoryProps) {
                                      }
                                      {props.edit &&
                                          <>
-                                             {returnTransferButton()}
-                                             <TwineButton
-                                                 name={uploading ? <CircularProgress color='darkpurple' variant='plain' /> : 'Save Story'} color="green" icon="/icons/green_checkmark.svg"
-                                                 action={(e) => postStory(getStory(true, work))}/>
+                                             {returnSaveButton()}
                                              <TwineButton
                                                  name='Cancel Edit Story' color="blackgreen" icon="/icons/green_x.svg"
                                                  action={(e) => goBack()}/>
@@ -279,13 +276,25 @@ function CreateStory(props: CreateStoryProps) {
 
     );
 
-    function returnTransferButton() {
+    function returnSaveButton() {
         if (work && work['publishStamp']) {
-            return <TwineButton name="Transfer to Draft" icon="/icons/purple_paper.svg"
-                                action={(e) => postStory(getStory(false, work))}></TwineButton>
+            return (<>
+                <TwineButton
+                    name={uploading ? <CircularProgress color='darkpurple' variant='plain'/> : 'Save Story'} color="green"
+                    icon="/icons/green_checkmark.svg"
+                    action={(e) => postStory(getStory(true, work))}/>
+                <TwineButton name="Transfer to Draft" icon="/icons/purple_paper.svg"
+                                  action={(e) => postStory(getStory(false, work))}></TwineButton>
+            </>)
         } else {
-            return <TwineButton name="Transfer to Published" icon="/icons/purple_paper.svg"
-                                action={(e) => postStory(getStory(true, work))}></TwineButton>
+            return (<>
+                <TwineButton
+                    name={uploading ? <CircularProgress color='darkpurple' variant='plain'/> : 'Save Story'} color="green"
+                    icon="/icons/green_checkmark.svg"
+                    action={(e) => postStory(getStory(false, work))}/>
+                <TwineButton name="Transfer to Published" icon="/icons/purple_paper.svg"
+                             action={(e) => postStory(getStory(true, work))}></TwineButton>
+            </>)
         }
     }
 
@@ -324,13 +333,13 @@ function CreateStory(props: CreateStoryProps) {
         return null;
     }
 
-    async function postStory(work: Work) {
-        if (work) {
+    async function postStory(workToPost: Work) {
+        if (workToPost) {
             let urlModifier = props.edit ? "update" : "add";
 
             setUploading(true);
             try {
-                const response = await genericPost("/api/work/" + urlModifier, work);
+                const response = await genericPost("/api/work/" + urlModifier, workToPost);
                 if (response) {
                     if (cover.file) {
                         await prepareAndUpload('cover');
@@ -339,7 +348,7 @@ function CreateStory(props: CreateStoryProps) {
                         await prepareAndUpload('banner');
                     }
                     setUploading(false);
-                    navigate("/story/" + work.url);
+                    navigate("/story/" + workToPost.url);
                 }
             } catch (error) {
                 setErrorMessage('Your title is the same as one of your existing titles. Please choose a different title.');

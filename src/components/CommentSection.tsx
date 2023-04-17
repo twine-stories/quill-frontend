@@ -5,7 +5,7 @@ import { User, Comment } from '../utils/types.ts';
 import { genericPost, genericGet } from '../utils/api.ts';
 import { PROFILE_IMGS_BUCKET } from '../config.ts';
 import TwineButton from './TwineButton.tsx';
-
+import ErrorPopup from './ErrorPopup.tsx';
 
 export default function CommentSection({episode}) {
 
@@ -13,11 +13,9 @@ export default function CommentSection({episode}) {
     const user: User = context['user'];
 
     const [comments, setComments] = useState<Comment[]>([]);
-
+    const [openError, setOpenError] = useState<boolean>(false);
 
     const  onComment = async () => {
-        console.log('comment');
-
         if (user && episode) {
             const data: string = document.getElementsByClassName("commentBox")[0].getElementsByTagName("textarea")[0].value;
 
@@ -34,6 +32,8 @@ export default function CommentSection({episode}) {
                 setComments(response);
             });
 
+        } else {
+            setOpenError(true);
         }
         
     }
@@ -53,7 +53,7 @@ export default function CommentSection({episode}) {
                 <Textarea
                     className="commentBox"
                     placeholder="Type something here…"
-                    minRows={3}
+                    minRows={1}
                     endDecorator={
                     <Box
                         sx={{
@@ -76,8 +76,8 @@ export default function CommentSection({episode}) {
                 />
             </FormControl>
             <div className='comments'>
-                {comments.map((comment) => (
-                    <div className='comment' style={{display: "flex", alignItems: "center", marginBottom: "1rem"}}>
+                {comments.map((comment, index) => (
+                    <div key={index} className='comment' style={{display: "flex", alignItems: "center", marginBottom: "1rem"}}>
                         <div>
                             <img 
                             src={'https://' + PROFILE_IMGS_BUCKET + '.s3.amazonaws.com/' + comment.commenter.profileImg} 
@@ -91,13 +91,14 @@ export default function CommentSection({episode}) {
                             />
                         </div>
                         <div className='name-comment' style={{marginLeft: "1rem"}}>
-                            <Typography level="h5" sx={{color: "#9e9feb"}}>{comment.commenter.userName}</Typography>
-                            <Typography level="h6" sx={{color: "#FFFFFF"}}>{comment.content}</Typography>
+                            <Typography level="h3" color='purple'>{comment.commenter.userName}</Typography>
+                            <Typography level="h6" color='white'>{comment.content}</Typography>
                         </div>
                         
                     </div>
                 ))}
             </div>
+            <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message='Please log in to comment.' />
 
         </div>
     )
