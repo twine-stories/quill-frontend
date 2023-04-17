@@ -740,7 +740,7 @@ function CreateChapter(props: CreateChapterProps) {
 
             navigate("/episode/" + url);
         }
-        setErrorMessage('Please make sure you have filled out all the fields before submitting.');
+        setErrorMessage('Please ensure you have filled out all required fields and checked the Community Guidelines box before submitting.');
         setOpenError(true);
     }
 }
