@@ -1,16 +1,23 @@
 import React from 'react';
-
-const TwoColumnLayout = ({ leftComponent, rightComponent }) => {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <div style={{ flex: '0 0 70%', marginRight: '5%' }}>
-        {leftComponent}
-      </div>
-      <div style={{ flex: '0 0 30%' }}>
-        {rightComponent}
-      </div>
-    </div>
-  );
-};
+interface TwoColumnLayoutProps {
+    leftComponent: JSX.Element;
+    rightComponent: JSX.Element;
+    leftWidth?: string;
+    rightWidth?: string;
+}
+function TwoColumnLayout(props: TwoColumnLayoutProps) {
+    let leftFlex = props.leftWidth ? "0 0 " + props.leftWidth : '0 0 70%';
+    let rightFlex = props.rightWidth ? "0 0 " + props.rightWidth : '0 0 30%';
+    return (
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <div style={{ flex: leftFlex, marginRight: '5%' }}>
+                {props.leftComponent}
+            </div>
+            <div style={{ flex: rightFlex }}>
+                {props.rightComponent}
+            </div>
+        </div>
+    );
+}
 
 export default TwoColumnLayout;

@@ -11,8 +11,9 @@ import ProfileWork from '../components/ProfileWork.tsx';
 import {default as axios} from "axios";
 import TwineButton from "../components/TwineButton.tsx";
 import GalleryTile from "../components/GalleryTile.tsx";
-import { genericGet } from '../utils/api.ts';
-import { NFTCollection, Work } from '../utils/types.ts';
+import {genericGet} from '../utils/api.ts';
+import {NFTCollection, Work} from '../utils/types.ts';
+import TwoColumnLayout from "../components/TwoColumnLayout.tsx";
 
 interface WorkGalleryProps {
     art: boolean;
@@ -36,7 +37,7 @@ function Gallery(props: WorkGalleryProps) {
                 if (props.art) {
                     const response: NFTCollection[] = await genericGet('/api/collection/active/creator/' + user.walletAddress);
                     response.forEach((elem: NFTCollection) => {
-                        profileWorks.push(<GalleryTile story={false} coll={elem} key={1} />)
+                        profileWorks.push(<GalleryTile story={false} coll={elem} key={1}/>)
                     });
                 } else {
                     const response: Work[] = await genericGet('/api/work/creator/' + user.walletAddress);
@@ -58,49 +59,58 @@ function Gallery(props: WorkGalleryProps) {
     return (
         <div>
             <Navbar/>
-            <Typography level="h2" sx={{color: "#9E9FEB"}}>
-                {props.episodeName ? props.episodeName : (props.draft ? "Draft" : "Published").concat(props.art ? " Collections" : " Stories")}
-            </Typography>
-            <Box sx={{backgroundColor: "#14100E", padding: '10px', marginBottom: '30px', borderRadius: "20px"}}>
-                <Typography level="h5" sx={{marginTop: '5px', marginBottom: '0px', color: "#9E9FEB"}}>
-                    {galleryItems.length} {galleryItems.length === 1 ? (props.art ? "Collection" : "Story") : (props.art ? "Collections" : "Stories")}
-                </Typography>
+            <TwoColumnLayout
+                leftWidth="80%"
+                rightWidth="20%"
+                leftComponent={
+                <>
+                    <Typography level="h2" sx={{color: "#9E9FEB"}}>
+                        {props.episodeName ? props.episodeName : (props.draft ? "Draft" : "Published").concat(props.art ? " Collections" : " Stories")}
+                    </Typography>
+                    <Box
+                        sx={{backgroundColor: "#14100E", padding: '10px', marginBottom: '30px', borderRadius: "20px"}}>
+                        <Typography level="h5" sx={{marginTop: '5px', marginBottom: '0px', color: "#9E9FEB"}}>
+                            {galleryItems.length} {galleryItems.length === 1 ? (props.art ? "Collection" : "Story") : (props.art ? "Collections" : "Stories")}
+                        </Typography>
 
-                <Grid
-                    container
-                    spacing={{xs: 3}}
-                    columns={{xs: 12}}
-                    sx={{flexGrow: 1, padding: '20px'}}
-                >
-                    {galleryItems.map((galleryTile, index) => (
-                        <Grid xs={4} key={index}>
-                            {galleryTile}
+                        <Grid
+                            container
+                            spacing={{xs: 3}}
+                            columns={{xs: 12}}
+                            sx={{flexGrow: 1, padding: '20px'}}
+                        >
+                            {galleryItems.map((galleryTile, index) => (
+                                <Grid xs={4} key={index}>
+                                    {galleryTile}
+                                </Grid>
+                            ))}
                         </Grid>
-                    ))}
-                </Grid>
-            </Box>
-            {props.art ?
-                <div>
-                    <div>
-                        <TwineButton color='green' icon='/icons/green_plus.svg' name='Create One Art' />
-                    </div>
-                    <div>
-                        <TwineButton color='green' icon='/icons/green_plus.svg' name='Publish Art Collection' />
-                    </div>
-                    <div>
-                        <TwineButton icon='/icons/purple_paper.svg' name={"Open " + props.draft ? "Published" : "Draft"} />
-                    </div>
-                </div>
-                :
-                <div>
-                    <div>
-                        <TwineButton color='green' icon='/icons/green_plus.svg' name='Create New Stories' action={() => {window.location.href = '/create/story'}} />
-                    </div>
-                    <div>
-                        <TwineButton icon='/icons/purple_paper.svg' name={"Open " + (props.draft ? "Published" : "Drafts")} action={() => {window.location.href = (props.draft ? '/gallery/story/published' : '/gallery/story/draft')}} />
-                    </div>
-                </div>
+                    </Box>
+                </>
             }
+
+                             rightComponent={(props.art) ?
+                                 <div>
+                                         <TwineButton color='green' icon='/icons/green_plus.svg'
+                                                      name='Create One Art'/>
+                                         <TwineButton color='green' icon='/icons/green_plus.svg'
+                                                      name='Publish Art Collection'/>
+                                         <TwineButton icon='/icons/purple_paper.svg'
+                                                      name={"Open " + props.draft ? "Published" : "Draft"}/>
+                                 </div>
+                                 :
+                                 <div>
+                                         <TwineButton sx={{width: "100%"}} color='green' icon='/icons/green_plus.svg'
+                                                      name='Create New Stories' action={() => {
+                                             window.location.href = '/create/story'
+                                         }}/>
+                                         <TwineButton sx={{width: "100%"}} icon='/icons/purple_paper.svg'
+                                                      name={"Open " + (props.draft ? "Published" : "Drafts")}
+                                                      action={() => {
+                                                          window.location.href = (props.draft ? '/gallery/story/published' : '/gallery/story/draft')
+                                                      }}/>
+                                 </div>
+                             }/>
         </div>
     )
 }

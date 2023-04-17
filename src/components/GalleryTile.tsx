@@ -2,6 +2,8 @@ import React from 'react';
 import './GalleryTile.css';
 import {NFTCollection, Work} from '../utils/types.ts';
 import {AspectRatio, Card, Typography} from "@mui/joy";
+import {STORY_IMGS_BUCKET} from "../config.ts";
+import {COVER_PATH} from "../utils/aws.ts";
 
 interface GalleryTileProps {
     work: Work;
@@ -10,13 +12,13 @@ interface GalleryTileProps {
 }
 
 function GalleryTile(props: GalleryTileProps) {
+    let imgSrc = 'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + COVER_PATH + props.work.cover;
     if (props.story) {
         return (
             <Card variant="outlined" sx={{backgroundColor: "#14100E"}} onClick={() => {window.location.href = '/story/' + props.work['url']}} className='gallery-tile'>
                 <AspectRatio minHeight="120px" maxHeight="200px" sx={{my: 2}}>
                     <img
-                        src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-                        srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
+                        src={imgSrc}
                         loading="lazy"
                         alt=""
                     />
