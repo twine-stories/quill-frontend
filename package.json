@@ -19,6 +19,7 @@
     "crypto-browserify": "^3.12.0",
     "http-proxy-middleware": "^2.0.6",
     "immer": "^9.0.19",
+    "marked": "^4.3.0",
     "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

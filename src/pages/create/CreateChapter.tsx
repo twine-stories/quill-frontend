@@ -35,6 +35,7 @@ import {CHAPTER_IMGS_BUCKET, STORY_IMGS_BUCKET} from "../../config.ts";
 import UploadImage from "../../components/UploadImage.tsx";
 import {useNavigate} from "react-router-dom";
 import ErrorPopup from "../../components/ErrorPopup.tsx";
+import {marked} from "marked";
 
 enableMapSet();
 
@@ -593,7 +594,8 @@ function CreateChapter(props: CreateChapterProps) {
                 if (!display) {
                     compoundedElements.push(content)
                 } else {
-                    compoundedElements.push(<Typography level="h6" color='white'>{content}</Typography>)
+                    // compoundedElements.push(<Typography level="h6" color='white'>{content}</Typography>)
+                    compoundedElements.push(<div dangerouslySetInnerHTML={{__html: marked.parse(content)}}></div>)
                 }
             }
         }

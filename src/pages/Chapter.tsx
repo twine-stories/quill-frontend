@@ -11,7 +11,7 @@ import { CHAPTER_IMGS_BUCKET } from '../config.ts';
 import CommentSection from '../components/CommentSection.tsx';
 import ErrorPopup from '../components/ErrorPopup.tsx';
 import TwineButton from '../components/TwineButton.tsx';
-
+import {marked} from 'marked';
 
 function Chapter() {
 
@@ -145,7 +145,8 @@ function Chapter() {
                         />
                     </AspectRatio>)
             } else {
-                compoundedElements.push(<Typography key={i} level="h6">{rawContentArray[i]}</Typography>)
+                // compoundedElements.push(<Typography key={i} level="h6">{marked.parse(rawContentArray[i])}</Typography>)
+                compoundedElements.push(<div key={i} dangerouslySetInnerHTML={{__html: marked.parse(rawContentArray[i])}}></div>)
             }
         }
         return compoundedElements;
