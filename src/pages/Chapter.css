@@ -9,3 +9,7 @@
 #chapter-content {
     width: 65vw;
 }
+
+#chapter-content .chapter-text {
+    text-align: left;
+}
