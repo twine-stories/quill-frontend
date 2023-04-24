@@ -12,6 +12,7 @@ import { PROFILE_IMGS_BUCKET } from '../config.ts';
 import IconButton from '../components/IconButton.tsx';
 import TwineButton from '../components/TwineButton.tsx';
 import RegisterCreator from '../components/RegisterCreator.tsx';
+import { proxy } from '../utils/api.ts';
 
 const axios = require('axios').default;
 
@@ -23,7 +24,7 @@ function Profile() {
 
     useEffect(() => {
         if (user && user.creator && user.walletAddress) {
-            axios.get('/api/work/creator/' + user.walletAddress)
+            axios.get(proxy + '/api/work/creator/' + user.walletAddress)
                 .then(response => {
                     if (response.data) {
                         var profileWorks: JSX.Element[] = [];

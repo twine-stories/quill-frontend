@@ -10,6 +10,7 @@ import {Grid, Textarea, Typography} from "@mui/joy";
 import { useNavigate } from 'react-router-dom';
 import { genericPost, genericGet } from '../utils/api.ts'; 
 import ErrorPopup from '../components/ErrorPopup.tsx';
+import { proxy } from '../utils/api.ts';
 
 const axios = require('axios').default;
 
@@ -24,7 +25,7 @@ function EditProfile() {
 
     useEffect(() => {
         if (user && user.creator && user.walletAddress) {
-            axios.get('/api/work/creator/' + user.walletAddress)
+            axios.get(proxy + '/api/work/creator/' + user.walletAddress)
                 .then(response => {
                     if (response.data) {
                         var profileWorks: JSX.Element[] = [];

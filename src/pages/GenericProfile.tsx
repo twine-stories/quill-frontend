@@ -14,6 +14,7 @@ import TwineButton from '../components/TwineButton.tsx';
 import RegisterCreator from '../components/RegisterCreator.tsx';
 import './GenericProfile.css';
 import GalleryTile from '../components/GalleryTile.tsx';
+import { proxy } from '../utils/api.ts';
 
 const axios = require('axios').default;
 
@@ -44,7 +45,7 @@ function GenericProfile() {
 
     useEffect(() => {
         if (user && user.creator && user.walletAddress) {
-            axios.get('/api/work/creator/published/' + user.walletAddress)
+            axios.get(proxy + '/api/work/creator/published/' + user.walletAddress)
                 .then(response => {
                     if (response.data) {
                         var profileWorks: JSX.Element[] = [];

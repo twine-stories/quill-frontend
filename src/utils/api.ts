@@ -1,6 +1,11 @@
 import {User, Work, Artwork, NFTCollection, Episode} from './types.ts';
+import { env } from '../config.ts';
 
 const axios = require('axios').default;
+export const proxy = env === 'prod' ? 'https://proxy.cors.sh/http://ec2-13-58-80-245.us-east-2.compute.amazonaws.com:8080' : '';
+if (env === 'prod') {
+    axios.defaults.headers.common['x-cors-api-key'] = "live_247c418e3e045d65807ae434c4b7b9835161122ab01906c5a2f9e4efb440a23c";
+}
 
 type CookieParams = {
     userCookie: string;
@@ -8,7 +13,7 @@ type CookieParams = {
 }
 
 export const genericGet = async (endpoint: string): Promise<object | null> => {
-    const response = await axios.get(endpoint);
+    const response = await axios.get(proxy + endpoint);
     if (response.status === 200) {
         return response.data;
     }
@@ -19,7 +24,7 @@ export const genericGet = async (endpoint: string): Promise<object | null> => {
 
 
 export const genericPost = async (endpoint: string, requestBody: object): Promise<object | null> => {
-    const response = await axios.post(endpoint, requestBody);
+    const response = await axios.post(proxy + endpoint, requestBody);
     if (response.status === 200) {
         return response.data;
     }
@@ -29,7 +34,7 @@ export const genericPost = async (endpoint: string, requestBody: object): Promis
 }
 
 export const userGet = (addr: string, setter: (user: User) => void) : void => {
-    axios.get('/api/user/' + addr)
+    axios.get(proxy + '/api/user/' + addr)
         .then(response => {
             setter(response.data);
         })
@@ -39,7 +44,7 @@ export const userGet = (addr: string, setter: (user: User) => void) : void => {
 }
 
 export const userUpdate = (user: User, setter: (user: User) => void) : void => {
-    axios.post('/api/user/update', user)
+    axios.post(proxy + '/api/user/update', user)
         .then(response => {
             if (response.status === 200) {
                 console.log(user);
@@ -52,7 +57,7 @@ export const userUpdate = (user: User, setter: (user: User) => void) : void => {
 }
 
 export const userAdd = (user: User, setter: (user: User) => void) : void => {
-    axios.post('/api/user/add', user)
+    axios.post(proxy + '/api/user/add', user)
         .then(response => {
             if (response.status === 200) {
                 setter(user);
@@ -64,7 +69,7 @@ export const userAdd = (user: User, setter: (user: User) => void) : void => {
 }
 
 export const cookieGet = (cookie: string, setter: (user: User) => void ) : void => {
-    axios.get('/api/user/cookie/' + cookie)
+    axios.get(proxy + '/api/user/cookie/' + cookie)
         .then(response => {
             if (response.data) {
                 setter(response.data);
@@ -76,7 +81,7 @@ export const cookieGet = (cookie: string, setter: (user: User) => void ) : void 
 }
 
 export const cookieSet = (params: CookieParams, setter: (cookie: string) => void) : void => {
-    axios.post('/api/user/setUserCookie', params)
+    axios.post(proxy + '/api/user/setUserCookie', params)
         .then(response => {
             if (response.status === 200) {
                 setter(params['userCookie']);
@@ -88,7 +93,7 @@ export const cookieSet = (params: CookieParams, setter: (cookie: string) => void
 }
 
 export const workGetByUrl = (url: string, setter: (work: Work) => void, fail: () => void) : void => {
-    axios.get('/api/work/url/' + url)
+    axios.get(proxy + '/api/work/url/' + url)
         .then(response => {
             if (response.data) {
                 setter(response.data);
@@ -102,7 +107,7 @@ export const workGetByUrl = (url: string, setter: (work: Work) => void, fail: ()
 }
 
 export const worksGetByCreator = async (address: string): Promise<Work[] | null> => {
-    const response = await axios.get('/api/work/creator/' + address);
+    const response = await axios.get(proxy + '/api/work/creator/' + address);
     if (response.status === 200) {
         return response.data;
     }
@@ -111,7 +116,7 @@ export const worksGetByCreator = async (address: string): Promise<Work[] | null>
 
 export const workAdd = (work: Work, fail: (foundWork: Work) => void) : void => {
     workGetByUrl(work.url, fail, () => {
-        axios.post('/api/work/add', work)
+        axios.post(proxy + '/api/work/add', work)
             .then(response => {
                 if (response.status === 200) {
                     console.log('success');
@@ -124,7 +129,7 @@ export const workAdd = (work: Work, fail: (foundWork: Work) => void) : void => {
 }
 
 export const episodeGetByUrl = (url: string, setter: (episode: Episode) => void, fail: () => void) : void => {
-    axios.get('/api/episode/url/' + url)
+    axios.get(proxy + '/api/episode/url/' + url)
         .then(response => {
             if (response.data) {
                 setter(response.data);
@@ -139,7 +144,7 @@ export const episodeGetByUrl = (url: string, setter: (episode: Episode) => void,
 
 export const episodeAdd = (episode: Episode, fail: (foundEpisode: Episode) => void) : void => {
     episodeGetByUrl(episode.url, fail, () => {
-        axios.post('/api/episode/add', episode)
+        axios.post(proxy + '/api/episode/add', episode)
             .then(response => {
                 if (response.status === 200) {
                     console.log('success');
@@ -152,7 +157,7 @@ export const episodeAdd = (episode: Episode, fail: (foundEpisode: Episode) => vo
 }
 
 export const episodesGetByWorkId = async (workId: number, fail: () => void): Promise<Episode[] | null> => {
-    const response = await axios.get('/api/episode/work/id/' + workId);
+    const response = await axios.get(proxy + '/api/episode/work/id/' + workId);
     if (response.status === 200) {
         return response.data;
     } else {
@@ -162,7 +167,7 @@ export const episodesGetByWorkId = async (workId: number, fail: () => void): Pro
 }
 
 export const artworkGetAll = async (): Promise<Artwork[] | null> => {
-    const response = await axios.get('/api/artworks');
+    const response = await axios.get(proxy + '/api/artworks');
     if (response.status === 200) {
         return response.data;
     }
@@ -170,7 +175,7 @@ export const artworkGetAll = async (): Promise<Artwork[] | null> => {
 }
 
 export const artworkGet = async (assetId: number): Promise<Artwork> => {
-    const response = await axios.get('/api/artwork/' + assetId);
+    const response = await axios.get(proxy + '/api/artwork/' + assetId);
     if (response.status === 200) {
         return response.data;
     }
@@ -178,7 +183,7 @@ export const artworkGet = async (assetId: number): Promise<Artwork> => {
 }
 
 export const artworkAdd = (artwork: Artwork): void => {
-    axios.post('/api/artwork/create', artwork)
+    axios.post(proxy + '/api/artwork/create', artwork)
         .then(response => {
             if (response.status === 200) {
                 console.log('success');
@@ -190,7 +195,7 @@ export const artworkAdd = (artwork: Artwork): void => {
 }
 
 export const artworkUpdate = (artwork: Artwork): void => {
-    axios.post('/api/artwork/update', artwork)
+    axios.post(proxy + '/api/artwork/update', artwork)
         .then(response => {
             if (response.status === 200) {
                 console.log('success');
@@ -202,7 +207,7 @@ export const artworkUpdate = (artwork: Artwork): void => {
 }
 
 export const collectionCreateWithArt = async (collection: NFTCollection, artworks: Artwork[]): Promise<NFTCollection> => {
-    const response = await axios.post('/api/collection/createWithArt', {collection: collection, artworks: artworks});
+    const response = await axios.post(proxy + '/api/collection/createWithArt', {collection: collection, artworks: artworks});
     if (response.status === 200) {
         return response.data;
     }
@@ -216,7 +221,7 @@ export const getEscrowProgram = async (saleType: string, assetIds: string, appId
 }
 
 export const collectionGetAll = async (): Promise<NFTCollection[] | null> => {
-    const response = await axios.get('/api/collections');
+    const response = await axios.get(proxy + '/api/collections');
     if (response.status === 200) {
         return response.data;
     }
@@ -224,7 +229,7 @@ export const collectionGetAll = async (): Promise<NFTCollection[] | null> => {
 }
 
 export const collectionGetByUrl = async (url: string): Promise<NFTCollection> => {
-    const response = await axios.get('/api/collection/url/' + url);
+    const response = await axios.get(proxy + '/api/collection/url/' + url);
     if (response.status === 200) {
         return response.data;
     }
