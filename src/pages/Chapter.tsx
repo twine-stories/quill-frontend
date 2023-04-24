@@ -32,12 +32,15 @@ function Chapter() {
     }, []);
 
     useEffect(() => {
-        if (episode && user && episode.id) {
-            const episode_str: string = String(episode.id);
-            genericGet('/api/like/isLikedByUser/' + user.userName + '/' + episode_str).then((response: any) => {
-                setLiked(response);
-            });
+        if (episode && episode.id) {
+            if (user) {
+                const episode_str: string = String(episode.id);
+                genericGet('/api/like/isLikedByUser/' + user.userName + '/' + episode_str).then((response: any) => {
+                    setLiked(response);
+                });
+            }
             genericGet('/api/profitSplit/episode/' + episode.id).then((response: ProfitSplit[]) => {
+                console.log(response);
                 const sortedResp: ProfitSplit[] = response.sort((a,b) => b.percentage - a.percentage);
                 let collabs: JSX.Element[] = [];
                 let index: number = 0;
@@ -148,7 +151,7 @@ function Chapter() {
                 }
             } else {
                 // compoundedElements.push(<Typography key={i} level="h6">{marked.parse(rawContentArray[i])}</Typography>)
-                compoundedElements.push(<div key={i} dangerouslySetInnerHTML={{__html: marked.parse(rawContentArray[i])}}></div>)
+                compoundedElements.push(<div key={i} className='chapter-text' dangerouslySetInnerHTML={{__html: marked.parse(rawContentArray[i])}}></div>)
             }
         }
         return compoundedElements;
