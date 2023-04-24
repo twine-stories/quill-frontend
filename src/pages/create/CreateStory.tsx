@@ -308,7 +308,7 @@ function CreateStory(props: CreateStoryProps) {
         const publishStamp = published ? new Date() : null;
         const id = currentWork ? currentWork['id'] : null;
 
-        if (title.value && description.value && hook.value && genre1.textContent && (cover.name || (work && work.cover))) {
+        if (title.value && !title.value.includes('/') && description.value && hook.value && genre1.textContent && (cover.name || (work && work.cover))) {
             let newWork: Work = {
                 id: id,
                 creator: user,

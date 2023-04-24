@@ -81,13 +81,13 @@ function Story() {
                             <Typography level="h1" sx={{color: "#E4E5FF"}}>{work['title']}</Typography>
                             <Typography level="h6" sx={{color: "#E4E5FF"}}>{work['description']}</Typography>
 
-                            {user.walletAddress === work.creator.walletAddress &&
+                            {(user && user.walletAddress === work.creator.walletAddress) &&
                                 <div style={{display: "flex", gap: "10px"}}>
                                     <TwineButton sx={{width: "50%"}} icon="/icons/purple_settings.svg" color="blackpurple" name="Edit Story" action={() => {
                                         window.location.href = '/edit/story/' + work['url'];
                                     }}/>
-                                    <TwineButton sx={{width: "50%"}}  icon="/icons/purple_plus.svg" color="purple" name="New Episode" action={() => {
-                                        window.location.href = '/create/episode/' + work['url'];
+                                    <TwineButton sx={{width: "50%"}}  icon="/icons/purple_plus.svg" color="purple" name="New Chapter" action={() => {
+                                        window.location.href = '/create/chapter/' + work['url'];
                                     }}/>
                                 </div>
                             }
@@ -101,7 +101,7 @@ function Story() {
                                 }
                             })}
 
-                            {user.walletAddress === work.creator.walletAddress &&
+                            {(user && user.walletAddress === work.creator.walletAddress) &&
                                 <>
                                     <Typography level="h2" sx={{color: "#9E9FEB"}}>Draft Chapters</Typography>
                                     {episodes.map((episode) => {

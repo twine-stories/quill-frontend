@@ -106,9 +106,9 @@ function Chapter() {
                         <Grid container alignItems='center' justifyContent='flex-start'>
                             <Typography sx={{marginRight: '20px'}} level="h3" color='white'>{episode.title}</Typography>
                         </Grid>
-                        {(user.userName === episode.work.creator.userName) &&
+                        {(user && user.userName === episode.work.creator.userName) &&
                             <TwineButton sx={{width: "100%"}} icon="/icons/green_setting.svg" color="blackgreen" name="Edit Chapter" action={() => {
-                                window.location.href = '/edit/episode/' + episode.url;
+                                window.location.href = '/edit/chapter/' + episode.url;
                             }}/>
                         }
                         <Grid>
@@ -136,14 +136,16 @@ function Chapter() {
         for (let i = 0; i < rawContentArray.length; i++) {
             if (rawContentArray[i].includes(CHAPTER_IMG_DELIMETER)) {
                 let imgSrc: string = rawContentArray[i].split(CHAPTER_IMG_DELIMETER)[1];
-                compoundedElements.push(
-                    <AspectRatio key={i} variant="plain" minHeight="120px" maxHeight="300px" objectFit="contain">
-                        <img
-                            src={'https://' + CHAPTER_IMGS_BUCKET + '.s3.amazonaws.com/' + imgSrc}
-                            loading="lazy"
-                            alt=""
-                        />
-                    </AspectRatio>)
+                if (imgSrc) {
+                    compoundedElements.push(
+                        <AspectRatio key={i} variant="plain" minHeight="120px" maxHeight="300px" objectFit="contain">
+                            <img
+                                src={'https://' + CHAPTER_IMGS_BUCKET + '.s3.amazonaws.com/' + imgSrc}
+                                loading="lazy"
+                                alt=""
+                            />
+                        </AspectRatio>)
+                }
             } else {
                 // compoundedElements.push(<Typography key={i} level="h6">{marked.parse(rawContentArray[i])}</Typography>)
                 compoundedElements.push(<div key={i} dangerouslySetInnerHTML={{__html: marked.parse(rawContentArray[i])}}></div>)

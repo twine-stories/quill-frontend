@@ -1,18 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './HomeSlot.css';
 import { Sheet, Typography, Grid } from '@mui/joy';
-import { Work } from '../utils/types.ts';
+import { Work, Episode } from '../utils/types.ts';
 import { STORY_IMGS_BUCKET } from '../config.ts';
 import { COVER_PATH } from '../utils/aws.ts';
+import { genericGet } from '../utils/api.ts';
+import { CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER } from '../utils/constants.ts';
 
 interface HomeProps {
     title: string;
-    work: Work;
+    work: Work | null;
 }
 
 function HomeSlot(props: HomeProps) {
 
     const [hovering, setHovering] = useState<boolean>(false);
+    const [chapter, setChapter] = useState<Episode>();
+    const [chapterContent, setChapterContent] = useState<string>('');
+
+    useEffect(() => {
+        if (props.work) {
+            genericGet('/api/episode/first/work/id/' + props.work.id).then((response: Episode) => {
+                setChapter(response);
+                if (response) {
+                    const content: string[] = response.content.split(CHAPTER_DELIMETER);
+                    let parsedContent: string = '';
+                    content.forEach((block: string) => {
+                        if (block.includes(CHAPTER_IMG_DELIMETER)) {
+                            return;
+                        }
+
+                        parsedContent += (block + ' ');
+                    })
+                    setChapterContent(parsedContent);
+                }
+            });
+        }
+    }, [props.work]);
 
     const unHoveredContent = <Grid container direction='column' alignItems='flex-start' justifyContent='flex-start' sx={{width: '250px'}}>
             {props.work && 
@@ -32,12 +56,12 @@ function HomeSlot(props: HomeProps) {
                 <Typography level='h3' color='purple'>{props.work.title}</Typography>
             }
             <Typography className='full-hook' level='h6'>
-                {props.work ? props.work.hook : 'click "create" on the top bar above to create a story and publish a chapter'}
+                {chapterContent ? chapterContent : 'click "create" on the top bar above to create a story and publish a chapter'}
             </Typography>
         </Grid>;
 
     return (
-        <Grid className='home-slot' onClick={() => {if (props.work) {window.location.href = '/story/' + props.work['url']}}} onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
+        <Grid className='home-slot' onClick={() => {if (chapter) {window.location.href = '/chapter/' + chapter.url}}} onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
             <Typography level='h2' color='purple' sx={{textAlign: 'center'}}>{props.title}</Typography>
             <Sheet
             color='home'

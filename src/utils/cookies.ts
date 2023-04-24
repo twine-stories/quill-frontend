@@ -1,4 +1,4 @@
-const cookieExpDays: number = 1;
+const cookieExpDays: number = 3;
 
 export const setCookie = (cookieName: string, cookieVal: string): void => {
     const d = new Date();

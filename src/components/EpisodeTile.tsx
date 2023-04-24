@@ -27,7 +27,7 @@ function EpisodeTile(props: EpisodeTileProps) {
                 display: 'flex',
                 flexDirection: 'row',
             }} onClick={() => {
-                navigate('/episode/' + props.episode['url'])
+                navigate('/chapter/' + props.episode['url'])
             }}>
                 {/*<AspectRatio variant="outlined" ratio="16/9">*/}
                     <img

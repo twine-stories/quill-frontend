@@ -1,0 +1,8 @@
+#login-tos {
+    color: #A5BB2D;
+    text-decoration: none;
+}
+
+#login-tos:hover {
+    text-decoration: underline;
+}

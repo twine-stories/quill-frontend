@@ -651,13 +651,13 @@ function CreateChapter(props: CreateChapterProps) {
         const mature: HTMLInputElement = document.getElementById("mature") as HTMLInputElement;
         const guidelines: HTMLInputElement = document.getElementById("guidelines") as HTMLInputElement;
         const endOfChapterMessage: HTMLInputElement = document.getElementById("endOfChapterMessage") as HTMLInputElement;
-        const publishStamp = published ? new Date() : null;
+        const publishStamp = published ? new Date() : undefined;
         const profitSplitMap = await checkCollaborators();
-        const id = currentChapter ? currentChapter['id'] : null;
+        const id = currentChapter ? currentChapter['id'] : undefined;
 
         const allContent = await reformatContent(false);
         const url: string = work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase();
-        if (title.value && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
+        if (title.value && !title.value.includes('/') && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
             let newEpisode: Episode = {
                 id: id,
                 work: work,
@@ -678,7 +678,7 @@ function CreateChapter(props: CreateChapterProps) {
 
             setUploading(true);
             try {
-                const response = await genericPost("/api/episode/" + urlModifier, newEpisode);
+                const response: number = await genericPost("/api/episode/" + urlModifier, newEpisode);
                 if (response) {
                     if (cover.file) {
                         await prepareAndUpload('cover');
@@ -738,7 +738,7 @@ function CreateChapter(props: CreateChapterProps) {
                 });
             }
 
-            navigate("/episode/" + url);
+            navigate("/chapter/" + url);
         }
         setErrorMessage('Please ensure you have filled out all required fields and checked the Community Guidelines box before submitting.');
         setOpenError(true);

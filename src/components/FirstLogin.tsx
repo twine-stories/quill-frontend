@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import './FirstLogin.css';
 import { UserContext } from "../App.tsx";
 import TwineButton from './TwineButton.tsx';
 import TwineInput from './TwineInput.tsx';
@@ -40,13 +41,16 @@ function FirstLogin() {
                     <TwineInput label='last name' placeholder='Enter last name...' inputAttrs={{id: 'lastNameInput'}} />
                     <TwineInput label='username' placeholder='Enter username...' inputAttrs={{id: 'usernameInput'}} />
                 </Grid>
-                <Grid container alignItems='center' justifyContent='center'>
-                    <Checkbox color='green' onChange={tosChange} sx={{marginBottom: '15px'}} size='sm' label="By checking this box, I verify that I have read and agree to the terms of use." slotProps={{
-                        input: {
-                            id: 'tos',
-                            'aria-label': 'primary checkbox'
-                        }
-                    }} />
+                <Grid container flexDirection='column' alignItems='center' justifyContent='center'>
+                    <Grid container alignItems='center' justifyContent='space-around'>
+                        <Checkbox color='green' onChange={tosChange} sx={{marginRight: '10px', marginBottom: '2px'}} size='sm' label='' slotProps={{
+                            input: {
+                                id: 'tos',
+                                'aria-label': 'primary checkbox'
+                            }
+                        }} />
+                        <Typography fontSize={'14px'} level='h6' color='white'>By checking this box, I verify that I have read and agree to the <a id='login-tos' href='/terms' target='_blank'>terms of use</a>.</Typography>
+                    </Grid>
                     <TwineButton enabled={canSubmit} color='green' action={(e) => {
                         if (!(document.getElementById('tos') as HTMLInputElement).checked) {
                             return;
@@ -55,7 +59,7 @@ function FirstLogin() {
                         const first = document.getElementById('firstNameInput') as HTMLInputElement;
                         const last = document.getElementById('lastNameInput') as HTMLInputElement;
                         const username = document.getElementById('usernameInput') as HTMLInputElement;
-                        if (first && last && username && first.value.length > 0 && last.value.length > 0 && username.value.length > 0) {
+                        if (first && last && username && first.value.length > 0 && last.value.length > 0 && username.value.length > 0 && !username.value.includes('/')) {
                             genericGet('/api/user/taken/' + username.value).then(response => {
                                 if (!response) {
                                     sendRequest(context['address'], first.value, last.value, username.value);
