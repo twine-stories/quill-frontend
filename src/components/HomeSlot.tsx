@@ -72,7 +72,7 @@ function HomeSlot(props: HomeProps) {
                 borderRadius: 'md',
                 p: 3
             }}>
-                <Grid container direction='column' alignItems='center' justifyContent={hovering ? 'flex-start' : 'space-between'} height='100%' xs={12}>
+                <Grid container direction='column' alignItems='center' justifyContent={hovering ? 'flex-start' : 'space-between'} height='100%' xs={12} className='home-slot-content'>
                     {hovering ? hoveredContent : unHoveredContent}
                 </Grid>
             </Sheet>

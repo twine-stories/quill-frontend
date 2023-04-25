@@ -1,14 +1,24 @@
+.home-slot h3 {
+    max-height: 20%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .home-slot h6 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-height: 70%;
     font-size: 14px;
 }
 
 .home-slot .full-hook {
-    -webkit-line-clamp: 18;
+    -webkit-line-clamp: 15;
 }
 
 .home-cover {
