@@ -190,7 +190,10 @@ function App() {
             setInitUserLoad(true);
             return;
         }
-        cookieGet(cookie, setUser);
+        genericGet('/api/user/cookie/' + cookie).then((response: User | null) => {
+            setUser(response);
+        });
+        // cookieGet(cookie, setUser);
     }, [getUserToggle]);
 
     useEffect(() => {
@@ -214,7 +217,7 @@ function App() {
     }, [address]);
 
     useEffect(() => {
-        if (user) {
+        if (user !== undefined) {
             setInitUserLoad(true);
         }
     }, [user]);
