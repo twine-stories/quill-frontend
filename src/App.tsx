@@ -219,17 +219,17 @@ function App() {
         }
     }, [user]);
 
-    // if (!initUserLoad) {
-    //     return (
-    //         <div className='App' style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-    //             <Grid sx={{
-    //                 '--CircularProgress-progressColor': '#9E9FEB'
-    //             }}>
-    //                 <CircularProgress color='lightpurple' variant='plain'/>
-    //             </Grid>
-    //         </div>
-    //     );
-    // }
+    if (!initUserLoad) {
+        return (
+            <div className='App' style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <Grid sx={{
+                    '--CircularProgress-progressColor': '#9E9FEB'
+                }}>
+                    <CircularProgress color='lightpurple' variant='plain'/>
+                </Grid>
+            </div>
+        );
+    }
     return (
         <div className="App">
             <CssVarsProvider defaultMode="dark" theme={theme}>
