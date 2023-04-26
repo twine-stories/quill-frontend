@@ -13,6 +13,12 @@
     src: url('../../public/fonts/Oxanium/Oxanium-Regular.ttf');
     font-weight: 700;
     margin-right: 10px;
+    cursor: pointer;
+}
+
+#profile-file-upload::file-selector-button:active {
+    background-color: #5758B3;
+    border: #5758B3;
 }
 
 #profile-upload-preview {
