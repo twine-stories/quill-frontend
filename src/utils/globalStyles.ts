@@ -49,6 +49,7 @@ declare module '@mui/joy/Checkbox' {
 declare module '@mui/joy/CircularProgress' {
     interface CircularProgressPropsColorOverrides {
         darkpurple: true;
+        lightpurple: true;
     }
 }
 
@@ -307,6 +308,9 @@ export const theme = extendTheme({
                 root: ({ ownerState, theme }) => ({
                     ...(ownerState.color === 'darkpurple' && {
                         '--CircularProgress-progressColor': '#373867'
+                    }),
+                    ...(ownerState.color === 'lightpurple' && {
+                        '--CircularProgress-progressColor': '#9E9FEB'
                     })
                 })
             }

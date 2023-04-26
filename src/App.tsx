@@ -1,4 +1,4 @@
-import {useEffect, useState, createContext} from 'react';
+import React, {useEffect, useState, createContext} from 'react';
 import './App.css';
 import {Routes, Route} from "react-router-dom";
 import RouteNotFound from './pages/RouteNotFound.tsx';
@@ -26,7 +26,7 @@ import {v4 as uuidv4} from 'uuid';
 import {getCookie, setCookie, deleteCookie} from './utils/cookies.ts';
 import {User} from './utils/types.ts';
 import {cookieSet, userGet, userAdd, cookieGet, genericGet, genericPost} from './utils/api.ts';
-import {CssVarsProvider} from "@mui/joy";
+import {CircularProgress, Grid, CssVarsProvider} from "@mui/joy";
 import GlobalStyle from "./utils/globalStyles.ts";
 import {PeraWalletConnect} from "@perawallet/connect";
 import {ConnectType} from './utils/enums.ts';
@@ -219,8 +219,16 @@ function App() {
         }
     }, [user]);
 
-    if (loading) {
-        return (<div className='App'></div>);
+    if (!initUserLoad) {
+        return (
+            <div className='App' style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <Grid sx={{
+                    '--CircularProgress-progressColor': '#9E9FEB'
+                }}>
+                    <CircularProgress color='lightpurple' variant='plain'/>
+                </Grid>
+            </div>
+        );
     }
     return (
         <div className="App">

@@ -1,9 +1,8 @@
-import React, { useState, useContext } from "react";
-import { UserContext } from "../App.tsx";
+import React, { useState } from "react";
 import "./UploadImage.css"
 import TwineButton from "./TwineButton.tsx";
 import TwineInput from "./TwineInput.tsx";
-import { Modal, Sheet, Typography, Grid, CircularProgress } from "@mui/joy";
+import { Modal, Sheet, Typography, Grid } from "@mui/joy";
 
 interface UploaderProps {
     open: boolean;
