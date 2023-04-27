@@ -3,12 +3,12 @@ import {Button} from "@mui/joy";
 
 interface ButtonProps {
     action: () => Promise<void>;
-    name: string;
+    name: string | JSX.Element;
     enabled?: boolean;
     icon?: string;
     color?: string;
     size?: string;
-    sx: object;
+    sx?: object;
 }
 
 function TwineButton(props: ButtonProps) {
