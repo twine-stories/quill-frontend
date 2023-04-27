@@ -11,6 +11,7 @@ import TwineButton from "../components/TwineButton.tsx";
 import EpisodeTile from "../components/EpisodeTile.tsx";
 import { PROFILE_IMGS_BUCKET } from '../config.ts';
 import IconButton from '../components/IconButton.tsx';
+import { useNavigate } from 'react-router-dom';
 
 function Story() {
 
@@ -60,6 +61,12 @@ function Story() {
 
     const goTo = async (link: string): Promise<void> => {
         window.open(link, '_blank');
+    }
+
+    let navigate = useNavigate();
+
+    const goToSameTab = async (link: string): Promise<void> => {
+        navigate(link);
     }
 
     return (
@@ -158,6 +165,8 @@ function Story() {
                                                                e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg'
                                                            }}
                                                            className='profile-pic'
+                                                           onClick={() => goToSameTab('/profile/' + creator['userName'])}
+                                                           style={{cursor: 'pointer'}}
                                                        />
                                                         <Typography level="h4"
                                                                     sx={{color: "#E4E5FF", margin: "0px", fontFamily: 'Twine', fontStyle: 'normal', fontWeight:'400'}}>{creator['userName']}</Typography>
@@ -194,18 +203,21 @@ function Story() {
                                                     minWidth: '256px'
                                                 }}
                                             >
-                                                <img
-                                                    src = {work['creator'] && 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/'+work['creator'].profileImg}
-                                                    alt = ""
-                                                    width = "128"
-                                                    height = "128"
-                                                    onError={e => {
-                                                        e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg'
-                                                    }}
-                                                    className='profile-pic'
-                                                />
-                                                <Typography level="h4"
-                                                            sx={{color: "#E4E5FF", margin: "0px", fontFamily: 'Twine', fontStyle: 'normal', fontWeight:'400'}}>{work['creator']['userName']}</Typography>
+                                                  <img
+                                                        src = {work['creator'] && 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/'+work['creator'].profileImg}
+                                                        alt = ""
+                                                        width = "128"
+                                                        height = "128"
+                                                        onError={e => {
+                                                            e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg'
+                                                        }}
+                                                        className='profile-pic'
+                                                        onClick={() => goToSameTab('/profile/' + work['creator']['userName'])}
+                                                        style={{cursor: 'pointer'}}
+                                                    />
+                                                    <Typography level="h4"
+                                                                sx={{color: "#E4E5FF", margin: "0px", fontFamily: 'Twine', fontStyle: 'normal', fontWeight:'400'}}>{work['creator']['userName']} </Typography>
+
                                             
                                             <Stack direction="row" spacing = {1} alignItems= "center"  >
                                                 {work['creator'].website && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/website.svg' action={() => goTo(work['creator'].website as string)} />}
