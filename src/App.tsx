@@ -62,7 +62,6 @@ function App() {
     const [initUserLoad, setInitUserLoad] = useState<boolean>(false);
     const [connType, setConnType] = useState<ConnectType>(ConnectType.PERA);
     const [beta, setBeta] = useState<boolean>(true);
-    const [loading, setLoading] = useState<boolean>(true);
     const [usePera, setUsePera] = useState<boolean>(false);
     const [useMyAlgo, setUseMyAlgo] = useState<boolean>(false);
 
@@ -174,8 +173,6 @@ function App() {
         if (cookie === 'active') {
             setBeta(false);
         }
-
-        setLoading(false);
     }, []);
 
     useEffect(() => {
