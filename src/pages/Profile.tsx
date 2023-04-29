@@ -7,11 +7,12 @@ import ProfileWork from '../components/ProfileWork.tsx';
 import './Profile.css';
 import "../components/ProfileSidebar.tsx"
 import ProfileSidebar from '../components/ProfileSidebar.tsx';
-import { Stack, Typography} from "@mui/joy";
+import { Stack, Typography, Grid } from "@mui/joy";
 import { PROFILE_IMGS_BUCKET } from '../config.ts';
 import IconButton from '../components/IconButton.tsx';
 import TwineButton from '../components/TwineButton.tsx';
 import RegisterCreator from '../components/RegisterCreator.tsx';
+import GalleryTile from '../components/GalleryTile.tsx';
 import { proxy } from '../utils/api.ts';
 
 const axios = require('axios').default;
@@ -105,10 +106,31 @@ function Profile() {
                             {user && user.discord && <IconButton color='darkpurple' icon='/icons/socials/discord.svg' action={() => goTo(user.discord as string)} />}
                         </Stack>
                         </div>
+
+                        
                     </div>
                     <ProfileSidebar goToDrafts={createNav} />
                     <RegisterCreator open={openCreator} close={closeCreator} updateUser={context['updateUser']} navigate={navToCreate} />
                 </div>
+                <div className="works">
+                            {works &&
+                            <div>
+                                 <div className="works-header">
+                                <Typography color='purple' level='h2'>{works.length + ' ' + (works.length === 1 ? 'Story' : 'Stories')}</Typography>
+                            </div>
+                            <Grid container
+                                spacing={{xs: 3}}
+                                columns={{xs: 12}}
+                                sx={{flexGrow: 1, padding: '20px'}} className="works-list">
+                                {works && works.map((work, index) => {
+                                    return <Grid xs={4} key={index}><GalleryTile work={work.props.work} story={true} /></Grid>
+                                })}
+                            </Grid>
+                            </div>
+                            
+                            }
+                           
+                        </div>
             </div>
 
             

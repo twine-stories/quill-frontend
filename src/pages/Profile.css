@@ -53,3 +53,16 @@ object-fit: cover;
 .socials button {
     margin: 0px;
 }
+
+.works {
+    margin-right: 24px;
+    margin-left: 7%;
+    margin-top : 15px;
+}
+
+.works-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
