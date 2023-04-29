@@ -69,12 +69,20 @@ function Chapter() {
                 episode: episode
             }
             if (liked) {
+                setLiked(false);
                 genericPost('/api/like/unlike', likeObj).then((response: any) => {
-                    setLiked(false);
+                    const episode_str: string = String(episode.id);
+                    genericGet('/api/like/numLikes/' + episode_str).then((response: any) => {
+                        setNumLikes(response);
+                    });
                 });
             } else {
+                setLiked(true);
                 genericPost('/api/like/like', likeObj).then((response: any) => {
-                    setLiked(true);
+                    const episode_str: string = String(episode.id);
+                    genericGet('/api/like/numLikes/' + episode_str).then((response: any) => {
+                        setNumLikes(response);
+                    });
                 });
 
             }
