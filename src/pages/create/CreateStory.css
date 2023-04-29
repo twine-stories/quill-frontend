@@ -64,3 +64,7 @@
     width: 44vw;
     height: 10vw;
 }
+
+#create-story-right-buttons button {
+    width: 230px;
+}

@@ -25,7 +25,7 @@ import {ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib} from '@reach-sh/stdlib'
 import {v4 as uuidv4} from 'uuid';
 import {getCookie, setCookie, deleteCookie} from './utils/cookies.ts';
 import {User} from './utils/types.ts';
-import {cookieSet, userGet, userAdd, cookieGet, genericGet, genericPost} from './utils/api.ts';
+import {cookieSet, userGet, userAdd, genericGet, genericPost} from './utils/api.ts';
 import {CircularProgress, Grid, CssVarsProvider} from "@mui/joy";
 import GlobalStyle from "./utils/globalStyles.ts";
 import {PeraWalletConnect} from "@perawallet/connect";
@@ -62,7 +62,6 @@ function App() {
     const [initUserLoad, setInitUserLoad] = useState<boolean>(false);
     const [connType, setConnType] = useState<ConnectType>(ConnectType.PERA);
     const [beta, setBeta] = useState<boolean>(true);
-    const [loading, setLoading] = useState<boolean>(true);
     const [usePera, setUsePera] = useState<boolean>(false);
     const [useMyAlgo, setUseMyAlgo] = useState<boolean>(false);
 
@@ -174,8 +173,6 @@ function App() {
         if (cookie === 'active') {
             setBeta(false);
         }
-
-        setLoading(false);
     }, []);
 
     useEffect(() => {
@@ -193,7 +190,6 @@ function App() {
         genericGet('/api/user/cookie/' + cookie).then((response: User | null) => {
             setUser(response);
         });
-        // cookieGet(cookie, setUser);
     }, [getUserToggle]);
 
     useEffect(() => {
