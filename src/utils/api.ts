@@ -68,18 +68,6 @@ export const userAdd = (user: User, setter: (user: User) => void) : void => {
         });
 }
 
-export const cookieGet = (cookie: string, setter: (user: User) => void ) : void => {
-    axios.get(proxy + '/api/user/cookie/' + cookie)
-        .then(response => {
-            if (response.data) {
-                setter(response.data);
-            }
-        })
-        .catch(error => {
-            console.error(error);
-        });
-}
-
 export const cookieSet = (params: CookieParams, setter: (cookie: string) => void) : void => {
     axios.post(proxy + '/api/user/setUserCookie', params)
         .then(response => {
