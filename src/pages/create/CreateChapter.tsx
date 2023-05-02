@@ -493,7 +493,7 @@ function CreateChapter(props: CreateChapterProps) {
 
                                      {/*TODO: FIX THIS LATER*/}
                                      {(!props.edit || chapter) && <Typography sx={{backgroundColor: "#14100E", borderRadius: "10px", p: "10px"}}
-                                                 level="h6" endDecorator={<Switch checked={props.edit ? chapter['mature'] : false} id="mature" sx={{ml: 1}}/>}>
+                                                 level="h6" endDecorator={<Switch defaultChecked={props.edit ? chapter['mature'] : false} id="mature" sx={{ml: 1}}/>}>
                                          Mature
                                      </Typography>}
 
