@@ -22,9 +22,8 @@ function Story() {
     const [creators, setCreators] = useState<Set<string>>(new Set());
 
     useEffect(() => {
-        console.log(window.location.href.split('/'))
         if (user) {
-            workGetByUrl(window.location.href.split('/')[4], setWork, () => {
+            workGetByUrl(window.location.href.split('/', 5)[4], setWork, () => {
                 console.log('fail');
             });
         }

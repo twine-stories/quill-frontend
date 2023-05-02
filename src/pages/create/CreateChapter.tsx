@@ -76,7 +76,7 @@ function CreateChapter(props: CreateChapterProps) {
 
     useEffect(() => {
         if (user && !props.edit) {
-            workGetByUrl(window.location.href.split('/')[5], setWork, () => {
+            workGetByUrl(window.location.href.split('/', 6)[5], setWork, () => {
                 console.log('fail');
             });
 
@@ -92,7 +92,7 @@ function CreateChapter(props: CreateChapterProps) {
 
     useEffect(() => {
         if (user && props.edit) {
-            episodeGetByUrl(window.location.href.split('/')[5], setChapter, () => {
+            episodeGetByUrl(window.location.href.split('/', 6)[5], setChapter, () => {
                 console.log('fail');
             });
         }
@@ -493,13 +493,13 @@ function CreateChapter(props: CreateChapterProps) {
 
                                      {/*TODO: FIX THIS LATER*/}
                                      {(!props.edit || chapter) && <Typography sx={{backgroundColor: "#14100E", borderRadius: "10px", p: "10px"}}
-                                                 level="h6" endDecorator={<Switch checked={props.edit ? chapter['mature'] : false} id="mature" sx={{ml: 1}}/>}>
+                                                 level="h6" endDecorator={<Switch defaultChecked={props.edit ? chapter['mature'] : false} id="mature" sx={{ml: 1}}/>}>
                                          Mature
                                      </Typography>}
 
 
                                      {/*TODO: FIX THIS LATER TOO*/}
-                                     <Checkbox id="guidelines" color="info"
+                                     <Checkbox id="guidelines" color="info" defaultChecked={props.edit}
                                                label="I Verify This Work is Mine and Follows Community Guidelines."/>
 
                                      {!view && <Button variant="outlined" color="neutral" onClick={() => {
@@ -616,21 +616,24 @@ function CreateChapter(props: CreateChapterProps) {
         const sum: number = values.reduce((partial, curr) => partial + curr, 0);
         if (sum !== 100) {
             // TODO: Make this a snackbar
-            console.log('invalid percent sum');
+            setErrorMessage('The total share of all the collaborators is not 100%!');
+            setOpenError(true);
             return null;
         }
 
         let users: User[] = [];
         for (let i = 0; i < usernames.length; i++) {
             if (usernames[i] === '') {
-                console.log('invalid username');
+                setErrorMessage('A username you entered as a collaborator is empty!');
+                setOpenError(true);
                 return null;
             }
             const response = await genericGet('/api/user/name/' + usernames[i])
             if (response) {
                 users.push(response);
             } else {
-                console.log('invalid username');
+                setErrorMessage('A username you entered as a collaborator is invalid.');
+                setOpenError(true);
                 return null;
             }
         }
@@ -645,16 +648,43 @@ function CreateChapter(props: CreateChapterProps) {
 
     async function postEpisode(published: boolean, currentChapter?: Episode) {
         const title: HTMLInputElement = document.getElementById("title") as HTMLInputElement;
+        if (!title.value) {
+            setErrorMessage('Please enter a title for your chapter!');
+            setOpenError(true);
+            return;
+        }
+
+        if (!(cover.name || (chapter && chapter.cover))) {
+            setErrorMessage('Please upload a cover for your chapter.');
+            setOpenError(true);
+            return;
+        }
+
         const mature: HTMLInputElement = document.getElementById("mature") as HTMLInputElement;
+
         const guidelines: HTMLInputElement = document.getElementById("guidelines") as HTMLInputElement;
+        if (!guidelines.checked) {
+            setErrorMessage('Please read and check the Community Guidelines box before submitting.');
+            setOpenError(true);
+            return;
+        }
+
         const endOfChapterMessage: HTMLInputElement = document.getElementById("endOfChapterMessage") as HTMLInputElement;
         const publishStamp = published ? new Date() : undefined;
+
         const profitSplitMap = await checkCollaborators();
+        if (profitSplitMap.size == 0) return;
+
         const id = currentChapter ? currentChapter['id'] : undefined;
 
         const allContent = await reformatContent(false);
+        if (allContent.length == 0) {
+            setErrorMessage('Please add some content for your chapter!');
+            setOpenError(true);
+            return;
+        }
         const url: string = work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase();
-        if (title.value && !title.value.includes('/') && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
+        if (title.value && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
             let newEpisode: Episode = {
                 id: id,
                 work: work,
@@ -668,8 +698,6 @@ function CreateChapter(props: CreateChapterProps) {
                 publishStamp: publishStamp,
                 published: published,
             };
-            console.log(chapter);
-            console.log(newEpisode);
 
             let urlModifier = props.edit ? "update" : "add";
 
