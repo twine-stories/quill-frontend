@@ -33,7 +33,7 @@ function Collection() {
 
     useEffect(() => {
         if (user) {
-            collectionGetByUrl(window.location.href.split('/')[4]).then((response: NFTCollection) => {
+            collectionGetByUrl(window.location.href.split('/', 5)[4]).then((response: NFTCollection) => {
                 setColl(response);
             });
         }

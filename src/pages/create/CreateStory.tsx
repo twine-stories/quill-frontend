@@ -64,7 +64,7 @@ function CreateStory(props: CreateStoryProps) {
 
     useEffect(() => {
         if (user && props.edit) {
-            workGetByUrl(window.location.href.split('/')[5], setWork, () => {
+            workGetByUrl(window.location.href.split('/', 6)[5], setWork, () => {
                 console.log('fail');
             });
         }
