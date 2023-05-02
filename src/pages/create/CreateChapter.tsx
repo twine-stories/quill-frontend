@@ -346,25 +346,22 @@ function CreateChapter(props: CreateChapterProps) {
             <TwoColumnLayout leftComponent={
                 <div>
                     <Typography level="h2" color='purple'>{props.edit ? "Edit Chapter" : "Create Chapter"}</Typography>
-
-                    {view &&
-                        <div id='chapter-content'>
-                            <Box
-                                sx={{
-                                    py: 1,
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: 1,
-                                    alignItems: 'center',
-                                    flexWrap: 'wrap',
-                                }}
-                            >
-                                <Grid>
-                                    {preview}
-                                </Grid>
-                            </Box>
-                        </div>
-                    }
+                    <div id='chapter-content' style={{display: view ? null : 'none', width: '100%'}}>
+                        <Box
+                            sx={{
+                                py: 1,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 1,
+                                alignItems: 'center',
+                                flexWrap: 'wrap',
+                            }}
+                        >
+                            <Grid>
+                                {preview}
+                            </Grid>
+                        </Box>
+                    </div>
 
                     <div style={{display: view ? 'none' : null}}>
                         <Box
