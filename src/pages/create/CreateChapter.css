@@ -6,3 +6,7 @@
 #create-chapter-stack .MuiTextarea-root {
     width: 100%
 }
+
+#chapter-content .chapter-text {
+    text-align: left;
+}
