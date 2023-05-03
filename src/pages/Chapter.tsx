@@ -95,8 +95,8 @@ function Chapter() {
         <div>
             <Navbar/>
             {episode && episode['content'] &&
-            <Grid container justifyContent='center'>
-                <Grid id='chapter-content'>
+            <Grid xs={12} container justifyContent='center'>
+                <Grid xs={12} id='chapter-content'>
                     <Box
                         sx={{
                             py: 2,
@@ -122,7 +122,7 @@ function Chapter() {
                                 window.location.href = '/edit/chapter/' + episode.url;
                             }}/>
                         }
-                        <Grid>
+                        <Grid xs={12}>
                             {
                                 loadEpisodeContent(episode['content'])
                             }
