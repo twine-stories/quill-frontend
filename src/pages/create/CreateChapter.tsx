@@ -76,7 +76,7 @@ function CreateChapter(props: CreateChapterProps) {
 
     useEffect(() => {
         if (user && !props.edit) {
-            workGetByUrl(window.location.href.split('/', 6)[5], setWork, () => {
+            workGetByUrl(window.location.href.split('/')[5], setWork, () => {
                 console.log('fail');
             });
 
@@ -92,7 +92,7 @@ function CreateChapter(props: CreateChapterProps) {
 
     useEffect(() => {
         if (user && props.edit) {
-            episodeGetByUrl(window.location.href.split('/', 6)[5], setChapter, () => {
+            episodeGetByUrl(window.location.href.split('/')[5], setChapter, () => {
                 console.log('fail');
             });
         }
