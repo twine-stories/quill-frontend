@@ -64,7 +64,7 @@ function CreateStory(props: CreateStoryProps) {
 
     useEffect(() => {
         if (user && props.edit) {
-            workGetByUrl(window.location.href.split('/', 6)[5], setWork, () => {
+            workGetByUrl(window.location.href.split('/')[5], setWork, () => {
                 console.log('fail');
             });
         }
@@ -331,9 +331,41 @@ function CreateStory(props: CreateStoryProps) {
 
     function getStory(published: boolean, currentWork?: Work): Work {
         const title: HTMLInputElement = document.getElementById("title") as HTMLInputElement;
+        if (!title.value) {
+            setErrorMessage('Please enter a title for your story!');
+            setOpenError(true);
+            return;
+        }
+        if (title.value.includes('/')) {
+            setErrorMessage('Sorry, there cannot be any backslashes in the story title.');
+            setOpenError(true);
+            return;
+        }
+
+        if (!(cover.name || (work && work.cover))) {
+            setErrorMessage('Please upload a cover for your story.');
+            setOpenError(true);
+            return;
+        }
+
         const description: HTMLInputElement = document.getElementById('description') as HTMLInputElement;
+        if (!description.value) {
+            setErrorMessage('Please enter a description.');
+            setOpenError(true);
+            return;
+        }
         const hook: HTMLInputElement = document.getElementById('hook') as HTMLInputElement;
+        if (!hook.value) {
+            setErrorMessage('Please enter a hook.');
+            setOpenError(true);
+            return;
+        }
         const genre1: HTMLInputElement = document.getElementById('genre1') as HTMLInputElement;
+        if (!genre1.textContent) {
+            setErrorMessage('Please enter a genre.');
+            setOpenError(true);
+            return;
+        }
         const genre2: HTMLInputElement = document.getElementById('genre2') as HTMLInputElement;
         const genre3: HTMLInputElement = document.getElementById('genre3') as HTMLInputElement;
         const publishStamp = published ? new Date() : null;

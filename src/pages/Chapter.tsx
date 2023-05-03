@@ -26,7 +26,7 @@ function Chapter() {
     const [collaborators, setCollaborators] = useState<JSX.Element[]>([]);
 
     useEffect(() => {
-        episodeGetByUrl(window.location.href.split('/', 5)[4], setEpisode, () => {
+        episodeGetByUrl(window.location.href.split('/')[4], setEpisode, () => {
             console.log('fail');
         });
     }, []);
