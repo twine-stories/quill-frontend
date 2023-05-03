@@ -357,7 +357,7 @@ function CreateChapter(props: CreateChapterProps) {
                                 flexWrap: 'wrap',
                             }}
                         >
-                            <Grid>
+                            <Grid sx={{width: '100%'}}>
                                 {preview}
                             </Grid>
                         </Box>
@@ -592,7 +592,7 @@ function CreateChapter(props: CreateChapterProps) {
                     compoundedElements.push(content)
                 } else {
                     // compoundedElements.push(<Typography level="h6" color='white'>{content}</Typography>)
-                    compoundedElements.push(<div dangerouslySetInnerHTML={{__html: marked.parse(content)}}></div>)
+                    compoundedElements.push(<div className='chapter-text' dangerouslySetInnerHTML={{__html: marked.parse(content)}}></div>)
                 }
             }
         }
