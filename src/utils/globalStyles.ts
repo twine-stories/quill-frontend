@@ -43,6 +43,7 @@ declare module '@mui/joy/Sheet' {
 declare module '@mui/joy/Checkbox' {
     interface CheckboxPropsColorOverrides {
         green: true;
+        purple: true;
     }
 }
 
@@ -257,6 +258,15 @@ export const theme = extendTheme({
                         '& .MuiCheckbox-checkbox.Joy-checked': {
                             background: '#A3B832',
                             color: '#5C720D'
+                        }
+                    }),
+                    ...(ownerState.color === 'purple' && {
+                        '& .MuiCheckbox-checkbox': {
+                            border: '1px solid #9E9FEB',
+                        },
+                        '& .MuiCheckbox-checkbox.Joy-checked': {
+                            background: '#9E9FEB',
+                            color: '#373867'
                         }
                     }),
                 }),

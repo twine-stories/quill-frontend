@@ -499,8 +499,17 @@ function CreateChapter(props: CreateChapterProps) {
 
 
                                      {/*TODO: FIX THIS LATER TOO*/}
-                                     <Checkbox id="guidelines" color="info" defaultChecked={props.edit}
-                                               label="I Verify This Work is Mine and Follows Community Guidelines."/>
+                                     <Grid container alignItems='center' justifyContent='space-around' flexWrap='nowrap'>
+                                        <Checkbox defaultChecked={props.edit} color='purple' sx={{marginRight: '20px', marginBottom: '2px'}} size='sm' label='' slotProps={{
+                                            input: {
+                                                id: 'guidelines',
+                                                'aria-label': 'primary checkbox'
+                                            }
+                                        }} />
+                                        <Typography fontSize={'14px'} level='h6' color='white'>I verify this work is mine and follows the <a id='comm-guidelines' href='https://twine-legal.s3.amazonaws.com/COMMUNITY_POLICY_AND_UPLOADING_GUIDELINES.pdf' target='_blank'>community guidelines</a>.</Typography>
+                                    </Grid>
+                                     {/* <Checkbox id="guidelines" color="info" defaultChecked={props.edit}
+                                               label="I Verify This Work is Mine and Follows Community Guidelines."/> */}
 
                                      {!view && <Button variant="outlined" color="neutral" onClick={() => {
                                          setView(true);
