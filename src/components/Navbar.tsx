@@ -1,10 +1,15 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styled from "styled-components";
 import CollabPopup from './CollabPopup.tsx';
 import { UserContext } from "../App.tsx";
 import LoginWall from './LoginWall.tsx';
 import RegisterCreator from './RegisterCreator.tsx';
 import ClickProfile from './ClickProfile.tsx';
+import { Autocomplete } from '@mui/joy';
+import IconButton from './IconButton.tsx';
+import { Work } from '../utils/types.ts';
+import { genericGet } from '../utils/api.ts';
+import { useNavigate } from 'react-router-dom';
 
 const NavDiv = styled.div`
     display: flex;
@@ -34,6 +39,12 @@ function Navbar() {
     const [open, setOpen] = useState<boolean>(false);
     const [openCreator, setOpenCreator] = useState<boolean>(false);
     const [openCollab, setOpenCollab] = useState<boolean>(false);
+    const [isSearching , setIsSearching] = useState<boolean>(false);
+    const [allWorks, setAllWorks] = useState<Work[]>([]);
+    const [workStrings, setWorkStrings] = useState<string[]>([]);
+    const [mapStringToLink, setMapStringToLink] = useState<Map<string, string>>(new Map<string, string>());
+
+    const navigate = useNavigate();
 
     const blockAccess = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         e.preventDefault();
@@ -62,6 +73,41 @@ function Navbar() {
         setOpenCreator(false);
     }
 
+    const openSearch = async () => {
+        setIsSearching(true);
+    } 
+
+    const closeSearch = async () => {
+        setIsSearching(false);
+    }
+
+    const onChange = async (e: React.SyntheticEvent<Element, Event>, value: string | null) => {
+        console.log(value);
+        if (value !== null) {
+            let link: string = mapStringToLink.get(value) || "";
+            if (link) {
+                navigate('/story/' + link);
+            }
+        }
+    }
+
+
+    useEffect(() => {
+        genericGet("/api/works").then((res) => {
+            setAllWorks(res);
+            let workNames: string[] = [];
+            let map: Map<string, string> = new Map<string, string>();
+            res.forEach((work: Work) => {
+                workNames.push(work.title);
+                map.set(work.title, work.url);
+            });
+            setWorkStrings(workNames);
+            setMapStringToLink(map);
+
+        });
+
+    }, []);
+
     return (
         <div style={{marginBottom: '25px'}}>
             {context['user'] && context['user']['walletAddress'] ?
@@ -73,7 +119,14 @@ function Navbar() {
                         <a href="/art">art</a>
                         <a onClick={() => setOpenCollab(true)}>collab</a>
                         <a onClick={createNav}>create</a>
-
+                        {
+                            isSearching ?
+                            <Autocomplete options = {workStrings}  freeSolo={true} onClose={closeSearch} onChange={onChange}
+                            />
+                            :
+                            <IconButton action={openSearch} icon='/icons/search.svg' color="green" />
+                        }
+                        
                         <a>
                             <ClickProfile
                                 isLoggedIn={true}
