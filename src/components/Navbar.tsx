@@ -100,16 +100,17 @@ function Navbar() {
             const response1 = await genericGet('/api/works');
             const response2 = await genericGet('/api/users');
             const newDyads: dyad[] = [];
-            if (response1){ 
-                response1.forEach((work: Work) => {
-                    newDyads.push({isWork: true, name: work.title, link: `/story/${work.url}`});
-                });
-            }
             if (response2){
                 response2.forEach((user: User) => {
                     newDyads.push({isWork: false, name: user.userName, link: `/profile/${user.userName}`});
                 });
             }
+            if (response1){ 
+                response1.forEach((work: Work) => {
+                    newDyads.push({isWork: true, name: work.title, link: `/story/${work.url}`});
+                });
+            }
+            
             setDyads(newDyads);
 
         }
