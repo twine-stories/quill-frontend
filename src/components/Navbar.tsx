@@ -97,7 +97,7 @@ function Navbar() {
 
     useEffect(() => {
         const getDyads = async () => {
-            const response1 = await genericGet('/api/works');
+            const response1 = await genericGet('/api/published_works');
             const response2 = await genericGet('/api/users');
             const newDyads: dyad[] = [];
             if (response2){
