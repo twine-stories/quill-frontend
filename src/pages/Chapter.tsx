@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar.tsx";
 import {UserContext} from "../App.tsx";
 import {Episode, User, Work, Like, ProfitSplit} from '../utils/types.ts';
 import {episodeGetByUrl, episodesGetByWorkId, genericGet, workGetByUrl, genericPost} from '../utils/api.ts';
-import {AspectRatio, Box, Button, Stack, Switch, Typography, Grid} from "@mui/joy";
+import {AspectRatio, Box, Button, Stack, Switch, Typography, Grid, Link} from "@mui/joy";
 import IconButton from "../components/IconButton.tsx";
 import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants.ts";
 import { CHAPTER_IMGS_BUCKET } from '../config.ts';
@@ -108,7 +108,9 @@ function Chapter() {
                         }}
                     >
                         <Grid xs={12} container alignItems='center' justifyContent='space-between'>
-                            <Typography level='h1' color='purple'>{episode.work.title}</Typography>
+                            <Link sx={{'&:hover': {
+                                'textDecoration': 'none'
+                            }}} href={'/story/' + episode.work.url}><Typography level='h1' color='purple'>{episode.work.title}</Typography></Link>
                             <Grid container direction='row'>
                                 <IconButton action = {likeAction} icon={liked ? '/icons/heart-red.svg' : '/icons/heart.svg'} color = "purple"/>
                                 <Typography level='h6' sx={{marginLeft: '10px'}}>{String(numLikes) + ' like' + (numLikes === 1 ? '' : 's')}</Typography>
