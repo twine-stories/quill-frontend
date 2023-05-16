@@ -9,7 +9,6 @@ import { Autocomplete, AutocompleteOption, Typography, ListItemContent } from '@
 import IconButton from './IconButton.tsx';
 import { Work, User} from '../utils/types.ts';
 import { genericGet } from '../utils/api.ts';
-import { useNavigate } from 'react-router-dom';
 import { StyledAutocompleteListbox } from '@mui/joy/AutocompleteListbox/AutocompleteListbox.js';
 
 const NavDiv = styled.div`
@@ -50,8 +49,6 @@ function Navbar() {
     const [isSearching , setIsSearching] = useState<boolean>(false);
     const [dyads, setDyads] = useState<dyad[]>([]);
 
-    const navigate = useNavigate();
-
     const blockAccess = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         e.preventDefault();
         setOpen(true);
@@ -90,7 +87,7 @@ function Navbar() {
     const onChange = async (e: React.SyntheticEvent<Element, Event>, value: string | dyad | null) => {
         console.log(value);
         if (value !== null && typeof value !== 'string') {
-            navigate(value.link);
+            window.location.href = value.link;
         }
     }
 
