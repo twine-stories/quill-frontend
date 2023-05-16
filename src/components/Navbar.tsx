@@ -119,6 +119,32 @@ function Navbar() {
         
     }, []);
 
+    const searchIcon: JSX.Element = isSearching ?
+        <Autocomplete autoHighlight sx= {{width: "225px"}} options = {dyads} freeSolo={true} onClose={closeSearch} onChange={onChange} 
+        getOptionLabel={(option: string | dyad) => {
+            if (typeof option === 'string') {
+                return option;
+                } else {
+                    return option.name;
+                }
+            }
+        }
+        renderOption={(props, option) => {
+            return (
+                <AutocompleteOption {...props}>
+                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'left', gap: '0px'}}>
+                    {option.name}
+                    <Typography level="body3" sx={{margin: '1px'}}>
+                    {option.isWork ? "Story" : "User"}
+                    </Typography>
+                </div>
+                </AutocompleteOption>
+            )
+        }}
+        />
+        :
+        <IconButton action={openSearch} icon='/icons/search.svg' color="green" />;
+
     return (
         <div style={{marginBottom: '25px'}}>
             {context['user'] && context['user']['walletAddress'] ?
@@ -130,34 +156,7 @@ function Navbar() {
                         <a href="/art">art</a>
                         <a onClick={() => setOpenCollab(true)}>collab</a>
                         <a onClick={createNav}>create</a>
-                        {
-                            isSearching ?
-                            <Autocomplete autoHighlight sx= {{width: "225px"}} options = {dyads} freeSolo={true} onClose={closeSearch} onChange={onChange} 
-                            getOptionLabel={(option: string | dyad) => {
-                                if (typeof option === 'string') {
-                                    return option;
-                                    } else {
-                                        return option.name;
-                                    }
-                                }
-                            }
-                            renderOption={(props, option) => {
-                                return (
-                                    <AutocompleteOption {...props}>
-                                    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'left', gap: '0px'}}>
-                                        {option.name}
-                                        <Typography level="body3" sx={{margin: '1px'}}>
-                                        {option.isWork ? "Story" : "User"}
-                                        </Typography>
-                                    </div>
-                                    </AutocompleteOption>
-                                )
-                            }}
-                            />
-                            :
-                            <IconButton action={openSearch} icon='/icons/search.svg' color="green" />
-                        }
-                        
+                        {searchIcon}
                         <a>
                             <ClickProfile
                                 isLoggedIn={true}
@@ -178,6 +177,7 @@ function Navbar() {
                         <a href="/art">art</a>
                         <a onClick={() => setOpenCollab(true)}>collab</a>
                         <a onClick={blockAccess}>create</a>
+                        {searchIcon}
                         <a>
                             <ClickProfile
                                 isLoggedIn={false}
