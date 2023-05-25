@@ -16,7 +16,7 @@ client.getTransactionParams().do().then(response => {
     suggestedParams.fee = 1000;
 });
 
-async function waitForTxn(txnId: string): Promise<Record<string, any>> {
+export async function waitForTxn(txnId: string): Promise<Record<string, any>> {
     const status = await client.status().do();
     var lastRound = status['last-round'];
     var pending = await client.pendingTransactionInformation(txnId).do();

@@ -12,6 +12,7 @@ import CommentSection from '../components/CommentSection.tsx';
 import ErrorPopup from '../components/ErrorPopup.tsx';
 import TwineButton from '../components/TwineButton.tsx';
 import {marked} from 'marked';
+import TwineInput from '../components/TwineInput.tsx';
 
 function Chapter() {
 
@@ -40,7 +41,6 @@ function Chapter() {
                 });
             }
             genericGet('/api/profitSplit/episode/' + episode.id).then((response: ProfitSplit[]) => {
-                console.log(response);
                 const sortedResp: ProfitSplit[] = response.sort((a,b) => b.percentage - a.percentage);
                 let collabs: JSX.Element[] = [];
                 let index: number = 0;
@@ -118,6 +118,12 @@ function Chapter() {
                         </Grid>
                         <Grid container alignItems='center' justifyContent='flex-start'>
                             <Typography sx={{marginRight: '20px'}} level="h3" color='white'>{episode.title}</Typography>
+                        </Grid>
+                        <Grid container>
+                            <TwineInput label='Tip amount:' placeholder='tip amount' />
+                            <TwineButton color='green' name='Tip' action={() => {
+                                console.log('tip');
+                            }} />
                         </Grid>
                         {(user && user.userName === episode.work.creator.userName) &&
                             <TwineButton sx={{width: "100%"}} icon="/icons/green_setting.svg" color="blackgreen" name="Edit Chapter" action={() => {
