@@ -49,7 +49,7 @@ if (env === 'dev') {
 }
 
 export const UserContext = createContext(null as any);
-const peraWallet = new PeraWalletConnect();
+export const peraWallet = new PeraWalletConnect();
 
 // probably move to secrets manager but this doesn't really need to be that secure
 const accessCode: string = 'twinebeta!!';
@@ -186,6 +186,10 @@ function App() {
             })
             setInitUserLoad(true);
             return;
+        } else {
+            peraWallet.reconnectSession().then((accounts) => {
+                peraWallet.connector?.on('disconnect', logOut);
+            })
         }
         genericGet('/api/user/cookie/' + cookie).then((response: User | null) => {
             setUser(response);

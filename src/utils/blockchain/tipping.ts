@@ -4,9 +4,12 @@ import { getClient, adminAddr } from './credentials.ts';
 import { waitForTxn } from './transactionRepository.ts';
 import { SignerTransaction } from '@perawallet/connect/dist/util/model/peraWalletModels.js';
 import { PeraWalletConnect } from '@perawallet/connect';
+import { peraWallet } from '../../App.tsx';
 
 const myAlgoConnect = new MyAlgoConnect();
-const peraWallet = new PeraWalletConnect();
+// const peraWallet = new PeraWalletConnect({
+//     chainId: 416002
+// });
 
 const client: algosdk.Algodv2 = getClient();
 
@@ -54,12 +57,13 @@ export const tip = async (sender: string, wallets: string[], percentages: number
         const convertedTxns: SignerTransaction[] = txns.map((txn: Transaction) => {
             return {txn: txn, signers: [sender]}
         });
+        
         const signedTxns = await peraWallet.signTransaction([convertedTxns]);
 
         for (const signedTxn of signedTxns) {
             const {txId} = await client.sendRawTransaction(signedTxn).do();
             await waitForTxn(txId);
-          }
+        }
     } else {
         // handle my algo wallet
         const convertedTxns: Uint8Array[] = txns.map((txn: Transaction) => txn.toByte());

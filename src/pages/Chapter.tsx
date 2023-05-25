@@ -13,6 +13,8 @@ import ErrorPopup from '../components/ErrorPopup.tsx';
 import TwineButton from '../components/TwineButton.tsx';
 import {marked} from 'marked';
 import TwineInput from '../components/TwineInput.tsx';
+import { tip } from '../utils/blockchain/tipping.ts';
+import { ConnectType } from '../utils/enums.ts';
 
 function Chapter() {
 
@@ -120,9 +122,18 @@ function Chapter() {
                             <Typography sx={{marginRight: '20px'}} level="h3" color='white'>{episode.title}</Typography>
                         </Grid>
                         <Grid container>
-                            <TwineInput label='Tip amount:' placeholder='tip amount' />
+                            <TwineInput type='number' label='Tip amount:' placeholder='tip amount' inputAttrs={{id: 'tipInput'}} />
                             <TwineButton color='green' name='Tip' action={() => {
-                                console.log('tip');
+                                if (user) {
+                                    const tipVal = document.getElementById('tipInput') as HTMLInputElement;
+                                    if (tipVal && tipVal.value) {
+                                        // will work for most reasonable tips, but not for very large tips
+                                        tip(user.walletAddress, [user.walletAddress], [100], BigInt(parseFloat(tipVal.value) * 1000000.0), user.connectType === ConnectType.PERA);
+                                    }
+                                } else {
+                                    // handle case where user is not logged in
+                                    console.log('log in');
+                                }
                             }} />
                         </Grid>
                         {(user && user.userName === episode.work.creator.userName) &&
