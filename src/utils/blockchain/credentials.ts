@@ -1,7 +1,8 @@
-import algosdk, { Algodv2, AppCreateTxn, Indexer, mnemonicToSecretKey } from 'algosdk';
+import { Algodv2, Indexer, mnemonicToSecretKey } from 'algosdk';
+import { env } from '../../config.ts';
 
-const clientAddress = 'https://testnet-algorand.api.purestake.io/ps2';
-const indexerAddress = 'https://testnet-algorand.api.purestake.io/idx2';
+const clientAddress = env === 'dev' ? 'https://testnet-algorand.api.purestake.io/ps2': 'https://mainnet-algorand.api.purestake.io/ps2';
+const indexerAddress = env === 'dev' ? 'https://testnet-algorand.api.purestake.io/idx2' : 'https://mainnet-algorand.api.purestake.io/idx2';
 const port = '';
 const token = {'X-API-Key': 'beOoH8pO9c3HNd85AXd6C1eRStQshbL352yYVQsR'};
 
