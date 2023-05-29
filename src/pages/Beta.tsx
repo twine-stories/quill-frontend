@@ -39,13 +39,14 @@ function Beta() {
                         }} />
                     </Grid>
                 </Grid>
-            </Grid>
-            <Stack direction="row" spacing = {2} alignItems= "center" sx={{alignSelf: "left"}} >
+                <Stack direction="row" spacing = {2} alignItems= "center" sx={{alignSelf: "left", marginTop: '20px'}} >
                 <IconButton sx={{margin: "0px", marginLeft:"250px"}}color='darkpurple' icon='/icons/socials/twitter.svg' action={() => window.open('https://twitter.com/TwineStories', '_blank')} />
                 <IconButton color='darkpurple' icon='/icons/socials/instagram.svg' action={() => window.open('https://www.instagram.com/twine_stories/', '_blank')} />
                 <IconButton color='darkpurple' icon='/icons/socials/discord.svg' action={() => window.open('https://discord.com/invite/HKrvJrRUwJ', '_blank')} />
                 <img src='/joindiscord.png' style={{marginTop: "-85px", marginLeft: "-10px"}}/>
-            </Stack>
+                </Stack>
+            </Grid>
+            
             
         </Grid>
     );
