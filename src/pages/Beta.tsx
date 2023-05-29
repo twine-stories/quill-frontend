@@ -18,9 +18,9 @@ function Beta() {
 
     return (
         <Grid container alignItems='center' justifyContent='space-around' sx={{minWidth: '350px'}}>
-            <Grid container direction='column' alignItems='center' justifyContent='space-around' xs={12} columns={1} sx={{margin: '60px 0px'}}>
-                <img src='/icons/twine.svg' width='45%' />
-                <iframe style={{borderRadius: '5px', border: 'none', margin: '40px', height: '30vw', width: '50vw', maxWidth: '900px', maxHeight: '540px', minWidth: '350px', minHeight: '210px'}}
+            <Grid container direction='column' alignItems='center' justifyContent='space-around' xs={12} columns={1} sx={{margin: '0px 0px 60px'}}>
+                <img src='/icons/TwineLogo.png' width='50%' style={{marginBottom: '-30px'}}/>
+                <iframe style={{borderRadius: '5px', border: 'none', margin: '0px 40px 40px', height: '30vw', width: '50vw', maxWidth: '900px', maxHeight: '540px', minWidth: '350px', minHeight: '210px'}}
                 src="https://www.youtube.com/embed/4jjeJMxQibQ">
                 </iframe>
                 <Typography id='paragraph' color='white' level='p' sx={{marginBottom: '40px', textAlign: "left", width: "50vw", maxWidth: '900px', minWidth: '350px', lineHeight: "1.25"}}>With Twine, creators come first. We afford authors and illustrators a genuine opportunity to make enough money to support themselves with their work. Unlike competitor platforms, Twine does not stand between creators and fans or determine how and what creators publish. Twine provides tools for creators to connect directly with each other, visualize worlds together, and grow loyal fanbases. Creators keep their IP and more than 90% of the revenue they generate. <br></br><br></br> We chose the name Twine because we were inspired by the science of forests. Transformational change can begin with small networks of people who fight for equity. A tree alone is vulnerable to weather, but a forest controls the weather.<br></br><br></br>Twine: We Create Worlds.</Typography>
