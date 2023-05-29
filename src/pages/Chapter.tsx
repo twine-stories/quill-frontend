@@ -27,6 +27,8 @@ function Chapter() {
     const [openError, setOpenError] = useState<boolean>(false);
 
     const [collaborators, setCollaborators] = useState<JSX.Element[]>([]);
+    const [creators, setCreators] = useState<string[]>([]);
+    const [percentages, setPercentages] = useState<number[]>([]);
 
     useEffect(() => {
         episodeGetByUrl(window.location.href.split('/')[4], setEpisode, () => {
@@ -45,12 +47,18 @@ function Chapter() {
             genericGet('/api/profitSplit/episode/' + episode.id).then((response: ProfitSplit[]) => {
                 const sortedResp: ProfitSplit[] = response.sort((a,b) => b.percentage - a.percentage);
                 let collabs: JSX.Element[] = [];
+                let creators: string[] = [];
+                let percentages: number[] = [];
                 let index: number = 0;
                 sortedResp.forEach((item: ProfitSplit) => {
                     collabs.push(<Typography key={index} level='h3' color='white' onClick={() => window.location.href = '/profile/' + item.creator.userName} sx={{cursor: 'pointer', fontSize: '20px'}}>{item.creator.firstName + ' ' + item.creator.lastName}</Typography>)
+                    creators.push(item.creator.walletAddress);
+                    percentages.push(item.percentage);
                     index++;
                 })
                 setCollaborators(collabs);
+                setCreators(creators);
+                setPercentages(percentages);
             });
         }
     }, [episode, user]);
@@ -123,16 +131,15 @@ function Chapter() {
                         </Grid>
                         <Grid container>
                             <TwineInput type='number' label='Tip amount:' placeholder='tip amount' inputAttrs={{id: 'tipInput'}} />
-                            <TwineButton color='green' name='Tip' action={() => {
+                            <TwineButton color='green' name='Confirm' action={() => {
                                 if (user) {
                                     const tipVal = document.getElementById('tipInput') as HTMLInputElement;
                                     if (tipVal && tipVal.value) {
-                                        // will work for most reasonable tips, but not for very large tips
-                                        tip(user.walletAddress, [user.walletAddress], [100], BigInt(parseFloat(tipVal.value) * 1000000.0), user.connectType === ConnectType.PERA);
+                                        tip(user.walletAddress, creators, percentages, BigInt(tipVal.value) * 1000000n, user.connectType === ConnectType.PERA);
                                     }
                                 } else {
                                     // handle case where user is not logged in
-                                    console.log('log in');
+                                    setOpenError(true);
                                 }
                             }} />
                         </Grid>
@@ -153,7 +160,7 @@ function Chapter() {
                         {collaborators}
                     </Grid>
                     <CommentSection episode={episode} />
-                    <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message='Please log in to like or follow.' />
+                    <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message='Please log in to like, follow, or tip.' />
                 </Grid>
             </Grid>
             }

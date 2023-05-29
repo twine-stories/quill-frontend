@@ -3,13 +3,16 @@ import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect';
 import { getClient, adminAddr } from './credentials.ts';
 import { waitForTxn } from './transactionRepository.ts';
 import { SignerTransaction } from '@perawallet/connect/dist/util/model/peraWalletModels.js';
-import { PeraWalletConnect } from '@perawallet/connect';
 import { peraWallet } from '../../App.tsx';
 
+type BigPayment = {
+    amount: bigint;
+    from: string;
+    to: string;
+    suggestedParams: SuggestedParams;
+}
+
 const myAlgoConnect = new MyAlgoConnect();
-// const peraWallet = new PeraWalletConnect({
-//     chainId: 416002
-// });
 
 const client: algosdk.Algodv2 = getClient();
 
@@ -24,7 +27,7 @@ const tipHelper = (sender: string, wallets: string[], percentages: number[], cre
     let txns: Transaction[] = [];
 
     let i: number;
-    let txnObj;
+    let txnObj: BigPayment;
     for (i = 0; i < wallets.length; i++) {
         txnObj = {
             amount: (creatorTipShare * BigInt(percentages[i])) / 100n,
@@ -44,7 +47,7 @@ export const tip = async (sender: string, wallets: string[], percentages: number
 
     let txns: Transaction[] = tipHelper(sender, wallets, percentages, creatorsCut);
 
-    const twinePaymentObj = {
+    const twinePaymentObj: BigPayment = {
         amount: twineCut,
         from: sender,
         to: adminAddr,
