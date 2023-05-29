@@ -15,6 +15,7 @@ import {marked} from 'marked';
 import TwineInput from '../components/TwineInput.tsx';
 import { tip } from '../utils/blockchain/tipping.ts';
 import { ConnectType } from '../utils/enums.ts';
+import TwoColumnLayout from '../components/TwoColumnLayout.tsx';
 
 function Chapter() {
 
@@ -25,10 +26,13 @@ function Chapter() {
     const [numLikes, setNumLikes] = useState<number>(0);
 
     const [openError, setOpenError] = useState<boolean>(false);
+    const [openTipError, setOpenTipError] = useState<boolean>(false);
 
     const [collaborators, setCollaborators] = useState<JSX.Element[]>([]);
     const [creators, setCreators] = useState<string[]>([]);
     const [percentages, setPercentages] = useState<number[]>([]);
+
+    const [showTip, setShowTip] = useState<boolean>(false);
 
     useEffect(() => {
         episodeGetByUrl(window.location.href.split('/')[4], setEpisode, () => {
@@ -114,7 +118,7 @@ function Chapter() {
                             flexDirection: 'column',
                             gap: 1,
                             alignItems: 'flex-start',
-                            flexWrap: 'wrap',
+                            flexWrap: 'wrap'
                         }}
                     >
                         <Grid xs={12} container alignItems='center' justifyContent='space-between'>
@@ -129,31 +133,45 @@ function Chapter() {
                         <Grid container alignItems='center' justifyContent='flex-start'>
                             <Typography sx={{marginRight: '20px'}} level="h3" color='white'>{episode.title}</Typography>
                         </Grid>
-                        <Grid container>
-                            <TwineInput type='number' label='Tip amount:' placeholder='tip amount' inputAttrs={{id: 'tipInput'}} />
-                            <TwineButton color='green' name='Confirm' action={() => {
-                                if (user) {
-                                    const tipVal = document.getElementById('tipInput') as HTMLInputElement;
-                                    if (tipVal && tipVal.value) {
-                                        tip(user.walletAddress, creators, percentages, BigInt(tipVal.value) * 1000000n, user.connectType === ConnectType.PERA);
+                        <TwoColumnLayout
+                            leftComponent={
+                                <div>
+                                    {(user && user.userName === episode.work.creator.userName) &&
+                                        <TwineButton sx={{width: "100%"}} icon="/icons/green_setting.svg" color="blackgreen" name="Edit Chapter" action={() => {
+                                            window.location.href = '/edit/chapter/' + episode.url;
+                                        }}/>
                                     }
-                                } else {
-                                    // handle case where user is not logged in
-                                    setOpenError(true);
-                                }
-                            }} />
-                        </Grid>
-                        {(user && user.userName === episode.work.creator.userName) &&
-                            <TwineButton sx={{width: "100%"}} icon="/icons/green_setting.svg" color="blackgreen" name="Edit Chapter" action={() => {
-                                window.location.href = '/edit/chapter/' + episode.url;
-                            }}/>
-                        }
-                        <Grid xs={12}>
-                            {
-                                loadEpisodeContent(episode['content'])
+                                    <Grid xs={12}>
+                                        {
+                                            loadEpisodeContent(episode['content'])
+                                        }
+                                    </Grid>
+                                </div>
                             }
-                        </Grid>
-
+                            rightComponent={
+                                <Grid container direction='column'>
+                                    <TwineButton icon='/icons/tip_jar.svg' color='green' name='Tip' action={() => {
+                                        setShowTip(!showTip);
+                                    }} />
+                                    <Grid container alignItems='center' direction='column' sx={showTip ? {marginTop: '20px', background: '#14100E', padding: '20px', borderRadius: '15px'} : {visibility: 'hidden', padding: '20px'}}>
+                                        <TwineInput type='number' label='Tip amount:' placeholder='tip amount' inputAttrs={{id: 'tipInput'}} />
+                                        <TwineButton icon='/icons/green_checkmark.svg' sx={{marginTop: '20px'}} color='green' name='Confirm' action={() => {
+                                            if (user) {
+                                                const tipVal = document.getElementById('tipInput') as HTMLInputElement;
+                                                if (tipVal && tipVal.value && parseFloat(tipVal.value) > 0) {
+                                                    tip(user.walletAddress, creators, percentages, BigInt(parseFloat(tipVal.value) * 1000000), user.connectType === ConnectType.PERA);
+                                                } else {
+                                                    setOpenTipError(true);
+                                                }
+                                            } else {
+                                                setOpenError(true);
+                                            }
+                                        }} />
+                                    </Grid>
+                                </Grid>
+                            }
+                        />
+                        
                     </Box>
                     <Grid sx={{marginBottom: '50px'}}>
                         <Typography level='h3' color='purple'>{'Creator' + (collaborators.length === 1 ? '' : 's') + ':'}</Typography>
@@ -161,6 +179,7 @@ function Chapter() {
                     </Grid>
                     <CommentSection episode={episode} />
                     <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message='Please log in to like, follow, or tip.' />
+                    <ErrorPopup isOpen={openTipError} onClose={() => setOpenTipError(false)} message='Please enter a valid tip amount.' />
                 </Grid>
             </Grid>
             }
