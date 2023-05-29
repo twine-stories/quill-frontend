@@ -60,7 +60,7 @@ function Chapter() {
                 setNumLikes(response);
             });
         }
-    });
+    }, [episode]);
 
     const likeAction = () => {
         if (user) {
