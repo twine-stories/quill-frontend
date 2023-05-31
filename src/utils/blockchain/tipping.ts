@@ -1,9 +1,9 @@
-import algosdk, { SuggestedParams, Transaction, makePaymentTxnWithSuggestedParamsFromObject } from 'algosdk';
+import { SuggestedParams, Transaction, makePaymentTxnWithSuggestedParamsFromObject } from 'algosdk';
 import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect';
-import { getClient, adminAddr } from './credentials.ts';
-import { waitForTxn } from './transactionRepository.ts';
+import { adminAddr } from './credentials.ts';
 import { SignerTransaction } from '@perawallet/connect/dist/util/model/peraWalletModels.js';
 import { peraWallet } from '../../App.tsx';
+import { genericGet, genericPost } from '../api.ts';
 
 type BigPayment = {
     amount: bigint;
@@ -14,13 +14,10 @@ type BigPayment = {
 
 const myAlgoConnect = new MyAlgoConnect();
 
-const client: algosdk.Algodv2 = getClient();
-
 let suggestedParams: SuggestedParams;
-client.getTransactionParams().do().then(response => {
+genericGet('/api/algo/suggestedParams').then((response: SuggestedParams) => {
     suggestedParams = response;
-    suggestedParams.flatFee = true;
-    suggestedParams.fee = 1000;
+    console.log(suggestedParams);
 });
 
 const tipHelper = (sender: string, wallets: string[], percentages: number[], creatorTipShare: bigint): Transaction[] => {
@@ -64,8 +61,7 @@ export const tip = async (sender: string, wallets: string[], percentages: number
         const signedTxns = await peraWallet.signTransaction([convertedTxns]);
 
         for (const signedTxn of signedTxns) {
-            const {txId} = await client.sendRawTransaction(signedTxn).do();
-            await waitForTxn(txId);
+            await genericPost('/api/algo/sendTransaction', {'signedTxn': Buffer.from(signedTxn).toString('base64')});
         }
     } else {
         // handle my algo wallet
@@ -73,8 +69,7 @@ export const tip = async (sender: string, wallets: string[], percentages: number
         const signedTxns: SignedTx[] = await myAlgoConnect.signTransaction(convertedTxns);
 
         for (const signedTxn of signedTxns) {
-            await client.sendRawTransaction(signedTxn.blob).do();
-            await waitForTxn(signedTxn.txID);
+            await genericPost('/api/algo/sendTransaction', {'signedTxn': Buffer.from(signedTxn.blob).toString('base64')});
         }
     }
 }
