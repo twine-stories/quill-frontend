@@ -66,7 +66,7 @@ input[type=number] {
     padding-bottom: 140px;
 }
 
-#pera-wallet-connect-modal-wrapper {
+#pera-wallet-connect-modal-wrapper, #pera-wallet-sign-txn-toast-wrapper {
     position: fixed;
-    z-index: 99999; /* Ensures that the popup is positioned above everything else */
+    z-index: 99999; /* Ensures that the pera popup is positioned above everything else */
 }

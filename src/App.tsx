@@ -36,20 +36,26 @@ import Chapter from "./pages/Chapter.tsx";
 import FirstLogin from './components/FirstLogin.tsx';
 import ErrorPopup from './components/ErrorPopup.tsx';
 import { env, PROFILE_IMGS_BUCKET } from './config.ts';
+import { AlgorandChainIDs } from '@perawallet/connect/dist/util/peraWalletTypes';
 
 const reach = loadStdlib('ALGO');
+let chainId: AlgorandChainIDs;
 if (env === 'dev') {
+    chainId = 416002;
     reach.setWalletFallback(reach.walletFallback({
         providerEnv: 'TestNet', MyAlgoConnect
     }));
 } else {
+    chainId = 416001;
     reach.setWalletFallback(reach.walletFallback({
         providerEnv: 'MainNet', MyAlgoConnect
     }));
 }
 
 export const UserContext = createContext(null as any);
-const peraWallet = new PeraWalletConnect();
+export const peraWallet = new PeraWalletConnect({
+    chainId: chainId
+});
 
 // probably move to secrets manager but this doesn't really need to be that secure
 const accessCode: string = 'twinebeta!!';
@@ -186,6 +192,10 @@ function App() {
             })
             setInitUserLoad(true);
             return;
+        } else {
+            peraWallet.reconnectSession().then((accounts) => {
+                peraWallet.connector?.on('disconnect', logOut);
+            })
         }
         genericGet('/api/user/cookie/' + cookie).then((response: User | null) => {
             setUser(response);
