@@ -14,13 +14,7 @@ type BigPayment = {
 
 const myAlgoConnect = new MyAlgoConnect();
 
-let suggestedParams: SuggestedParams;
-genericGet('/api/algo/suggestedParams').then((response: SuggestedParams) => {
-    suggestedParams = response;
-    console.log(suggestedParams);
-});
-
-const tipHelper = (sender: string, wallets: string[], percentages: number[], creatorTipShare: bigint): Transaction[] => {
+const tipHelper = (sender: string, wallets: string[], percentages: number[], creatorTipShare: bigint, suggestedParams: SuggestedParams): Transaction[] => {
     let txns: Transaction[] = [];
 
     let i: number;
@@ -38,11 +32,13 @@ const tipHelper = (sender: string, wallets: string[], percentages: number[], cre
     return txns;
 }
 
-export const tip = async (sender: string, wallets: string[], percentages: number[], totalTip: bigint, pera: boolean) => {
+export const tip = async (sender: string, wallets: string[], percentages: number[], totalTip: bigint, pera: boolean, setProcessing) => {
     const twineCut: bigint = (totalTip) / 10n;
     const creatorsCut: bigint = totalTip - twineCut;
 
-    let txns: Transaction[] = tipHelper(sender, wallets, percentages, creatorsCut);
+    let suggestedParams: SuggestedParams = await genericGet('/api/algo/suggestedParams');
+
+    let txns: Transaction[] = tipHelper(sender, wallets, percentages, creatorsCut, suggestedParams);
 
     const twinePaymentObj: BigPayment = {
         amount: twineCut,
@@ -52,6 +48,7 @@ export const tip = async (sender: string, wallets: string[], percentages: number
     };
     txns.push(makePaymentTxnWithSuggestedParamsFromObject(twinePaymentObj));
 
+    let promises: Promise<object | null>[] = [];
     if (pera) {
         // handle pera wallet
         const convertedTxns: SignerTransaction[] = txns.map((txn: Transaction) => {
@@ -60,16 +57,22 @@ export const tip = async (sender: string, wallets: string[], percentages: number
         
         const signedTxns = await peraWallet.signTransaction([convertedTxns]);
 
+        setProcessing(true);
         for (const signedTxn of signedTxns) {
-            await genericPost('/api/algo/sendTransaction', {'signedTxn': Buffer.from(signedTxn).toString('base64')});
+            promises.push(genericPost('/api/algo/sendTransaction', {'signedTxn': Buffer.from(signedTxn).toString('base64')}));
         }
+
     } else {
         // handle my algo wallet
         const convertedTxns: Uint8Array[] = txns.map((txn: Transaction) => txn.toByte());
         const signedTxns: SignedTx[] = await myAlgoConnect.signTransaction(convertedTxns);
 
+        setProcessing(true);
         for (const signedTxn of signedTxns) {
-            await genericPost('/api/algo/sendTransaction', {'signedTxn': Buffer.from(signedTxn.blob).toString('base64')});
+            promises.push(genericPost('/api/algo/sendTransaction', {'signedTxn': Buffer.from(signedTxn.blob).toString('base64')}));
         }
     }
+
+    await Promise.all(promises);
+    setProcessing(false);
 }

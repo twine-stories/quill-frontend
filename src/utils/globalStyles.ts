@@ -51,6 +51,7 @@ declare module '@mui/joy/CircularProgress' {
     interface CircularProgressPropsColorOverrides {
         darkpurple: true;
         lightpurple: true;
+        darkgreen: true;
     }
 }
 
@@ -321,7 +322,10 @@ export const theme = extendTheme({
                     }),
                     ...(ownerState.color === 'lightpurple' && {
                         '--CircularProgress-progressColor': '#9E9FEB'
-                    })
+                    }),
+                    ...(ownerState.color === 'darkgreen' && {
+                        '--CircularProgress-progressColor': '#5C720D'
+                    }),
                 })
             }
         }

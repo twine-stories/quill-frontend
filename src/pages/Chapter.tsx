@@ -4,12 +4,13 @@ import Navbar from "../components/Navbar.tsx";
 import {UserContext} from "../App.tsx";
 import {Episode, User, Work, Like, ProfitSplit} from '../utils/types.ts';
 import {episodeGetByUrl, episodesGetByWorkId, genericGet, workGetByUrl, genericPost} from '../utils/api.ts';
-import {AspectRatio, Box, Button, Stack, Switch, Typography, Grid, Link} from "@mui/joy";
+import {AspectRatio, Box, Button, Stack, Switch, Typography, Grid, Link, CircularProgress} from "@mui/joy";
 import IconButton from "../components/IconButton.tsx";
 import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants.ts";
 import { CHAPTER_IMGS_BUCKET } from '../config.ts';
 import CommentSection from '../components/CommentSection.tsx';
 import ErrorPopup from '../components/ErrorPopup.tsx';
+import SuccessPopup from '../components/SuccessPopup.tsx';
 import TwineButton from '../components/TwineButton.tsx';
 import {marked} from 'marked';
 import TwineInput from '../components/TwineInput.tsx';
@@ -27,6 +28,9 @@ function Chapter() {
 
     const [openError, setOpenError] = useState<boolean>(false);
     const [openTipError, setOpenTipError] = useState<boolean>(false);
+    const [openTipSuccess, setOpenTipSuccess] = useState<boolean>(false);
+
+    const [processingTip, setProcessingTip] = useState<boolean>(false);
 
     const [collaborators, setCollaborators] = useState<JSX.Element[]>([]);
     const [creators, setCreators] = useState<string[]>([]);
@@ -134,6 +138,7 @@ function Chapter() {
                             <Typography sx={{marginRight: '20px'}} level="h3" color='white'>{episode.title}</Typography>
                         </Grid>
                         <TwoColumnLayout
+                            rightWidth='25%'
                             leftComponent={
                                 <div>
                                     {(user && user.userName === episode.work.creator.userName) &&
@@ -153,19 +158,24 @@ function Chapter() {
                                     <TwineButton icon='/icons/tip_jar.svg' color='green' name='Tip' action={() => {
                                         setShowTip(!showTip);
                                     }} />
-                                    <Grid container alignItems='center' direction='column' sx={showTip ? {marginTop: '20px', background: '#14100E', padding: '20px', borderRadius: '15px'} : {visibility: 'hidden', padding: '20px'}}>
-                                        <TwineInput type='number' label='Tip amount:' placeholder='tip amount' inputAttrs={{id: 'tipInput'}} />
-                                        <TwineButton icon='/icons/green_checkmark.svg' sx={{marginTop: '20px'}} color='green' name='Confirm' action={() => {
+                                    <Grid container alignItems='center' direction='column' sx={showTip ? {marginTop: '20px', background: '#14100E', padding: '20px 20px', borderRadius: '15px'} : {visibility: 'hidden', padding: '20px'}}>
+                                        <TwineInput type='number' label='Tip amount:' placeholder='tip amount' inputAttrs={{id: 'tipInput'}} endDecorator='/icons/algo.svg' />
+                                        <TwineButton icon='/icons/green_checkmark.svg' sx={{marginTop: '20px'}} color='green' name={processingTip ? <CircularProgress color='darkgreen' variant='plain'/> : 'Confirm'} action={() => {
                                             if (user) {
                                                 const tipVal = document.getElementById('tipInput') as HTMLInputElement;
-                                                if (tipVal && tipVal.value && parseFloat(tipVal.value) > 0) {
-                                                    tip(user.walletAddress, creators, percentages, BigInt(parseFloat(tipVal.value) * 1000000), user.connectType === ConnectType.PERA);
+                                                if (tipVal && tipVal.value && parseFloat(tipVal.value) >= 0.1) {
+                                                    tip(user.walletAddress, creators, percentages, BigInt(Math.floor(parseFloat(tipVal.value) * 1000000)), user.connectType === ConnectType.PERA, setProcessingTip).then(() => {
+                                                        setOpenTipSuccess(true);
+                                                        tipVal.value = '';
+                                                    })
                                                 } else {
                                                     setOpenTipError(true);
                                                 }
                                             } else {
                                                 setOpenError(true);
                                             }
+                                            // make sure loading goes away
+                                            setProcessingTip(false);
                                         }} />
                                     </Grid>
                                 </Grid>
@@ -180,6 +190,7 @@ function Chapter() {
                     <CommentSection episode={episode} />
                     <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message='Please log in to like, follow, or tip.' />
                     <ErrorPopup isOpen={openTipError} onClose={() => setOpenTipError(false)} message='Please enter a valid tip amount.' />
+                    <SuccessPopup isOpen={openTipSuccess} onClose={() => setOpenTipSuccess(false)} />
                 </Grid>
             </Grid>
             }

@@ -2,6 +2,7 @@ import algosdk, { SuggestedParams, Transaction, Algodv2, LogicSigAccount, Indexe
 import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect';
 import { getClient, getIndexer, adminAddr, getSecretKey } from './credentials.ts';
 import { BUY } from './constants.ts';
+import { env } from '../../config.ts';
 
 const myAlgoConnect = new MyAlgoConnect();
 
@@ -10,7 +11,7 @@ const indexer: Indexer = getIndexer();
 const encoder = new TextEncoder();
 
 let suggestedParams: SuggestedParams;
-client.getTransactionParams().do().then(response => {
+env !== 'prod' && client.getTransactionParams().do().then(response => {
     suggestedParams = response;
     suggestedParams.flatFee = true;
     suggestedParams.fee = 1000;
