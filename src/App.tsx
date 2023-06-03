@@ -35,7 +35,7 @@ import CreateChapter from "./pages/create/CreateChapter.tsx";
 import Chapter from "./pages/Chapter.tsx";
 import FirstLogin from './components/FirstLogin.tsx';
 import ErrorPopup from './components/ErrorPopup.tsx';
-import { env, PROFILE_IMGS_BUCKET } from './config.ts';
+import { env } from './config.ts';
 import { AlgorandChainIDs } from '@perawallet/connect/dist/util/peraWalletTypes';
 
 const reach = loadStdlib('ALGO');
