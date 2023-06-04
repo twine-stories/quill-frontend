@@ -115,3 +115,10 @@ export type Comment = {
     episode: Episode;
     content: string;
 }
+
+export type Tip = {
+    id?: number;
+    tipper: User;
+    episode: Episode;
+    amount: number;
+}

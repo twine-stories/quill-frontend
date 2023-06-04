@@ -2,9 +2,9 @@ import React, {useState, useContext, useEffect} from 'react';
 import './Chapter.css';
 import Navbar from "../components/Navbar.tsx";
 import {UserContext} from "../App.tsx";
-import {Episode, User, Work, Like, ProfitSplit} from '../utils/types.ts';
-import {episodeGetByUrl, episodesGetByWorkId, genericGet, workGetByUrl, genericPost} from '../utils/api.ts';
-import {AspectRatio, Box, Button, Stack, Switch, Typography, Grid, Link, CircularProgress} from "@mui/joy";
+import {Episode, User, Like, ProfitSplit, Tip} from '../utils/types.ts';
+import {episodeGetByUrl, genericGet, genericPost} from '../utils/api.ts';
+import {AspectRatio, Box, Typography, Grid, Link, CircularProgress} from "@mui/joy";
 import IconButton from "../components/IconButton.tsx";
 import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants.ts";
 import { CHAPTER_IMGS_BUCKET } from '../config.ts';
@@ -17,6 +17,7 @@ import TwineInput from '../components/TwineInput.tsx';
 import { tip } from '../utils/blockchain/tipping.ts';
 import { ConnectType } from '../utils/enums.ts';
 import TwoColumnLayout from '../components/TwoColumnLayout.tsx';
+import { microToAlgo, algoToMicro, TWINE_CUT } from '../utils/blockchain/constants.ts';
 
 function Chapter() {
 
@@ -164,9 +165,17 @@ function Chapter() {
                                             if (user) {
                                                 const tipVal = document.getElementById('tipInput') as HTMLInputElement;
                                                 if (tipVal && tipVal.value && parseFloat(tipVal.value) >= 0.1) {
-                                                    tip(user.walletAddress, creators, percentages, BigInt(Math.floor(parseFloat(tipVal.value) * 1000000)), user.connectType === ConnectType.PERA, setProcessingTip).then(() => {
+                                                    const adjustedVal: bigint = algoToMicro(parseFloat(tipVal.value));
+                                                    // BigInt(Math.floor(parseFloat(tipVal.value) * 1000000));
+                                                    tip(user.walletAddress, creators, percentages, adjustedVal, user.connectType === ConnectType.PERA, setProcessingTip).then(() => {
                                                         setOpenTipSuccess(true);
                                                         tipVal.value = '';
+                                                        const tipObj: Tip = {
+                                                            tipper: user,
+                                                            episode: episode,
+                                                            amount: microToAlgo(adjustedVal) * (1.0 - TWINE_CUT)
+                                                        };
+                                                        genericPost('/api/tip/tip', tipObj);
                                                     })
                                                 } else {
                                                     setOpenTipError(true);

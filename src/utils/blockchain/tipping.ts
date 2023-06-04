@@ -4,6 +4,7 @@ import { adminAddr } from './credentials.ts';
 import { SignerTransaction } from '@perawallet/connect/dist/util/model/peraWalletModels.js';
 import { peraWallet } from '../../App.tsx';
 import { genericGet, genericPost } from '../api.ts';
+import { TWINE_CUT } from './constants.ts';
 
 type BigPayment = {
     amount: bigint;
@@ -33,7 +34,7 @@ const tipHelper = (sender: string, wallets: string[], percentages: number[], cre
 }
 
 export const tip = async (sender: string, wallets: string[], percentages: number[], totalTip: bigint, pera: boolean, setProcessing) => {
-    const twineCut: bigint = (totalTip) / 10n;
+    const twineCut: bigint = (totalTip) / BigInt(TWINE_CUT * 100);
     const creatorsCut: bigint = totalTip - twineCut;
 
     let suggestedParams: SuggestedParams = await genericGet('/api/algo/suggestedParams');
