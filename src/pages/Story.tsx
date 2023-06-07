@@ -132,15 +132,23 @@ function Story() {
         }
     }
 
-    const moveChapterUp = (id: number): void => {
+    const moveChapterUp = (chapterNumber: number): void => {
+        const higherChapterNumberToSwap = chapterNumber += 1
         let newPublishedEpisodes: JSX.Element[] = [];
-        publishedEpisodes.forEach((collaborator: JSX.Element) => {
-            if (collaborator.props.id !== id) {
-                newCollaborators.push(collaborator);
+        for (let i = 0; i < publishedEpisodes.length; i++) {
+            var currPubEp = publishedEpisodes[i];
+            let newPubEp = currPubEp;
+            if (currPubEp.episodeNumber === chapterNumber) {
+                newPubEp.episodeNumber = newPubEp.episodeNumber + 1;
             }
-        });
+            else if (currPubEp.episodeNumber === higherChapterNumberToSwap) {
+                newPubEp.episodeNumber = newPubEp.episodeNumber - 1;
+            }
 
-        setCollaborators(newCollaborators);
+            newPublishedEpisodes.push(newPubEp)
+        }
+
+        setPublishedEpisodes(newPublishedEpisodes);
     };
 
     return (
