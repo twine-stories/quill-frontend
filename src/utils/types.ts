@@ -45,6 +45,7 @@ export type Episode = {
     work: Work;
     title: string;
     content: string;
+    episodeNumber: number;
     cover?: string;
     endOfChapterMessage?: string;
     publishStamp?: Date;

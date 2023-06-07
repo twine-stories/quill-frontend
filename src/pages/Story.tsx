@@ -1,8 +1,8 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext, useEffect, createContext} from 'react';
 import Navbar from "../components/Navbar.tsx";
 import {UserContext} from "../App.tsx";
 import {Episode, User, Work, Pr} from '../utils/types.ts';
-import {episodesGetByWorkId, genericGet, workGetByUrl} from '../utils/api.ts';
+import {episodesGetByWorkId, genericGet, genericPost, workGetByUrl} from '../utils/api.ts';
 import TwoColumnLayout from "../components/TwoColumnLayout.tsx";
 import {Box, Button, Stack, Switch, Typography} from "@mui/joy";
 import Sheet from "@mui/joy/Sheet";
@@ -13,10 +13,13 @@ import { PROFILE_IMGS_BUCKET } from '../config.ts';
 import IconButton from '../components/IconButton.tsx';
 import { useNavigate } from 'react-router-dom';
 
+export const EpisodeOrderContext = createContext(null as any);
+
 function Story() {
 
     const [work, setWork] = useState<Work>(null);
     const [episodes, setEpisodes] = useState<Array<Episode>>( []);
+    const [publishedEpisodes, setPublishedEpisodes] = useState<Array<Episode>>( []);
     const context: object = useContext(UserContext);
     const user: User = context['user'];
     const [creators, setCreators] = useState<Set<string>>(new Set());
@@ -38,9 +41,15 @@ function Story() {
     }, [work]);
 
     useEffect(() => {
+        var tempPublishedEpisodes = []
+
         // loop over all episodes
         for (let i = 0; i < episodes.length; i++) {
             const currEp = episodes[i];
+            if (currEp['publishStamp']) {
+                tempPublishedEpisodes.push(currEp)
+            }
+
             genericGet('/api/profitSplit/episode/' + currEp['id']).then((response) => {
                 for (let j = 0; j < response.length; j++) {
                     const currSplit = response[j];
@@ -54,6 +63,7 @@ function Story() {
                 }
             });
         }
+        setPublishedEpisodes(tempPublishedEpisodes)
     }, [episodes]);
             
 
@@ -67,6 +77,71 @@ function Story() {
     const goToSameTab = async (link: string): Promise<void> => {
         navigate(link);
     }
+
+    // this will be a migration function running for a year 06/14/2023
+    // this will account for episode objects with no valid episode number before it was
+    // introduced in the open beta launch
+    async function getMigrationPublishedEpisodeTiles() {
+        if (publishedEpisodes.length > 0) {
+            // var publishedEpisodes: Episode[] = [];
+            // for (let i = 0; i < episodes.length; i++) {
+            //     const currEp = episodes[i];
+            //     if (currEp['publishStamp']) {
+            //         publishedEpisodes.push(currEp)
+            //     }
+            // }
+
+            // migrate if needed
+            if (publishedEpisodes[0].episodeNumber !== -1) {
+                const sortedPublishedEpisodes = publishedEpisodes.sort((e1, e2) => {
+                    return e2.publishStamp - e1.publishStamp
+                })
+                var counter = 0
+                for (let i = 0; i < sortedPublishedEpisodes.length; i++) {
+                    var currPubEp = sortedPublishedEpisodes[i];
+                    currPubEp.episodeNumber = counter
+                    counter += 1
+                    try {
+                        const response: number = await genericPost("/api/episode/update", currPubEp);
+                        if (response) {
+                            // if (cover.file) {
+                            //     await prepareAndUpload('cover');
+                            // }
+                            // setUploading(false);
+                            // newEpisode.id = response;
+                        }
+                    } catch (error) {
+                        // TODO: make this a dialog
+                        console.log("We ran into an error 🗿")
+                        return;
+                    }
+                }
+                setPublishedEpisodes(sortedPublishedEpisodes);
+            }
+
+
+            //// ALERT ////
+            // ONLY KEEP THIS BELOW CODE SECTION AFTER MIGRATION DATE //
+            publishedEpisodes.sort((e1, e2) => {
+                return e2.episodeNumber - e1.episodeNumber
+            }).map((episode) => {
+                return (
+                    <EpisodeTile isCreator={user.walletAddress === work.creator.walletAddress} episode={episode} totalEpisodes={publishedEpisodes.length}/>
+                )
+            })
+        }
+    }
+
+    const moveChapterUp = (id: number): void => {
+        let newPublishedEpisodes: JSX.Element[] = [];
+        publishedEpisodes.forEach((collaborator: JSX.Element) => {
+            if (collaborator.props.id !== id) {
+                newCollaborators.push(collaborator);
+            }
+        });
+
+        setCollaborators(newCollaborators);
+    };
 
     return (
         <div>
@@ -92,31 +167,44 @@ function Story() {
                                     <TwineButton sx={{width: "50%"}} icon="/icons/purple_settings.svg" color="blackpurple" name="Edit Story" action={() => {
                                         window.location.href = '/edit/story/' + work['url'];
                                     }}/>
+                                    {/* FYI: publishedEpisodes.length is the new chapter's number */}
                                     <TwineButton sx={{width: "50%"}}  icon="/icons/purple_plus.svg" color="purple" name="New Chapter" action={() => {
-                                        window.location.href = '/create/chapter/' + work['url'];
+                                        window.location.href = '/create/chapter/' + work['url'] + '/' + publishedEpisodes.length;
                                     }}/>
                                 </div>
                             }
 
-                            <Typography level="h2" sx={{color: "#9E9FEB"}}>Published Chapters</Typography>
-                            {episodes.map((episode) => {
-                                if (episode['publishStamp']) {
-                                    return (
-                                        <EpisodeTile isCreator={user.walletAddress === work.creator.walletAddress} episode={episode}/>
-                                    )
-                                }
-                            })}
-
-                            {(user && user.walletAddress === work.creator.walletAddress) &&
+                            {episodes &&
                                 <>
-                                    <Typography level="h2" sx={{color: "#9E9FEB"}}>Draft Chapters</Typography>
-                                    {episodes.map((episode) => {
-                                        if (!episode['publishStamp']) {
-                                            return (
-                                                <EpisodeTile isCreator={user.walletAddress === work.creator.walletAddress} episode={episode}/>
-                                            )
-                                        }
-                                    })}
+                                    <Typography level="h2" sx={{color: "#9E9FEB"}}>Published Chapters</Typography>
+                                    {/*{episodes.map((episode) => {*/}
+                                    {/*    if (episode['publishStamp']) {*/}
+                                    {/*        return (*/}
+                                    {/*            <EpisodeTile isCreator={user.walletAddress === work.creator.walletAddress} episode={episode}/>*/}
+                                    {/*        )*/}
+                                    {/*    }*/}
+                                    {/*})}*/}
+                                    {
+                                        <EpisodeOrderContext.Provider value={{
+                                            'moveUp': moveChapterUp,
+                                            'moveDown': moveChapterDown
+                                        }}>
+                                            getMigrationPublishedEpisodeTiles()
+                                        </EpisodeOrderContext.Provider>
+                                    }
+
+                                    {(user && user.walletAddress === work.creator.walletAddress) &&
+                                        <>
+                                            <Typography level="h2" sx={{color: "#9E9FEB"}}>Draft Chapters</Typography>
+                                            {episodes.map((episode) => {
+                                                if (!episode['publishStamp']) {
+                                                    return (
+                                                        <EpisodeTile isCreator={user.walletAddress === work.creator.walletAddress} episode={episode}/>
+                                                    )
+                                                }
+                                            })}
+                                        </>
+                                    }
                                 </>
                             }
 
