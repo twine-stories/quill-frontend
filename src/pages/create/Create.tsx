@@ -138,7 +138,7 @@ function Create() {
 
 
     const mintNFT = async (walletAddress: string, unitName: string, assetName: string, assetUrl: string) => {
-        const response: object = await createNFT(walletAddress, unitName, assetName, assetUrl);
+        await createNFT(walletAddress, unitName, assetName, assetUrl);
         setUpdateAssets(!updateAssets);
     }
 
@@ -284,7 +284,7 @@ function Create() {
         }
 
         // algosdk.assignGroupID(txns);
-        const response = await signTxns(txns);
+        await signTxns(txns);
 
         const work: HTMLInputElement = document.getElementById('works') as HTMLInputElement;
         const name: HTMLInputElement = document.getElementById('collName') as HTMLInputElement;

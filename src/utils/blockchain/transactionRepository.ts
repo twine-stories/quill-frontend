@@ -3,6 +3,7 @@ import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect';
 import { getClient, getIndexer, adminAddr, getSecretKey } from './credentials.ts';
 import { BUY } from './constants.ts';
 import { env } from '../../config.ts';
+import { genericPost } from '../api.ts';
 
 const myAlgoConnect = new MyAlgoConnect();
 
@@ -17,6 +18,10 @@ env !== 'prod' && client.getTransactionParams().do().then(response => {
     suggestedParams.fee = 1000;
 });
 
+export const sendTransaction = async (signedTxn: Uint8Array): Promise<string> => {
+    return await genericPost('/api/algo/sendTransaction', {'signedTxn': Buffer.from(signedTxn).toString('base64')})
+}
+
 export async function waitForTxn(txnId: string): Promise<Record<string, any>> {
     const status = await client.status().do();
     var lastRound = status['last-round'];
@@ -30,32 +35,38 @@ export async function waitForTxn(txnId: string): Promise<Record<string, any>> {
     return pending;
 }
 
-async function signTxn(txn: Transaction): Promise<object> {
+async function signTxn(txn: Transaction): Promise<string> {
     const signedTxn: SignedTx = await myAlgoConnect.signTransaction(txn.toByte());
-    const response = await client.sendRawTransaction(signedTxn.blob).do();
+    return sendTransaction(signedTxn.blob);
+    // await client.sendRawTransaction(signedTxn.blob).do();
 
-    const txnInfo = await waitForTxn(signedTxn.txID);
-    return txnInfo;
+    // const txnInfo = await waitForTxn(signedTxn.txID);
+    // return txnInfo;
 }
 
-export async function signTxns(txns: Transaction[]) {
+export async function signTxns(txns: Transaction[]): Promise<string[]> {
     const convertedTxns: Uint8Array[] = txns.map((txn: Transaction) => txn.toByte());
 
     const signedTxns: SignedTx[] = await myAlgoConnect.signTransaction(convertedTxns);
     // const signedTxnsBlobs: Uint8Array[] = signedTxns.map((elem: SignedTx) => elem.blob);
     // const { txId }: Record<string, any> = await client.sendRawTransaction(signedTxnsBlobs).do();
     // await waitForTxn(txId);
+    let promises: Promise<string>[] = [];
     for (const signedTxn of signedTxns) {
-        await client.sendRawTransaction(signedTxn.blob).do();
-        await waitForTxn(signedTxn.txID);
+        promises.push(sendTransaction(signedTxn.blob));
+        // await client.sendRawTransaction(signedTxn.blob).do();
+        // await waitForTxn(signedTxn.txID);
     }
+
+    return await Promise.all(promises);
 }
 
 async function logicSign(txn: Transaction) {
     const signedTxn: Uint8Array = txn.signTxn(getSecretKey());
-    const response = await client.sendRawTransaction(signedTxn).do();
+    return sendTransaction(signedTxn);
+    // const response = await client.sendRawTransaction(signedTxn).do();
 
-    return await waitForTxn(response['txId']);
+    // return await waitForTxn(response['txId']);
 }
 
 export function pay(sender: string, receiver: string, amount: number | bigint): Transaction {
@@ -70,7 +81,7 @@ export function pay(sender: string, receiver: string, amount: number | bigint): 
     return paymentTxn;
 }
 
-export async function paySign(sender: string, receiver: string, amount: number | bigint, logicSig?: boolean): Promise<Transaction | object> {
+export async function paySign(sender: string, receiver: string, amount: number | bigint, logicSig?: boolean): Promise<string> {
     const paymentTxn: Transaction = pay(sender, receiver, amount);
 
     if (logicSig) {
@@ -79,7 +90,7 @@ export async function paySign(sender: string, receiver: string, amount: number |
     return await signTxn(paymentTxn);
 }
 
-async function createASA(creatorAddress: string, unitName: string, assetName: string, total: number, decimals: number, assetUrl: string): Promise<object> {
+async function createASA(creatorAddress: string, unitName: string, assetName: string, total: number, decimals: number, assetUrl: string): Promise<string> {
     const createTxn: Transaction = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
         from: creatorAddress,
         suggestedParams: suggestedParams,
@@ -98,7 +109,7 @@ async function createASA(creatorAddress: string, unitName: string, assetName: st
     return await signTxn(createTxn);
 }
 
-export async function createNFT(creatorAddress: string, unitName: string, assetName: string, assetUrl: string): Promise<object> {
+export async function createNFT(creatorAddress: string, unitName: string, assetName: string, assetUrl: string): Promise<string> {
     return await createASA(creatorAddress, unitName, assetName, 1, 0, assetUrl);
 }
 
@@ -153,7 +164,7 @@ export function changeAssetManagement(assetId: number, currentManagerAddress: st
     return assetChangeTxn;
 }
 
-export async function changeAssetManagementSign(assetId: number, currentManagerAddress: string, manager: string | undefined, reserve: string | undefined, freeze: string | undefined, clawback: string | undefined, emptyAddressChecking: boolean): Promise<object> {
+export async function changeAssetManagementSign(assetId: number, currentManagerAddress: string, manager: string | undefined, reserve: string | undefined, freeze: string | undefined, clawback: string | undefined, emptyAddressChecking: boolean): Promise<string> {
     const assetChangeTxn: Transaction = changeAssetManagement(assetId, currentManagerAddress, manager, reserve, freeze, clawback, emptyAddressChecking);
     return await signTxn(assetChangeTxn);
 }

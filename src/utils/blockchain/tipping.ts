@@ -3,8 +3,9 @@ import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect';
 import { adminAddr } from './credentials.ts';
 import { SignerTransaction } from '@perawallet/connect/dist/util/model/peraWalletModels.js';
 import { peraWallet } from '../../App.tsx';
-import { genericGet, genericPost } from '../api.ts';
+import { genericGet } from '../api.ts';
 import { TWINE_CUT } from './constants.ts';
+import { sendTransaction } from './transactionRepository.ts';
 
 type BigPayment = {
     amount: bigint;
@@ -49,7 +50,7 @@ export const tip = async (sender: string, wallets: string[], percentages: number
     };
     txns.push(makePaymentTxnWithSuggestedParamsFromObject(twinePaymentObj));
 
-    let promises: Promise<object | null>[] = [];
+    let promises: Promise<string>[] = [];
     if (pera) {
         // handle pera wallet
         const convertedTxns: SignerTransaction[] = txns.map((txn: Transaction) => {
@@ -60,7 +61,7 @@ export const tip = async (sender: string, wallets: string[], percentages: number
 
         setProcessing(true);
         for (const signedTxn of signedTxns) {
-            promises.push(genericPost('/api/algo/sendTransaction', {'signedTxn': Buffer.from(signedTxn).toString('base64')}));
+            promises.push(sendTransaction(signedTxn));
         }
 
     } else {
@@ -70,7 +71,7 @@ export const tip = async (sender: string, wallets: string[], percentages: number
 
         setProcessing(true);
         for (const signedTxn of signedTxns) {
-            promises.push(genericPost('/api/algo/sendTransaction', {'signedTxn': Buffer.from(signedTxn.blob).toString('base64')}));
+            promises.push(sendTransaction(signedTxn.blob));
         }
     }
 

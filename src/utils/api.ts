@@ -12,7 +12,7 @@ type CookieParams = {
     walletAddress: string;
 }
 
-export const genericGet = async (endpoint: string): Promise<object | null> => {
+export const genericGet = async (endpoint: string) => {
     const response = await axios.get(proxy + endpoint);
     if (response.status === 200) {
         return response.data;
@@ -23,7 +23,7 @@ export const genericGet = async (endpoint: string): Promise<object | null> => {
 }
 
 
-export const genericPost = async (endpoint: string, requestBody: object): Promise<object | null> => {
+export const genericPost = async (endpoint: string, requestBody: object) => {
     const response = await axios.post(proxy + endpoint, requestBody);
     if (response.status === 200) {
         return response.data;
