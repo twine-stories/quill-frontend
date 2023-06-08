@@ -132,17 +132,76 @@ function Story() {
         }
     }
 
-    const moveChapterUp = (chapterNumber: number): void => {
-        const higherChapterNumberToSwap = chapterNumber += 1
+    const moveChapterUp = async (chapterNumber: number): void => {
+        const lowerChapterNumberToSwap = chapterNumber - 1
         let newPublishedEpisodes: JSX.Element[] = [];
         for (let i = 0; i < publishedEpisodes.length; i++) {
             var currPubEp = publishedEpisodes[i];
+            // TODO: copy the object
             let newPubEp = currPubEp;
             if (currPubEp.episodeNumber === chapterNumber) {
-                newPubEp.episodeNumber = newPubEp.episodeNumber + 1;
+                newPubEp.episodeNumber = currPubEp.episodeNumber - 1;
+                try {
+                    const response: number = await genericPost("/api/episode/update", newPubEp);
+                    if (response) {
+                        // TODO: figure this out
+                    }
+                } catch (error) {
+                    // TODO: make this a dialog
+                    console.log("We ran into an error 🗿")
+                    return;
+                }
+            } else if (currPubEp.episodeNumber === lowerChapterNumberToSwap) {
+                newPubEp.episodeNumber = currPubEp.episodeNumber + 1;
+                try {
+                    const response: number = await genericPost("/api/episode/update", newPubEp);
+                    if (response) {
+                        // TODO: figure this out
+                    }
+                } catch (error) {
+                    // TODO: make this a dialog
+                    console.log("We ran into an error 🗿")
+                    return;
+                }
             }
-            else if (currPubEp.episodeNumber === higherChapterNumberToSwap) {
-                newPubEp.episodeNumber = newPubEp.episodeNumber - 1;
+
+            newPublishedEpisodes.push(newPubEp)
+        }
+
+        setPublishedEpisodes(newPublishedEpisodes);
+    };
+
+    const moveChapterDown = async (chapterNumber: number): void => {
+        const higherChapterNumberToSwap = chapterNumber + 1
+        let newPublishedEpisodes: JSX.Element[] = [];
+        for (let i = 0; i < publishedEpisodes.length; i++) {
+            var currPubEp = publishedEpisodes[i];
+            // TODO: copy the object
+            let newPubEp = currPubEp;
+            if (currPubEp.episodeNumber === chapterNumber) {
+                newPubEp.episodeNumber = currPubEp.episodeNumber + 1;
+                try {
+                    const response: number = await genericPost("/api/episode/update", newPubEp);
+                    if (response) {
+                        // TODO: figure this out
+                    }
+                } catch (error) {
+                    // TODO: make this a dialog
+                    console.log("We ran into an error 🗿")
+                    return;
+                }
+            } else if (currPubEp.episodeNumber === higherChapterNumberToSwap) {
+                newPubEp.episodeNumber = currPubEp.episodeNumber - 1;
+                try {
+                    const response: number = await genericPost("/api/episode/update", newPubEp);
+                    if (response) {
+                        // TODO: figure this out
+                    }
+                } catch (error) {
+                    // TODO: make this a dialog
+                    console.log("We ran into an error 🗿")
+                    return;
+                }
             }
 
             newPublishedEpisodes.push(newPubEp)
