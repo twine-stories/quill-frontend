@@ -5,35 +5,40 @@ import { UserContext } from "../App.tsx";
 import LoginWall from './LoginWall.tsx';
 import RegisterCreator from './RegisterCreator.tsx';
 import ClickProfile from './ClickProfile.tsx';
-import { Autocomplete, AutocompleteOption, Typography, ListItemContent } from '@mui/joy';
+import { Autocomplete, AutocompleteOption, Typography, Box } from '@mui/joy';
 import IconButton from './IconButton.tsx';
 import { Work, User} from '../utils/types.ts';
 import { genericGet } from '../utils/api.ts';
-import { StyledAutocompleteListbox } from '@mui/joy/AutocompleteListbox/AutocompleteListbox.js';
+
+
+
 
 const NavDiv = styled.div`
-    display: flex;
-    justify-content: space-between;
+.navContainer{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+.navItemsNames{
+  a{
+    font-family: 'Twine';
+    text-decoration: none;
+    font-style: normal;
+    font-weight: 400;
+    cursor: pointer;
+    font-size: 36px;
+    line-height: 100%;
+    color: #a3b832;
+    max-width: 15vw;
+  }
+}
+.iconSearch{
+    display:flex;
     align-items: center;
-    margin-top: 20px;
-
-    a {
-        font-family: 'Twine';
-        text-decoration: none;
-        font-style: normal;
-        font-weight: 400;
-        cursor: pointer;
-        font-size: 36px;
-        line-height: 100%;
-        color: #a3b832;
-        max-width: 15vw;
-    }
-
-    #navbarLogin {
-        color: #9E9FEB;
-    }  
-`;
-
+    
+   
+    }`;
 
 type dyad = {
     isWork: boolean;
@@ -140,7 +145,7 @@ function Navbar() {
         }}
         />
         :
-        <IconButton action={openSearch} icon='/icons/search.svg' color="green" />;
+        <IconButton sx={{width:"56px", height:"56px"}} action={openSearch} icon='/icons/search.svg' color="green" />;
 
     return (
         <div style={{marginBottom: '25px'}}>
@@ -168,21 +173,29 @@ function Navbar() {
                 :
                 <>
                     <NavDiv>
+                        <Box className='navContainer'>
+                        <Box className='navLogo'>
                         <a href="/" id='navbarLogo'>
-                            <img src="/icons/twine_logo_2.svg" width="100%" />
+                            <img alt="" src="/icons/twine_logo_2.svg" width="100%" />
                         </a>
+                        </Box>
+                        <Box className='navItemsNames'>
                         <a href="/art">art</a>
-                        <a onClick={() => setOpenCollab(true)}>collab</a>
+                        <a onClick={() => setOpenCollab(true)} style={{paddingLeft: "40px",paddingRight: "40px"}}>collab</a>
                         <a onClick={blockAccess}>create</a>
+                        </Box>
+                        <Box className='iconSearch navItemsNames'>
                         {searchIcon}
-                        <a>
-                            <ClickProfile
+                        <a style={{paddingLeft:"10px"}}>
+                            < ClickProfile
                                 isLoggedIn={false}
                                 logOutFunc={() => {}}
                                 connectAlgoFunc={context['connectToMyAlgo']}
                                 connectPeraFunc={context['connectToPera']}
                             />
                         </a>
+                        </Box>
+                        </Box>
                     </NavDiv>
                     <LoginWall open={open} closeWall={closeWall} />
                 </>
