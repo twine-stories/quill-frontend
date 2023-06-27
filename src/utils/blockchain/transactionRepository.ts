@@ -2,8 +2,7 @@ import algosdk, { SuggestedParams, Transaction, Algodv2, LogicSigAccount, Indexe
 import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect';
 import { getClient, getIndexer, adminAddr, getSecretKey } from './credentials.ts';
 import { BUY } from './constants.ts';
-import { env } from '../../config.ts';
-import { genericPost } from '../api.ts';
+import { genericGet, genericPost } from '../api.ts';
 
 const myAlgoConnect = new MyAlgoConnect();
 
@@ -11,15 +10,12 @@ const client: Algodv2 = getClient();
 const indexer: Indexer = getIndexer();
 const encoder = new TextEncoder();
 
-let suggestedParams: SuggestedParams;
-env !== 'prod' && client.getTransactionParams().do().then(response => {
-    suggestedParams = response;
-    suggestedParams.flatFee = true;
-    suggestedParams.fee = 1000;
-});
-
 export const sendTransaction = async (signedTxn: Uint8Array): Promise<string> => {
-    return await genericPost('/api/algo/sendTransaction', {'signedTxn': Buffer.from(signedTxn).toString('base64')})
+    return await genericPost('/api/algo/sendTransaction', {'signedTxn': Buffer.from(signedTxn).toString('base64')});
+}
+
+export const getSuggestedParams = async (): Promise<SuggestedParams> => {
+    return await genericGet('/api/algo/suggestedParams');
 }
 
 export async function waitForTxn(txnId: string): Promise<Record<string, any>> {
@@ -37,7 +33,7 @@ export async function waitForTxn(txnId: string): Promise<Record<string, any>> {
 
 async function signTxn(txn: Transaction): Promise<string> {
     const signedTxn: SignedTx = await myAlgoConnect.signTransaction(txn.toByte());
-    return sendTransaction(signedTxn.blob);
+    return await sendTransaction(signedTxn.blob);
     // await client.sendRawTransaction(signedTxn.blob).do();
 
     // const txnInfo = await waitForTxn(signedTxn.txID);
@@ -46,11 +42,8 @@ async function signTxn(txn: Transaction): Promise<string> {
 
 export async function signTxns(txns: Transaction[]): Promise<string[]> {
     const convertedTxns: Uint8Array[] = txns.map((txn: Transaction) => txn.toByte());
-
     const signedTxns: SignedTx[] = await myAlgoConnect.signTransaction(convertedTxns);
-    // const signedTxnsBlobs: Uint8Array[] = signedTxns.map((elem: SignedTx) => elem.blob);
-    // const { txId }: Record<string, any> = await client.sendRawTransaction(signedTxnsBlobs).do();
-    // await waitForTxn(txId);
+
     let promises: Promise<string>[] = [];
     for (const signedTxn of signedTxns) {
         promises.push(sendTransaction(signedTxn.blob));
@@ -63,13 +56,14 @@ export async function signTxns(txns: Transaction[]): Promise<string[]> {
 
 async function logicSign(txn: Transaction) {
     const signedTxn: Uint8Array = txn.signTxn(getSecretKey());
-    return sendTransaction(signedTxn);
+    return await sendTransaction(signedTxn);
     // const response = await client.sendRawTransaction(signedTxn).do();
 
     // return await waitForTxn(response['txId']);
 }
 
-export function pay(sender: string, receiver: string, amount: number | bigint): Transaction {
+export async function pay(sender: string, receiver: string, amount: number | bigint): Promise<Transaction> {
+    let suggestedParams = await getSuggestedParams();
     const txn = {
         amount: amount,
         from: sender,
@@ -82,7 +76,7 @@ export function pay(sender: string, receiver: string, amount: number | bigint): 
 }
 
 export async function paySign(sender: string, receiver: string, amount: number | bigint, logicSig?: boolean): Promise<string> {
-    const paymentTxn: Transaction = pay(sender, receiver, amount);
+    const paymentTxn: Transaction = await pay(sender, receiver, amount);
 
     if (logicSig) {
         return await logicSign(paymentTxn);
@@ -91,6 +85,7 @@ export async function paySign(sender: string, receiver: string, amount: number |
 }
 
 async function createASA(creatorAddress: string, unitName: string, assetName: string, total: number, decimals: number, assetUrl: string): Promise<string> {
+    let suggestedParams = await getSuggestedParams();
     const createTxn: Transaction = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
         from: creatorAddress,
         suggestedParams: suggestedParams,
@@ -114,6 +109,8 @@ export async function createNFT(creatorAddress: string, unitName: string, assetN
 }
 
 export async function createApplication(approvalProgram: string, clearProgram: string, globalInts: number, globalByteSlices: number, localInts: number, localByteSlices: number, appArgs: Uint8Array[], foreignAssets: number[]): Promise<number> {
+    let suggestedParams = await getSuggestedParams();
+
     const apBytes: Uint8Array = await compileProgram(approvalProgram);
     const cpBytes: Uint8Array = await compileProgram(clearProgram);
 
@@ -148,7 +145,8 @@ async function compileProgram(source: string): Promise<Uint8Array> {
     return compiledBytes;
 }
 
-export function changeAssetManagement(assetId: number, currentManagerAddress: string, manager: string | undefined, reserve: string | undefined, freeze: string | undefined, clawback: string | undefined, emptyAddressChecking: boolean): Transaction {
+export async function changeAssetManagement(assetId: number, currentManagerAddress: string, manager: string | undefined, reserve: string | undefined, freeze: string | undefined, clawback: string | undefined, emptyAddressChecking: boolean): Promise<Transaction> {
+    let suggestedParams = await getSuggestedParams();
     const txn = {
         from: currentManagerAddress,
         assetIndex: assetId,
@@ -165,7 +163,7 @@ export function changeAssetManagement(assetId: number, currentManagerAddress: st
 }
 
 export async function changeAssetManagementSign(assetId: number, currentManagerAddress: string, manager: string | undefined, reserve: string | undefined, freeze: string | undefined, clawback: string | undefined, emptyAddressChecking: boolean): Promise<string> {
-    const assetChangeTxn: Transaction = changeAssetManagement(assetId, currentManagerAddress, manager, reserve, freeze, clawback, emptyAddressChecking);
+    const assetChangeTxn: Transaction = await changeAssetManagement(assetId, currentManagerAddress, manager, reserve, freeze, clawback, emptyAddressChecking);
     return await signTxn(assetChangeTxn);
 }
 
@@ -190,7 +188,8 @@ export async function getAccountAssets(walletAddress: string): Promise<Array<obj
     return assets['assets'];
 }
 
-export function callApplication(appId: number, callerAddress: string, onComplete: algosdk.OnApplicationComplete, appArgs?: Uint8Array[], foreignAssets?: number[], accounts?: string[]): Transaction {
+export async function callApplication(appId: number, callerAddress: string, onComplete: algosdk.OnApplicationComplete, appArgs?: Uint8Array[], foreignAssets?: number[], accounts?: string[]): Promise<Transaction> {
+    let suggestedParams = await getSuggestedParams();
     const txn = {
         from: callerAddress,
         suggestedParams: suggestedParams,
@@ -206,7 +205,7 @@ export function callApplication(appId: number, callerAddress: string, onComplete
 }
 
 export async function callApplicationSign(appId: number, callerAddress: string, onComplete: algosdk.OnApplicationComplete, appArgs?: Uint8Array[], foreignAssets?: number[], accounts?: string[], logicSig?: boolean) {
-    const callTxn: Transaction = callApplication(appId, callerAddress, onComplete, appArgs, foreignAssets, accounts);
+    const callTxn: Transaction = await callApplication(appId, callerAddress, onComplete, appArgs, foreignAssets, accounts);
 
     if (logicSig) {
         return await logicSign(callTxn);
@@ -214,7 +213,8 @@ export async function callApplicationSign(appId: number, callerAddress: string, 
     return await signTxn(callTxn);
 }
 
-function assetTransfer(senderAddress: string, receiverAddress: string, amount: number | bigint, assetId: number, revocationTarget?: string): Transaction {
+async function assetTransfer(senderAddress: string, receiverAddress: string, amount: number | bigint, assetId: number, revocationTarget?: string): Promise<Transaction> {
+    let suggestedParams = await getSuggestedParams();
     const txn = {
         from: senderAddress,
         to: receiverAddress,
@@ -228,20 +228,20 @@ function assetTransfer(senderAddress: string, receiverAddress: string, amount: n
     return transferTxn;
 }
 
-export function optIn(assetId: number, address: string): Transaction {
-    return assetTransfer(address, address, 0, assetId);
+export async function optIn(assetId: number, address: string): Promise<Transaction> {
+    return await assetTransfer(address, address, 0, assetId);
 }
 
-export function buyAsset(assetId: number, appId: number, ownerAddress: string, buyerAddress: string, price: number | bigint, escrowAddress: string, contractAddress: string, timestamp?: number): Transaction[] {
+export async function buyAsset(assetId: number, appId: number, ownerAddress: string, buyerAddress: string, price: number | bigint, escrowAddress: string, contractAddress: string, timestamp?: number): Promise<Transaction[]> {
     let appArgs: Uint8Array[] = [BUY];
     if (timestamp) {
         appArgs.push(encodeUint64(timestamp));
     }
     appArgs.push(...[decodeAddress('KYUH2SNU6FWFGBK6PNWI4EUIABOYFIQIQH2WOP3FW7DGA623ESTGXYQPJA').publicKey, encodeUint64(90), decodeAddress('CB2MYSJFLTUMGRURINUT3B5A7VK45LNZWFRTLG2SJGBRVAQF32UDDUEX34').publicKey, encodeUint64(10)]);
-    let appCallTxn: Transaction = callApplication(appId, buyerAddress, algosdk.OnApplicationComplete.NoOpOC, appArgs);
+    let appCallTxn: Transaction = await callApplication(appId, buyerAddress, algosdk.OnApplicationComplete.NoOpOC, appArgs);
     // change hardcod
-    let paymentTxn: Transaction = pay(buyerAddress, contractAddress, price);
-    let assetTransferTxn: Transaction = assetTransfer(escrowAddress, buyerAddress, 1, assetId, ownerAddress);
+    let paymentTxn: Transaction = await pay(buyerAddress, contractAddress, price);
+    let assetTransferTxn: Transaction = await assetTransfer(escrowAddress, buyerAddress, 1, assetId, ownerAddress);
 
     let txns: Transaction[] = [appCallTxn, paymentTxn, assetTransferTxn];
     const gid: Buffer = computeGroupID(txns);

@@ -143,6 +143,9 @@ function Create() {
     }
 
     const genContract = async (assetId: number, data: object): Promise<AssetInfo | null> => {
+        // create application from backend, have backend communicate with fast api
+        // pretty much move whole contract logic to backend bc the user only needs to sign away the asset (can send the transaction once we have completed the application/escrow setup)
+        // will probably need to change the escrow logic, but wont be too bad hopefully
         const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], [assetId]);
         const escrowProgram: string = await getEscrowProgram(contractType.toLowerCase(), assetId.toString(), id);
 
@@ -205,36 +208,16 @@ function Create() {
         const data = initResponse.data;
         let contractInfo: Record<number, AssetInfo> = {};
         if (data) {
-            if (contractType === CollectionType.SHUFFLE) {
-                const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], nftList);
-                const escrowProgram: string = await getEscrowProgram('shuffle', nftList.toString(), id);
-                if (escrowProgram) {
-                    const escrowAddress: string = await escrowProgramToAddress(escrowProgram);
-                    await Promise.all([
-                        callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, undefined, true),
-                        paySign(adminAddr, escrowAddress, 100000 + (100000 * nftList.length), true)
-                    ])
-                    for (const assetId of nftList) {
-                        contractInfo[assetId] = {
-                            appId: id,
-                            assetId: assetId,
-                            escrowAddress: escrowAddress,
-                            price: 1000000
-                        };
-                    }
-                }
-            } else {
-                let promises: Promise<AssetInfo | null>[] = [];
-                for (const assetId of nftList) {
-                    promises.push(genContract(assetId, data));
-                }
-                const values: (AssetInfo | null)[] = await Promise.all(promises);
-                values.forEach((val: AssetInfo | null) => {
-                    if (val !== null) {
-                        contractInfo[val.assetId] = val;
-                    }
-                });
+            let promises: Promise<AssetInfo | null>[] = [];
+            for (const assetId of nftList) {
+                promises.push(genContract(assetId, data));
             }
+            const values: (AssetInfo | null)[] = await Promise.all(promises);
+            values.forEach((val: AssetInfo | null) => {
+                if (val !== null) {
+                    contractInfo[val.assetId] = val;
+                }
+            });
 
             setSmartContractInfo(contractInfo);
             setSelectedNFTs(nftList);
@@ -255,31 +238,22 @@ function Create() {
             txns.push(changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, info.escrowAddress, false));
         }
 
-        if (contractType === CollectionType.SHUFFLE) {
-            const nftIds: number[] = Object.keys(smartContractInfo).map((elem: string) => parseInt(elem));
-            const dummyInfo: AssetInfo = smartContractInfo[nftIds[0]];
-            if (dummyInfo.price) {
-                const price: Uint8Array = encodeUint64(dummyInfo.price);
-                txns.push(callApplication(dummyInfo.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], nftIds));
-            }
-        } else {
-            for (const id in smartContractInfo) {
-                const assetId: number = parseInt(id);
-                const info: AssetInfo = smartContractInfo[assetId];
+        for (const id in smartContractInfo) {
+            const assetId: number = parseInt(id);
+            const info: AssetInfo = smartContractInfo[assetId];
 
-                if (info.price && contractType === CollectionType.SALE) {
-                    const price: Uint8Array = encodeUint64(info.price);
-                    txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId]));
-                } else if (info.startPrice && info.endPrice && info.duration && contractType === CollectionType.REV_AUCTION) {
-                    const startPrice: Uint8Array = encodeUint64(info.startPrice);
-                    const endPrice: Uint8Array = encodeUint64(info.endPrice);
-                    const duration: Uint8Array = encodeUint64(info.duration);
-                    txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, startPrice, endPrice, duration], [assetId]));
-                } else {
-                    // incorrect behavior here
-                    txns.pop();
-                    console.log('encountered incomplete asset info');
-                }
+            if (info.price && contractType === CollectionType.SALE) {
+                const price: Uint8Array = encodeUint64(info.price);
+                txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId]));
+            } else if (info.startPrice && info.endPrice && info.duration && contractType === CollectionType.REV_AUCTION) {
+                const startPrice: Uint8Array = encodeUint64(info.startPrice);
+                const endPrice: Uint8Array = encodeUint64(info.endPrice);
+                const duration: Uint8Array = encodeUint64(info.duration);
+                txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, startPrice, endPrice, duration], [assetId]));
+            } else {
+                // incorrect behavior here
+                txns.pop();
+                console.log('encountered incomplete asset info');
             }
         }
 
