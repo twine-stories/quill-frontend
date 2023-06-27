@@ -11,8 +11,6 @@ import { Work, User} from '../utils/types.ts';
 import { genericGet } from '../utils/api.ts';
 
 
-
-
 const NavDiv = styled.div`
 .navContainer{
   display:flex;
@@ -36,9 +34,7 @@ const NavDiv = styled.div`
 .iconSearch{
     display:flex;
     align-items: center;
-    
-   
-    }`;
+}`;
 
 type dyad = {
     isWork: boolean;
@@ -145,21 +141,27 @@ function Navbar() {
         }}
         />
         :
-        <IconButton sx={{width:"56px", height:"56px"}} action={openSearch} icon='/icons/search.svg' color="green" />;
+        <IconButton action={openSearch} icon='/icons/search.svg' color="green" />;
 
     return (
         <div style={{marginBottom: '25px'}}>
             {context['user'] && context['user']['walletAddress'] ?
                 <>
                     <NavDiv>
+                    <Box className='navContainer'>
+                    <Box className='navLogo'>
                         <a href="/" id='navbarLogo'>
                             <img src="/icons/twine_logo_2.svg" width="100%" />
                         </a>
+                    </Box>
+                    <Box className='navItemsNames'>
                         <a href="/art">art</a>
-                        <a onClick={() => setOpenCollab(true)}>collab</a>
-                        <a onClick={createNav}>create</a>
+                        <a onClick={() => setOpenCollab(true)} style={{paddingLeft: "40px",paddingRight: "40px"}}>collab</a>
+                        <a onClick={createNav} style={{paddingRight:"30px"}}>create</a>
+                    </Box>
+                    <Box className='iconSearch navItemsNames'>
                         {searchIcon}
-                        <a>
+                        <a style={{paddingLeft:"10px",paddingTop: "10px"}}>
                             <ClickProfile
                                 isLoggedIn={true}
                                 logOutFunc={context['logOut']}
@@ -167,16 +169,18 @@ function Navbar() {
                                 connectPeraFunc={() => {}}
                             />
                         </a>
+                    </Box>
+                    </Box>
                     </NavDiv>
                     <RegisterCreator open={openCreator} close={closeCreator} updateUser={context['updateUser']} navigate={navToCreate} />
                 </>
                 :
                 <>
                     <NavDiv>
-                        <Box className='navContainer'>
+                        <Box className='navContainer' style={{ display: 'flex', justifyContent: 'flex-start' }}>
                         <Box className='navLogo'>
                         <a href="/" id='navbarLogo'>
-                            <img alt="" src="/icons/twine_logo_2.svg" width="100%" />
+                            <img alt="" src="/icons/twine_logo_2.svg" width="100%"/>
                         </a>
                         </Box>
                         <Box className='navItemsNames'>
@@ -186,7 +190,7 @@ function Navbar() {
                         </Box>
                         <Box className='iconSearch navItemsNames'>
                         {searchIcon}
-                        <a style={{paddingLeft:"10px"}}>
+                        <a style={{paddingLeft:"10px",paddingTop: "10px"}}>
                             < ClickProfile
                                 isLoggedIn={false}
                                 logOutFunc={() => {}}
