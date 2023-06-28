@@ -64,12 +64,12 @@ function Gallery(props: WorkGalleryProps) {
                 rightWidth="20%"
                 leftComponent={
                 <>
-                    <Typography level="h2" sx={{color: "#9E9FEB"}}>
+                    <Typography level="h2" sx={{color: "#9E9FEB",fontSize: "50px"}}>
                         {props.episodeName ? props.episodeName : (props.draft ? "Draft" : "Published").concat(props.art ? " Collections" : " Stories")}
                     </Typography>
                     <Box
                         sx={{backgroundColor: "#14100E", padding: '10px', marginBottom: '30px', borderRadius: "20px"}}>
-                        <Typography level="h5" sx={{marginTop: '5px', marginBottom: '0px', color: "#9E9FEB"}}>
+                        <Typography level="h5" sx={{marginBottom: '0px', color: "#9E9FEB",fontSize:"24px",fontFamily: "Twine",lineHeight: "100%",letterSpacing: "-0.48px",marginLeft: "23px", marginTop: "27px"}}>
                             {galleryItems.length} {galleryItems.length === 1 ? (props.art ? "Collection" : "Story") : (props.art ? "Collections" : "Stories")}
                         </Typography>
 
