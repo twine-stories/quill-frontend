@@ -177,7 +177,7 @@ function Navbar() {
                 :
                 <>
                     <NavDiv>
-                        <Box className='navContainer' style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                        <Box className='navContainer'>
                         <Box className='navLogo'>
                         <a href="/" id='navbarLogo'>
                             <img alt="" src="/icons/twine_logo_2.svg" width="100%"/>
