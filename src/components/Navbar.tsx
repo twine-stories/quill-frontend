@@ -156,8 +156,8 @@ function Navbar() {
                     </Box>
                     <Box className='navItemsNames'>
                         <a href="/art">art</a>
-                        <a onClick={() => setOpenCollab(true)} style={{paddingLeft: "40px",paddingRight: "40px"}}>collab</a>
-                        <a onClick={createNav} style={{paddingRight:"30px"}}>create</a>
+                        <a onClick={() => setOpenCollab(true)} style={{marginLeft: "40px",marginRight: "40px"}}>collab</a>
+                        <a onClick={createNav} style={{marginRight:"30px"}}>create</a>
                     </Box>
                     <Box className='iconSearch navItemsNames'>
                         {searchIcon}
