@@ -594,7 +594,7 @@ function CreateChapter(props: CreateChapterProps) {
                             />
                         </AspectRatio>)
                 }
-            } else {
+            } else if (content !== "") {
                 if (!display) {
                     compoundedElements.push(content)
                 } else {
@@ -660,6 +660,11 @@ function CreateChapter(props: CreateChapterProps) {
             setOpenError(true);
             return;
         }
+        if (title.value.includes('/')) {
+            setErrorMessage('Sorry, there cannot be any backslashes in the chapter title.');
+            setOpenError(true);
+            return;
+        }
 
         if (!(cover.name || (chapter && chapter.cover))) {
             setErrorMessage('Please upload a cover for your chapter.');
@@ -691,7 +696,7 @@ function CreateChapter(props: CreateChapterProps) {
             return;
         }
         const url: string = work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase();
-        if (title.value && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
+        if (title.value && !title.value.includes('/') && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
             let newEpisode: Episode = {
                 id: id,
                 work: work,
