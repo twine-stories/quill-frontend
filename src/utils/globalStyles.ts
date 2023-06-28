@@ -208,8 +208,7 @@ export const theme = extendTheme({
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='10' ry='10' stroke='%23A3B832' stroke-width='4' stroke-dasharray='4%2c 12' stroke-dashoffset='2' stroke-linecap='square'/%3e%3c/svg%3e")`,
-                        borderRadius: "28px",
+                        backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='20' ry='20' stroke='%23A3B832' stroke-width='4' stroke-dasharray='6%2c 13' stroke-dashoffset='2' stroke-linecap='square'/%3e%3c/svg%3e")`,
                         height: "340px",
                         width: "19%",
                         margin: '10px',
@@ -217,7 +216,7 @@ export const theme = extendTheme({
 
                     }),
                     ...(ownerState.variant === 'rounded' && {
-                        borderRadius: '28px',
+                        borderRadius: '20px',
                     }),
                     ...(ownerState.color === 'home' && {
                         border: '1px #241D19 solid',

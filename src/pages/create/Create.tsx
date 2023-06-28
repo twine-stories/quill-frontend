@@ -67,6 +67,8 @@ function Create() {
     const user: User = context['user'];
     const cname: string = 'nftCheckboxes';
 
+    const [hover, setOnHover] = useState<boolean>(false);
+
     const removeCollaborator = (id: number): void => {
         let newCollaborators: JSX.Element[] = [];
         console.log(collaborators);
@@ -337,28 +339,33 @@ function Create() {
                     width='100%'
                 >
                     <Sheet color="green_dashed" variant="rounded">
-                        <TwineButton sx={{
-                            display: 'flex', 
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            paddingBlock: '2rem',
-                            paddingInline: '2.4rem', 
-                            borderRadius: '15px',
-                            transition: 'background-color 0.3s ease',
-                            ':hover': { 
-                                backgroundColor: "#5C720D", 
-                                color: '#A3B832',
-                                icon: {fill: '#A3B832 !important',marginBottom: '0.5rem',}},}}
-                                 color="green" name="Create Story" icon="/icons/green_plus.svg" action={() => {
-                            window.location.href = '/create/story/'
-                        }}
-                        iconSx={{
-                            color: 'blackgreen',
-                          }}
-                    ></TwineButton>
+                        <span
+                            onMouseEnter={()=>setOnHover(true)}
+                            onMouseLeave={()=>setOnHover(false)}
+                        >
+                            <TwineButton sx={{
+                                display: 'flex', 
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                paddingBlock: '2rem',
+                                paddingInline: '2.4rem', 
+                                borderRadius: '15px',
+                                transition: 'background-color 0.3s ease',
+                                ':hover': { 
+                                    backgroundColor: "#5C720D", 
+                                    color: '#A3B832',
+                                },}}
+                                color="green" name="Create Story" icon={hover ? "/icons/green_plus_hover.svg" : "/icons/green_plus.svg"} action={() => {
+                                window.location.href = '/create/story/'
+                            }}
+                            iconSx={{
+                                color: 'blackgreen',
+                            }}
+                        ></TwineButton>
+                    </span>
                     </Sheet>
                     <Sheet color="green_dashed" variant="rounded">
-                        <TwineButton sx={{display: 'flex', flexDirection: 'column',alignItems: 'center',paddingBlock: '2rem',paddingInline: '2.4rem', borderRadius: '15px',transition: 'background-color 0.3s ease',':hover': { backgroundColor: "#5C720D", color: '#A3B832'},}} icon="/icons/green_paper.svg" color="blackgreen" name="Published Stories"
+                        <TwineButton sx={{margin:"0px", display: 'flex', flexDirection: 'column',alignItems: 'center',paddingBlock: '2rem',paddingInline: '2.4rem', borderRadius: '15px',transition: 'background-color 0.3s ease',':hover': { backgroundColor: "#5C720D", color: '#A3B832'},}} icon="/icons/green_paper.svg" color="blackgreen" name="Published Stories"
                                     action={() => {
                                         window.location.href = '/gallery/story/published'
                                     }}/>
