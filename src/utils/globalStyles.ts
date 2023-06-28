@@ -1,8 +1,8 @@
-import {createGlobalStyle} from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 import styles from './globalStyles.css';
-import {extendTheme} from "@mui/joy";
+import { extendTheme } from "@mui/joy";
 
-const GlobalStyle = createGlobalStyle `${styles.toString()}`;
+const GlobalStyle = createGlobalStyle`${styles.toString()}`;
 
 declare module '@mui/joy/Typography' {
     interface TypographyPropsColorOverrides {
@@ -203,14 +203,21 @@ export const theme = extendTheme({
                         }
                     }),
                     ...(ownerState.color === 'green_dashed' && {
-                        border: '1px #A3B832 dashed',
+                        // border: '1px #A3B832 dashed',
                         padding: '0px 20px',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='10' ry='10' stroke='%23A3B832' stroke-width='4' stroke-dasharray='4%2c 12' stroke-dashoffset='2' stroke-linecap='square'/%3e%3c/svg%3e")`,
+                        borderRadius: "28px",
+                        height: "340px",
+                        width: "19%",
+                        margin: '10px',
+                        backgroundColor: '#0d0603'
+
                     }),
                     ...(ownerState.variant === 'rounded' && {
-                        borderRadius: '10px',
+                        borderRadius: '28px',
                     }),
                     ...(ownerState.color === 'home' && {
                         border: '1px #241D19 solid',
@@ -242,7 +249,7 @@ export const theme = extendTheme({
                         padding: '13px',
                     }),
                 }),
-                
+
             },
         },
         JoyCheckbox: {

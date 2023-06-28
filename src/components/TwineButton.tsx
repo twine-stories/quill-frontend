@@ -24,7 +24,7 @@ function TwineButton(props: ButtonProps) {
             onClick={props.action}
             disabled={!(props.enabled === undefined || props.enabled)}
         >
-            {props.name}
+            <span style={{paddingTop:"10px"}}>{props.name}</span>
         </Button>
     )
 }
