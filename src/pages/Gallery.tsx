@@ -75,12 +75,12 @@ function Gallery(props: WorkGalleryProps) {
 
                         <Grid
                             container
-                            spacing={{xs: 3}}
-                            columns={{xs: 12}}
-                            sx={{flexGrow: 1, padding: '20px'}}
+                            spacing={{xs: 2}}
+                            columns={{ xs: 1, sm: 2, md: 2, lg:3 }}
+                             sx={{ padding: '12px'}}
                         >
                             {galleryItems.map((galleryTile, index) => (
-                                <Grid xs={4} key={index}>
+                                <Grid md={1} xl={1}  lg={1}  sm={2} xs={1} key={index}>
                                     {galleryTile}
                                 </Grid>
                             ))}
