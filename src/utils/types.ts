@@ -115,4 +115,12 @@ export type Comment = {
     commenter: User;
     episode: Episode;
     content: string;
+    publishStamp?: String;
+}
+
+export type Tip = {
+    id?: number;
+    tipper: User;
+    episode: Episode;
+    amount: number;
 }

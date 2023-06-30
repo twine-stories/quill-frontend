@@ -2,16 +2,22 @@ import React, {useState, useContext, useEffect} from 'react';
 import './Chapter.css';
 import Navbar from "../components/Navbar.tsx";
 import {UserContext} from "../App.tsx";
-import {Episode, User, Work, Like, ProfitSplit} from '../utils/types.ts';
-import {episodeGetByUrl, episodesGetByWorkId, genericGet, workGetByUrl, genericPost} from '../utils/api.ts';
-import {AspectRatio, Box, Button, Stack, Switch, Typography, Grid} from "@mui/joy";
+import {Episode, User, Like, ProfitSplit, Tip} from '../utils/types.ts';
+import {episodeGetByUrl, genericGet, genericPost} from '../utils/api.ts';
+import {AspectRatio, Box, Typography, Grid, Link, CircularProgress} from "@mui/joy";
 import IconButton from "../components/IconButton.tsx";
 import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants.ts";
 import { CHAPTER_IMGS_BUCKET } from '../config.ts';
 import CommentSection from '../components/CommentSection.tsx';
 import ErrorPopup from '../components/ErrorPopup.tsx';
+import SuccessPopup from '../components/SuccessPopup.tsx';
 import TwineButton from '../components/TwineButton.tsx';
 import {marked} from 'marked';
+import TwineInput from '../components/TwineInput.tsx';
+import { tip } from '../utils/blockchain/tipping.ts';
+import { ConnectType } from '../utils/enums.ts';
+import TwoColumnLayout from '../components/TwoColumnLayout.tsx';
+import { microToAlgo, algoToMicro, TWINE_CUT } from '../utils/blockchain/constants.ts';
 
 function Chapter() {
 
@@ -22,11 +28,19 @@ function Chapter() {
     const [numLikes, setNumLikes] = useState<number>(0);
 
     const [openError, setOpenError] = useState<boolean>(false);
+    const [openTipError, setOpenTipError] = useState<boolean>(false);
+    const [openTipSuccess, setOpenTipSuccess] = useState<boolean>(false);
+
+    const [processingTip, setProcessingTip] = useState<boolean>(false);
 
     const [collaborators, setCollaborators] = useState<JSX.Element[]>([]);
+    const [creators, setCreators] = useState<string[]>([]);
+    const [percentages, setPercentages] = useState<number[]>([]);
+
+    const [showTip, setShowTip] = useState<boolean>(false);
 
     useEffect(() => {
-        episodeGetByUrl(window.location.href.split('/', 5)[4], setEpisode, () => {
+        episodeGetByUrl(window.location.href.split('/')[4], setEpisode, () => {
             console.log('fail');
         });
     }, []);
@@ -40,15 +54,20 @@ function Chapter() {
                 });
             }
             genericGet('/api/profitSplit/episode/' + episode.id).then((response: ProfitSplit[]) => {
-                console.log(response);
                 const sortedResp: ProfitSplit[] = response.sort((a,b) => b.percentage - a.percentage);
                 let collabs: JSX.Element[] = [];
+                let creators: string[] = [];
+                let percentages: number[] = [];
                 let index: number = 0;
                 sortedResp.forEach((item: ProfitSplit) => {
                     collabs.push(<Typography key={index} level='h3' color='white' onClick={() => window.location.href = '/profile/' + item.creator.userName} sx={{cursor: 'pointer', fontSize: '20px'}}>{item.creator.firstName + ' ' + item.creator.lastName}</Typography>)
+                    creators.push(item.creator.walletAddress);
+                    percentages.push(item.percentage);
                     index++;
                 })
                 setCollaborators(collabs);
+                setCreators(creators);
+                setPercentages(percentages);
             });
         }
     }, [episode, user]);
@@ -60,7 +79,7 @@ function Chapter() {
                 setNumLikes(response);
             });
         }
-    });
+    }, [episode]);
 
     const likeAction = () => {
         if (user) {
@@ -95,8 +114,8 @@ function Chapter() {
         <div>
             <Navbar/>
             {episode && episode['content'] &&
-            <Grid container justifyContent='center'>
-                <Grid id='chapter-content'>
+            <Grid xs={12} container justifyContent='center'>
+                <Grid xs={12} id='chapter-content'>
                     <Box
                         sx={{
                             py: 2,
@@ -104,11 +123,13 @@ function Chapter() {
                             flexDirection: 'column',
                             gap: 1,
                             alignItems: 'flex-start',
-                            flexWrap: 'wrap',
+                            flexWrap: 'wrap'
                         }}
                     >
                         <Grid xs={12} container alignItems='center' justifyContent='space-between'>
-                            <Typography level='h1' color='purple'>{episode.work.title}</Typography>
+                            <Link sx={{'&:hover': {
+                                'textDecoration': 'none'
+                            }}} href={'/story/' + episode.work.url}><Typography level='h1' color='purple'>{episode.work.title}</Typography></Link>
                             <Grid container direction='row'>
                                 <IconButton action = {likeAction} icon={liked ? '/icons/heart-red.svg' : '/icons/heart.svg'} color = "purple"/>
                                 <Typography level='h6' sx={{marginLeft: '10px'}}>{String(numLikes) + ' like' + (numLikes === 1 ? '' : 's')}</Typography>
@@ -117,24 +138,68 @@ function Chapter() {
                         <Grid container alignItems='center' justifyContent='flex-start'>
                             <Typography sx={{marginRight: '20px'}} level="h3" color='white'>{episode.title}</Typography>
                         </Grid>
-                        {(user && user.userName === episode.work.creator.userName) &&
-                            <TwineButton sx={{width: "100%"}} icon="/icons/green_setting.svg" color="blackgreen" name="Edit Chapter" action={() => {
-                                window.location.href = '/edit/chapter/' + episode.url;
-                            }}/>
-                        }
-                        <Grid>
-                            {
-                                loadEpisodeContent(episode['content'])
+                        <TwoColumnLayout
+                            rightWidth='25%'
+                            leftComponent={
+                                <div>
+                                    {(user && user.userName === episode.work.creator.userName) &&
+                                        <TwineButton sx={{width: "100%"}} icon="/icons/green_setting.svg" color="blackgreen" name="Edit Chapter" action={() => {
+                                            window.location.href = '/edit/chapter/' + episode.url;
+                                        }}/>
+                                    }
+                                    <Grid xs={12}>
+                                        {
+                                            loadEpisodeContent(episode['content'])
+                                        }
+                                    </Grid>
+                                </div>
                             }
-                        </Grid>
-
+                            rightComponent={
+                                <Grid container direction='column'>
+                                    <TwineButton icon='/icons/tip_jar.svg' color='green' name='Tip' action={() => {
+                                        setShowTip(!showTip);
+                                    }} />
+                                    <Grid container alignItems='center' direction='column' sx={showTip ? {marginTop: '20px', background: '#14100E', padding: '20px 20px', borderRadius: '15px'} : {visibility: 'hidden', padding: '20px'}}>
+                                        <TwineInput type='number' label='Tip amount:' placeholder='tip amount' inputAttrs={{id: 'tipInput'}} endDecorator='/icons/algo.svg' />
+                                        <TwineButton icon='/icons/green_checkmark.svg' sx={{marginTop: '20px'}} color='green' name={processingTip ? <CircularProgress color='darkgreen' variant='plain'/> : 'Confirm'} action={() => {
+                                            if (user) {
+                                                const tipVal = document.getElementById('tipInput') as HTMLInputElement;
+                                                if (tipVal && tipVal.value && parseFloat(tipVal.value) >= 0.1) {
+                                                    const adjustedVal: bigint = algoToMicro(parseFloat(tipVal.value));
+                                                    // BigInt(Math.floor(parseFloat(tipVal.value) * 1000000));
+                                                    tip(user.walletAddress, creators, percentages, adjustedVal, user.connectType === ConnectType.PERA, setProcessingTip).then(() => {
+                                                        setOpenTipSuccess(true);
+                                                        tipVal.value = '';
+                                                        const tipObj: Tip = {
+                                                            tipper: user,
+                                                            episode: episode,
+                                                            amount: microToAlgo(adjustedVal) * (1.0 - TWINE_CUT)
+                                                        };
+                                                        genericPost('/api/tip/tip', tipObj);
+                                                    })
+                                                } else {
+                                                    setOpenTipError(true);
+                                                }
+                                            } else {
+                                                setOpenError(true);
+                                            }
+                                            // make sure loading goes away
+                                            setProcessingTip(false);
+                                        }} />
+                                    </Grid>
+                                </Grid>
+                            }
+                        />
+                        
                     </Box>
                     <Grid sx={{marginBottom: '50px'}}>
                         <Typography level='h3' color='purple'>{'Creator' + (collaborators.length === 1 ? '' : 's') + ':'}</Typography>
                         {collaborators}
                     </Grid>
                     <CommentSection episode={episode} />
-                    <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message='Please log in to like or follow.' />
+                    <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message='Please log in to like, follow, or tip.' />
+                    <ErrorPopup isOpen={openTipError} onClose={() => setOpenTipError(false)} message='Please enter a valid tip amount.' />
+                    <SuccessPopup isOpen={openTipSuccess} onClose={() => setOpenTipSuccess(false)} />
                 </Grid>
             </Grid>
             }

@@ -45,9 +45,9 @@ export default function ClickProfile({ isLoggedIn, logOutFunc, connectAlgoFunc, 
                 <img
                         src = {user && 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/'+user.profileImg}
                         alt = ""
-                        width = "64"
-                        height = "64"
-                        style = {{borderRadius: "50%"}}
+                        width = "58"
+                        height = "58"
+                        style = {{borderRadius: "50%",objectFit: "cover"}}
                         onError={e => {
                             e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg'
                         }}

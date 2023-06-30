@@ -9,7 +9,7 @@ function TwoColumnLayout(props: TwoColumnLayoutProps) {
     let leftFlex = props.leftWidth ? "0 0 " + props.leftWidth : '0 0 70%';
     let rightFlex = props.rightWidth ? "0 0 " + props.rightWidth : '0 0 30%';
     return (
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
             <div style={{ flex: leftFlex, marginRight: '5%' }}>
                 {props.leftComponent}
             </div>

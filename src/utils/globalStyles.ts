@@ -43,6 +43,7 @@ declare module '@mui/joy/Sheet' {
 declare module '@mui/joy/Checkbox' {
     interface CheckboxPropsColorOverrides {
         green: true;
+        purple: true;
     }
 }
 
@@ -50,6 +51,7 @@ declare module '@mui/joy/CircularProgress' {
     interface CircularProgressPropsColorOverrides {
         darkpurple: true;
         lightpurple: true;
+        darkgreen: true;
     }
 }
 
@@ -259,6 +261,15 @@ export const theme = extendTheme({
                             color: '#5C720D'
                         }
                     }),
+                    ...(ownerState.color === 'purple' && {
+                        '& .MuiCheckbox-checkbox': {
+                            border: '1px solid #9E9FEB',
+                        },
+                        '& .MuiCheckbox-checkbox.Joy-checked': {
+                            background: '#9E9FEB',
+                            color: '#373867'
+                        }
+                    }),
                 }),
             },
         },
@@ -311,7 +322,10 @@ export const theme = extendTheme({
                     }),
                     ...(ownerState.color === 'lightpurple' && {
                         '--CircularProgress-progressColor': '#9E9FEB'
-                    })
+                    }),
+                    ...(ownerState.color === 'darkgreen' && {
+                        '--CircularProgress-progressColor': '#5C720D'
+                    }),
                 })
             }
         }
