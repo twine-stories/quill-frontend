@@ -8,6 +8,8 @@ interface ButtonProps {
     color?: string;
     size?: string;
     sx?: object;
+    backgroundColor?: string;
+    
 }
 
 function IconButton(props: ButtonProps) {
@@ -18,13 +20,14 @@ function IconButton(props: ButtonProps) {
         borderRadius: '50%',
         height: '40px',
         width: '40px',
+        backgroundColor: props.backgroundColor,
         ...props.sx
     }
     return (
         props.enabled === undefined || props.enabled ?
-            <Button sx={sx} size={size} color={color} onClick={props.action}><img width={dim} height={dim} src={props.icon} style={{position: 'absolute'}} /></Button>
+            <Button sx={sx} size={size} color={color} onClick={props.action}><img width={dim} height={dim} src={props.icon} style={{position: 'absolute',color:"#A3B832"}} /></Button>
             :
-            <Button sx={sx} size={size} color={color} onClick={props.action} disabled><img width={dim} height={dim} src={props.icon} style={{position: 'absolute'}} /></Button>
+            <Button sx={sx} size={size} color={color} onClick={props.action} disabled><img width={dim} height={dim} src={props.icon} style={{position: 'absolute',color:'#A3B832'}} /></Button>
     )
 }
 
