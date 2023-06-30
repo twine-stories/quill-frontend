@@ -57,7 +57,7 @@ input[type=number] {
 }
 
 .App {
-    width: 75vw;
+    width: 100vw;
     min-height: 95vh;
     position: relative;
 }
