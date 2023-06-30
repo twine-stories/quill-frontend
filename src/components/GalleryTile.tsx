@@ -16,7 +16,7 @@ function GalleryTile(props: GalleryTileProps) {
     if (props.story) {
         return (
             <Card variant="outlined" sx={{backgroundColor: "#14100E",borderRadius: "32px",border: "2px solid #241D19",padding: "13px"}} onClick={() => {window.location.href = '/story/' + props.work['url']}} className='gallery-tile'>
-                <Grid container alignItems='center' justifyContent='center' height='75%'width='100%'>
+                <Grid container alignItems='center' justifyContent='center'>
                     {/* <AspectRatio sx={{my: 2, height: '150px', width: '100px'}}> */}
                         <img
                             className='tile-img'
