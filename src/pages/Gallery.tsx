@@ -57,7 +57,7 @@ function Gallery(props: WorkGalleryProps) {
     }, [context['user']]);
 
     return (
-        <div>
+        <div className='gallery' style={{margin:"0px 3px"}}>
             <Navbar/>
             <TwoColumnLayout
                 leftWidth="80%"

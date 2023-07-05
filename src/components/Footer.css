@@ -1,7 +1,7 @@
 #footer {
     position: absolute;
     bottom: 15px;
-    width: 75vw;
+    width: 100vw;
 }
 
 #footer-links {
@@ -18,3 +18,9 @@
 #footer-links a:hover {
     color: #9E9FEB;
 }
+
+@media screen and (min-width: 450px) and (max-width: 475px) {
+    #footer {
+      margin-left: 10px;
+    }
+  }

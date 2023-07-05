@@ -4,7 +4,6 @@ import TwineButton from '../components/TwineButton.tsx';
 import { UserContext } from '../App.tsx';
 import TwineInput from '../components/TwineInput.tsx';
 import IconButton from '../components/IconButton.tsx';
-import './Beta.css';
 
 
 function Beta() {
@@ -44,10 +43,9 @@ function Beta() {
                     </Grid>
                 </Grid>
                 <Stack direction="row" spacing = {2} alignItems= "center" sx={{alignSelf: "left", marginTop: '50px'}} >
-                <IconButton className='svgBackground' sx={{margin: "0px", marginLeft:"250px"}} color='darkpurple' icon='/icons/socials/twitter.svg' backgroundColor='#5C720D' action={() => window.open('https://twitter.com/TwineStories', '_blank')} />
-                <IconButton color='darkpurple' icon='/icons/socials/instagram.svg' backgroundColor='#5C720D' action={() => window.open('https://www.instagram.com/twine_stories/', '_blank')} />
-                <IconButton color='darkpurple' icon='/icons/socials/discord.svg' backgroundColor='#5C720D' action={() => window.open('https://discord.com/invite/HKrvJrRUwJ', '_blank')} />
-                <IconButton color='darkpurple' icon='/icons/socials/music.svg' backgroundColor='#5C720D' action={() => window.open('https://discord.com/invite/HKrvJrRUwJ', '_blank')} />
+                <IconButton sx={{margin: "0px", marginLeft:"250px"}} color='darkpurple' icon='/icons/socials/twitter.svg' action={() => window.open('https://twitter.com/TwineStories', '_blank')} />
+                <IconButton color='darkpurple' icon='/icons/socials/instagram.svg' action={() => window.open('https://www.instagram.com/twine_stories/', '_blank')} />
+                <IconButton color='darkpurple' icon='/icons/socials/discord.svg'  action={() => window.open('https://discord.com/invite/HKrvJrRUwJ', '_blank')} />
                  <img src='/joindiscord.png' style={{marginTop: "-85px", marginLeft: "-10px"}}/>
                 </Stack>
             </Grid>

@@ -42,7 +42,7 @@ export default function ClickProfile({ isLoggedIn, logOutFunc, connectAlgoFunc, 
         <div>
             {isLoggedIn ? (
             <div>
-                <img
+                <img    className="profile-img"
                         src = {user && 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/'+user.profileImg}
                         alt = ""
                         width = "58"

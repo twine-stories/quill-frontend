@@ -71,7 +71,9 @@ function HomeSlot(props: HomeProps) {
                 height: '450px',
                 borderRadius: 'md',
                 p: 3
-            }}>
+            }}
+            className="responsive-sheet"
+            >
                 <Grid container direction='column' alignItems='center' justifyContent={hovering ? 'flex-start' : 'space-between'} height='100%' xs={12} className='home-slot-content'>
                     {hovering ? hoveredContent : unHoveredContent}
                 </Grid>

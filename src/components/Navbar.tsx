@@ -9,6 +9,7 @@ import { Autocomplete, AutocompleteOption, Typography, Box } from '@mui/joy';
 import IconButton from './IconButton.tsx';
 import { Work, User} from '../utils/types.ts';
 import { genericGet } from '../utils/api.ts';
+import './Navbar.css';
 
 
 const NavDiv = styled.div`
@@ -31,6 +32,16 @@ const NavDiv = styled.div`
     max-width: 15vw;
   }
 }
+@media screen and (max-width: 700px) and (min-width: 300px) {
+    .navItemsNames a {
+      font-size: 21px;
+      margin-left: 5px !important;
+      margin-right: 5px !important;
+      padding-left: 0px !important;;
+      padding-top: 3px !important;;
+    }
+  }
+
 .iconSearch{
     display:flex;
     align-items: center;
@@ -156,7 +167,7 @@ function Navbar() {
                     </Box>
                     <Box className='navItemsNames'>
                         <a href="/art" style={{marginLeft:"30px"}}>art</a>
-                        <a onClick={() => setOpenCollab(true)} style={{marginLeft: "40px",marginRight: "40px"}}>collab</a>
+                        <a onClick={() => setOpenCollab(true)} style={{margin:"0px 40px"}}>collab</a>
                         <a onClick={createNav} style={{marginRight:"30px"}}>create</a>
                     </Box>
                     <Box className='iconSearch navItemsNames'>
@@ -185,12 +196,12 @@ function Navbar() {
                         </Box>
                         <Box className='navItemsNames'>
                         <a href="/art" style={{marginLeft:"30px"}}>art</a>
-                        <a onClick={() => setOpenCollab(true)} style={{marginLeft: "40px",marginRight: "40px"}}>collab</a>
+                        <a onClick={() => setOpenCollab(true)} style={{margin:"0px 40px"}}>collab</a>
                         <a onClick={blockAccess} style={{marginRight:"30px"}}>create</a>
                         </Box>
                         <Box className='iconSearch navItemsNames'>
                         {searchIcon}
-                        <a style={{paddingLeft:"10px",paddingTop: "10px"}}>
+                        <a className="aTag" style={{padding:"0px 10px"}}>
                             < ClickProfile
                                 isLoggedIn={false}
                                 logOutFunc={() => {}}

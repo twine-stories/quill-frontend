@@ -133,7 +133,7 @@ function CreateStory(props: CreateStoryProps) {
     }
 
     return (
-        <div>
+        <div style={{marginRight: "97px"}}>
             <Navbar/>
             <Typography level="h2" color='purple'>{props.edit ? "Edit Story" : "Create Story"}</Typography>
             <TwoColumnLayout

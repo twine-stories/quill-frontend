@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const buttonStyle = {width: "100%"}
+// const buttonStyle = {width: "100%"}
 
 const ProfileSidebar = ({goToDrafts}) => {
 
@@ -17,7 +17,7 @@ const ProfileSidebar = ({goToDrafts}) => {
 
     return (
         <div className = "sidebar">
-            <TwineButton icon='/icons/Paper.svg' name = "Drafts" action = {goToDrafts} sx = {buttonStyle} color='green' />
+            <TwineButton icon='/icons/Paper.svg' name = "Drafts" action = {goToDrafts} color='green' />
         </div>
     )
 }

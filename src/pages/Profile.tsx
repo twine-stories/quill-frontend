@@ -75,7 +75,7 @@ function Profile() {
     }
 
     return (
-        <div>
+        <div className='profile'>
             <Navbar />
             <div className="profile-page">
                 <div className="profile-info">

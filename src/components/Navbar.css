@@ -1,0 +1,13 @@
+.navLogo img {
+  max-width: 100%;
+  height: auto;
+}
+
+
+@media screen and (max-width: 900px) and (min-width: 300px) {
+    .navLogo img {
+        min-width: 138px;
+      }
+    
+  }
+
