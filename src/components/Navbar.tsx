@@ -41,7 +41,6 @@ const NavDiv = styled.div`
       padding-top: 3px !important;;
     }
   }
-
 .iconSearch{
     display:flex;
     align-items: center;
@@ -166,9 +165,9 @@ function Navbar() {
                         </a>
                     </Box>
                     <Box className='navItemsNames'>
-                        <a href="/art" style={{marginLeft:"30px"}}>art</a>
-                        <a onClick={() => setOpenCollab(true)} style={{margin:"0px 40px"}}>collab</a>
-                        <a onClick={createNav} style={{marginRight:"30px"}}>create</a>
+                        <a href="/art" style={{marginLeft:"30px"}} className="navLink">art</a>
+                        <a onClick={() => setOpenCollab(true)} style={{margin:"0px 40px"}} className="navLink">collab</a>
+                        <a onClick={createNav} style={{marginRight:"30px"}} className="navLink">create</a>
                     </Box>
                     <Box className='iconSearch navItemsNames'>
                         {searchIcon}

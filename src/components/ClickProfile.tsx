@@ -39,7 +39,7 @@ export default function ClickProfile({ isLoggedIn, logOutFunc, connectAlgoFunc, 
     // TODO: GET USER NAME
 
     return (
-        <div>
+        <div className='Profile-img-container'>
             {isLoggedIn ? (
             <div>
                 <img    className="profile-img"
@@ -64,7 +64,7 @@ export default function ClickProfile({ isLoggedIn, logOutFunc, connectAlgoFunc, 
                 </Menu>
             </div>
         ) : (
-            <div>
+            <div className='navBar-login'>
                 <a id='navbarLogin' onClick={handleClick}>Login</a>
                 <Modal open={open} onClose={() => handleClose("")}>
                     <Sheet

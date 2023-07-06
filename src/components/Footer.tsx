@@ -13,7 +13,7 @@ function Footer() {
             </Grid>
             <Grid container alignItems='center' justifyContent='space-around' id='footer-links' columnSpacing={6}>
                 <Grid><a href='/about'>About</a></Grid>
-                <Grid><a href='/feedback'>Feedback</a></Grid>
+                <Grid className='feedBack'><a href='/feedback'>Feedback</a></Grid>
                 <Grid><a href='/help'>Algo Help</a></Grid>
                 <Grid><a href='/terms'>Terms</a></Grid>
             </Grid>

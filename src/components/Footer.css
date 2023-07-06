@@ -19,8 +19,20 @@
     color: #9E9FEB;
 }
 
-@media screen and (min-width: 450px) and (max-width: 475px) {
+@media screen and (min-width: 400px) and (max-width: 475px) {
     #footer {
       margin-left: 10px;
+    }
+  }
+
+  @media only screen and (max-width: 320px) {
+    #footer {
+      margin-left: 65px;
+    }
+  }
+  
+  @media only screen and (min-width: 321px) and (max-width: 375px) {
+    #footer{
+      margin-left: 43px;
     }
   }

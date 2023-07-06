@@ -14,6 +14,8 @@ import GalleryTile from "../components/GalleryTile.tsx";
 import {genericGet} from '../utils/api.ts';
 import {NFTCollection, Work} from '../utils/types.ts';
 import TwoColumnLayout from "../components/TwoColumnLayout.tsx";
+import "./Gallery.css";
+
 
 interface WorkGalleryProps {
     art: boolean;
@@ -99,7 +101,7 @@ function Gallery(props: WorkGalleryProps) {
                                                       name={"Open " + props.draft ? "Published" : "Draft"}/>
                                  </div>
                                  :
-                                 <div>
+                                 <div className='Create-published-button'>
                                          <TwineButton sx={{width: "100%"}} color='green' icon='/icons/green_plus.svg'
                                                       name='Create New Stories' action={() => {
                                              window.location.href = '/create/story'

@@ -11,3 +11,17 @@
     
   }
 
+  @media only screen and (max-width: 320px),
+       (min-width: 321px) and (max-width: 375px),
+       (min-width: 376px) and (max-width: 425px) {
+    .navItemsNames .navLink {
+    margin-left: 24px !important;
+  }
+}
+
+@media screen and (max-width: 375px) and (min-width: 300px) {
+  .navLogo {
+    margin-left: -8px;
+    }
+  
+}
