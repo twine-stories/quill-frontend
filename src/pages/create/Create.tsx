@@ -359,7 +359,9 @@ function Create() {
                                 color="green"
                                 name="Create Story" action={() => {
                                     window.location.href = '/create/story/'
-                        }}/>
+                        }}
+                        paddingTop="10px"
+                        />
                     </span>
                     </Sheet>
                     <Sheet color="green_dashed" variant="rounded">
@@ -374,7 +376,9 @@ function Create() {
                                      icon="/icons/green_paper.svg" color="blackgreen" name="Published Stories"
                                      action={() => {
                                         window.location.href = '/gallery/story/published'
-                                    }}/>
+                                    }}
+                                    paddingTop="10px"
+                                    />
                     </Sheet>
                     <Sheet color="green_dashed"  variant="rounded">
                         <TwineButton sx={{display: 'flex',
@@ -388,12 +392,12 @@ function Create() {
                          color="blackgreen" 
                          name="Story Drafts" action={() => {
                             window.location.href = '/gallery/story/draft'
-                        }}/>
+                        }}
+                        paddingTop="10px"/>
                     </Sheet>
                 </Stack>
 
-
-                <Typography level="h2" color='purple' marginTop='30px'>
+ <Typography level="h2" color='purple' marginTop='30px'>
                     Create Art Coming Soon!
                 </Typography>
                 {env === 'dev' &&

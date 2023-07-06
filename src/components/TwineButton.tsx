@@ -9,12 +9,12 @@ interface ButtonProps {
     color?: string;
     size?: string;
     sx?: object;
+    paddingTop?:string;
 }
 
 function TwineButton(props: ButtonProps) {
     const color: string = props.color ? props.color : 'purple';
     const size: string = props.size ? props.size : 'md';
-    
     return (
         <Button
             sx={props.sx}
@@ -24,7 +24,7 @@ function TwineButton(props: ButtonProps) {
             onClick={props.action}
             disabled={!(props.enabled === undefined || props.enabled)}
         >
-           <span style={{paddingTop:"10px"}}>{props.name}</span>
+           <span style={{paddingTop: props.paddingTop || ''}}>{props.name}</span>
         </Button>
     )
 }
