@@ -68,3 +68,8 @@
 #create-story-right-buttons button {
     width: 230px;
 }
+@media (min-width: 320px) and (max-width: 768px) {
+    .create-image-upload {
+      width:85%;
+    }
+  }

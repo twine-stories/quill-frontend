@@ -3,3 +3,13 @@
     margin-right: 34px;
   }
 }
+@media only screen and (min-width: 375px) {
+  .Create-published-button {
+     margin-left: 6px;
+    }
+  }
+ @media only screen and (min-width: 425px) {
+    .Create-published-button {
+       margin-left: -15px;
+      }
+    }

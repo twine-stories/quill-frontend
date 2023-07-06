@@ -36,3 +36,15 @@
       margin-left: 43px;
     }
   }
+
+
+  @media (min-width: 320px) and (max-width: 375px) {
+    .about{
+      padding:0px;
+    }
+  }
+  @media screen and (min-width: 425px){
+   .footer-styling {
+      margin-left: 19px !important;
+    }
+  }
