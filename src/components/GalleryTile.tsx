@@ -19,14 +19,14 @@ function GalleryTile(props: GalleryTileProps) {
                 <Grid container alignItems='center' justifyContent='center'>
                     {/* <AspectRatio sx={{my: 2, height: '150px', width: '100px'}}> */}
                         <img
-                            className='tile-img'
+                            className='gallery-tile-img'
                             src={imgSrc}
                             loading="lazy"
                             alt=""
                         />
                     {/* </AspectRatio> */}
                 </Grid>
-                <div className="titleContainer">
+                <div className="gallery-tile-title-container">
                     <Typography level="h2" sx={{color: "#9E9FEB"}}>
                         {props.work && props.work['title']}
                     </Typography>
