@@ -80,7 +80,7 @@ function Gallery(props: WorkGalleryProps) {
                              sx={{ padding: '12px'}}
                         >
                             {galleryItems.map((galleryTile, index) => (
-                                <Grid sx={{width:"160px !important"}} md={1} xl={1}  lg={1}  sm={2} xs={1} key={index}>
+                                <Grid sx={{width:"225px !important"}} md={1} xl={1}  lg={1}  sm={2} xs={1} key={index}>
                                     {galleryTile}
                                 </Grid>
                             ))}
