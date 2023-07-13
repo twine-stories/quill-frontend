@@ -66,31 +66,7 @@ object-fit: cover;
     flex-wrap: wrap;
     gap: 10px;
 }
-
-@media screen and (max-width : 425px) and (min-width:320px) {
-  .works-header{
-    margin-left: 33px !important;
-  }
-}
-@media screen and (max-width : 1024px)and (min-width:768px) {
-    .works-header{
-      margin-left: 60px !important;
-    }
-  }
-  
-  @media screen and (max-width : 1440px) {
-    .works-header{
-      margin-left: 93px;
-    }
-  }
-
-  @media screen and (min-width : 2560px) {
-    .works-header{
-      margin-left: 177px;
-    }
-  }
-
-  @media screen and (min-width : 2560px) {
+@media screen and (min-width : 2560px) {
     .edit-notif{
      width: 70%;
     }
