@@ -25,3 +25,12 @@
     }
   
 }
+
+@media screen and (max-width: 768px) and (min-width: 300px) {
+  .iconSearch{
+    margin-left: 40px;
+  }
+  .navItemsNames{
+    margin-left: 29px;
+  }
+}

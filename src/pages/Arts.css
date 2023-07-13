@@ -1,13 +1,13 @@
 @media only screen and (max-width: 425px) {
     .h2-Art-text {
-      margin: 0px 30px !important;
+      margin-left: 71px !important;
       text-align: center !important;
     }
   }
 
   @media only screen and (max-width: 375px) {
     .h2-Art-text {
-      margin-left: 91px !important;
+      margin-left: 123px !important;
     }
   }
   

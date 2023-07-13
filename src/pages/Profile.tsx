@@ -119,11 +119,11 @@ function Profile() {
                                 <Typography color='purple' level='h2'>{works.length + ' ' + (works.length === 1 ? 'Story' : 'Stories')}</Typography>
                             </div>
                             <Grid container
-                                spacing={{xs: 3}}
-                                columns={{xs: 12}}
-                                sx={{flexGrow: 1, padding: '20px'}} className="works-list">
+                                spacing={{xs: 2}}
+                                columns={{ xs: 1,sm: 6,md: 4,lg:5,xl:10}}
+                                 className="works-list">
                                 {works && works.map((work, index) => {
-                                    return <Grid xs={4} key={index}><GalleryTile work={work.props.work} story={true} /></Grid>
+                                    return <Grid md={1} xl={1}  lg={1}  sm={2} key={index}><GalleryTile work={work.props.work} story={true} /></Grid>
                                 })}
                             </Grid>
                             </div>
