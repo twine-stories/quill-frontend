@@ -115,6 +115,7 @@ export type Comment = {
     commenter: User;
     episode: Episode;
     content: string;
+    publishStamp?: String;
 }
 
 export type Tip = {

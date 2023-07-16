@@ -1,11 +1,11 @@
 .gallery-tile {
     cursor: pointer;
-    height: 350px;
+    height: 332px;
 }
 
 .gallery-tile h2 {
-    font-size: 24px;
-    margin-top: 20px;
+    font-size: 22px;
+    margin-top: 4px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -18,9 +18,15 @@
     white-space: nowrap;
 }
 
-.gallery-tile .tile-img {
-    width: 120px !important;
-    height: 180px !important;
-    border-radius: 15px;
+.gallery-tile .gallery-tile-img {
+    width: 180px; 
+    height:  270px; 
+    border-radius: 25px;
     object-fit: cover;
+}
+
+.gallery-tile-title-container{
+    display: flex;
+    justify-content: left;
+    margin-left: 16px;
 }

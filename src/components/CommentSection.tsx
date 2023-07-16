@@ -23,7 +23,7 @@ export default function CommentSection({episode}) {
             const comment: Comment = {
                 commenter: user,
                 episode: episode,
-                content: data
+                content: data,
             }
 
             const response = await genericPost('/api/comment/comment', comment);
@@ -45,10 +45,17 @@ export default function CommentSection({episode}) {
             });
         }
     }, [episode]);
+
+    const formatDate = (date: String) => {
+        // only include month, day, year
+        date = new Date(date).toLocaleString();
+        date = date.split(',')[0];
+        return date;
+    }
     
     return (
         <div>
-            <Typography level="h2" sx={{color: "#9e9feb"}}>Comments</Typography>
+            <Typography level="h2" sx={{color: "#9e9feb",}}>Comments</Typography>
             <FormControl>
                 <Textarea
                     className="commentBox"
@@ -72,6 +79,7 @@ export default function CommentSection({episode}) {
                     }
                     sx={{
                     minWidth: 300,
+                    marginBottom: '15px'
                     }}
                 />
             </FormControl>
@@ -91,8 +99,9 @@ export default function CommentSection({episode}) {
                             />
                         </div>
                         <div className='name-comment' style={{marginLeft: "1rem"}}>
-                            <Typography level="h3" color='purple'>{comment.commenter.userName}</Typography>
-                            <Typography level="h6" color='white'>{comment.content}</Typography>
+                            <Typography level="h3" sx={{marginBottom: '6px'}} color='purple'>{comment.commenter.userName}</Typography>
+                            <Typography level="h6" sx={{marginBottom: '6px', marginTop: '0px'}} color='white'>{comment.content}</Typography>
+                            <Typography level="h6" sx={{fontSize: '14px', marginTop: '0px'}} color='purple'>{comment.publishStamp && formatDate(comment.publishStamp)}</Typography>
                         </div>
                         
                     </div>
