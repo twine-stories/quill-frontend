@@ -5,8 +5,7 @@ import TwineButton from "./TwineButton.tsx";
 import {useNavigate} from "react-router-dom";
 import { CHAPTER_IMGS_BUCKET } from '../config.ts';
 import { COVER_PATH } from '../utils/aws.ts';
-import {CollaboratorContext} from "../pages/create/Create";
-import {EpisodeOrderContext} from "../pages/Story";
+import {EpisodeOrderContext} from "../pages/Story.tsx";
 
 interface EpisodeTileProps {
     episode: Episode;

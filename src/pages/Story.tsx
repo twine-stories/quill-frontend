@@ -77,7 +77,8 @@ function Story() {
     // this will be a migration function running for a year 06/14/2023
     // this will account for episode objects with no valid episode number before it was
     // introduced in the open beta launch
-    async function getMigrationPublishedEpisodeTiles() {
+    function getMigrationPublishedEpisodeTiles() {
+        console.log(publishedEpisodes)
         if (publishedEpisodes.length > 0) {
             // var publishedEpisodes: Episode[] = [];
             // for (let i = 0; i < episodes.length; i++) {
@@ -88,43 +89,47 @@ function Story() {
             // }
 
             // migrate if needed
-            if (publishedEpisodes[0].episodeNumber !== -1) {
-                const sortedPublishedEpisodes = publishedEpisodes.sort((e1, e2) => {
-                    return e2.publishStamp - e1.publishStamp
-                })
-                var counter = 0
-                for (let i = 0; i < sortedPublishedEpisodes.length; i++) {
-                    var currPubEp = sortedPublishedEpisodes[i];
-                    currPubEp.episodeNumber = counter
-                    counter += 1
-                    try {
-                        const response: number = await genericPost("/api/episode/update", currPubEp);
-                        if (response) {
-                            // if (cover.file) {
-                            //     await prepareAndUpload('cover');
-                            // }
-                            // setUploading(false);
-                            // newEpisode.id = response;
-                        }
-                    } catch (error) {
-                        // TODO: make this a dialog
-                        console.log("We ran into an error 🗿")
-                        return;
-                    }
-                }
-                setPublishedEpisodes(sortedPublishedEpisodes);
-            }
+            // if (publishedEpisodes[0].episodeNumber !== -1) {
+            //     const sortedPublishedEpisodes = publishedEpisodes.sort((e1, e2) => {
+            //         return e2.publishStamp - e1.publishStamp
+            //     })
+            //     var counter = 0
+            //     for (let i = 0; i < sortedPublishedEpisodes.length; i++) {
+            //         var currPubEp = sortedPublishedEpisodes[i];
+            //         currPubEp.episodeNumber = counter
+            //         counter += 1
+            //         try {
+            //             const response: number = await genericPost("/api/episode/update", currPubEp);
+            //             if (response) {
+            //                 // if (cover.file) {
+            //                 //     await prepareAndUpload('cover');
+            //                 // }
+            //                 // setUploading(false);
+            //                 // newEpisode.id = response;
+            //             }
+            //         } catch (error) {
+            //             // TODO: make this a dialog
+            //             console.log("We ran into an error 🗿")
+            //             return;
+            //         }
+            //     }
+            //     setPublishedEpisodes(sortedPublishedEpisodes);
+            // }
 
 
             //// ALERT ////
             // ONLY KEEP THIS BELOW CODE SECTION AFTER MIGRATION DATE //
-            publishedEpisodes.sort((e1, e2) => {
+            const temp = publishedEpisodes.toSorted((e1, e2) => {
                 return e2.episodeNumber - e1.episodeNumber
-            }).map((episode) => {
-                return (
-                    <EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode} totalEpisodes={publishedEpisodes.length}/>
-            )
-            })
+            });
+
+            return temp.map((episode) => {
+                if (!episode['publishStamp']) {
+                    return (
+                        <EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode} totalEpisodes={publishedEpisodes.length}/>)
+                }
+            });
+
         }
     }
 
@@ -254,7 +259,13 @@ function Story() {
                                                     'moveUp': moveChapterUp,
                                                     'moveDown': moveChapterDown
                                                 }}>
-                                                    getMigrationPublishedEpisodeTiles()
+                                                    {/*{getMigrationPublishedEpisodeTiles()}*/}
+                                                    {
+                                                        publishedEpisodes.toSorted((e1, e2) => {
+                                                        return e2.episodeNumber - e1.episodeNumber}).map((episode) => {
+                                                        return (<EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode} totalEpisodes={publishedEpisodes.length}/>)
+                                                    })
+                                                    }
                                                 </EpisodeOrderContext.Provider>
                                             }
 
@@ -264,7 +275,6 @@ function Story() {
                                                     {episodes.map((episode) => {
                                                         if (!episode['publishStamp']) {
                                                             return (
-
                                                                 <EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode}/>
                                                             )
                                                         }
