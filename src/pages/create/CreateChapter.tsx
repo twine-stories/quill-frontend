@@ -784,7 +784,7 @@ function CreateChapter(props: CreateChapterProps) {
                 });
             }
 
-            // navigate("/chapter/" + url);
+            navigate("/chapter/" + url);
         }
         setErrorMessage('Please ensure you have filled out all required fields and checked the Community Guidelines box before submitting.');
         setOpenError(true);
