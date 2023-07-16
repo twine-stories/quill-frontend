@@ -136,141 +136,146 @@ function CreateStory(props: CreateStoryProps) {
         <div>
             <Navbar/>
             <Typography level="h2" color='purple'>{props.edit ? "Edit Story" : "Create Story"}</Typography>
-            <TwoColumnLayout leftComponent={
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 3,
-                        // alignItems: 'center',
-                        // flexWrap: 'wrap',
-                    }}
-                >
-                    {(!props.edit || work) &&
-                        <TwineInput defaultValue={(props.edit) ? work['title'] : ""} id='title' label='Title'
-                                    placeholder='Enter Title...'/>}
-                    {(!props.edit || work) &&
-                        <TwineInput defaultValue={(work && props.edit) ? work['description'] : ""} id='description'
-                                    label='Description' placeholder='Enter Description...' multiline={true}/>}
-                    {(!props.edit || work) &&
-                        <TwineInput defaultValue={(work && props.edit) ? work['hook'] : ""} id='hook' label='Hook'
-                                    placeholder='Enter Hook...' multiline={true}/>}
-                    {(!props.edit || work) && <TwineSelect id="genre1" label="Genre" options={genreOptions}
-                                                           defaultValue={(props.edit) ? work['genre1'].toLowerCase() : ""}/>}
-                    {(!props.edit || work) && <TwineSelect id="genre2" label="Genre 2 (optional)" options={genreOptions}
-                                                           defaultValue={(props.edit) ? work['genre2'].toLowerCase() : "none"}/>}
-                    {(!props.edit || work) && <TwineSelect id="genre3" label="Genre 3 (optional)" options={genreOptions}
-                                                           defaultValue={(props.edit) ? work['genre3'].toLowerCase() : "none"}/>}
+            <TwoColumnLayout
+                leftComponent={
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 3
+                        }}
+                    >
+                        {(!props.edit || work) &&
+                            <TwineInput defaultValue={(props.edit) ? work['title'] : ""} id='title' label='Title'
+                                        placeholder='Enter Title...'/>}
+                        {(!props.edit || work) &&
+                            <TwineInput defaultValue={(work && props.edit) ? work['description'] : ""} id='description'
+                                        label='Description' placeholder='Enter Description...' multiline={true}/>}
+                        {(!props.edit || work) &&
+                            <TwineInput defaultValue={(work && props.edit) ? work['hook'] : ""} id='hook' label='Hook'
+                                        placeholder='Enter Hook...' multiline={true}/>}
+                        {(!props.edit || work) && <TwineSelect id="genre1" label="Genre" options={genreOptions}
+                                                            defaultValue={(props.edit) ? work['genre1'].toLowerCase() : ""}/>}
+                        {(!props.edit || work) && <TwineSelect id="genre2" label="Genre 2 (optional)" options={genreOptions}
+                                                            defaultValue={(props.edit) ? work['genre2'].toLowerCase() : "none"}/>}
+                        {(!props.edit || work) && <TwineSelect id="genre3" label="Genre 3 (optional)" options={genreOptions}
+                                                            defaultValue={(props.edit) ? work['genre3'].toLowerCase() : "none"}/>}
 
-                    <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' className='create-image-upload'>
-                        <Typography level="h3" color='purple'>Banner (Optional)</Typography>
-                        <Grid container alignItems='center' justifyContent='center' xs={12}>
-                        <Grid container alignItems='center' justifyContent='center' id='create-banner-wrapper'>
-                            {((work && work.banner) || banner.preview) ?
-                                <img
-                                    src = {banner.preview ? banner.preview : 'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + STORY_BANNER_PATH + (work ? work.banner : banner.name)}
-                                    alt = ""
-                                    onClick = {() => setBanner({
+                        <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' className='create-image-upload'>
+                            <Typography level="h3" color='purple'>Banner (Optional)</Typography>
+                            <Grid container alignItems='center' justifyContent='center' xs={12}>
+                            <Grid container alignItems='center' justifyContent='center' id='create-banner-wrapper'>
+                                {((work && work.banner) || banner.preview) ?
+                                    <img
+                                        src = {banner.preview ? banner.preview : 'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + STORY_BANNER_PATH + (work ? work.banner : banner.name)}
+                                        alt = ""
+                                        onClick = {() => setBanner({
+                                            ...banner,
+                                            openUpload: true
+                                        })}
+                                        id='create-banner'
+                                    />
+                                    :
+                                    <TwineButton icon='/icons/purple_plus_light.svg' name='Upload' color='darkpurple' action={async () => setBanner({
                                         ...banner,
                                         openUpload: true
-                                    })}
-                                    id='create-banner'
-                                />
-                                :
-                                <TwineButton icon='/icons/purple_plus_light.svg' name='Upload' color='darkpurple' action={() => setBanner({
+                                    })} />
+                                }
+                            </Grid>
+                            </Grid>
+                            <UploadImage
+                                open={banner.openUpload}
+                                close={async () => setBanner({
                                     ...banner,
-                                    openUpload: true
-                                })} />
+                                    openUpload: false
+                                })}
+                                handleUpload={(file: File) => handleUpload(file, 'banner')}
+                                circle={false}
+                                width='440px'
+                                height='100px'
+                            />
+                        </Grid>
+                    </Box>
+                }
+                rightComponent={
+                    <Box
+                        sx={{
+                            py: 2,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 2,
+                            alignItems: 'center',
+                            flexWrap: 'wrap',
+                        }}
+                        id='create-story-right'
+                    >
+                        <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' className='create-image-upload'>
+                            <Typography level="h3" color='purple'>Cover Art</Typography>
+                            <Grid container alignItems='center' justifyContent='center' id='create-cover-wrapper'>
+                                {((work && work.cover) || cover.preview) ?
+                                    <img
+                                        src = {cover.preview ? cover.preview : 'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + COVER_PATH + (work ? work.cover : cover.name)}
+                                        alt = ""
+                                        onClick = {() => setCover({
+                                            ...cover,
+                                            openUpload: true
+                                        })}
+                                        id='create-cover'
+                                    />
+                                    :
+                                    <TwineButton icon='/icons/purple_plus_light.svg' name='Upload' color='darkpurple' action={async () => setCover({
+                                        ...cover,
+                                        openUpload: true
+                                    })} />
+                                }
+                            </Grid>
+                            <UploadImage
+                                open={cover.openUpload}
+                                close={async () => setCover({
+                                    ...cover,
+                                    openUpload: false
+                                })}
+                                handleUpload={(file: File) => handleUpload(file, 'cover')}
+                                circle={false}
+                                width='160px'
+                                height='240px'
+                            />
+                        </Grid>
+                        <Grid container direction='column' rowGap={2} id='create-story-right-buttons'>
+                            {!props.edit &&
+                                <>
+                                    <TwineButton
+                                        name={uploading && draftClicked ? <CircularProgress color='darkpurple' variant='plain' /> : "Save Draft"} icon="/icons/purple_checkmark.svg"
+                                        action={(e) => {
+                                        setDraftClicked(true);
+                                        postStory(getStory(false)).then(() => {
+                                            setDraftClicked(false);
+                                        });
+                                    }} />
+                                    <TwineButton
+                                        name={uploading && createClicked ? <CircularProgress color='darkpurple' variant='plain' /> : 'Create Story'} color="green" icon="/icons/green_plus.svg"
+                                        action={(e) => {
+                                            setCreateClicked(true);
+                                            postStory(getStory(true)).then(() => {
+                                                setCreateClicked(false);
+                                            });
+                                    }}/>
+                                </>
+                            }
+                            {props.edit &&
+                                <>
+                                    {returnSaveButton()}
+                                    <TwineButton
+                                        name='Cancel Edit Story'
+                                        color="blackgreen"
+                                        icon="/icons/green_x.svg"
+                                        action={(e) => goBack()}/>
+                                </>
                             }
                         </Grid>
-                        </Grid>
-                        <UploadImage
-                            open={banner.openUpload}
-                            close={() => setBanner({
-                                ...banner,
-                                openUpload: false
-                            })}
-                            handleUpload={(file: File) => handleUpload(file, 'banner')}
-                            circle={false}
-                            width='440px'
-                            height='100px'
-                        />
-                    </Grid>
-                </Box>
-            }
-                             rightComponent={
-                                 <Box
-                                     sx={{
-                                         py: 2,
-                                         display: 'flex',
-                                         flexDirection: 'column',
-                                         gap: 2,
-                                         alignItems: 'center',
-                                         flexWrap: 'wrap',
-                                     }}
-                                 >
-                                    <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' className='create-image-upload'>
-                                        <Typography level="h3" color='purple'>Cover Art</Typography>
-                                        <Grid container alignItems='center' justifyContent='center' id='create-cover-wrapper'>
-                                            {((work && work.cover) || cover.preview) ?
-                                                <img
-                                                    src = {cover.preview ? cover.preview : 'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + COVER_PATH + (work ? work.cover : cover.name)}
-                                                    alt = ""
-                                                    onClick = {() => setCover({
-                                                        ...cover,
-                                                        openUpload: true
-                                                    })}
-                                                    id='create-cover'
-                                                />
-                                                :
-                                                <TwineButton icon='/icons/purple_plus_light.svg' name='Upload' color='darkpurple' action={() => setCover({
-                                                    ...cover,
-                                                    openUpload: true
-                                                })} />
-                                            }
-                                        </Grid>
-                                        <UploadImage
-                                            open={cover.openUpload}
-                                            close={() => setCover({
-                                                ...cover,
-                                                openUpload: false
-                                            })}
-                                            handleUpload={(file: File) => handleUpload(file, 'cover')}
-                                            circle={false}
-                                            width='160px'
-                                            height='240px'
-                                        />
-                                    </Grid>
-                                     {!props.edit &&
-                                         <>
-                                             <TwineButton name={uploading && draftClicked ? <CircularProgress color='darkpurple' variant='plain' /> : "Save Draft"} icon="/icons/purple_checkmark.svg"
-                                                          action={(e) => {
-                                                            setDraftClicked(true);
-                                                            postStory(getStory(false)).then(() => {
-                                                                setDraftClicked(false);
-                                                            });
-                                                        }}></TwineButton>
-                                             <TwineButton
-                                                 name={uploading && createClicked ? <CircularProgress color='darkpurple' variant='plain' /> : 'Create Story'} color="green" icon="/icons/green_plus.svg"
-                                                 action={(e) => {
-                                                    setCreateClicked(true);
-                                                    postStory(getStory(true)).then(() => {
-                                                        setCreateClicked(false);
-                                                    });
-                                                }}/>
-                                         </>
-                                     }
-                                     {props.edit &&
-                                         <>
-                                             {returnSaveButton()}
-                                             <TwineButton
-                                                 name='Cancel Edit Story' color="blackgreen" icon="/icons/green_x.svg"
-                                                 action={(e) => goBack()}/>
-                                         </>
-                                     }
-                                     <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message={errorMessage} />
-                                 </Box>
-                             }
+                        <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message={errorMessage} />
+                    </Box>
+                }
             />
         </div>
 
@@ -280,29 +285,87 @@ function CreateStory(props: CreateStoryProps) {
         if (work && work['publishStamp']) {
             return (<>
                 <TwineButton
-                    name={uploading ? <CircularProgress color='darkpurple' variant='plain'/> : 'Save Story'} color="green"
+                    name={uploading && createClicked ? <CircularProgress color='darkpurple' variant='plain'/> : 'Save Story'}
+                    color="green"
                     icon="/icons/green_checkmark.svg"
-                    action={(e) => postStory(getStory(true, work))}/>
-                <TwineButton name="Transfer to Draft" icon="/icons/purple_paper.svg"
-                                  action={(e) => postStory(getStory(false, work))}></TwineButton>
+                    action={(e) => {
+                        setCreateClicked(true);
+                        postStory(getStory(true, work)).then(() => {
+                            setCreateClicked(false);
+                        });
+                    }}/>
+                <TwineButton
+                    name={uploading && draftClicked ? <CircularProgress color='darkpurple' variant='plain'/> : "Transfer to Draft"}
+                    icon="/icons/purple_paper.svg"
+                    action={(e) => {
+                        setDraftClicked(true);
+                        postStory(getStory(false, work)).then(() => {
+                            setDraftClicked(false);
+                        });
+                    }} />
             </>)
         } else {
             return (<>
                 <TwineButton
-                    name={uploading ? <CircularProgress color='darkpurple' variant='plain'/> : 'Save Story'} color="green"
+                    name={uploading && draftClicked ? <CircularProgress color='darkpurple' variant='plain'/> : 'Save Story'}
+                    color="green"
                     icon="/icons/green_checkmark.svg"
-                    action={(e) => postStory(getStory(false, work))}/>
-                <TwineButton name="Transfer to Published" icon="/icons/purple_paper.svg"
-                             action={(e) => postStory(getStory(true, work))}></TwineButton>
+                    action={(e) => {
+                        setDraftClicked(true);
+                        postStory(getStory(false, work)).then(() => {
+                            setDraftClicked(false);
+                        });
+                    }}/>
+                <TwineButton
+                    name={uploading && createClicked ? <CircularProgress color='darkpurple' variant='plain'/> : "Transfer to Published"}
+                    icon="/icons/purple_paper.svg"
+                    action={(e) => {
+                        setCreateClicked(true);
+                        postStory(getStory(true, work)).then(() => {
+                            setCreateClicked(false);
+                        });
+                    }} />
             </>)
         }
     }
 
     function getStory(published: boolean, currentWork?: Work): Work {
         const title: HTMLInputElement = document.getElementById("title") as HTMLInputElement;
+        if (!title.value) {
+            setErrorMessage('Please enter a title for your story!');
+            setOpenError(true);
+            return;
+        }
+        if (title.value.includes('/')) {
+            setErrorMessage('Sorry, there cannot be any backslashes in the story title.');
+            setOpenError(true);
+            return;
+        }
+
+        if (!(cover.name || (work && work.cover))) {
+            setErrorMessage('Please upload a cover for your story.');
+            setOpenError(true);
+            return;
+        }
+
         const description: HTMLInputElement = document.getElementById('description') as HTMLInputElement;
+        if (!description.value) {
+            setErrorMessage('Please enter a description.');
+            setOpenError(true);
+            return;
+        }
         const hook: HTMLInputElement = document.getElementById('hook') as HTMLInputElement;
+        if (!hook.value) {
+            setErrorMessage('Please enter a hook.');
+            setOpenError(true);
+            return;
+        }
         const genre1: HTMLInputElement = document.getElementById('genre1') as HTMLInputElement;
+        if (!genre1.textContent) {
+            setErrorMessage('Please enter a genre.');
+            setOpenError(true);
+            return;
+        }
         const genre2: HTMLInputElement = document.getElementById('genre2') as HTMLInputElement;
         const genre3: HTMLInputElement = document.getElementById('genre3') as HTMLInputElement;
         const publishStamp = published ? new Date() : null;

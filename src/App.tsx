@@ -25,7 +25,7 @@ import {ALGO_MyAlgoConnect as MyAlgoConnect, loadStdlib} from '@reach-sh/stdlib'
 import {v4 as uuidv4} from 'uuid';
 import {getCookie, setCookie, deleteCookie} from './utils/cookies.ts';
 import {User} from './utils/types.ts';
-import {cookieSet, userGet, userAdd, cookieGet, genericGet, genericPost} from './utils/api.ts';
+import {cookieSet, userGet, userAdd, genericGet, genericPost} from './utils/api.ts';
 import {CircularProgress, Grid, CssVarsProvider} from "@mui/joy";
 import GlobalStyle from "./utils/globalStyles.ts";
 import {PeraWalletConnect} from "@perawallet/connect";
@@ -35,21 +35,27 @@ import CreateChapter from "./pages/create/CreateChapter.tsx";
 import Chapter from "./pages/Chapter.tsx";
 import FirstLogin from './components/FirstLogin.tsx';
 import ErrorPopup from './components/ErrorPopup.tsx';
-import { env, PROFILE_IMGS_BUCKET } from './config.ts';
+import { env } from './config.ts';
+import { AlgorandChainIDs } from '@perawallet/connect/dist/util/peraWalletTypes';
 
 const reach = loadStdlib('ALGO');
+let chainId: AlgorandChainIDs;
 if (env === 'dev') {
+    chainId = 416002;
     reach.setWalletFallback(reach.walletFallback({
         providerEnv: 'TestNet', MyAlgoConnect
     }));
 } else {
+    chainId = 416001;
     reach.setWalletFallback(reach.walletFallback({
         providerEnv: 'MainNet', MyAlgoConnect
     }));
 }
 
 export const UserContext = createContext(null as any);
-const peraWallet = new PeraWalletConnect();
+export const peraWallet = new PeraWalletConnect({
+    chainId: chainId
+});
 
 // probably move to secrets manager but this doesn't really need to be that secure
 const accessCode: string = 'twinebeta!!';
@@ -62,7 +68,6 @@ function App() {
     const [initUserLoad, setInitUserLoad] = useState<boolean>(false);
     const [connType, setConnType] = useState<ConnectType>(ConnectType.PERA);
     const [beta, setBeta] = useState<boolean>(true);
-    const [loading, setLoading] = useState<boolean>(true);
     const [usePera, setUsePera] = useState<boolean>(false);
     const [useMyAlgo, setUseMyAlgo] = useState<boolean>(false);
 
@@ -174,8 +179,6 @@ function App() {
         if (cookie === 'active') {
             setBeta(false);
         }
-
-        setLoading(false);
     }, []);
 
     useEffect(() => {
@@ -189,11 +192,14 @@ function App() {
             })
             setInitUserLoad(true);
             return;
+        } else {
+            peraWallet.reconnectSession().then((accounts) => {
+                peraWallet.connector?.on('disconnect', logOut);
+            })
         }
         genericGet('/api/user/cookie/' + cookie).then((response: User | null) => {
             setUser(response);
         });
-        // cookieGet(cookie, setUser);
     }, [getUserToggle]);
 
     useEffect(() => {

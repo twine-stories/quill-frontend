@@ -346,25 +346,22 @@ function CreateChapter(props: CreateChapterProps) {
             <TwoColumnLayout leftComponent={
                 <div>
                     <Typography level="h2" color='purple'>{props.edit ? "Edit Chapter" : "Create Chapter"}</Typography>
-
-                    {view &&
-                        <div id='chapter-content'>
-                            <Box
-                                sx={{
-                                    py: 1,
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: 1,
-                                    alignItems: 'center',
-                                    flexWrap: 'wrap',
-                                }}
-                            >
-                                <Grid>
-                                    {preview}
-                                </Grid>
-                            </Box>
-                        </div>
-                    }
+                    <div id='chapter-content' style={{display: view ? null : 'none', width: '100%'}}>
+                        <Box
+                            sx={{
+                                py: 1,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 1,
+                                alignItems: 'center',
+                                flexWrap: 'wrap',
+                            }}
+                        >
+                            <Grid sx={{width: '100%'}}>
+                                {preview}
+                            </Grid>
+                        </Box>
+                    </div>
 
                     <div style={{display: view ? 'none' : null}}>
                         <Box
@@ -496,14 +493,21 @@ function CreateChapter(props: CreateChapterProps) {
 
                                      {/*TODO: FIX THIS LATER*/}
                                      {(!props.edit || chapter) && <Typography sx={{backgroundColor: "#14100E", borderRadius: "10px", p: "10px"}}
-                                                 level="h6" endDecorator={<Switch checked={props.edit ? chapter['mature'] : false} id="mature" sx={{ml: 1}}/>}>
+                                                 level="h6" endDecorator={<Switch defaultChecked={props.edit ? chapter['mature'] : false} id="mature" sx={{ml: 1}}/>}>
                                          Mature
                                      </Typography>}
 
 
                                      {/*TODO: FIX THIS LATER TOO*/}
-                                     <Checkbox id="guidelines" color="info"
-                                               label="I Verify This Work is Mine and Follows Community Guidelines."/>
+                                     <Grid container alignItems='center' justifyContent='space-around' flexWrap='nowrap'>
+                                        <Checkbox defaultChecked={props.edit} color='purple' sx={{marginRight: '20px', marginBottom: '2px'}} size='sm' label='' slotProps={{
+                                            input: {
+                                                id: 'guidelines',
+                                                'aria-label': 'primary checkbox'
+                                            }
+                                        }} />
+                                        <Typography fontSize={'14px'} level='h6' color='white'>I verify this work is mine and follows the <a id='comm-guidelines' href='https://twine-legal.s3.amazonaws.com/COMMUNITY_POLICY_AND_UPLOADING_GUIDELINES.pdf' target='_blank'>community guidelines</a>.</Typography>
+                                    </Grid>
 
                                      {!view && <Button variant="outlined" color="neutral" onClick={() => {
                                          setView(true);
@@ -590,12 +594,12 @@ function CreateChapter(props: CreateChapterProps) {
                             />
                         </AspectRatio>)
                 }
-            } else {
+            } else if (content !== "") {
                 if (!display) {
                     compoundedElements.push(content)
                 } else {
                     // compoundedElements.push(<Typography level="h6" color='white'>{content}</Typography>)
-                    compoundedElements.push(<div dangerouslySetInnerHTML={{__html: marked.parse(content)}}></div>)
+                    compoundedElements.push(<div className='chapter-text' dangerouslySetInnerHTML={{__html: marked.parse(content)}}></div>)
                 }
             }
         }
@@ -619,21 +623,24 @@ function CreateChapter(props: CreateChapterProps) {
         const sum: number = values.reduce((partial, curr) => partial + curr, 0);
         if (sum !== 100) {
             // TODO: Make this a snackbar
-            console.log('invalid percent sum');
+            setErrorMessage('The total share of all the collaborators is not 100%!');
+            setOpenError(true);
             return null;
         }
 
         let users: User[] = [];
         for (let i = 0; i < usernames.length; i++) {
             if (usernames[i] === '') {
-                console.log('invalid username');
+                setErrorMessage('A username you entered as a collaborator is empty!');
+                setOpenError(true);
                 return null;
             }
             const response = await genericGet('/api/user/name/' + usernames[i])
             if (response) {
                 users.push(response);
             } else {
-                console.log('invalid username');
+                setErrorMessage('A username you entered as a collaborator is invalid.');
+                setOpenError(true);
                 return null;
             }
         }
@@ -655,14 +662,46 @@ function CreateChapter(props: CreateChapterProps) {
         }
 
         const title: HTMLInputElement = document.getElementById("title") as HTMLInputElement;
+        if (!title.value) {
+            setErrorMessage('Please enter a title for your chapter!');
+            setOpenError(true);
+            return;
+        }
+        if (title.value.includes('/')) {
+            setErrorMessage('Sorry, there cannot be any backslashes in the chapter title.');
+            setOpenError(true);
+            return;
+        }
+
+        if (!(cover.name || (chapter && chapter.cover))) {
+            setErrorMessage('Please upload a cover for your chapter.');
+            setOpenError(true);
+            return;
+        }
+
         const mature: HTMLInputElement = document.getElementById("mature") as HTMLInputElement;
+
         const guidelines: HTMLInputElement = document.getElementById("guidelines") as HTMLInputElement;
+        if (!guidelines.checked) {
+            setErrorMessage('Please read and check the Community Guidelines box before submitting.');
+            setOpenError(true);
+            return;
+        }
+
         const endOfChapterMessage: HTMLInputElement = document.getElementById("endOfChapterMessage") as HTMLInputElement;
         const publishStamp = published ? new Date() : undefined;
+
         const profitSplitMap = await checkCollaborators();
+        if (profitSplitMap.size == 0) return;
+
         const id = currentChapter ? currentChapter['id'] : undefined;
 
         const allContent = await reformatContent(false);
+        if (allContent.length == 0) {
+            setErrorMessage('Please add some content for your chapter!');
+            setOpenError(true);
+            return;
+        }
         const url: string = work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase();
         if (title.value && !title.value.includes('/') && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
             let newEpisode: Episode = {
@@ -679,8 +718,6 @@ function CreateChapter(props: CreateChapterProps) {
                 publishStamp: publishStamp,
                 published: published,
             };
-            console.log(chapter);
-            console.log(newEpisode);
 
             let urlModifier = props.edit ? "update" : "add";
 
