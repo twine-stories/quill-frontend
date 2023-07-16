@@ -98,7 +98,7 @@ function Story() {
 
                                     <Typography level="h2" sx={{color: "#9E9FEB"}}>Published Chapters</Typography>
                                     {episodes.map((episode) => {
-                                        if (episode['publishStamp']) {
+                                        if (episode['published']) {
                                             return (
                                                 <EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode}/>
                                             )
@@ -109,7 +109,7 @@ function Story() {
                                         <>
                                             <Typography level="h2" sx={{color: "#9E9FEB"}}>Draft Chapters</Typography>
                                             {episodes.map((episode) => {
-                                                if (!episode['publishStamp']) {
+                                                if (!episode['published']) {
                                                     return (
                                                         <EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode}/>
                                                     )

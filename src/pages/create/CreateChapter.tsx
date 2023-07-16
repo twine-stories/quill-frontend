@@ -544,7 +544,7 @@ function CreateChapter(props: CreateChapterProps) {
     );
 
     function returnSaveButton() {
-        if (chapter && chapter['publishStamp']) {
+        if (chapter && chapter['published']) {
             return (<>
                 <TwineButton
                     name={uploading ? <CircularProgress color='darkpurple' variant='plain'/> : 'Save Chapter'} color="green"
@@ -702,6 +702,7 @@ function CreateChapter(props: CreateChapterProps) {
             setOpenError(true);
             return;
         }
+
         const url: string = work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase();
         if (title.value && !title.value.includes('/') && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
             let newEpisode: Episode = {
@@ -783,7 +784,7 @@ function CreateChapter(props: CreateChapterProps) {
                 });
             }
 
-            navigate("/chapter/" + url);
+            // navigate("/chapter/" + url);
         }
         setErrorMessage('Please ensure you have filled out all required fields and checked the Community Guidelines box before submitting.');
         setOpenError(true);
