@@ -233,7 +233,7 @@ function CreateChapter(props: CreateChapterProps) {
     };
 
     function removeItem(index: number) {
-        //TODO: Fix this later 💀
+        //TODO: Fix this later
         // add uuid
         setResultMap(newResultMap => {
             newResultMap.set(index, "!BAD!");
@@ -647,6 +647,13 @@ function CreateChapter(props: CreateChapterProps) {
     }
 
     async function postEpisode(published: boolean, currentChapter?: Episode) {
+        if (published) {
+            setErrorMessage('Oops! Publishing is temporarily disabled. We\'re working behind the scenes to enhance your story-sharing experience. But don\'t worry, you can still save your incredible story as a draft and get it ready for the world.');
+            setUploading(false);
+            setOpenError(true);
+            return;
+        }
+
         const title: HTMLInputElement = document.getElementById("title") as HTMLInputElement;
         const mature: HTMLInputElement = document.getElementById("mature") as HTMLInputElement;
         const guidelines: HTMLInputElement = document.getElementById("guidelines") as HTMLInputElement;
@@ -667,6 +674,7 @@ function CreateChapter(props: CreateChapterProps) {
                 url: url,
                 endOfChapterMessage: endOfChapterMessage.value,
                 mature: mature.checked,
+                episodeNumber: -1,
                 flags: 0,
                 publishStamp: publishStamp,
                 published: published,

@@ -48,6 +48,7 @@ export type Episode = {
     cover?: string;
     endOfChapterMessage?: string;
     publishStamp?: Date;
+    episodeNumber: number;
     flags: number;
     url: string;
     mature: boolean;
