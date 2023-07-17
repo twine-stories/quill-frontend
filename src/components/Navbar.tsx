@@ -13,13 +13,13 @@ import './Navbar.css';
 
 
 const NavDiv = styled.div`
-.navContainer{
+.nav-container{
   display:flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
 }
-.navItemsNames{
+.nav-items-names{
   a{
     font-family: 'Twine';
     text-decoration: none;
@@ -33,7 +33,7 @@ const NavDiv = styled.div`
   }
 }
 @media screen and (max-width: 700px) and (min-width: 300px) {
-    .navItemsNames a {
+    .nav-items-names a {
       font-size: 21px;
       margin-left: 5px !important;
       margin-right: 5px !important;
@@ -41,7 +41,7 @@ const NavDiv = styled.div`
       padding-top: 3px !important;;
     }
   }
-.iconSearch{
+.icon-search{
     display:flex;
     align-items: center;
 }`;
@@ -158,18 +158,18 @@ function Navbar() {
             {context['user'] && context['user']['walletAddress'] ?
                 <>
                     <NavDiv>
-                    <Box className='navContainer'>
-                    <Box className='navLogo'>
+                    <Box className='nav-container'>
+                    <Box className='nav-logo'>
                         <a href="/" id='navbarLogo'>
                             <img src="/icons/twine_logo_2.svg" width="100%" />
                         </a>
                     </Box>
-                    <Box className='navItemsNames'>
+                    <Box className='nav-items-names'>
                         <a href="/art" style={{marginLeft:"30px"}}>art</a>
                         <a onClick={() => setOpenCollab(true)} style={{margin:"0px 40px"}}>collab</a>
                         <a onClick={createNav} style={{marginRight:"30px"}}>create</a>
                     </Box>
-                    <Box className='iconSearch navItemsNames'>
+                    <Box className='icon-search nav-items-names'>
                         {searchIcon}
                         <a style={{paddingLeft:"10px",paddingTop: "10px"}}>
                             <ClickProfile
@@ -187,20 +187,20 @@ function Navbar() {
                 :
                 <>
                     <NavDiv>
-                        <Box className='navContainer'>
-                        <Box className='navLogo'>
+                        <Box className='nav-container'>
+                        <Box className='nav-logo'>
                         <a href="/" id='navbarLogo'>
                             <img alt="" src="/icons/twine_logo_2.svg" width="100%"/>
                         </a>
                         </Box>
-                        <Box className='navItemsNames'>
+                        <Box className='nav-items-names'>
                         <a href="/art" style={{marginLeft:"30px"}}>art</a>
                         <a onClick={() => setOpenCollab(true)} style={{margin:"0px 40px"}}>collab</a>
                         <a onClick={blockAccess} style={{marginRight:"30px"}}>create</a>
                         </Box>
-                        <Box className='iconSearch navItemsNames'>
+                        <Box className='icon-search nav-items-names'>
                         {searchIcon}
-                        <a className="aTag" style={{padding:"0px 10px"}}>
+                        <a style={{padding:"0px 10px"}}>
                             < ClickProfile
                                 isLoggedIn={false}
                                 logOutFunc={() => {}}

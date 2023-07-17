@@ -39,7 +39,7 @@ export default function ClickProfile({ isLoggedIn, logOutFunc, connectAlgoFunc, 
     // TODO: GET USER NAME
 
     return (
-        <div className='Profile-img-container'>
+        <div className='profile-img-container'>
             {isLoggedIn ? (
             <div>
                 <img    className="profile-img"

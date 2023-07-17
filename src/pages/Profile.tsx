@@ -120,7 +120,7 @@ function Profile() {
                             </div>
                             <Grid container
                                 spacing={{xs: 2}}
-                                columns={{ xs: 1,sm: 6,md: 4,lg:5,xl:10}}
+                                columns={{ xs: 1,sm: 6,md: 3,lg:4,xl:8}}
                                  className="works-list">
                                 {works && works.map((work, index) => {
                                     return <Grid md={1} xl={1}  lg={1}  sm={2} key={index}><GalleryTile work={work.props.work} story={true} /></Grid>

@@ -1,15 +1,15 @@
 @media only screen and (min-width: 1440px) {
-.Create-published-button {
+.create-published-button {
     margin-right: 34px;
   }
 }
 @media only screen and (min-width: 375px) {
-  .Create-published-button {
+  .create-published-button {
      margin-left: 6px;
     }
   }
  @media only screen and (min-width: 425px) {
-    .Create-published-button {
+    .create-published-button {
        margin-left: -15px;
       }
     }

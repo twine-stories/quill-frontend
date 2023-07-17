@@ -73,3 +73,8 @@
       width:85%;
     }
   }
+@media (min-width: 768px) and (max-width: 2560px) {
+    .create-image-upload {
+       padding: 12px;
+    }
+  }
