@@ -15,26 +15,28 @@ function GalleryTile(props: GalleryTileProps) {
     let imgSrc = 'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + COVER_PATH + props.work.cover;
     if (props.story) {
         return (
-            <Card variant="outlined" sx={{backgroundColor: "#14100E"}} onClick={() => {window.location.href = '/story/' + props.work['url']}} className='gallery-tile'>
+            <Card variant="outlined" sx={{backgroundColor: "#14100E",borderRadius: "32px",border: "2px solid #241D19",padding: "13px"}} onClick={() => {window.location.href = '/story/' + props.work['url']}} className='gallery-tile'>
                 <Grid container alignItems='center' justifyContent='center'>
                     {/* <AspectRatio sx={{my: 2, height: '150px', width: '100px'}}> */}
                         <img
-                            className='tile-img'
+                            className='gallery-tile-img'
                             src={imgSrc}
                             loading="lazy"
                             alt=""
                         />
                     {/* </AspectRatio> */}
                 </Grid>
-                <Typography level="h2" sx={{color: "#9E9FEB"}}>
-                    {props.work && props.work['title']}
-                </Typography>
-                {/*<Typography level="h6" sx={{color: "#E4E5FF"}}>*/}
-                {/*    Episodes:*/}
-                {/*</Typography>*/}
-                {/*<Typography level="h6" sx={{color: "#E4E5FF"}}>*/}
-                {/*    /!*Published on {props.work && props.work['publishStamp'].toString()}*!/*/}
-                {/*</Typography>*/}
+                <div className="gallery-tile-title-container">
+                    <Typography level="h2" sx={{color: "#9E9FEB"}}>
+                        {props.work && props.work['title']}
+                    </Typography>
+                    {/*<Typography level="h6" sx={{color: "#E4E5FF"}}>*/}
+                    {/*    Episodes:*/}
+                    {/*</Typography>*/}
+                    {/*<Typography level="h6" sx={{color: "#E4E5FF"}}>*/}
+                    {/*    /!*Published on {props.work && props.work['publishStamp'].toString()}*!/*/}
+                    {/*</Typography>*/}
+                </div>
             </Card>
         );
     } else {

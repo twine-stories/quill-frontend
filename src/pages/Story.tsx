@@ -42,7 +42,7 @@ function Story() {
         // loop over all episodes
         for (let i = 0; i < episodes.length; i++) {
             const currEp = episodes[i];
-            if (currEp['publishStamp']) {
+            if (currEp['published']) {
                 tempPublishedEpisodes.push(currEp)
             }
 
@@ -83,7 +83,7 @@ function Story() {
             // var publishedEpisodes: Episode[] = [];
             // for (let i = 0; i < episodes.length; i++) {
             //     const currEp = episodes[i];
-            //     if (currEp['publishStamp']) {
+            //     if (currEp['published']) {
             //         publishedEpisodes.push(currEp)
             //     }
             // }
@@ -124,7 +124,7 @@ function Story() {
             });
 
             return temp.map((episode) => {
-                if (!episode['publishStamp']) {
+                if (!episode['published']) {
                     return (
                         <EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode} totalEpisodes={publishedEpisodes.length}/>)
                 }
@@ -273,7 +273,7 @@ function Story() {
                                                 <>
                                                     <Typography level="h2" sx={{color: "#9E9FEB"}}>Draft Chapters</Typography>
                                                     {episodes.map((episode) => {
-                                                        if (!episode['publishStamp']) {
+                                                        if (!episode['published']) {
                                                             return (
                                                                 <EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode}/>
                                                             )

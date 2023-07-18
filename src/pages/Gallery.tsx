@@ -64,23 +64,23 @@ function Gallery(props: WorkGalleryProps) {
                 rightWidth="20%"
                 leftComponent={
                 <>
-                    <Typography level="h2" sx={{color: "#9E9FEB"}}>
+                    <Typography level="h2" sx={{color: "#9E9FEB",fontSize: "50px"}}>
                         {props.episodeName ? props.episodeName : (props.draft ? "Draft" : "Published").concat(props.art ? " Collections" : " Stories")}
                     </Typography>
                     <Box
                         sx={{backgroundColor: "#14100E", padding: '10px', marginBottom: '30px', borderRadius: "20px"}}>
-                        <Typography level="h5" sx={{marginTop: '5px', marginBottom: '0px', color: "#9E9FEB"}}>
+                        <Typography level="h5" sx={{marginBottom: '0px', color: "#9E9FEB",fontSize:"24px",fontFamily: "Twine",lineHeight: "100%",letterSpacing: "-0.48px",marginLeft: "23px", marginTop: "27px"}}>
                             {galleryItems.length} {galleryItems.length === 1 ? (props.art ? "Collection" : "Story") : (props.art ? "Collections" : "Stories")}
                         </Typography>
 
                         <Grid
                             container
-                            spacing={{xs: 3}}
-                            columns={{xs: 12}}
-                            sx={{flexGrow: 1, padding: '20px'}}
+                            spacing={{xs: 2}}
+                            columns={{ xs: 1, sm: 2, md: 2, lg:3 }}
+                             sx={{ padding: '12px'}}
                         >
                             {galleryItems.map((galleryTile, index) => (
-                                <Grid xs={4} key={index}>
+                                <Grid sx={{width:"225px !important"}} md={1} xl={1}  lg={1}  sm={2} xs={1} key={index}>
                                     {galleryTile}
                                 </Grid>
                             ))}

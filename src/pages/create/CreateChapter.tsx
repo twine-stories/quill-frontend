@@ -233,7 +233,7 @@ function CreateChapter(props: CreateChapterProps) {
     };
 
     function removeItem(index: number) {
-        //TODO: Fix this later 💀
+        //TODO: Fix this later
         // add uuid
         setResultMap(newResultMap => {
             newResultMap.set(index, "!BAD!");
@@ -544,7 +544,7 @@ function CreateChapter(props: CreateChapterProps) {
     );
 
     function returnSaveButton() {
-        if (chapter && chapter['publishStamp']) {
+        if (chapter && chapter['published']) {
             return (<>
                 <TwineButton
                     name={uploading ? <CircularProgress color='darkpurple' variant='plain'/> : 'Save Chapter'} color="green"
@@ -594,7 +594,7 @@ function CreateChapter(props: CreateChapterProps) {
                             />
                         </AspectRatio>)
                 }
-            } else {
+            } else if (content !== "") {
                 if (!display) {
                     compoundedElements.push(content)
                 } else {
@@ -654,9 +654,21 @@ function CreateChapter(props: CreateChapterProps) {
     }
 
     async function postEpisode(published: boolean, currentChapter?: Episode) {
+        if (published) {
+            setErrorMessage('Oops! Publishing is temporarily disabled. We\'re working behind the scenes to enhance your story-sharing experience. But don\'t worry, you can still save your incredible story as a draft and get it ready for the world.');
+            setUploading(false);
+            setOpenError(true);
+            return;
+        }
+
         const title: HTMLInputElement = document.getElementById("title") as HTMLInputElement;
         if (!title.value) {
             setErrorMessage('Please enter a title for your chapter!');
+            setOpenError(true);
+            return;
+        }
+        if (title.value.includes('/')) {
+            setErrorMessage('Sorry, there cannot be any backslashes in the chapter title.');
             setOpenError(true);
             return;
         }
@@ -690,8 +702,9 @@ function CreateChapter(props: CreateChapterProps) {
             setOpenError(true);
             return;
         }
+
         const url: string = work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase();
-        if (title.value && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
+        if (title.value && !title.value.includes('/') && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
             let newEpisode: Episode = {
                 id: id,
                 work: work,
@@ -701,6 +714,7 @@ function CreateChapter(props: CreateChapterProps) {
                 url: url,
                 endOfChapterMessage: endOfChapterMessage.value,
                 mature: mature.checked,
+                episodeNumber: -1,
                 flags: 0,
                 publishStamp: publishStamp,
                 published: published,
