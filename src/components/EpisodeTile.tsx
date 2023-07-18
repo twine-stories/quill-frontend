@@ -17,6 +17,7 @@ function EpisodeTile(props: EpisodeTileProps) {
     const context: object = useContext(EpisodeOrderContext);
     const moveUp: (id: number) => void = context['moveUp'];
     const moveDown: (id: number) => void = context['moveDown'];
+    const deleteDraftChapter: (id: number) => void = context['deleteDraftChapter'];
 
     let navigate = useNavigate();
 
@@ -56,18 +57,26 @@ function EpisodeTile(props: EpisodeTileProps) {
                     </Typography>
                 </div>
             </Card>
-            {props.episode.episodeNumber !== -1 && props.episode.episodeNumber !== 0 &&
-                <IconButton onClick={function () {
-                    moveUp(props.episode.episodeNumber)
-                }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_up.svg"
-                                                                          width="30px" height="30px"/></IconButton>
-            }
-            {props.episode.episodeNumber !== -1 && props.episode.episodeNumber !== props.totalEpisodes - 1 &&
-                <IconButton onClick={function () {
-                    moveDown(props.episode.episodeNumber)
-                }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_down.svg"
-                                                                          width="30px" height="30px"/></IconButton>
-            }
+            <Stack direction="column" alignItems= "center">
+                {props.episode.episodeNumber !== -1 && props.episode.episodeNumber !== 0 &&
+                    <IconButton onClick={function () {
+                        moveUp(props.episode.episodeNumber)
+                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_up.svg"
+                                                                              width="30px" height="30px"/></IconButton>
+                }
+                {props.episode.episodeNumber !== -1 && props.episode.episodeNumber !== props.totalEpisodes - 1 &&
+                    <IconButton onClick={function () {
+                        moveDown(props.episode.episodeNumber)
+                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_down.svg"
+                                                                              width="30px" height="30px"/></IconButton>
+                }
+            </Stack>
+            {/*{props.episode.episodeNumber === -1 &&*/}
+            {/*    <IconButton onClick={function () {*/}
+            {/*        deleteDraftChapter(props.episode.id)*/}
+            {/*    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg"*/}
+            {/*                                                              width="30px" height="30px"/></IconButton>*/}
+            {/*}*/}
         </Stack>
     );
 }

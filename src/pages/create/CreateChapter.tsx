@@ -24,7 +24,15 @@ import Sheet from '@mui/joy/Sheet';
 import TwineInput from "../../components/TwineInput.tsx";
 import TwoColumnLayout from "../../components/TwoColumnLayout.tsx";
 import TwineButton from "../../components/TwineButton.tsx";
-import {episodeAdd, episodeGetByUrl, genericGet, genericPost, workAdd, workGetByUrl} from "../../utils/api.ts";
+import {
+    episodeAdd,
+    episodeGetByUrl,
+    episodesGetByWorkId,
+    genericGet,
+    genericPost,
+    workAdd,
+    workGetByUrl
+} from "../../utils/api.ts";
 import {v4 as uuidv4} from 'uuid';
 import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER, MAX_COLLABORATORS} from "../../utils/constants.ts";
 import Collaborator from "../../components/Collaborator.tsx";
@@ -51,6 +59,7 @@ function CreateChapter(props: CreateChapterProps) {
     const context: object = useContext(UserContext);
     const user: User = context['user'];
     const [chapter, setChapter] = useState<Episode>(null);
+    const [chapters, setChapters] = useState<Array<Episode>>( []);
 
     const [uploading, setUploading] = useState<boolean>(false);
     const [inputList, setInputList, inputListRef] = useState<JSX.Element[]>([]);
@@ -97,6 +106,14 @@ function CreateChapter(props: CreateChapterProps) {
             });
         }
     }, [props.edit, user]);
+
+    useEffect(() => {
+        if (work && props.edit) {
+            episodesGetByWorkId(work['id'], () => {
+                console.log('fail');
+            }).then((response) => {setChapters(response)})
+        }
+    }, [props.edit, work]);
 
     useEffect(() => {
         if (user && props.edit && chapter && !populatedForEdit) {
@@ -696,6 +713,7 @@ function CreateChapter(props: CreateChapterProps) {
             return;
         }
 
+        // Set episode number.
         var episodeNumber;
         // This means the chapter is already published
         if (currentChapter && currentChapter['episodeNumber'] !== -1 && published) {
@@ -713,6 +731,26 @@ function CreateChapter(props: CreateChapterProps) {
             episodeNumber = -1;
         }
 
+        // Fix episode number for other chapters if transferring published to drafts.
+        if (currentChapter && currentChapter['episodeNumber'] !== -1 && !published) {
+            const origChapNumber = currentChapter['episodeNumber']
+            for (let i = 0; i < chapters.length; i++) {
+                var chapAtIndex = chapters[i];
+                if (chapAtIndex.episodeNumber > origChapNumber) {
+                    chapAtIndex.episodeNumber = chapAtIndex.episodeNumber - 1;
+                    try {
+                        const response: number = await genericPost("/api/episode/update", chapAtIndex);
+                        if (response) {
+                            // TODO: figure this out
+                        }
+                    } catch (error) {
+                        // TODO: make this a dialog
+                        console.log("We ran into an error 🗿")
+                        return;
+                    }
+                }
+            }
+        }
 
         const url: string = work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase();
         if (title.value && !title.value.includes('/') && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {

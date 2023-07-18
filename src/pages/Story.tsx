@@ -171,6 +171,11 @@ function Story() {
         setPublishedEpisodes(newPublishedEpisodes);
     };
 
+
+    const deleteDraftChapter = async (chapterId: number): void => {
+
+    };
+
     return (
         <div>
             <Navbar/>
@@ -211,7 +216,8 @@ function Story() {
                                             {
                                                 <EpisodeOrderContext.Provider value={{
                                                     'moveUp': moveChapterUp,
-                                                    'moveDown': moveChapterDown
+                                                    'moveDown': moveChapterDown,
+                                                    'deleteDraftChapter': deleteDraftChapter
                                                 }}>
                                                     {
                                                         publishedEpisodes.toSorted((e1, e2) => {
@@ -225,7 +231,8 @@ function Story() {
                                             {(user && user.walletAddress === work.creator.walletAddress) &&
                                                 <EpisodeOrderContext.Provider value={{
                                                     'moveUp': moveChapterUp,
-                                                    'moveDown': moveChapterDown
+                                                    'moveDown': moveChapterDown,
+                                                    'deleteDraftChapter': deleteDraftChapter
                                                 }}>
                                                     <Typography level="h2" sx={{color: "#9E9FEB"}}>Draft Chapters</Typography>
                                                     {episodes.map((episode) => {
