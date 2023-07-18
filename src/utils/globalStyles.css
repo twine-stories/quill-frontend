@@ -56,8 +56,13 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
+#root {
+    width: 100%;
+    overflow-x: hidden;
+}
+
 .App {
-    width: 100vw;
+    width: 100%;
     min-height: 95vh;
     position: relative;
 }
