@@ -654,13 +654,6 @@ function CreateChapter(props: CreateChapterProps) {
     }
 
     async function postEpisode(published: boolean, currentChapter?: Episode) {
-        if (published) {
-            setErrorMessage('Oops! Publishing is temporarily disabled. We\'re working behind the scenes to enhance your story-sharing experience. But don\'t worry, you can still save your incredible story as a draft and get it ready for the world.');
-            setUploading(false);
-            setOpenError(true);
-            return;
-        }
-
         const title: HTMLInputElement = document.getElementById("title") as HTMLInputElement;
         if (!title.value) {
             setErrorMessage('Please enter a title for your chapter!');
@@ -703,6 +696,24 @@ function CreateChapter(props: CreateChapterProps) {
             return;
         }
 
+        var episodeNumber;
+        // This means the chapter is already published
+        if (currentChapter && currentChapter['episodeNumber'] !== -1 && published) {
+            episodeNumber = currentChapter['episodeNumber']
+        }
+        else if (published) {
+            const totalPubChapters = await genericGet("/api/episode/numpublished/work/url/" + work.url);
+            if (totalPubChapters == null) {
+                setErrorMessage('Sorry, something went wrong. Please try again.');
+                setOpenError(true);
+                return;
+            }
+            episodeNumber = totalPubChapters;
+        } else {
+            episodeNumber = -1;
+        }
+
+
         const url: string = work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase();
         if (title.value && !title.value.includes('/') && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
             let newEpisode: Episode = {
@@ -714,7 +725,7 @@ function CreateChapter(props: CreateChapterProps) {
                 url: url,
                 endOfChapterMessage: endOfChapterMessage.value,
                 mature: mature.checked,
-                episodeNumber: -1,
+                episodeNumber: episodeNumber,
                 flags: 0,
                 publishStamp: publishStamp,
                 published: published,

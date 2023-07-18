@@ -74,51 +74,9 @@ function Story() {
         navigate(link);
     }
 
-    // this will be a migration function running for a year 06/14/2023
-    // this will account for episode objects with no valid episode number before it was
-    // introduced in the open beta launch
-    function getMigrationPublishedEpisodeTiles() {
+    function getPublishedEpisodeTiles() {
         console.log(publishedEpisodes)
         if (publishedEpisodes.length > 0) {
-            // var publishedEpisodes: Episode[] = [];
-            // for (let i = 0; i < episodes.length; i++) {
-            //     const currEp = episodes[i];
-            //     if (currEp['published']) {
-            //         publishedEpisodes.push(currEp)
-            //     }
-            // }
-
-            // migrate if needed
-            // if (publishedEpisodes[0].episodeNumber !== -1) {
-            //     const sortedPublishedEpisodes = publishedEpisodes.sort((e1, e2) => {
-            //         return e2.publishStamp - e1.publishStamp
-            //     })
-            //     var counter = 0
-            //     for (let i = 0; i < sortedPublishedEpisodes.length; i++) {
-            //         var currPubEp = sortedPublishedEpisodes[i];
-            //         currPubEp.episodeNumber = counter
-            //         counter += 1
-            //         try {
-            //             const response: number = await genericPost("/api/episode/update", currPubEp);
-            //             if (response) {
-            //                 // if (cover.file) {
-            //                 //     await prepareAndUpload('cover');
-            //                 // }
-            //                 // setUploading(false);
-            //                 // newEpisode.id = response;
-            //             }
-            //         } catch (error) {
-            //             // TODO: make this a dialog
-            //             console.log("We ran into an error 🗿")
-            //             return;
-            //         }
-            //     }
-            //     setPublishedEpisodes(sortedPublishedEpisodes);
-            // }
-
-
-            //// ALERT ////
-            // ONLY KEEP THIS BELOW CODE SECTION AFTER MIGRATION DATE //
             const temp = publishedEpisodes.toSorted((e1, e2) => {
                 return e2.episodeNumber - e1.episodeNumber
             });
@@ -134,6 +92,7 @@ function Story() {
     }
 
     const moveChapterUp = async (chapterNumber: number): void => {
+        console.log("MOVING UP")
         const lowerChapterNumberToSwap = chapterNumber - 1
         let newPublishedEpisodes: JSX.Element[] = [];
         for (let i = 0; i < publishedEpisodes.length; i++) {
@@ -173,6 +132,7 @@ function Story() {
     };
 
     const moveChapterDown = async (chapterNumber: number): void => {
+        console.log("MOVING DOWN")
         const higherChapterNumberToSwap = chapterNumber + 1
         let newPublishedEpisodes: JSX.Element[] = [];
         for (let i = 0; i < publishedEpisodes.length; i++) {
@@ -247,22 +207,15 @@ function Story() {
                                     {episodes &&
                                         <>
                                             <Typography level="h2" sx={{color: "#9E9FEB"}}>Published Chapters</Typography>
-                                            {/*{episodes.map((episode) => {*/}
-                                            {/*    if (episode['publishStamp']) {*/}
-                                            {/*        return (*/}
-                                            {/*            <EpisodeTile isCreator={user.walletAddress === work.creator.walletAddress} episode={episode}/>*/}
-                                            {/*        )*/}
-                                            {/*    }*/}
-                                            {/*})}*/}
+
                                             {
                                                 <EpisodeOrderContext.Provider value={{
                                                     'moveUp': moveChapterUp,
                                                     'moveDown': moveChapterDown
                                                 }}>
-                                                    {/*{getMigrationPublishedEpisodeTiles()}*/}
                                                     {
                                                         publishedEpisodes.toSorted((e1, e2) => {
-                                                        return e2.episodeNumber - e1.episodeNumber}).map((episode) => {
+                                                        return e1.episodeNumber - e2.episodeNumber}).map((episode) => {
                                                         return (<EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode} totalEpisodes={publishedEpisodes.length}/>)
                                                     })
                                                     }
@@ -270,7 +223,10 @@ function Story() {
                                             }
 
                                             {(user && user.walletAddress === work.creator.walletAddress) &&
-                                                <>
+                                                <EpisodeOrderContext.Provider value={{
+                                                    'moveUp': moveChapterUp,
+                                                    'moveDown': moveChapterDown
+                                                }}>
                                                     <Typography level="h2" sx={{color: "#9E9FEB"}}>Draft Chapters</Typography>
                                                     {episodes.map((episode) => {
                                                         if (!episode['published']) {
@@ -279,7 +235,7 @@ function Story() {
                                                             )
                                                         }
                                                     })}
-                                                </>
+                                                </EpisodeOrderContext.Provider>
                                             }
                                         </>
                                     }
