@@ -61,7 +61,7 @@ function HomeSlot(props: HomeProps) {
         </Grid>;
 
     return (
-        <Grid className='home-slot' onClick={() => {if (chapter) {window.location.href = '/chapter/' + chapter.url}}} onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
+        <Grid className='home-slot section-center' onClick={() => {if (chapter) {window.location.href = '/chapter/' + chapter.url}}} onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
             <Typography level='h2' color='purple' sx={{textAlign: 'center'}}>{props.title}</Typography>
             <Sheet
             color='home'
@@ -72,7 +72,7 @@ function HomeSlot(props: HomeProps) {
                 borderRadius: 'md',
                 p: 3
             }}
-            className="responsive-sheet"
+            className="responsive-sheet gap-phone"
             >
                 <Grid container direction='column' alignItems='center' justifyContent={hovering ? 'flex-start' : 'space-between'} height='100%' xs={12} className='home-slot-content'>
                     {hovering ? hoveredContent : unHoveredContent}

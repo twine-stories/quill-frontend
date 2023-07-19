@@ -37,3 +37,20 @@
     }
   }
   
+  @media only screen and (max-width: 575px) {
+    .gap-phone {
+      width: 230px !important;
+      margin: 20px auto !important;
+    }
+    .section-center{
+      margin: 0 auto;
+    }
+  }
+
+  @media only screen and (max-width:320px) {
+    .gap-phone {
+      width: 220px !important;
+    }
+ 
+  }
+

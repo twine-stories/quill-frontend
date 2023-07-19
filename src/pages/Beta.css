@@ -1,0 +1,48 @@
+
+@media only screen and (max-width: 575px) {
+    .para-gragh {
+        min-width: 280px !important;
+    }
+    .i-frame{
+        min-width: 260px !important;
+        margin-bottom: 30px;
+    }
+    html, body {
+        overflow-x: hidden;
+    }    
+    .pass-code-container{
+        min-width: 280px !important;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    .i-frame{
+     position: relative;
+     left: -22px;
+}
+.para-gragh {
+    position: relative;
+    left: -25px;
+}
+.paas-code {
+    position: relative;
+    left: 0px;
+}
+.stack-icon-button {
+    position: relative;
+    left: -29px;
+}
+.logo-twine {
+    position: relative;
+    left: -16px;
+}
+.pass-code-container{
+    position: relative;
+    left: -25px;
+}
+}
+@media only screen and (min-width: 768px) {
+.para-gragh {
+ margin-top: 40px !important;
+}
+}

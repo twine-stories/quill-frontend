@@ -93,8 +93,8 @@ function Profile() {
                         <Typography color='white' level='h4'>@{user && user.userName}</Typography>
                         <Typography color='purple' level='h1'>{user && user.firstName} {user && user.lastName}</Typography>
                         <div className="edit-notif">
-                            <TwineButton icon='/icons/Setting.svg' action={editProfile} color="purple" name="Edit Profile" sx={{width:'85%', marginLeft:'0px'}} />
-                            <TwineButton icon='/icons/bell.svg' color="darkpurple" name="" sx={{width:'15%'}} name="0" />
+                            <TwineButton  className="edit-profile-class" icon='/icons/Setting.svg' action={editProfile} color="purple" name="Edit Profile" sx={{width:'85%', marginLeft:'0px'}} />
+                            <TwineButton  className="bell-class"  icon='/icons/bell.svg' color="darkpurple" name="" sx={{width:'15%'}} name="0" />
                         </div>
                         <Typography color='white' level='h6'>{user && user.description}</Typography>
                         <div className="socials">

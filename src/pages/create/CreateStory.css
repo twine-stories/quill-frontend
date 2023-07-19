@@ -78,3 +78,23 @@
        padding: 12px;
     }
   }
+
+@media only screen and (max-width: 575px) {
+    .two-column-layout{
+        display: block !important;
+    }
+    .margin-remove{
+        margin-right:0px !important;
+    }
+    .create-image-upload {
+        width: 100%;
+    }
+    #create-cover-wrapper {
+        width: 100%;
+        height: 180px;
+    }
+    #create-banner-wrapper {
+        width: 46vw;
+        height: inherit !important;
+    }
+}

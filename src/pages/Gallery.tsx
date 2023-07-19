@@ -61,7 +61,7 @@ function Gallery(props: WorkGalleryProps) {
     return (
         <div className='gallery' style={{margin:"0px 3px"}}>
             <Navbar/>
-            <TwoColumnLayout
+            <TwoColumnLayout className="gallery-columns"
                 leftWidth="80%"
                 rightWidth="20%"
                 leftComponent={

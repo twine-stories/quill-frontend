@@ -4,11 +4,6 @@ import TwineButton from "./TwineButton.tsx";
 import { useNavigate } from 'react-router-dom';
     
 
-
-
-
-// const buttonStyle = {width: "100%"}
-
 const ProfileSidebar = ({goToDrafts}) => {
 
     let navigate = useNavigate();

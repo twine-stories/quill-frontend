@@ -11,14 +11,6 @@
     
   }
 
-  /* @media only screen and (max-width: 320px),
-       (min-width: 321px) and (max-width: 375px),
-       (min-width: 376px) and (max-width: 425px) {
-    .nav-items-names .navLink {
-    margin-left: 24px !important;
-  }
-} */
-
 @media screen and (max-width: 375px) and (min-width: 300px) {
   .nav-logo {
     margin-left: -8px;
@@ -39,4 +31,56 @@
   .nav-items-names a {
     font-size: 29px !important;
    }
+   
+}
+@media screen and (max-width: 575px){
+  .nav-container{
+    justify-content: center !important;
+  }
+.nav-items-names {
+  margin-left: 0 !important;
+}
+.nav-logo img {
+  max-width: 80px;
+}
+ .nav-items-names a {
+  font-size: 14px !important; 
+}
+.icon-search .css-17e6rrd-JoyButton-root {
+  height: 35px !important;
+  width: 35px;
+  min-height: 35px !important;
+}
+.icon-search img {
+  width: 10px;
+}
+
+.nav-container {
+  justify-content: center !important;
+  margin-left: 10px;
+}
+}
+@media screen and (max-width: 320px){
+
+  .nav-items-names a {
+    font-size: 12px !important;
+}
+.nav-logo img {
+  min-width: 90px;
+}
+.nav-container {
+  justify-content: center !important;
+  margin-left: -50px;
+}
+.profile-img {
+  width: 30px !important;
+  height: 30px !important;
+}
+.icon-search {
+  height: 30px !important;
+  width: 30px;
+  min-height: 35px !important;
+}
+
+
 }
