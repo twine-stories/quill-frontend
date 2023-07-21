@@ -5,10 +5,13 @@ import { UserContext } from '../App.tsx';
 import TwineInput from '../components/TwineInput.tsx';
 import IconButton from '../components/IconButton.tsx';
 import { genericPost } from '../utils/api.ts';
+import SuccessPopup from '../components/SuccessPopup.tsx';
 import "./Beta.css";
 
 
 function Beta() {
+    const [openPopup, setOpenPopup] = useState<Boolean>(false);
+
     const context: object = useContext(UserContext);
     const enterBeta: (code: string) => void = context['enterBeta'];
 
@@ -21,6 +24,7 @@ function Beta() {
     const submitMailingListInput = () => {
         genericPost('/api/mailingList/add/' + (document.getElementById('mailing-list') as HTMLInputElement).value, {});
         (document.getElementById('mailing-list') as HTMLInputElement).value = '';
+        setOpenPopup(true);
     }
 
     return (
@@ -77,7 +81,7 @@ function Beta() {
                 </Stack>
             </Grid>
             
-            
+            <SuccessPopup isOpen={openPopup} onClose={() => setOpenPopup(false)} />
         </Grid>
     );
 }
