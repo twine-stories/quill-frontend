@@ -4,6 +4,7 @@ import { NFTCollection } from '../utils/types.ts';
 import { collectionGetAll } from '../utils/api.ts';
 import { env } from '../config.ts';
 import { Typography, Grid } from "@mui/joy";
+import './Art.css';
 
 function Art() {
     const [colls, setColls] = useState<NFTCollection[]>();
@@ -26,7 +27,7 @@ function Art() {
         <div>
             <Navbar />
             <Grid container direction='column' alignItems='center' justifyContent='space-around'>
-                <Typography level='h2' color='purple'>Digital Art Marketplace Coming Soon!</Typography>
+                <Typography className="h2-art-text" level='h2' color='purple'>Digital Art Marketplace Coming Soon!</Typography>
                 {env === 'dev' && collListings}
             </Grid>
         </div>

@@ -65,7 +65,7 @@ function Story() {
     }
 
     return (
-        <div>
+        <div className='story'>
             <Navbar/>
             <Grid container direction='column' alignItems='center'>
                 <Grid sx={{width: '65vw'}}>

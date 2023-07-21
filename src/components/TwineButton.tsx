@@ -10,6 +10,7 @@ interface ButtonProps {
     size?: string;
     sx?: object;
     paddingTop?:string;
+    className?:string;
 }
 
 function TwineButton(props: ButtonProps) {
@@ -17,10 +18,12 @@ function TwineButton(props: ButtonProps) {
     const size: string = props.size ? props.size : 'md';
     return (
         <Button
+          className={props.className}
             sx={props.sx}
             size={size}
             color={color}
             startDecorator={props.icon && <img width="18px" height="18px" src={props.icon} />}
+            className={props.className}
             onClick={props.action}
             disabled={!(props.enabled === undefined || props.enabled)}
         >
