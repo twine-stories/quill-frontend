@@ -10,6 +10,8 @@ import IconButton from './IconButton.tsx';
 import { Work, User} from '../utils/types.ts';
 import { genericGet } from '../utils/api.ts';
 import './Navbar.css';
+import Hamburger from './Hamburger.tsx';
+
 
 
 const NavDiv = styled.div`
@@ -34,7 +36,7 @@ const NavDiv = styled.div`
 }
 @media screen and (max-width: 700px) and (min-width: 300px) {
     .nav-items-names a {
-      font-size: 21px;
+      font-size: 43px;
       margin-left: 5px !important;
       margin-right: 5px !important;
       padding-left: 0px !important;;
@@ -59,7 +61,7 @@ function Navbar() {
     const [openCollab, setOpenCollab] = useState<boolean>(false);
     const [isSearching , setIsSearching] = useState<boolean>(false);
     const [dyads, setDyads] = useState<dyad[]>([]);
-
+    const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
     const blockAccess = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         e.preventDefault();
         setOpen(true);
@@ -159,6 +161,7 @@ function Navbar() {
                 <>
                     <NavDiv>
                     <Box className='nav-container'>
+                    {!isMenuOpen && <Hamburger/>}
                     <Box className='nav-logo'>
                         <a href="/" id='navbarLogo'>
                             <img src="/icons/twine_logo_2.svg" width="100%" />
@@ -170,7 +173,7 @@ function Navbar() {
                         <a onClick={createNav} style={{marginRight:"30px"}}>create</a>
                     </Box>
                     <Box className='icon-search nav-items-names'>
-                        {searchIcon}
+                    <a className="searchh">{searchIcon}</a>
                         <a style={{paddingLeft:"10px",paddingTop: "10px"}}>
                             <ClickProfile
                                 isLoggedIn={true}
@@ -188,6 +191,7 @@ function Navbar() {
                 <>
                     <NavDiv>
                         <Box className='nav-container'>
+                        {!isMenuOpen && <Hamburger/>}
                         <Box className='nav-logo'>
                         <a href="/" id='navbarLogo'>
                             <img alt="" src="/icons/twine_logo_2.svg" width="100%"/>
@@ -199,7 +203,7 @@ function Navbar() {
                         <a onClick={blockAccess} style={{marginRight:"30px"}}>create</a>
                         </Box>
                         <Box className='icon-search nav-items-names'>
-                        {searchIcon}
+                        <a className="searchh">{searchIcon}</a>
                         <a style={{padding:"0px 10px"}}>
                             < ClickProfile
                                 isLoggedIn={false}

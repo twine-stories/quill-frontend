@@ -1,0 +1,53 @@
+a{
+  font-family: 'Twine';
+  text-decoration: none;
+  font-style: normal;
+  font-weight: 400;
+  cursor: pointer;
+  font-size: 36px;
+  line-height: 100%;
+  color: #a3b832;
+}
+@media screen and (max-width: 575px) {
+  a{
+  padding-left: 22px !important;
+  }
+
+.basics-demo-button{
+  background-color: #0d0603 !important;
+}
+}
+
+@media (max-width:575px) and (min-width:425px) {
+  a{
+    padding-left: 35px !important;
+   }
+   .search-icon {
+    margin-left: 29px !important;
+   }
+  }
+ @media screen and (max-width:375px){  
+  .search-icon{
+    margin-left: 16px !important;
+    }
+}
+
+@media screen and (min-width: 575px) {
+.basics-demo-button{
+  display: none !important;
+}
+
+}
+
+@media screen and (max-width: 575px) {
+.basic-menu-option-1{
+color:blue;
+}
+}
+
+.options:hover{
+  background-color: #241D19;
+  border-radius: 10px;
+  width: 200px;
+ }
+

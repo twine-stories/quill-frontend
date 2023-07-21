@@ -126,6 +126,13 @@ export const theme = extendTheme({
                             backgroundColor: '#92A52D'
                         },
                     }),
+                    ...(ownerState.color === 'litegreen' && {
+                        color: '#5C720D',
+                        backgroundColor: '#5C720D',
+                        '&:active': {
+                            backgroundColor: '#92A52D'
+                        },
+                    }),
                     ...(ownerState.color === 'green' && ownerState.disabled === true && {
                         color: '#404626',
                         backgroundColor: '#A3B83280',

@@ -6,9 +6,8 @@
 
 @media screen and (max-width: 900px) and (min-width: 300px) {
     .nav-logo img {
-        min-width: 138px;
+        min-width: 150px;
       }
-    
   }
 
 @media screen and (max-width: 375px) and (min-width: 300px) {
@@ -41,7 +40,7 @@
   margin-left: 0 !important;
 }
 .nav-logo img {
-  max-width: 80px;
+  max-width: 155px;
 }
  .nav-items-names a {
   font-size: 14px !important; 
@@ -57,11 +56,9 @@
 
 .nav-container {
   justify-content: center !important;
-  margin-left: 10px;
 }
 }
 @media screen and (max-width: 320px){
-
   .nav-items-names a {
     font-size: 12px !important;
 }
@@ -70,17 +67,52 @@
 }
 .nav-container {
   justify-content: center !important;
-  margin-left: -50px;
+  margin-left: -35px;
 }
 .profile-img {
-  width: 30px !important;
-  height: 30px !important;
+  width: 50px !important;
+  height: 50px !important;
 }
 .icon-search {
   height: 30px !important;
   width: 30px;
   min-height: 35px !important;
 }
-
-
 }
+
+@media screen and (max-width: 575px){
+  #navbarLogo{
+    padding-left: 0px !important;
+  }
+  .nav-items-names{
+    display:none;
+  }
+  .searchh{
+    display:none;
+  }
+  .custom-button-class{
+    height: 50px !important;
+    width: 50px !important;
+    border-radius: 30% !important;
+  }
+  .custom-button-class img{
+    height: 30px !important;
+    width: 30px !important;
+  }
+}
+
+@media screen and (min-width: 575px) {
+  .parent-custom-button{
+    display:none !important;
+  }
+}
+@media (max-width:575px) and (min-width:425px) {
+.nav-logo img{
+  margin: 0px 35px;
+}
+}
+@media (max-width:423px) and (min-width:375px) {
+  .nav-logo img{
+    margin: 0px 25px;
+  }
+  }
