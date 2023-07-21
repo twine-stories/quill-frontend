@@ -23,6 +23,7 @@ function TwineButton(props: ButtonProps) {
             size={size}
             color={color}
             startDecorator={props.icon && <img width="18px" height="18px" src={props.icon} />}
+            className={props.className}
             onClick={props.action}
             disabled={!(props.enabled === undefined || props.enabled)}
         >
