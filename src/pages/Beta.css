@@ -10,7 +10,7 @@
     html, body {
         overflow-x: hidden;
     }    
-    .pass-code-container{
+    .beta-field-container{
         min-width: 280px !important;
     }
 }
@@ -24,7 +24,7 @@
     position: relative;
     left: -25px;
 }
-.paas-code {
+.beta-field {
     position: relative;
     left: 0px;
 }
@@ -36,7 +36,7 @@
     position: relative;
     left: -16px;
 }
-.pass-code-container{
+.beta-field-container{
     position: relative;
     left: -25px;
 }
