@@ -10,6 +10,7 @@ interface ButtonProps {
     size?: string;
     sx?: object;
     paddingTop?:string;
+    className?:string;
 }
 
 function TwineButton(props: ButtonProps) {
@@ -17,6 +18,7 @@ function TwineButton(props: ButtonProps) {
     const size: string = props.size ? props.size : 'md';
     return (
         <Button
+          className={props.className}
             sx={props.sx}
             size={size}
             color={color}

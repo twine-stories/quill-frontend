@@ -4,13 +4,16 @@ interface TwoColumnLayoutProps {
     rightComponent: JSX.Element;
     leftWidth?: string;
     rightWidth?: string;
+    className?: string;
+    marginRight?:string;
 }
+
 function TwoColumnLayout(props: TwoColumnLayoutProps) {
     let leftFlex = props.leftWidth ? "0 0 " + props.leftWidth : '0 0 70%';
     let rightFlex = props.rightWidth ? "0 0 " + props.rightWidth : '0 0 30%';
     return (
-        <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-            <div style={{ flex: leftFlex, marginRight: '5%' }}>
+        <div className={props.className} style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+            <div style={{ flex: leftFlex, marginRight: '5%' }} className={props.className}>
                 {props.leftComponent}
             </div>
             <div style={{ flex: rightFlex }}>

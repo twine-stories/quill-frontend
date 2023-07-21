@@ -326,9 +326,9 @@ function Create() {
     }
 
     return (
-        <div>
+        <div className='create'>
             <Navbar/>
-            <Typography level="h2" color='green' sx={{paddingLeft: "16px"}}>Create Stories</Typography>
+            <Typography level="h2" color='green' sx={{paddingLeft: "16px",marginTop:"74px"}}>Create Stories</Typography>
             <Grid container direction='column' alignItems='flex-start' justifyContent='space-around'>
                 <Stack
                     direction="row"

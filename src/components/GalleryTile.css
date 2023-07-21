@@ -5,7 +5,7 @@
 
 .gallery-tile h2 {
     font-size: 22px;
-    margin-top: 4px;
+    margin-top: 10px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;

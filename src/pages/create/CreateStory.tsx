@@ -133,12 +133,13 @@ function CreateStory(props: CreateStoryProps) {
     }
 
     return (
-        <div>
+        <div style={{marginRight: "97px"}} className="margin-remove">
             <Navbar/>
             <Typography level="h2" color='purple'>{props.edit ? "Edit Story" : "Create Story"}</Typography>
-            <TwoColumnLayout
+            <TwoColumnLayout className="two-column-layout margin-remove" 
                 leftComponent={
-                    <Box
+                    <Box 
+                       className="create-story"
                         sx={{
                             display: 'flex',
                             flexDirection: 'column',
