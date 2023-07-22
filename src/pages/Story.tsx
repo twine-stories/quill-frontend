@@ -1,8 +1,8 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext, useEffect, createContext} from 'react';
 import Navbar from "../components/Navbar.tsx";
 import {UserContext} from "../App.tsx";
 import {Episode, User, Work, Pr} from '../utils/types.ts';
-import {episodesGetByWorkId, genericGet, workGetByUrl} from '../utils/api.ts';
+import {episodesGetByWorkId, genericGet, genericPost, workGetByUrl} from '../utils/api.ts';
 import TwoColumnLayout from "../components/TwoColumnLayout.tsx";
 import {Box, Stack, Grid, Typography} from "@mui/joy";
 import TwineButton from "../components/TwineButton.tsx";
@@ -11,10 +11,13 @@ import { PROFILE_IMGS_BUCKET } from '../config.ts';
 import IconButton from '../components/IconButton.tsx';
 import { useNavigate } from 'react-router-dom';
 
+export const EpisodeOrderContext = createContext(null as any);
+
 function Story() {
 
     const [work, setWork] = useState<Work>(null);
     const [episodes, setEpisodes] = useState<Array<Episode>>( []);
+    const [publishedEpisodes, setPublishedEpisodes] = useState<Array<Episode>>( []);
     const context: object = useContext(UserContext);
     const user: User = context['user'];
     const [creators, setCreators] = useState<Set<string>>(new Set());
@@ -34,9 +37,15 @@ function Story() {
     }, [work]);
 
     useEffect(() => {
+        var tempPublishedEpisodes = []
+
         // loop over all episodes
         for (let i = 0; i < episodes.length; i++) {
             const currEp = episodes[i];
+            if (currEp['published']) {
+                tempPublishedEpisodes.push(currEp)
+            }
+
             genericGet('/api/profitSplit/episode/' + currEp['id']).then((response) => {
                 for (let j = 0; j < response.length; j++) {
                     const currSplit = response[j];
@@ -50,6 +59,7 @@ function Story() {
                 }
             });
         }
+        setPublishedEpisodes(tempPublishedEpisodes)
     }, [episodes]);
             
 
@@ -63,6 +73,108 @@ function Story() {
     const goToSameTab = async (link: string): Promise<void> => {
         navigate(link);
     }
+
+    function getPublishedEpisodeTiles() {
+        console.log(publishedEpisodes)
+        if (publishedEpisodes.length > 0) {
+            const temp = publishedEpisodes.toSorted((e1, e2) => {
+                return e2.episodeNumber - e1.episodeNumber
+            });
+
+            return temp.map((episode) => {
+                if (!episode['published']) {
+                    return (
+                        <EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode} totalEpisodes={publishedEpisodes.length}/>)
+                }
+            });
+
+        }
+    }
+
+    const moveChapterUp = async (chapterNumber: number): void => {
+        console.log("MOVING UP")
+        const lowerChapterNumberToSwap = chapterNumber - 1
+        let newPublishedEpisodes: JSX.Element[] = [];
+        for (let i = 0; i < publishedEpisodes.length; i++) {
+            var currPubEp = publishedEpisodes[i];
+            // TODO: copy the object
+            let newPubEp = currPubEp;
+            if (currPubEp.episodeNumber === chapterNumber) {
+                newPubEp.episodeNumber = currPubEp.episodeNumber - 1;
+                try {
+                    const response: number = await genericPost("/api/episode/update", newPubEp);
+                    if (response) {
+                        // TODO: figure this out
+                    }
+                } catch (error) {
+                    // TODO: make this a dialog
+                    console.log("We ran into an error 🗿")
+                    return;
+                }
+            } else if (currPubEp.episodeNumber === lowerChapterNumberToSwap) {
+                newPubEp.episodeNumber = currPubEp.episodeNumber + 1;
+                try {
+                    const response: number = await genericPost("/api/episode/update", newPubEp);
+                    if (response) {
+                        // TODO: figure this out
+                    }
+                } catch (error) {
+                    // TODO: make this a dialog
+                    console.log("We ran into an error 🗿")
+                    return;
+                }
+            }
+
+            newPublishedEpisodes.push(newPubEp)
+        }
+
+        setPublishedEpisodes(newPublishedEpisodes);
+    };
+
+    const moveChapterDown = async (chapterNumber: number): void => {
+        console.log("MOVING DOWN")
+        const higherChapterNumberToSwap = chapterNumber + 1
+        let newPublishedEpisodes: JSX.Element[] = [];
+        for (let i = 0; i < publishedEpisodes.length; i++) {
+            var currPubEp = publishedEpisodes[i];
+            // TODO: copy the object
+            let newPubEp = currPubEp;
+            if (currPubEp.episodeNumber === chapterNumber) {
+                newPubEp.episodeNumber = currPubEp.episodeNumber + 1;
+                try {
+                    const response: number = await genericPost("/api/episode/update", newPubEp);
+                    if (response) {
+                        // TODO: figure this out
+                    }
+                } catch (error) {
+                    // TODO: make this a dialog
+                    console.log("We ran into an error 🗿")
+                    return;
+                }
+            } else if (currPubEp.episodeNumber === higherChapterNumberToSwap) {
+                newPubEp.episodeNumber = currPubEp.episodeNumber - 1;
+                try {
+                    const response: number = await genericPost("/api/episode/update", newPubEp);
+                    if (response) {
+                        // TODO: figure this out
+                    }
+                } catch (error) {
+                    // TODO: make this a dialog
+                    console.log("We ran into an error 🗿")
+                    return;
+                }
+            }
+
+            newPublishedEpisodes.push(newPubEp)
+        }
+
+        setPublishedEpisodes(newPublishedEpisodes);
+    };
+
+
+    const deleteDraftChapter = async (chapterId: number): void => {
+
+    };
 
     return (
         <div className='story'>
@@ -90,35 +202,50 @@ function Story() {
                                             <TwineButton sx={{width: "50%"}} icon="/icons/purple_settings.svg" color="blackpurple" name="Edit Story" action={() => {
                                                 window.location.href = '/edit/story/' + work['url'];
                                             }}/>
+                                            {/* FYI: publishedEpisodes.length is the new chapter's number */}
                                             <TwineButton sx={{width: "50%"}}  icon="/icons/purple_plus.svg" color="purple" name="New Chapter" action={() => {
-                                                window.location.href = '/create/chapter/' + work['url'];
+                                                window.location.href = '/create/chapter/' + work['url'] + '/' + publishedEpisodes.length;
                                             }}/>
                                         </div>
                                     }
 
-                                    <Typography level="h2" sx={{color: "#9E9FEB"}}>Published Chapters</Typography>
-                                    {episodes.map((episode) => {
-                                        if (episode['published']) {
-                                            return (
-                                                <EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode}/>
-                                            )
-                                        }
-                                    })}
-
-                                    {(user && user.walletAddress === work.creator.walletAddress) &&
+                                    {episodes &&
                                         <>
-                                            <Typography level="h2" sx={{color: "#9E9FEB"}}>Draft Chapters</Typography>
-                                            {episodes.map((episode) => {
-                                                if (!episode['published']) {
-                                                    return (
-                                                        <EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode}/>
-                                                    )
-                                                }
-                                            })}
+                                            <Typography level="h2" sx={{color: "#9E9FEB"}}>Published Chapters</Typography>
+
+                                            {
+                                                <EpisodeOrderContext.Provider value={{
+                                                    'moveUp': moveChapterUp,
+                                                    'moveDown': moveChapterDown,
+                                                    'deleteDraftChapter': deleteDraftChapter
+                                                }}>
+                                                    {
+                                                        publishedEpisodes.toSorted((e1, e2) => {
+                                                        return e1.episodeNumber - e2.episodeNumber}).map((episode) => {
+                                                        return (<EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode} totalEpisodes={publishedEpisodes.length}/>)
+                                                    })
+                                                    }
+                                                </EpisodeOrderContext.Provider>
+                                            }
+
+                                            {(user && user.walletAddress === work.creator.walletAddress) &&
+                                                <EpisodeOrderContext.Provider value={{
+                                                    'moveUp': moveChapterUp,
+                                                    'moveDown': moveChapterDown,
+                                                    'deleteDraftChapter': deleteDraftChapter
+                                                }}>
+                                                    <Typography level="h2" sx={{color: "#9E9FEB"}}>Draft Chapters</Typography>
+                                                    {episodes.map((episode) => {
+                                                        if (!episode['published']) {
+                                                            return (
+                                                                <EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode}/>
+                                                            )
+                                                        }
+                                                    })}
+                                                </EpisodeOrderContext.Provider>
+                                            }
                                         </>
                                     }
-
-
                                 </Box>
                             }
                         </div>
