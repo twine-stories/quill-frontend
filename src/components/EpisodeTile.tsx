@@ -1,17 +1,24 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Episode, NFTCollection, Work} from '../utils/types.ts';
-import {AspectRatio, Card, Stack, Typography} from "@mui/joy";
+import {AspectRatio, Card, IconButton, Stack, Typography} from "@mui/joy";
 import TwineButton from "./TwineButton.tsx";
 import {useNavigate} from "react-router-dom";
 import { CHAPTER_IMGS_BUCKET } from '../config.ts';
 import { COVER_PATH } from '../utils/aws.ts';
+import {EpisodeOrderContext} from "../pages/Story.tsx";
 
 interface EpisodeTileProps {
     episode: Episode;
     isCreator : boolean;
+    totalEpisodes?: number;
 }
 
 function EpisodeTile(props: EpisodeTileProps) {
+    const context: object = useContext(EpisodeOrderContext);
+    const moveUp: (id: number) => void = context['moveUp'];
+    const moveDown: (id: number) => void = context['moveDown'];
+    const deleteDraftChapter: (id: number) => void = context['deleteDraftChapter'];
+
     let navigate = useNavigate();
 
     const stringToDate = (dateString: string) => {
@@ -49,8 +56,27 @@ function EpisodeTile(props: EpisodeTileProps) {
                         {props.episode && props.episode['title']}
                     </Typography>
                 </div>
-                
             </Card>
+            <Stack direction="column" alignItems= "center">
+                {props.episode.episodeNumber !== -1 && props.episode.episodeNumber !== 0 &&
+                    <IconButton onClick={function () {
+                        moveUp(props.episode.episodeNumber)
+                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_up.svg"
+                                                                              width="30px" height="30px"/></IconButton>
+                }
+                {props.episode.episodeNumber !== -1 && props.episode.episodeNumber !== props.totalEpisodes - 1 &&
+                    <IconButton onClick={function () {
+                        moveDown(props.episode.episodeNumber)
+                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_down.svg"
+                                                                              width="30px" height="30px"/></IconButton>
+                }
+            </Stack>
+            {/*{props.episode.episodeNumber === -1 &&*/}
+            {/*    <IconButton onClick={function () {*/}
+            {/*        deleteDraftChapter(props.episode.id)*/}
+            {/*    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg"*/}
+            {/*                                                              width="30px" height="30px"/></IconButton>*/}
+            {/*}*/}
         </Stack>
     );
 }
