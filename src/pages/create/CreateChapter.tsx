@@ -130,12 +130,12 @@ function CreateChapter(props: CreateChapterProps) {
                 response.forEach((item: ProfitSplit) => {
                     if (item.creator.userName !== chapter.work.creator.userName) {
                         collabs.push(<Collaborator profitSplit={true} defaultCreator={item.creator.userName}
-                            defaultWallet={item.creator.walletAddress} defaultProfit={item.percentage} principle={false} id={uuidv4()}
-                            key={uuidv4()}/>);
+                                                   defaultWallet={item.creator.walletAddress} defaultProfit={item.percentage} principle={false} id={uuidv4()}
+                                                   key={uuidv4()}/>);
                     } else {
                         collabs[0] = <Collaborator profitSplit={true} defaultCreator={item.creator.userName}
-                            defaultWallet={item.creator.walletAddress} defaultProfit={item.percentage} principle={true} id={uuidv4()}
-                            key={uuidv4()}/>
+                                                   defaultWallet={item.creator.walletAddress} defaultProfit={item.percentage} principle={true} id={uuidv4()}
+                                                   key={uuidv4()}/>
                     }
                 })
                 setCollaborators(collabs);
@@ -408,9 +408,9 @@ function CreateChapter(props: CreateChapterProps) {
                                 'removeItem': removeItem
                             }}>
                                 <Stack id='create-chapter-stack'
-                                    alignItems="center"
-                                    spacing={3}
-                                    sx={{width: "100%"}}>
+                                       alignItems="center"
+                                       spacing={3}
+                                       sx={{width: "100%"}}>
                                     {inputList}
                                 </Stack>
                             </ChapterContext.Provider>
@@ -510,21 +510,21 @@ function CreateChapter(props: CreateChapterProps) {
 
                                      {/*TODO: FIX THIS LATER*/}
                                      {(!props.edit || chapter) && <Typography sx={{backgroundColor: "#14100E", borderRadius: "10px", p: "10px"}}
-                                                 level="h6" endDecorator={<Switch defaultChecked={props.edit ? chapter['mature'] : false} id="mature" sx={{ml: 1}}/>}>
+                                                                              level="h6" endDecorator={<Switch defaultChecked={props.edit ? chapter['mature'] : false} id="mature" sx={{ml: 1}}/>}>
                                          Mature
                                      </Typography>}
 
 
                                      {/*TODO: FIX THIS LATER TOO*/}
                                      <Grid container alignItems='center' justifyContent='space-around' flexWrap='nowrap'>
-                                        <Checkbox defaultChecked={props.edit} color='purple' sx={{marginRight: '20px', marginBottom: '2px'}} size='sm' label='' slotProps={{
-                                            input: {
-                                                id: 'guidelines',
-                                                'aria-label': 'primary checkbox'
-                                            }
-                                        }} />
-                                        <Typography fontSize={'14px'} level='h6' color='white'>I verify this work is mine and follows the <a id='comm-guidelines' href='https://twine-legal.s3.amazonaws.com/COMMUNITY_POLICY_AND_UPLOADING_GUIDELINES.pdf' target='_blank'>community guidelines</a>.</Typography>
-                                    </Grid>
+                                         <Checkbox defaultChecked={props.edit} color='purple' sx={{marginRight: '20px', marginBottom: '2px'}} size='sm' label='' slotProps={{
+                                             input: {
+                                                 id: 'guidelines',
+                                                 'aria-label': 'primary checkbox'
+                                             }
+                                         }} />
+                                         <Typography fontSize={'14px'} level='h6' color='white'>I verify this work is mine and follows the <a id='comm-guidelines' href='https://twine-legal.s3.amazonaws.com/COMMUNITY_POLICY_AND_UPLOADING_GUIDELINES.pdf' target='_blank'>community guidelines</a>.</Typography>
+                                     </Grid>
 
                                      {!view && <Button variant="outlined" color="neutral" onClick={() => {
                                          setView(true);
@@ -738,16 +738,7 @@ function CreateChapter(props: CreateChapterProps) {
                 var chapAtIndex = chapters[i];
                 if (chapAtIndex.episodeNumber > origChapNumber) {
                     chapAtIndex.episodeNumber = chapAtIndex.episodeNumber - 1;
-                    try {
-                        const response: number = await genericPost("/api/episode/update", chapAtIndex);
-                        if (response) {
-                            // TODO: figure this out
-                        }
-                    } catch (error) {
-                        // TODO: make this a dialog
-                        console.log("We ran into an error 🗿")
-                        return;
-                    }
+                    genericPost("/api/episode/update", chapAtIndex);
                 }
             }
         }
@@ -800,7 +791,7 @@ function CreateChapter(props: CreateChapterProps) {
                             creator: user,
                             percentage: value,
                         };
-    
+
                         let found: boolean = false;
                         for (i = 0; i < response.length; i++) {
                             if (response[i].creator.userName === user.userName) {
@@ -810,12 +801,12 @@ function CreateChapter(props: CreateChapterProps) {
                                 foundEntries.add(i);
                             }
                         }
-    
+
                         if (!found) {
                             genericPost("/api/profitSplit/add", newSplit);
                         }
                     });
-    
+
                     for (i = 0; i < response.length; i++) {
                         if (!foundEntries.has(i)) {
                             genericPost('/api/profitSplit/delete', response[i]);

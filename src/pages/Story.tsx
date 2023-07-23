@@ -50,7 +50,7 @@ function Story() {
                 for (let j = 0; j < response.length; j++) {
                     const currSplit = response[j];
                     const tuple = [currSplit['creator'], currSplit['percentage']];
-                    
+
                     setCreators((creators) => {
                         const newCreators = new Set(creators);
                         newCreators.add(JSON.stringify(tuple));
@@ -61,7 +61,7 @@ function Story() {
         }
         setPublishedEpisodes(tempPublishedEpisodes)
     }, [episodes]);
-            
+
 
 
     const goTo = async (link: string): Promise<void> => {
@@ -74,56 +74,20 @@ function Story() {
         navigate(link);
     }
 
-    function getPublishedEpisodeTiles() {
-        console.log(publishedEpisodes)
-        if (publishedEpisodes.length > 0) {
-            const temp = publishedEpisodes.toSorted((e1, e2) => {
-                return e2.episodeNumber - e1.episodeNumber
-            });
-
-            return temp.map((episode) => {
-                if (!episode['published']) {
-                    return (
-                        <EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode} totalEpisodes={publishedEpisodes.length}/>)
-                }
-            });
-
-        }
-    }
-
     const moveChapterUp = async (chapterNumber: number): void => {
-        console.log("MOVING UP")
         const lowerChapterNumberToSwap = chapterNumber - 1
         let newPublishedEpisodes: JSX.Element[] = [];
         for (let i = 0; i < publishedEpisodes.length; i++) {
             var currPubEp = publishedEpisodes[i];
-            // TODO: copy the object
+
             let newPubEp = currPubEp;
             if (currPubEp.episodeNumber === chapterNumber) {
                 newPubEp.episodeNumber = currPubEp.episodeNumber - 1;
-                try {
-                    const response: number = await genericPost("/api/episode/update", newPubEp);
-                    if (response) {
-                        // TODO: figure this out
-                    }
-                } catch (error) {
-                    // TODO: make this a dialog
-                    console.log("We ran into an error 🗿")
-                    return;
-                }
             } else if (currPubEp.episodeNumber === lowerChapterNumberToSwap) {
                 newPubEp.episodeNumber = currPubEp.episodeNumber + 1;
-                try {
-                    const response: number = await genericPost("/api/episode/update", newPubEp);
-                    if (response) {
-                        // TODO: figure this out
-                    }
-                } catch (error) {
-                    // TODO: make this a dialog
-                    console.log("We ran into an error 🗿")
-                    return;
-                }
             }
+
+            genericPost("/api/episode/update", newPubEp);
 
             newPublishedEpisodes.push(newPubEp)
         }
@@ -132,38 +96,19 @@ function Story() {
     };
 
     const moveChapterDown = async (chapterNumber: number): void => {
-        console.log("MOVING DOWN")
         const higherChapterNumberToSwap = chapterNumber + 1
         let newPublishedEpisodes: JSX.Element[] = [];
         for (let i = 0; i < publishedEpisodes.length; i++) {
             var currPubEp = publishedEpisodes[i];
-            // TODO: copy the object
+
             let newPubEp = currPubEp;
             if (currPubEp.episodeNumber === chapterNumber) {
                 newPubEp.episodeNumber = currPubEp.episodeNumber + 1;
-                try {
-                    const response: number = await genericPost("/api/episode/update", newPubEp);
-                    if (response) {
-                        // TODO: figure this out
-                    }
-                } catch (error) {
-                    // TODO: make this a dialog
-                    console.log("We ran into an error 🗿")
-                    return;
-                }
             } else if (currPubEp.episodeNumber === higherChapterNumberToSwap) {
                 newPubEp.episodeNumber = currPubEp.episodeNumber - 1;
-                try {
-                    const response: number = await genericPost("/api/episode/update", newPubEp);
-                    if (response) {
-                        // TODO: figure this out
-                    }
-                } catch (error) {
-                    // TODO: make this a dialog
-                    console.log("We ran into an error 🗿")
-                    return;
-                }
             }
+
+            genericPost("/api/episode/update", newPubEp);
 
             newPublishedEpisodes.push(newPubEp)
         }
@@ -177,7 +122,7 @@ function Story() {
     };
 
     return (
-        <div className='story'>
+        <div>
             <Navbar/>
             <Grid container direction='column' alignItems='center'>
                 <Grid sx={{width: '65vw'}}>
@@ -221,9 +166,10 @@ function Story() {
                                                 }}>
                                                     {
                                                         publishedEpisodes.toSorted((e1, e2) => {
-                                                        return e1.episodeNumber - e2.episodeNumber}).map((episode) => {
-                                                        return (<EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode} totalEpisodes={publishedEpisodes.length}/>)
-                                                    })
+                                                            return e1.episodeNumber - e2.episodeNumber}).map((episode) => {
+                                                            return (<EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode} totalEpisodes={publishedEpisodes.length}/>)
+                                                        })
+
                                                     }
                                                 </EpisodeOrderContext.Provider>
                                             }
@@ -250,119 +196,119 @@ function Story() {
                             }
                         </div>
                     }
-                        rightComponent={
-                            <div style={{backgroundColor: "#150f0e", borderRadius: "32px"}}>
-                                <Typography level="h5" sx={{color: "#9E9FEB", paddingTop: "15px", paddingLeft: "15px", fontFamily: 'Twine', fontStyle: 'normal', fontWeight: '400' }}>Creators</Typography>
-                                <div className="creator-list">
-                                    {creators && creators.size > 0 &&
-                                    <div>
-                                        {Array.from(creators).map((str_json) => {
-                                        const [creator, percentage] = JSON.parse(str_json);
-                                        return [creator, percentage];
-                                        
-                                    })
-                                    .sort((a, b) => {
-                                        return b[1] - a[1];
-                                    
-                                    }).map(([creator, percentage]) => {
-                                        return (
-                                            <div className="creator">
-                                                { creator &&
-                                                    <Box
-                                                        sx={{
-                                                            py: 2,
-                                                            display: 'flex',
-                                                            flexDirection: 'column',
-                                                            gap: 1,
-                                                            alignItems: 'center',
-                                                            flexWrap: 'wrap',
-                                                            marginTop: '-35px',
-                                                            minWidth: '256px'
-                                                        }}
-                                                    >
-                                                        <img
-                                                            src = {creator && 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/'+creator.profileImg}
-                                                            alt = ""
-                                                            width = "128"
-                                                            height = "128"
-                                                            onError={e => {
-                                                                e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg'
-                                                            }}
-                                                            className='profile-pic'
-                                                            onClick={() => goToSameTab('/profile/' + creator['userName'])}
-                                                            style={{cursor: 'pointer'}}
-                                                        />
-                                                        <Typography level="h4"
-                                                            sx={{color: "#E4E5FF", margin: "0px", fontFamily: 'Twine', fontStyle: 'normal', fontWeight:'400'}}>{creator['userName']}</Typography>
-                                                    
-                                                        <Stack direction="row" spacing = {1} alignItems= "center"  >
-                                                            {creator.website && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/website.svg' action={() => goTo(creator.website as string)} />}
-                                                            {creator.twitter && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/twitter.svg' action={() => goTo(creator.twitter as string)} />}
-                                                            {creator.instagram && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/instagram.svg' action={() => goTo(creator.instagram as string)} />}
-                                                            {creator.reddit && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/reddit.svg' action={() => goTo(creator.reddit as string)} />}
-                                                            {creator.discord && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/discord.svg' action={() => goTo(creator.discord as string)} />}
-                                                        </Stack>
-                                                    </Box>
-                                                
-                                                }
+                                     rightComponent={
+                                         <div style={{backgroundColor: "#150f0e", borderRadius: "32px"}}>
+                                             <Typography level="h5" sx={{color: "#9E9FEB", paddingTop: "15px", paddingLeft: "15px", fontFamily: 'Twine', fontStyle: 'normal', fontWeight: '400' }}>Creators</Typography>
+                                             <div className="creator-list">
+                                                 {creators && creators.size > 0 &&
+                                                     <div>
+                                                         {Array.from(creators).map((str_json) => {
+                                                             const [creator, percentage] = JSON.parse(str_json);
+                                                             return [creator, percentage];
 
-                                            </div>
-                                        )})}
-                                        </div>
-                                    }
-                                    {creators && creators.size === 0 &&
-                                        <div>
-                                            
-                                            <div className="creator">
-                                                { work && work['creator'] &&
-                                                    <Box
-                                                    sx={{
-                                                        py: 2,
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        gap: 1,
-                                                        alignItems: 'center',
-                                                        flexWrap: 'wrap',
-                                                        marginTop: '-35px',
-                                                        minWidth: '256px'
-                                                    }}
-                                                >
-                                                    <img
-                                                            src = {work['creator'] && 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/'+work['creator'].profileImg}
-                                                            alt = ""
-                                                            width = "128"
-                                                            height = "128"
-                                                            onError={e => {
-                                                                e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg'
-                                                            }}
-                                                            className='profile-pic'
-                                                            onClick={() => goToSameTab('/profile/' + work['creator']['userName'])}
-                                                            style={{cursor: 'pointer'}}
-                                                        />
-                                                        <Typography level="h4"
-                                                                    sx={{color: "#E4E5FF", margin: "0px", fontFamily: 'Twine', fontStyle: 'normal', fontWeight:'400'}}>{work['creator']['userName']} </Typography>
+                                                         })
+                                                             .sort((a, b) => {
+                                                                 return b[1] - a[1];
 
-                                                
-                                                <Stack direction="row" spacing = {1} alignItems= "center"  >
-                                                    {work['creator'].website && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/website.svg' action={() => goTo(work['creator'].website as string)} />}
-                                                    {work['creator'].twitter && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/twitter.svg' action={() => goTo(work['creator'].twitter as string)} />}
-                                                    {work['creator'].instagram && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/instagram.svg' action={() => goTo(work['creator'].instagram as string)} />}
-                                                    {work['creator'].reddit && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/reddit.svg' action={() => goTo(work['creator'].reddit as string)} />}
-                                                    {work['creator'].discord && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/discord.svg' action={() => goTo(work['creator'].discord as string)} />}
-                                                </Stack>
-                                                </Box>
-                                                
-                                                }
+                                                             }).map(([creator, percentage]) => {
+                                                                 return (
+                                                                     <div className="creator">
+                                                                         { creator &&
+                                                                             <Box
+                                                                                 sx={{
+                                                                                     py: 2,
+                                                                                     display: 'flex',
+                                                                                     flexDirection: 'column',
+                                                                                     gap: 1,
+                                                                                     alignItems: 'center',
+                                                                                     flexWrap: 'wrap',
+                                                                                     marginTop: '-35px',
+                                                                                     minWidth: '256px'
+                                                                                 }}
+                                                                             >
+                                                                                 <img
+                                                                                     src = {creator && 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/'+creator.profileImg}
+                                                                                     alt = ""
+                                                                                     width = "128"
+                                                                                     height = "128"
+                                                                                     onError={e => {
+                                                                                         e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg'
+                                                                                     }}
+                                                                                     className='profile-pic'
+                                                                                     onClick={() => goToSameTab('/profile/' + creator['userName'])}
+                                                                                     style={{cursor: 'pointer'}}
+                                                                                 />
+                                                                                 <Typography level="h4"
+                                                                                             sx={{color: "#E4E5FF", margin: "0px", fontFamily: 'Twine', fontStyle: 'normal', fontWeight:'400'}}>{creator['userName']}</Typography>
 
-                                            </div>
-                                        </div>
+                                                                                 <Stack direction="row" spacing = {1} alignItems= "center"  >
+                                                                                     {creator.website && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/website.svg' action={() => goTo(creator.website as string)} />}
+                                                                                     {creator.twitter && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/twitter.svg' action={() => goTo(creator.twitter as string)} />}
+                                                                                     {creator.instagram && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/instagram.svg' action={() => goTo(creator.instagram as string)} />}
+                                                                                     {creator.reddit && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/reddit.svg' action={() => goTo(creator.reddit as string)} />}
+                                                                                     {creator.discord && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/discord.svg' action={() => goTo(creator.discord as string)} />}
+                                                                                 </Stack>
+                                                                             </Box>
 
-                                    }
-                                </div>
-                            </div>
-                        }
+                                                                         }
+
+                                                                     </div>
+                                                                 )})}
+                                                     </div>
+                                                 }
+                                                 {creators && creators.size === 0 &&
+                                                     <div>
+
+                                                         <div className="creator">
+                                                             { work && work['creator'] &&
+                                                                 <Box
+                                                                     sx={{
+                                                                         py: 2,
+                                                                         display: 'flex',
+                                                                         flexDirection: 'column',
+                                                                         gap: 1,
+                                                                         alignItems: 'center',
+                                                                         flexWrap: 'wrap',
+                                                                         marginTop: '-35px',
+                                                                         minWidth: '256px'
+                                                                     }}
+                                                                 >
+                                                                     <img
+                                                                         src = {work['creator'] && 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/'+work['creator'].profileImg}
+                                                                         alt = ""
+                                                                         width = "128"
+                                                                         height = "128"
+                                                                         onError={e => {
+                                                                             e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg'
+                                                                         }}
+                                                                         className='profile-pic'
+                                                                         onClick={() => goToSameTab('/profile/' + work['creator']['userName'])}
+                                                                         style={{cursor: 'pointer'}}
+                                                                     />
+                                                                     <Typography level="h4"
+                                                                                 sx={{color: "#E4E5FF", margin: "0px", fontFamily: 'Twine', fontStyle: 'normal', fontWeight:'400'}}>{work['creator']['userName']} </Typography>
+
+
+                                                                     <Stack direction="row" spacing = {1} alignItems= "center"  >
+                                                                         {work['creator'].website && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/website.svg' action={() => goTo(work['creator'].website as string)} />}
+                                                                         {work['creator'].twitter && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/twitter.svg' action={() => goTo(work['creator'].twitter as string)} />}
+                                                                         {work['creator'].instagram && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/instagram.svg' action={() => goTo(work['creator'].instagram as string)} />}
+                                                                         {work['creator'].reddit && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/reddit.svg' action={() => goTo(work['creator'].reddit as string)} />}
+                                                                         {work['creator'].discord && <IconButton sx = {{margin: "0px"}} color='darkpurple' icon='/icons/socials/discord.svg' action={() => goTo(work['creator'].discord as string)} />}
+                                                                     </Stack>
+                                                                 </Box>
+
+                                                             }
+
+                                                         </div>
+                                                     </div>
+
+                                                 }
+                                             </div>
+                                         </div>
+                                     }
                     />
-                </Grid> 
+                </Grid>
             </Grid>
         </div>
     );
