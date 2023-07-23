@@ -66,3 +66,34 @@ object-fit: cover;
     flex-wrap: wrap;
     gap: 10px;
 }
+@media screen and (min-width : 2560px) {
+    .edit-notif{
+     width: 70%;
+    }
+  }
+
+@media only screen and (max-width: 575px) {
+    .bell-class {
+        width: initial !important;
+    }
+    .profile-info .profile-pic {
+    width: 50px !important;
+    height: 50px !important;
+    margin: 0 !important;
+    }
+    .edit-profile-class {
+        font-size: 10px !important;
+    }
+
+    .edit-profile-class img{
+        width: 14px !important;
+    }
+
+    .bell-class img {
+        width: 14px !important;
+    }
+    .bell-class img {
+        width: 10px !important;
+    }
+
+}

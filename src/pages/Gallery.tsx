@@ -14,6 +14,8 @@ import GalleryTile from "../components/GalleryTile.tsx";
 import {genericGet} from '../utils/api.ts';
 import {NFTCollection, Work} from '../utils/types.ts';
 import TwoColumnLayout from "../components/TwoColumnLayout.tsx";
+import "./Gallery.css";
+
 
 interface WorkGalleryProps {
     art: boolean;
@@ -57,30 +59,30 @@ function Gallery(props: WorkGalleryProps) {
     }, [context['user']]);
 
     return (
-        <div>
+        <div className='gallery' style={{margin:"0px 3px"}}>
             <Navbar/>
-            <TwoColumnLayout
+            <TwoColumnLayout className="gallery-columns"
                 leftWidth="80%"
                 rightWidth="20%"
                 leftComponent={
                 <>
-                    <Typography level="h2" sx={{color: "#9E9FEB"}}>
+                    <Typography level="h2" sx={{color: "#9E9FEB",fontSize: "50px"}}>
                         {props.episodeName ? props.episodeName : (props.draft ? "Draft" : "Published").concat(props.art ? " Collections" : " Stories")}
                     </Typography>
                     <Box
                         sx={{backgroundColor: "#14100E", padding: '10px', marginBottom: '30px', borderRadius: "20px"}}>
-                        <Typography level="h5" sx={{marginTop: '5px', marginBottom: '0px', color: "#9E9FEB"}}>
+                        <Typography level="h5" sx={{marginBottom: '0px', color: "#9E9FEB",fontSize:"24px",fontFamily: "Twine",lineHeight: "100%",letterSpacing: "-0.48px",marginLeft: "23px", marginTop: "27px"}}>
                             {galleryItems.length} {galleryItems.length === 1 ? (props.art ? "Collection" : "Story") : (props.art ? "Collections" : "Stories")}
                         </Typography>
 
                         <Grid
                             container
-                            spacing={{xs: 3}}
-                            columns={{xs: 12}}
-                            sx={{flexGrow: 1, padding: '20px'}}
+                            spacing={{xs: 2}}
+                            columns={{ xs: 1, sm: 2, md: 2, lg:3 }}
+                             sx={{ padding: '12px'}}
                         >
                             {galleryItems.map((galleryTile, index) => (
-                                <Grid xs={4} key={index}>
+                                <Grid sx={{width:"225px !important"}} md={1} xl={1}  lg={1}  sm={2} xs={1} key={index}>
                                     {galleryTile}
                                 </Grid>
                             ))}
@@ -99,12 +101,12 @@ function Gallery(props: WorkGalleryProps) {
                                                       name={"Open " + props.draft ? "Published" : "Draft"}/>
                                  </div>
                                  :
-                                 <div>
-                                         <TwineButton sx={{width: "100%"}} color='green' icon='/icons/green_plus.svg'
+                                 <div className='create-published-button'>
+                                         <TwineButton sx={{width: "80%"}} color='green' icon='/icons/green_plus.svg'
                                                       name='Create New Stories' action={() => {
                                              window.location.href = '/create/story'
                                          }}/>
-                                         <TwineButton sx={{width: "100%"}} icon='/icons/purple_paper.svg'
+                                         <TwineButton sx={{width: "80%"}} icon='/icons/purple_paper.svg'
                                                       name={"Open " + (props.draft ? "Published" : "Drafts")}
                                                       action={() => {
                                                           window.location.href = (props.draft ? '/gallery/story/published' : '/gallery/story/draft')

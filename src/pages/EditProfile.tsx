@@ -110,7 +110,7 @@ function EditProfile() {
             <Navbar />
             <Typography color='purple' level='h2'>Edit Profile</Typography>
             <Grid container alignItems='flex-start' justifyContent='space-between' className="edit-profile">
-                <Grid xs={8}>
+                <Grid xs={8} className="container-grid">
                     <Typography color='purple' level='h3'>About Profile</Typography>
                     <Grid container direction='column' rowSpacing={3} className="edit-inner">
                         <Grid container columnSpacing={1} alignItems='center' justifyContent='space-between'>

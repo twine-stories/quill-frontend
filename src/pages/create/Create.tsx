@@ -33,6 +33,7 @@ import {saleTypeMap, MAX_COLLABORATORS_SMART_CONTRACTS} from '../../utils/consta
 import {Typography, Sheet, Stack, Grid} from "@mui/joy";
 import {CollectionType} from '../../utils/enums.ts';
 import { env } from '../../config.ts';
+import "./Create.css";
 
 const axios = require('axios').default;
 export const CollaboratorContext = createContext(null as any);
@@ -67,6 +68,7 @@ function Create() {
     const user: User = context['user'];
     const cname: string = 'nftCheckboxes';
 
+    const [hover, setOnHover] = useState<boolean>(false);
     const removeCollaborator = (id: number): void => {
         let newCollaborators: JSX.Element[] = [];
         console.log(collaborators);
@@ -325,36 +327,81 @@ function Create() {
     }
 
     return (
-        <div>
+        <div className='create'>
             <Navbar/>
-            <Typography level="h2" color='green'>Create Story</Typography>
+            <Typography level="h2" color='green' sx={{paddingLeft: "16px",marginTop:"74px"}}>Create Stories</Typography>
             <Grid container direction='column' alignItems='flex-start' justifyContent='space-around'>
                 <Stack
                     direction="row"
                     justifyContent="flex-start"
                     alignItems="center"
                     flexWrap='wrap'
+                    width="100%"
                 >
-                    <Sheet sx={{height: "250px", width: '150px', margin: '10px'}} color="green_dashed" variant="rounded">
-                        <TwineButton sx={{paddingBlock:"2rem", paddingInline:"2.5rem"}} icon="/icons/green_plus.svg" color="green" name="Create Story" action={() => {
-                            window.location.href = '/create/story/'
-                        }}/>
+                    <Sheet color="green_dashed" variant="rounded">
+                              <span
+                            onMouseEnter={()=>setOnHover(true)}
+                            onMouseLeave={()=>setOnHover(false)}
+                        >
+                        <TwineButton
+                                sx={{
+                                    display: 'flex', 
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    paddingBlock: '2rem',
+                                    paddingInline: '2.4rem', 
+                                    borderRadius: '15px',
+                                    transition: 'background-color 0.3s ease',
+                                    ':hover': { 
+                                        backgroundColor: "#5C720D", 
+                                        color: '#A3B832',
+                                    },}}
+                                icon={hover ? "/icons/green_plus_hover.svg" : "/icons/green_plus.svg"}
+                                color="green"
+                                name="Create Story" action={() => {
+                                    window.location.href = '/create/story/'
+                        }}
+                        paddingTop="10px"
+                        className="custom-start-decorator"
+                        />
+                    </span>
                     </Sheet>
-                    <Sheet sx={{height: "250px", width: '150px', margin: '10px'}} color="green_dashed" variant="rounded">
-                        <TwineButton sx={{paddingBlock:"2rem", paddingInline:"2.5rem"}} icon="/icons/green_paper.svg" color="blackgreen" name="Published Stories"
-                                    action={() => {
+                    <Sheet color="green_dashed" variant="rounded">
+                        <TwineButton sx={{margin:"0px", 
+                                        display: 'flex', 
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        paddingBlock: '2rem',
+                                        paddingInline: '2.4rem', 
+                                        borderRadius: '15px',
+                                        transition: 'background-color 0.3s ease',':hover': { backgroundColor: "#5C720D", color: '#A3B832'},}} 
+                                     icon="/icons/green_paper.svg" color="blackgreen" name="Published Stories"
+                                     action={() => {
                                         window.location.href = '/gallery/story/published'
-                                    }}/>
+                                    }}
+                                    paddingTop="10px"
+                                    className="custom-start-decorator"
+                                    />
                     </Sheet>
-                    <Sheet sx={{height: "250px", width: '150px', margin: '10px'}} color="green_dashed" variant="rounded">
-                        <TwineButton sx={{paddingBlock:"2rem", paddingInline:"2.5rem"}} icon="/icons/green_paper.svg" color="blackgreen" name="Story Drafts" action={() => {
+                    <Sheet color="green_dashed"  variant="rounded">
+                        <TwineButton sx={{display: 'flex',
+                         flexDirection: 'column',
+                         alignItems: 'center',
+                         paddingBlock: '2rem',
+                         paddingInline: '2.4rem', 
+                         borderRadius: '15px',
+                         transition: 'background-color 0.3s ease',':hover': { backgroundColor: "#5C720D", color: '#A3B832'},}} 
+                         icon="/icons/green_paper.svg" 
+                         color="blackgreen" 
+                         name="Story Drafts" action={() => {
                             window.location.href = '/gallery/story/draft'
-                        }}/>
+                        }}
+                        paddingTop="10px"
+                        className="custom-start-decorator"/>
                     </Sheet>
                 </Stack>
 
-
-                <Typography level="h2" color='purple' marginTop='30px'>
+ <Typography level="h2" color='purple' marginTop='30px'>
                     Create Art Coming Soon!
                 </Typography>
                 {env === 'dev' &&

@@ -48,6 +48,7 @@ export type Episode = {
     cover?: string;
     endOfChapterMessage?: string;
     publishStamp?: Date;
+    episodeNumber: number;
     flags: number;
     url: string;
     mature: boolean;
@@ -114,6 +115,7 @@ export type Comment = {
     commenter: User;
     episode: Episode;
     content: string;
+    publishStamp?: String;
 }
 
 export type Tip = {
