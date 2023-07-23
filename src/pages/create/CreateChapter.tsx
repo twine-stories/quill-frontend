@@ -738,16 +738,7 @@ function CreateChapter(props: CreateChapterProps) {
                 var chapAtIndex = chapters[i];
                 if (chapAtIndex.episodeNumber > origChapNumber) {
                     chapAtIndex.episodeNumber = chapAtIndex.episodeNumber - 1;
-                    try {
-                        const response: number = await genericPost("/api/episode/update", chapAtIndex);
-                        if (response) {
-                            // TODO: figure this out
-                        }
-                    } catch (error) {
-                        // TODO: make this a dialog
-                        console.log("We ran into an error 🗿")
-                        return;
-                    }
+                    genericPost("/api/episode/update", chapAtIndex);
                 }
             }
         }

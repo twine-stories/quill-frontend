@@ -74,57 +74,20 @@ function Story() {
         navigate(link);
     }
 
-    function getPublishedEpisodeTiles() {
-        console.log(publishedEpisodes)
-        if (publishedEpisodes.length > 0) {
-            const temp = publishedEpisodes.toSorted((e1, e2) => {
-                return e2.episodeNumber - e1.episodeNumber
-            });
-
-            return temp.map((episode) => {
-                if (!episode['published']) {
-                    return (
-                        <EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode} totalEpisodes={publishedEpisodes.length}/>)
-                }
-            });
-
-        }
-    }
-
     const moveChapterUp = async (chapterNumber: number): void => {
-        console.log("MOVING UP")
         const lowerChapterNumberToSwap = chapterNumber - 1
         let newPublishedEpisodes: JSX.Element[] = [];
         for (let i = 0; i < publishedEpisodes.length; i++) {
             var currPubEp = publishedEpisodes[i];
-            // TODO: copy the object
+
             let newPubEp = currPubEp;
             if (currPubEp.episodeNumber === chapterNumber) {
                 newPubEp.episodeNumber = currPubEp.episodeNumber - 1;
-                try {
-                    const response: number = await genericPost("/api/episode/update", newPubEp);
-                    if (response) {
-                        // TODO: figure this out
-                    }
-                } catch (error) {
-                    // TODO: make this a dialog
-                    console.log("We ran into an error 🗿")
-                    return;
-                }
             } else if (currPubEp.episodeNumber === lowerChapterNumberToSwap) {
                 newPubEp.episodeNumber = currPubEp.episodeNumber + 1;
-                try {
-                    const response: number = await genericPost("/api/episode/update", newPubEp);
-                    if (response) {
-                        // TODO: figure this out
-                    }
-                } catch (error) {
-                    // TODO: make this a dialog
-                    console.log("We ran into an error 🗿")
-                    return;
-                }
             }
 
+            genericPost("/api/episode/update", newPubEp);
             newPublishedEpisodes.push(newPubEp)
         }
 
@@ -132,39 +95,19 @@ function Story() {
     };
 
     const moveChapterDown = async (chapterNumber: number): void => {
-        console.log("MOVING DOWN")
         const higherChapterNumberToSwap = chapterNumber + 1
         let newPublishedEpisodes: JSX.Element[] = [];
         for (let i = 0; i < publishedEpisodes.length; i++) {
             var currPubEp = publishedEpisodes[i];
-            // TODO: copy the object
+
             let newPubEp = currPubEp;
             if (currPubEp.episodeNumber === chapterNumber) {
                 newPubEp.episodeNumber = currPubEp.episodeNumber + 1;
-                try {
-                    const response: number = await genericPost("/api/episode/update", newPubEp);
-                    if (response) {
-                        // TODO: figure this out
-                    }
-                } catch (error) {
-                    // TODO: make this a dialog
-                    console.log("We ran into an error 🗿")
-                    return;
-                }
             } else if (currPubEp.episodeNumber === higherChapterNumberToSwap) {
                 newPubEp.episodeNumber = currPubEp.episodeNumber - 1;
-                try {
-                    const response: number = await genericPost("/api/episode/update", newPubEp);
-                    if (response) {
-                        // TODO: figure this out
-                    }
-                } catch (error) {
-                    // TODO: make this a dialog
-                    console.log("We ran into an error 🗿")
-                    return;
-                }
             }
 
+            genericPost("/api/episode/update", newPubEp);
             newPublishedEpisodes.push(newPubEp)
         }
 
