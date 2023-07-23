@@ -88,6 +88,7 @@ function Story() {
             }
 
             genericPost("/api/episode/update", newPubEp);
+
             newPublishedEpisodes.push(newPubEp)
         }
 
@@ -108,6 +109,7 @@ function Story() {
             }
 
             genericPost("/api/episode/update", newPubEp);
+
             newPublishedEpisodes.push(newPubEp)
         }
 
@@ -167,6 +169,7 @@ function Story() {
                                                             return e1.episodeNumber - e2.episodeNumber}).map((episode) => {
                                                             return (<EpisodeTile isCreator={user && user.walletAddress === work.creator.walletAddress} episode={episode} totalEpisodes={publishedEpisodes.length}/>)
                                                         })
+
                                                     }
                                                 </EpisodeOrderContext.Provider>
                                             }
