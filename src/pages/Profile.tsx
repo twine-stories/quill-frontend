@@ -75,7 +75,7 @@ function Profile() {
     }
 
     return (
-        <div>
+        <div className='profile'>
             <Navbar />
             <div className="profile-page">
                 <div className="profile-info">
@@ -93,8 +93,8 @@ function Profile() {
                         <Typography color='white' level='h4'>@{user && user.userName}</Typography>
                         <Typography color='purple' level='h1'>{user && user.firstName} {user && user.lastName}</Typography>
                         <div className="edit-notif">
-                            <TwineButton icon='/icons/Setting.svg' action={editProfile} color="purple" name="Edit Profile" sx={{width:'85%', marginLeft:'0px'}} />
-                            <TwineButton icon='/icons/bell.svg' color="darkpurple" name="" sx={{width:'15%'}} name="0" />
+                            <TwineButton  className="edit-profile-class" icon='/icons/Setting.svg' action={editProfile} color="purple" name="Edit Profile" sx={{width:'85%', marginLeft:'0px'}} />
+                            <TwineButton  className="bell-class"  icon='/icons/bell.svg' color="darkpurple" name="" sx={{width:'15%'}} name="0" />
                         </div>
                         <Typography color='white' level='h6'>{user && user.description}</Typography>
                         <div className="socials">
@@ -119,11 +119,11 @@ function Profile() {
                                 <Typography color='purple' level='h2'>{works.length + ' ' + (works.length === 1 ? 'Story' : 'Stories')}</Typography>
                             </div>
                             <Grid container
-                                spacing={{xs: 3}}
-                                columns={{xs: 12}}
-                                sx={{flexGrow: 1, padding: '20px'}} className="works-list">
+                                spacing={{xs: 2}}
+                                columns={{ xs: 1,sm: 6,md: 3,lg:4,xl:8}}
+                                 className="works-list">
                                 {works && works.map((work, index) => {
-                                    return <Grid xs={4} key={index}><GalleryTile work={work.props.work} story={true} /></Grid>
+                                    return <Grid md={1} xl={1}  lg={1}  sm={2} key={index}><GalleryTile work={work.props.work} story={true} /></Grid>
                                 })}
                             </Grid>
                             </div>

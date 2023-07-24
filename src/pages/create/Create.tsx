@@ -33,6 +33,7 @@ import {saleTypeMap, MAX_COLLABORATORS_SMART_CONTRACTS} from '../../utils/consta
 import {Typography, Sheet, Stack, Grid} from "@mui/joy";
 import {CollectionType} from '../../utils/enums.ts';
 import { env } from '../../config.ts';
+import "./Create.css";
 
 const axios = require('axios').default;
 export const CollaboratorContext = createContext(null as any);
@@ -300,9 +301,9 @@ function Create() {
     }
 
     return (
-        <div>
+        <div className='create'>
             <Navbar/>
-            <Typography level="h2" color='green' sx={{paddingLeft: "16px"}}>Create Stories</Typography>
+            <Typography level="h2" color='green' sx={{paddingLeft: "16px",marginTop:"74px"}}>Create Stories</Typography>
             <Grid container direction='column' alignItems='flex-start' justifyContent='space-around'>
                 <Stack
                     direction="row"
@@ -335,6 +336,7 @@ function Create() {
                                     window.location.href = '/create/story/'
                         }}
                         paddingTop="10px"
+                        className="custom-start-decorator"
                         />
                     </span>
                     </Sheet>
@@ -352,6 +354,7 @@ function Create() {
                                         window.location.href = '/gallery/story/published'
                                     }}
                                     paddingTop="10px"
+                                    className="custom-start-decorator"
                                     />
                     </Sheet>
                     <Sheet color="green_dashed"  variant="rounded">
@@ -367,7 +370,8 @@ function Create() {
                          name="Story Drafts" action={() => {
                             window.location.href = '/gallery/story/draft'
                         }}
-                        paddingTop="10px"/>
+                        paddingTop="10px"
+                        className="custom-start-decorator"/>
                     </Sheet>
                 </Stack>
 

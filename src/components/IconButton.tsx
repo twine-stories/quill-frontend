@@ -8,6 +8,7 @@ interface ButtonProps {
     color?: string;
     size?: string;
     sx?: object;
+    
 }
 
 function IconButton(props: ButtonProps) {

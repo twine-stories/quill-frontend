@@ -14,6 +14,8 @@ import GalleryTile from "../components/GalleryTile.tsx";
 import {genericGet} from '../utils/api.ts';
 import {NFTCollection, Work} from '../utils/types.ts';
 import TwoColumnLayout from "../components/TwoColumnLayout.tsx";
+import "./Gallery.css";
+
 
 interface WorkGalleryProps {
     art: boolean;
@@ -57,9 +59,9 @@ function Gallery(props: WorkGalleryProps) {
     }, [context['user']]);
 
     return (
-        <div>
+        <div className='gallery' style={{margin:"0px 3px"}}>
             <Navbar/>
-            <TwoColumnLayout
+            <TwoColumnLayout className="gallery-columns"
                 leftWidth="80%"
                 rightWidth="20%"
                 leftComponent={
@@ -99,12 +101,12 @@ function Gallery(props: WorkGalleryProps) {
                                                       name={"Open " + props.draft ? "Published" : "Draft"}/>
                                  </div>
                                  :
-                                 <div>
-                                         <TwineButton sx={{width: "100%"}} color='green' icon='/icons/green_plus.svg'
+                                 <div className='create-published-button'>
+                                         <TwineButton sx={{width: "80%"}} color='green' icon='/icons/green_plus.svg'
                                                       name='Create New Stories' action={() => {
                                              window.location.href = '/create/story'
                                          }}/>
-                                         <TwineButton sx={{width: "100%"}} icon='/icons/purple_paper.svg'
+                                         <TwineButton sx={{width: "80%"}} icon='/icons/purple_paper.svg'
                                                       name={"Open " + (props.draft ? "Published" : "Drafts")}
                                                       action={() => {
                                                           window.location.href = (props.draft ? '/gallery/story/published' : '/gallery/story/draft')
