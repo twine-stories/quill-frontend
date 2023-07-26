@@ -10,7 +10,24 @@
 .create-image-upload h3 {
     font-size: 22px;
 }
+.create-story ul{
+    background-color: #14100E !important;
+    padding: 4px 16px;
+}
+.dropdown-option{
+    background-color:#14100E !important;
+    margin: 0 !important;
+}
+.dropdown-option {
+    color:#9E9FEB !important;
+    font-weight: 600;
 
+}
+.dropdown-option:hover{
+    background-color: #241D19 !important;
+    border-radius: 10px !important;
+
+}
 #create-cover-wrapper, #create-banner-wrapper {
     border-radius: 15px;
     border: 1px #241D19 dashed;
@@ -68,6 +85,7 @@
 #create-story-right-buttons button {
     width: 230px;
 }
+
 @media (min-width: 320px) and (max-width: 768px) {
     .create-image-upload {
       width:85%;
