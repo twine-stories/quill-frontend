@@ -128,7 +128,7 @@ function Navbar() {
     }, []);
 
     const searchIcon: JSX.Element = isSearching ?
-        <Autocomplete autoHighlight sx= {{width: "225px"}} options = {dyads} freeSolo={true} onClose={closeSearch} onChange={onChange} 
+        <Autocomplete autoHighlight sx= {{width: "190px", marginRight:'20px'}} options = {dyads} freeSolo={true} onClose={closeSearch} onChange={onChange} 
         getOptionLabel={(option: string | dyad) => {
             if (typeof option === 'string') {
                 return option;
