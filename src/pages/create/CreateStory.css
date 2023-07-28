@@ -10,6 +10,12 @@
 .create-image-upload h3 {
     font-size: 22px;
 }
+.dropdown-field .MuiSelect-root{
+    background-color: #0d0603 !important;
+    border-radius: 15px !important;
+    height: 52px !important;
+    border-color: #241D19 !important;
+}
 .create-story ul{
     background-color: #14100E !important;
     padding: 4px 16px;
@@ -23,11 +29,7 @@
     font-weight: 600;
 
 }
-.dropdown-option:hover{
-    background-color: #241D19 !important;
-    border-radius: 10px !important;
 
-}
 #create-cover-wrapper, #create-banner-wrapper {
     border-radius: 15px;
     border: 1px #241D19 dashed;
