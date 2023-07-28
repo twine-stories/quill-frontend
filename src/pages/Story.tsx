@@ -118,7 +118,18 @@ function Story() {
 
 
     const deleteDraftChapter = async (chapterId: number): void => {
+        let newEpisodes: JSX.Element[] = [];
+        for (let i = 0; i < episodes.length; i++) {
+            var currEp = episodes[i];
+            if (currEp.id === chapterId) {
+                genericPost("/api/episode/delete/" + chapterId.toString(), null)
+            }
+            else {
+                newEpisodes.push(currEp)
+            }
+        }
 
+        setEpisodes(newEpisodes);
     };
 
     return (

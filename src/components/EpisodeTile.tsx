@@ -74,13 +74,14 @@ function EpisodeTile(props: EpisodeTileProps) {
                 }
             </Stack>
             }
-            
-            {/*{props.episode.episodeNumber === -1 &&*/}
-            {/*    <IconButton onClick={function () {*/}
-            {/*        deleteDraftChapter(props.episode.id)*/}
-            {/*    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg"*/}
-            {/*                                                              width="30px" height="30px"/></IconButton>*/}
-            {/*}*/}
+            <Stack direction="column" alignItems= "center">
+            {props.episode.episodeNumber === -1 &&
+                <IconButton onClick={function () {
+                    deleteDraftChapter(props.episode.id)
+                }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg"
+                                                                          width="30px" height="30px"/></IconButton>
+            }
+            </Stack>
         </Stack>
     );
 }
