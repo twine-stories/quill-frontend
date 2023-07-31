@@ -102,11 +102,11 @@ function Gallery(props: WorkGalleryProps) {
                                  </div>
                                  :
                                  <div className='create-published-button'>
-                                         <TwineButton sx={{width: "80%"}} color='green' icon='/icons/green_plus.svg'
+                                         <TwineButton sx={{width: "100%", borderRadius:'13px', height:'45px'}} color='green' icon='/icons/green_plus.svg'
                                                       name='Create New Stories' action={() => {
                                              window.location.href = '/create/story'
                                          }}/>
-                                         <TwineButton sx={{width: "80%"}} icon='/icons/purple_paper.svg'
+                                         <TwineButton sx={{width: "100%",borderRadius:'13px',height:'45px'}} icon='/icons/purple_paper.svg'
                                                       name={"Open " + (props.draft ? "Published" : "Drafts")}
                                                       action={() => {
                                                           window.location.href = (props.draft ? '/gallery/story/published' : '/gallery/story/draft')
