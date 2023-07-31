@@ -58,7 +58,7 @@ const Search = () => {
     const searchIcon: JSX.Element = isSearching ?
         <Box display={'flex'}>
         <IconButton action={openSearch} icon={isSearching ? '/icons/search_color.svg'  : '/icons/search_color.svg'} color={isSearching ? "litegreen" : "green"} />
-        <Autocomplete autoHighlight sx={{width: "75%",  outline:'none'}} className="search-inputf" options={dyads} freeSolo={true} onClose={closeSearch} onChange={onChange}
+        <Autocomplete autoHighlight sx={{width: "75%",  outline:'none'}} className="search-inputfield" options={dyads} freeSolo={true} onClose={closeSearch} onChange={onChange}
                 getOptionLabel={(option: string | dyad) => {
                     if (typeof option === 'string') {
                         return option;
