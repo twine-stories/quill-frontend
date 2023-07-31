@@ -14,8 +14,7 @@ type dyad = {
 }
 
 const Search = () => {
-    // const context: object = useContext(UserContext);
-    const [isSearching, setIsSearching] = useState<boolean>(false);
+    const [isSearching, setIsSearching] = useState<boolean>(true);
     const [dyads, setDyads] = useState<dyad[]>([]);
     const openSearch = async () => {
         setIsSearching(true);
@@ -59,7 +58,7 @@ const Search = () => {
     const searchIcon: JSX.Element = isSearching ?
         <Box display={'flex'}>
         <IconButton action={openSearch} icon={isSearching ? '/icons/search_color.svg'  : '/icons/search_color.svg'} color={isSearching ? "litegreen" : "green"} />
-        <Autocomplete autoHighlight sx={{width: "75%"}} options={dyads} freeSolo={true} onClose={closeSearch} onChange={onChange}
+        <Autocomplete autoHighlight sx={{width: "75%",  outline:'none'}} className="search-inputfield" options={dyads} freeSolo={true} onChange={onChange}
                 getOptionLabel={(option: string | dyad) => {
                     if (typeof option === 'string') {
                         return option;
@@ -88,6 +87,8 @@ const Search = () => {
                         </>
                     )
                 }}
+           
+               
             />
         </Box>
         :

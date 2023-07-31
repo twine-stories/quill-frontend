@@ -8,6 +8,20 @@ a{
   line-height: 100%;
   color: #a3b832;
 }
+.search-inputfield.Joy-focused.css-8un9o9-JoyAutocomplete-root {
+  --Input-focusedHighlight: #241D19 !important;
+
+}
+.search-inputfield{
+  background-color: #0d0603!important;
+}
+ .MuiAutocomplete-listbox{
+  background-color: #14100E !important;
+}
+.MuiAutocomplete-listbox li{
+  background-color: #14100E !important;
+}
+
 
 @media screen and (max-width: 620px) {
 .basics-demo-button{
