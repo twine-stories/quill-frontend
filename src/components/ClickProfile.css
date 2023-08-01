@@ -18,6 +18,20 @@
     font-size: 20px;
 }
 
+
+.closeButton{
+text-align: end;
+}
+.closeButton img {
+    padding: 12px;
+    width: 25px;
+    cursor: pointer;
+    border-radius: 13px;
+}
+.closeButton img:hover {
+    background: #14100E;
+}
+
 #loginPopup {
     background-color: #14100E;
     padding: 20px;
