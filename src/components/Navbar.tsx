@@ -90,6 +90,7 @@ function Navbar() {
         <div style={{marginBottom: '25px'}}>
             {context['user'] && context['user']['walletAddress'] ?
                 <>
+
                     <NavDiv>
                     <Box className='nav-container'>
                     {!isMenuOpen && <Hamburger/>}
@@ -120,6 +121,7 @@ function Navbar() {
                 </>
                 :
                 <>
+
                     <NavDiv>
                         <Box className='nav-container'>
                         {!isMenuOpen && <Hamburger/>}

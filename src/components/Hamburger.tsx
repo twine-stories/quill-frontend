@@ -3,6 +3,7 @@ import { Autocomplete, AutocompleteOption, Typography, Box } from '@mui/joy';
 import styled from "styled-components";
 import { UserContext } from "../App.tsx";
 import { Work, User } from '../utils/types.ts';
+import LoginWall from './LoginWall.tsx';
 import { genericGet } from '../utils/api.ts';
 import CollabPopup from './CollabPopup.tsx';
 import Button from '@mui/joy/Button';
@@ -20,13 +21,19 @@ const Hamburger = (props:SearchStylingprops) => {
     const context: object = useContext(UserContext);
     const [isSearching, setIsSearching] = useState<boolean>(false);
     const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
+    const buttonRef = React.useRef(null);
+    const [open, setOpen] = React.useState(false);
+    const [openLogin, setOpenLogin] = React.useState(false);
     const handleToggle = () => {
         setMenuOpen(!isMenuOpen)
         console.log("togglelisworking")
     }
+    const blockAccess = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        e.preventDefault();
+        setOpenLogin(true);
+    }
 
-    const buttonRef = React.useRef(null);
-    const [open, setOpen] = React.useState(false);
+   
 
     
 
@@ -49,6 +56,9 @@ const Hamburger = (props:SearchStylingprops) => {
 
     const closeSearch = async () => {
         setIsSearching(false);
+    }
+    const closeWall = (): void => {
+        setOpenLogin(false);
     }
    
     <IconButton action={openSearch} icon={isSearching ? 'icons/search_color.svg'  : '/icons/search.svg'} color={isSearching ? "litegreen" : "green"} />
@@ -76,10 +86,15 @@ const Hamburger = (props:SearchStylingprops) => {
                     <MenuItem><a href="/">home</a></MenuItem>
                     <MenuItem><a href="/art">art</a></MenuItem>
                     <MenuItem><a onClick={() => setOpenCollab(true)}>collab</a></MenuItem>
-                    <MenuItem><a onClick={createNav} style={{ marginRight: "30px" }}>create</a></MenuItem>
-                </Menu>
+                   
+                    {context['user'] && context['user']['walletAddress'] ?  <MenuItem><a onClick={createNav} style={{ marginRight: "30px" }}>create</a></MenuItem>:
+                     <MenuItem><a onClick={blockAccess} style={{ marginRight: "30px" }}>create</a></MenuItem>
+            }
+                    </Menu>
             </div>
             <CollabPopup open={openCollab} close={() => setOpenCollab(false)} />
+            {console.log(open,'open')}
+            <LoginWall open={openLogin} closeWall={closeWall} />
         </>
     )
 
