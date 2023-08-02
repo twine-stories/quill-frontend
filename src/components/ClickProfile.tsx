@@ -76,9 +76,10 @@ export default function ClickProfile({ isLoggedIn, logOutFunc, connectAlgoFunc, 
                         boxShadow: 'lg',
                     }}>
                          <Box className="closeButton">
+                         <Typography id='loginPopupHeader' color='green' level='h2'>Select Wallet</Typography>
                         <img className='closelogo' onClick={()=>setAnchorEl(null)} src='/icons/arrow.topright.svg' alt='closeArrow' /> 
                         </Box>
-                        <Typography id='loginPopupHeader' color='green' level='h2'>Select Wallet</Typography>
+                        
                         {/* <ModalClose color="success" /> */}
                         <Grid id='loginPopup'>
                             <Typography id='loginPopupTop' color='white' level='h3'>
