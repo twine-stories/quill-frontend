@@ -8,6 +8,9 @@ interface ButtonProps {
     color?: string;
     size?: string;
     sx?: object;
+    buttonClassName?: string;
+    className?:string;
+    backgroundColor?:string;
     
 }
 
@@ -23,9 +26,9 @@ function IconButton(props: ButtonProps) {
     }
     return (
         props.enabled === undefined || props.enabled ?
-            <Button sx={sx} size={size} color={color} onClick={props.action}><img width={dim} height={dim} src={props.icon} style={{position: 'absolute'}} /></Button>
+            <Button sx={sx} size={size} className={props.className} className={props.buttonClassName} backgroundColor={props.backgroundColor} color={color} onClick={props.action}><img width={dim} height={dim} src={props.icon} style={{position: 'absolute'}} /></Button>
             :
-            <Button sx={sx} size={size} color={color} onClick={props.action} disabled><img width={dim} height={dim} src={props.icon} style={{position: 'absolute'}} /></Button>
+            <Button sx={sx} size={size}className={props.className} className={props.buttonClassName} backgroundColor={props.backgroundColor} color={color} onClick={props.action} disabled><img width={dim} height={dim} src={props.icon} style={{position: 'absolute'}} /></Button>
     )
 }
 
