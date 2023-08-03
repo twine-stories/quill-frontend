@@ -63,14 +63,20 @@ function EpisodeTile(props: EpisodeTileProps) {
                 {props.episode.episodeNumber !== -1 && props.episode.episodeNumber !== 0 &&
                     <IconButton onClick={function () {
                         moveUp(props.episode.episodeNumber)
-                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_up.svg"
-                                                                            width="30px" height="30px"/></IconButton>
+                    }} variant="plain" color="neutral" sx={{ml: 'auto', '&:hover':{
+                        backgroundColor:'#0d0603'
+                    }}}><div className='arrowButton'><img className='arrowUpImg1' alt='arrowimg' src="/icons/hover-purple-arrow-up.svg"
+                    width="30px" height="30px"/><img className='arrowUpImg2' alt='arrowimg' src="/icons/purple_arrow_up.svg"
+                    width="30px" height="30px"/> </div></IconButton>
                 }
                 {props.episode.episodeNumber !== -1 && props.episode.episodeNumber !== props.totalEpisodes - 1 &&
                     <IconButton onClick={function () {
                         moveDown(props.episode.episodeNumber)
-                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_down.svg"
-                                                                            width="30px" height="30px"/></IconButton>
+                    }} variant="plain" color="neutral" sx={{ml: 'auto', '&:hover':{
+                        backgroundColor:'#0d0603'
+                    }}}><img className='arrowButtonDown1' alt='arrowimg' src="/icons/purple_arrow_down.svg"
+                    width="30px" height="30px"/><img className='arrowButtonDown2' alt='arrowimg' src="/icons/hover-purple-arrow-down.svg"
+                    width="30px" height="30px"/></IconButton>
                 }
             </Stack>
             }

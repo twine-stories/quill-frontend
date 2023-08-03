@@ -96,19 +96,27 @@ function InputListItem(props: InputListItemProps) {
                 />
             </Grid>
             <Box sx={{ml: 'auto', marginRight: "20px"}}>
-                <IconButton onClick={function () {
-                    moveItemUp(counter)
-                }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_up.svg"
-                                                                            width="30px" height="30px"/></IconButton>
-                <IconButton onClick={function () {
-                    moveItemDown(counter)
-                }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_down.svg"
-                                                                            width="30px" height="30px"/></IconButton>
-                <IconButton onClick={function () {
-                    removeItem(counter)
-                }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg" width="30px"
-                                                                            height="30px"/></IconButton>
-            </Box>
+                                <IconButton onClick={function () {
+                                    moveItemUp(counter)
+                                }}  variant="plain"  color="neutral" sx={{ml: 'auto', '&:hover':{
+                                    backgroundColor:'#0d0603'
+                                }}}><div className='arrowButton'><img className='arrowUpImg1' alt='arrowimg' src="/icons/hover-purple-arrow-up.svg"
+                                width="30px" height="30px"/><img className='arrowUpImg2' alt='arrowimg' src="/icons/purple_arrow_up.svg"
+                                width="30px" height="30px"/> </div></IconButton>
+                                <IconButton onClick={function () {
+                                    moveItemDown(counter)
+                                }} variant="plain" color="neutral" sx={{ml: 'auto', '&:hover':{
+                                    backgroundColor:'#0d0603'
+                                }}}><img className='arrowButtonDown1' alt='arrowimg' src="/icons/purple_arrow_down.svg"
+                                                                                          width="30px" height="30px"/><img className='arrowButtonDown2' alt='arrowimg' src="/icons/hover-purple-arrow-down.svg"
+                                                                                          width="30px" height="30px"/></IconButton>
+                                <IconButton onClick={function () {
+                                    removeItem(counter)
+                                }} variant="plain" color="neutral" sx={{ml: 'auto', '&:hover':{
+                                    backgroundColor:'#0d0603' 
+                                }}}><img src="/icons/red_remove.svg" alt='delImg' width="30px"
+                                                                                          height="30px"/></IconButton>
+                            </Box>
         </Card>
     );
 }

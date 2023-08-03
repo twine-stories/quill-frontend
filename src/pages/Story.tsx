@@ -167,7 +167,7 @@ function Story() {
 
                                     {episodes &&
                                         <>
-                                            <Typography level="h2" sx={{color: "#9E9FEB"}}>Published Chapters</Typography>
+                                            <Typography level="h2" sx={{color: "#9E9FEB", marginTop:'30px'}}> Chapters</Typography>
 
                                             {
                                                 <EpisodeOrderContext.Provider value={{
@@ -191,7 +191,7 @@ function Story() {
                                                     'moveDown': moveChapterDown,
                                                     'deleteDraftChapter': deleteDraftChapter
                                                 }}>
-                                                    <Typography level="h2" sx={{color: "#9E9FEB"}}>Draft Chapters</Typography>
+                                                    <Typography level="h2" sx={{color: "#9E9FEB",marginTop:'30px'}}>Draft Chapters</Typography>
                                                     {episodes.map((episode) => {
                                                         if (!episode['published']) {
                                                             return (

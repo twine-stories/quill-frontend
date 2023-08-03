@@ -14,3 +14,16 @@
 #comm-guidelines {
     color: #9E9FEB;
 }
+img.arrowUpImg1, img.arrowButtonDown2 {
+    position: absolute;
+    opacity: 0;
+    transition: 0.1s;
+}
+img.arrowUpImg1:hover {
+    opacity: 1;
+}
+
+
+img.arrowButtonDown2:hover {
+    opacity: 1;
+}

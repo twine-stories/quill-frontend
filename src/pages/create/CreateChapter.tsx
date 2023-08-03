@@ -177,19 +177,27 @@ function CreateChapter(props: CreateChapterProps) {
                             color="neutral"
                             endDecorator={
                                 <Box sx={{ml: 'auto'}}>
-                                    <IconButton onClick={function () {
-                                        moveItemUp(i)
-                                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_up.svg"
-                                                                                              width="30px" height="30px"/></IconButton>
-                                    <IconButton onClick={function () {
-                                        moveItemDown(i)
-                                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_down.svg"
-                                                                                              width="30px" height="30px"/></IconButton>
-                                    <IconButton onClick={function () {
-                                        removeItem(i)
-                                    }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg" width="30px"
-                                                                                              height="30px"/></IconButton>
-                                </Box>
+                                <IconButton onClick={function () {
+                                    moveItemUp(i)
+                                }}  variant="plain"  color="neutral" sx={{ml: 'auto', '&:hover':{
+                                    backgroundColor:'#0d0603'
+                                }}}><div className='arrowButton'><img className='arrowUpImg1' alt='arrowimg' src="/icons/hover-purple-arrow-up.svg"
+                                width="30px" height="30px"/><img className='arrowUpImg2' alt='arrowimg' src="/icons/purple_arrow_up.svg"
+                                width="30px" height="30px"/> </div></IconButton>
+                                <IconButton onClick={function () {
+                                    moveItemDown(i)
+                                }} variant="plain" color="neutral" sx={{ml: 'auto', '&:hover':{
+                                    backgroundColor:'#0d0603'
+                                }}}><img className='arrowButtonDown1' alt='arrowimg' src="/icons/purple_arrow_down.svg"
+                                                                                          width="30px" height="30px"/><img className='arrowButtonDown2' alt='arrowimg' src="/icons/hover-purple-arrow-down.svg"
+                                                                                          width="30px" height="30px"/></IconButton>
+                                <IconButton onClick={function () {
+                                    removeItem(i)
+                                }} variant="plain" color="neutral" sx={{ml: 'auto', '&:hover':{
+                                    backgroundColor:'#0d0603' 
+                                }}}><img src="/icons/red_remove.svg" alt='delImg' width="30px"
+                                                                                          height="30px"/></IconButton>
+                            </Box>
                             }
                             sx={{minWidth: "40%"}}
                         />
@@ -324,15 +332,23 @@ function CreateChapter(props: CreateChapterProps) {
                     <Box sx={{ml: 'auto'}}>
                         <IconButton onClick={function () {
                             moveItemUp(counter)
-                        }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_up.svg"
-                                                                                  width="30px" height="30px"/></IconButton>
+                        }}  variant="plain"  color="neutral" sx={{ml: 'auto', '&:hover':{
+                            backgroundColor:'#0d0603'
+                        }}}><div className='arrowButton'><img className='arrowUpImg1' alt='arrowimg' src="/icons/hover-purple-arrow-up.svg"
+                        width="30px" height="30px"/><img className='arrowUpImg2' alt='arrowimg' src="/icons/purple_arrow_up.svg"
+                        width="30px" height="30px"/> </div></IconButton>
                         <IconButton onClick={function () {
                             moveItemDown(counter)
-                        }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/purple_arrow_down.svg"
+                        }} variant="plain" color="neutral" sx={{ml: 'auto', '&:hover':{
+                            backgroundColor:'#0d0603'
+                        }}}><img className='arrowButtonDown1' alt='arrowimg' src="/icons/purple_arrow_down.svg"
+                                                                                  width="30px" height="30px"/><img alt='arrowimg' className='arrowButtonDown2' src="/icons/hover-purple-arrow-down.svg"
                                                                                   width="30px" height="30px"/></IconButton>
                         <IconButton onClick={function () {
                             removeItem(counter)
-                        }} variant="plain" color="neutral" sx={{ml: 'auto'}}><img src="/icons/red_remove.svg" width="30px"
+                        }} variant="plain" color="neutral" sx={{ml: 'auto', '&:hover':{
+                            backgroundColor:'#0d0603' 
+                        }}}><img src="/icons/red_remove.svg" alt='delImg' width="30px"
                                                                                   height="30px"/></IconButton>
                     </Box>
                 }
@@ -420,11 +436,13 @@ function CreateChapter(props: CreateChapterProps) {
                                 justifyContent="center"
                                 sx={{width: '100%', marginBottom: '20px'}}>
                                 <Button startDecorator={<img
+                                alt='whiteText'
                                     src="/icons/white_text.svg"
                                     width="20px" height="20px"
                                 />} variant="outlined" color="neutral" onClick={() => onAddTextButtonClick()}>Add Paragraph</Button>
                                 <Button startDecorator={<img
                                     src="/icons/add_image.svg"
+                                    alt='addImg'
                                     width="20px" height="20px"
                                 />} variant="outlined" color="neutral" onClick={() => onAddImageButtonClick()}>Add
                                     Image</Button>
