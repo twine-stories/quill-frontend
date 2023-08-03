@@ -2,8 +2,8 @@ import React, {useState, useContext, useEffect} from 'react';
 import './Chapter.css';
 import Navbar from "../components/Navbar.tsx";
 import {UserContext} from "../App.tsx";
-import {Episode, User, Like, ProfitSplit, Tip} from '../utils/types.ts';
-import {episodeGetByUrl, genericGet, genericPost} from '../utils/api.ts';
+import {Episode, User, Like, ProfitSplit, Tip, Work} from '../utils/types.ts';
+import {episodeGetByUrl, genericGet, genericPost, episodesGetByWorkId} from '../utils/api.ts';
 import {AspectRatio, Box, Typography, Grid, Link, CircularProgress} from "@mui/joy";
 import IconButton from "../components/IconButton.tsx";
 import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants.ts";
@@ -22,6 +22,8 @@ import { microToAlgo, algoToMicro, TWINE_CUT } from '../utils/blockchain/constan
 function Chapter() {
 
     const [episode, setEpisode] = useState<Episode>([]);
+    const [work, setWork] = useState<Work>(null);
+    const [episodes, setEpisodes] = useState<Array<Episode>>([]);
     const context: object = useContext(UserContext);
     const user: User = context['user'];
     const [liked, setLiked] = useState<boolean>(false);
@@ -44,6 +46,7 @@ function Chapter() {
             console.log('fail');
         });
     }, []);
+
 
     useEffect(() => {
         if (episode && episode.id) {
@@ -69,6 +72,7 @@ function Chapter() {
                 setCreators(creators);
                 setPercentages(percentages);
             });
+            setWork(episode.work);
         }
     }, [episode, user]);
 
@@ -80,6 +84,14 @@ function Chapter() {
             });
         }
     }, [episode]);
+
+    useEffect(() => {
+        if (work) {
+            episodesGetByWorkId(work['id'], () => {
+                console.log('fail');
+            }).then((response) => {setEpisodes(response)})
+        }
+    }, [work]);
 
     const likeAction = () => {
         if (user) {
@@ -107,6 +119,24 @@ function Chapter() {
             }
         } else {
             setOpenError(true);
+        }
+    }
+
+    const moveToNextChapter = () => {
+        if (episodes && episodes.length > 0) {
+            const index: number = episodes.findIndex((ep: Episode) => ep.id === episode.id);
+            if (index !== -1 && index < episodes.length - 1) {
+                window.location.href = episodes[index + 1].url;
+            }
+        }
+    }
+
+    const moveToPreviousChapter = () => {
+        if (episodes && episodes.length > 0) {
+            const index: number = episodes.findIndex((ep: Episode) => ep.id === episode.id);
+            if (index !== -1 && index > 0) {
+                window.location.href = episodes[index - 1].url;
+            }
         }
     }
 
@@ -187,6 +217,8 @@ function Chapter() {
                                             setProcessingTip(false);
                                         }} />
                                     </Grid>
+                                    <TwineButton icon='purple_check.svg' color='purple' name='Next' action={moveToNextChapter} />
+                                    <TwineButton icon='purple_check.svg' color='purple' name='Previous' action={moveToPreviousChapter} />
                                 </Grid>
                             }
                         />
