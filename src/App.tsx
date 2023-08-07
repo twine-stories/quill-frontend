@@ -37,6 +37,7 @@ import FirstLogin from './components/FirstLogin.tsx';
 import ErrorPopup from './components/ErrorPopup.tsx';
 import { env } from './config.ts';
 import { AlgorandChainIDs } from '@perawallet/connect/dist/util/peraWalletTypes';
+import CreateArtwork from './pages/create/CreateArtwork.tsx';
 
 const reach = loadStdlib('ALGO');
 let chainId: AlgorandChainIDs;
@@ -280,6 +281,7 @@ function App() {
                                 <Route path="/create" element={<Create/>}></Route>
                                 <Route path="/create/story" element={<CreateStory/>}></Route>
                                 <Route path="/create/chapter/*" element={<CreateChapter/>}></Route>
+                                <Route path="/create/art" element={<CreateArtwork/>}></Route>
 
                                 <Route path="/edit/story/*" element={<CreateStory edit={true}/>}></Route>
                                 <Route path="/edit/chapter/*" element={<CreateChapter edit={true}/>}></Route>
