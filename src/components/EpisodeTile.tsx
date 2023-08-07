@@ -7,6 +7,7 @@ import { CHAPTER_IMGS_BUCKET } from "../config.ts";
 import { COVER_PATH } from "../utils/aws.ts";
 import { EpisodeOrderContext } from "../pages/Story.tsx";
 
+
 interface EpisodeTileProps {
   episode: Episode;
   isCreator: boolean;
@@ -113,16 +114,16 @@ function EpisodeTile(props: EpisodeTileProps) {
                   },
                 }}
               >
-                <div className="arrowButton">
+                <div className="arrow-button">
                   <img
-                    className="arrowUpImg1"
+                    className="hover-arrow-up-img"
                     alt="arrowimg"
                     src="/icons/hover-purple-arrow-up.svg"
                     width="30px"
                     height="30px"
                   />
                   <img
-                    className="arrowUpImg2"
+                    className="arrow-up-img"
                     alt="arrowimg"
                     src="/icons/purple_arrow_up.svg"
                     width="30px"
@@ -147,14 +148,14 @@ function EpisodeTile(props: EpisodeTileProps) {
                 }}
               >
                 <img
-                  className="arrowButtonDown1"
+                  className="arrow-button-down"
                   alt="arrowimg"
                   src="/icons/purple_arrow_down.svg"
                   width="30px"
                   height="30px"
                 />
                 <img
-                  className="arrowButtonDown2"
+                  className="hover-arrow-button-down"
                   alt="arrowimg"
                   src="/icons/hover-purple-arrow-down.svg"
                   width="30px"
@@ -172,9 +173,15 @@ function EpisodeTile(props: EpisodeTileProps) {
             }}
             variant="plain"
             color="neutral"
-            sx={{ ml: "auto" }}
+            sx={{
+              ml: "auto",
+              "&:hover": {
+                backgroundColor: "#0d0603",
+              },
+            }}
           >
-            <img src="/icons/red_remove.svg" width="30px" height="30px" />
+            <img src="/icons/red_remove.svg" width="30px" height="30px" className="remove-img"/>
+            <img src="/icons/hover_red_remove.svg" width="30px" height="30px" className="remove-img-hover"/>
           </IconButton>
         )}
       </Stack>

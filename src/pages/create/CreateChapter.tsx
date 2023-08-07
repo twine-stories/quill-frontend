@@ -233,16 +233,16 @@ function CreateChapter(props: CreateChapterProps) {
                       },
                     }}
                   >
-                    <div className="arrowButton">
+                    <div className="arrow-button">
                       <img
-                        className="arrowUpImg1"
+                        className="hover-arrow-up-img"
                         alt="arrowimg"
                         src="/icons/hover-purple-arrow-up.svg"
                         width="30px"
                         height="30px"
                       />
                       <img
-                        className="arrowUpImg2"
+                        className="arrow-up-img"
                         alt="arrowimg"
                         src="/icons/purple_arrow_up.svg"
                         width="30px"
@@ -264,14 +264,14 @@ function CreateChapter(props: CreateChapterProps) {
                     }}
                   >
                     <img
-                      className="arrowButtonDown1"
+                      className="arrow-button-down"
                       alt="arrowimg"
                       src="/icons/purple_arrow_down.svg"
                       width="30px"
                       height="30px"
                     />
                     <img
-                      className="arrowButtonDown2"
+                      className="hover-arrow-button-down"
                       alt="arrowimg"
                       src="/icons/hover-purple-arrow-down.svg"
                       width="30px"
@@ -296,6 +296,13 @@ function CreateChapter(props: CreateChapterProps) {
                       alt="delImg"
                       width="30px"
                       height="30px"
+                      className="remove-img"
+                    />
+                    <img
+                      src="/icons/hover_red_remove.svg"
+                      width="30px"
+                      height="30px"
+                      className="remove-img-hover"
                     />
                   </IconButton>
                 </Box>
@@ -445,16 +452,16 @@ function CreateChapter(props: CreateChapterProps) {
                   },
                 }}
               >
-                <div className="arrowButton">
+                <div className="arrow-button">
                   <img
-                    className="arrowUpImg1"
+                    className="hover-arrow-up-img"
                     alt="arrowimg"
                     src="/icons/hover-purple-arrow-up.svg"
                     width="30px"
                     height="30px"
                   />
                   <img
-                    className="arrowUpImg2"
+                    className="arrow-up-img"
                     alt="arrowimg"
                     src="/icons/purple_arrow_up.svg"
                     width="30px"
@@ -476,7 +483,7 @@ function CreateChapter(props: CreateChapterProps) {
                 }}
               >
                 <img
-                  className="arrowButtonDown1"
+                  className="arrow-button-down"
                   alt="arrowimg"
                   src="/icons/purple_arrow_down.svg"
                   width="30px"
@@ -484,7 +491,7 @@ function CreateChapter(props: CreateChapterProps) {
                 />
                 <img
                   alt="arrowimg"
-                  className="arrowButtonDown2"
+                  className="hover-arrow-button-down"
                   src="/icons/hover-purple-arrow-down.svg"
                   width="30px"
                   height="30px"
@@ -508,6 +515,13 @@ function CreateChapter(props: CreateChapterProps) {
                   alt="delImg"
                   width="30px"
                   height="30px"
+                  className="remove-img"
+                />
+                <img
+                  src="/icons/hover_red_remove.svg"
+                  width="30px"
+                  height="30px"
+                  className="remove-img-hover"
                 />
               </IconButton>
             </Box>
