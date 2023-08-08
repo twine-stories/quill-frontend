@@ -138,12 +138,6 @@ function Create() {
         window.location.href = '/';
     }
 
-
-    const mintNFT = async (walletAddress: string, unitName: string, assetName: string, assetUrl: string) => {
-        await createNFT(walletAddress, unitName, assetName, assetUrl);
-        setUpdateAssets(!updateAssets);
-    }
-
     const genContract = async (assetId: number, data: object): Promise<AssetInfo | null> => {
         // create application from backend, have backend communicate with fast api
         // pretty much move whole contract logic to backend bc the user only needs to sign away the asset (can send the transaction once we have completed the application/escrow setup)
@@ -417,25 +411,6 @@ function Create() {
             </Grid>
             {env === 'dev' &&
                 <div>
-                    <div>
-                        <TwineInput placeholder='Unit name' inputAttrs={{
-                            id: 'unitName'
-                        }}/>
-                        <TwineInput placeholder='Asset name' inputAttrs={{
-                            id: 'assetName'
-                        }}/>
-                        <TwineInput placeholder='Asset url' inputAttrs={{
-                            id: 'assetUrl'
-                        }}/>
-                        <TwineButton name='Mint NFT' action={(e) => {
-                            const unitName: HTMLInputElement = document.getElementById('unitName') as HTMLInputElement;
-                            const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;
-                            const assetUrl: HTMLInputElement = document.getElementById('assetUrl') as HTMLInputElement;
-                            if (unitName && assetName && assetUrl) {
-                                mintNFT(user.walletAddress, unitName.value, assetName.value, assetUrl.value);
-                            }
-                        }}/>
-                    </div>
                     {allAssets}
                     <label htmlFor="saleType">Choose a sale type:</label>
                     <select name="saleType" id="saleType" onChange={(e) => {

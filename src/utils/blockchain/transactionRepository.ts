@@ -3,6 +3,8 @@ import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect';
 import { getClient, getIndexer, adminAddr, getSecretKey } from './credentials.ts';
 import { BUY } from './constants.ts';
 import { genericGet, genericPost } from '../api.ts';
+import { ConnectType } from '../enums.ts';
+import { peraWallet } from '../../App.tsx';
 
 const myAlgoConnect = new MyAlgoConnect();
 
@@ -31,13 +33,16 @@ export async function waitForTxn(txnId: string): Promise<Record<string, any>> {
     return pending;
 }
 
-async function signTxn(txn: Transaction): Promise<string> {
-    const signedTxn: SignedTx = await myAlgoConnect.signTransaction(txn.toByte());
-    return await sendTransaction(signedTxn.blob);
-    // await client.sendRawTransaction(signedTxn.blob).do();
-
-    // const txnInfo = await waitForTxn(signedTxn.txID);
-    // return txnInfo;
+async function signTxn(txn: Transaction, connectType: ConnectType, sender: string): Promise<string> {
+    var signed: Uint8Array
+    if (connectType == ConnectType.PERA) {
+        const signedTxn = await peraWallet.signTransaction([[{txn: txn, signers: [sender]}]])
+        signed = signedTxn[0]
+    } else {
+        const signedTxn: SignedTx = await myAlgoConnect.signTransaction(txn.toByte());
+        signed = signedTxn.blob
+    }
+    return await sendTransaction(signed);
 }
 
 export async function signTxns(txns: Transaction[]): Promise<string[]> {
@@ -47,8 +52,6 @@ export async function signTxns(txns: Transaction[]): Promise<string[]> {
     let promises: Promise<string>[] = [];
     for (const signedTxn of signedTxns) {
         promises.push(sendTransaction(signedTxn.blob));
-        // await client.sendRawTransaction(signedTxn.blob).do();
-        // await waitForTxn(signedTxn.txID);
     }
 
     return await Promise.all(promises);
@@ -57,9 +60,6 @@ export async function signTxns(txns: Transaction[]): Promise<string[]> {
 async function logicSign(txn: Transaction) {
     const signedTxn: Uint8Array = txn.signTxn(getSecretKey());
     return await sendTransaction(signedTxn);
-    // const response = await client.sendRawTransaction(signedTxn).do();
-
-    // return await waitForTxn(response['txId']);
 }
 
 export async function pay(sender: string, receiver: string, amount: number | bigint): Promise<Transaction> {
@@ -84,7 +84,7 @@ export async function paySign(sender: string, receiver: string, amount: number |
     return await signTxn(paymentTxn);
 }
 
-async function createASA(creatorAddress: string, unitName: string, assetName: string, total: number, decimals: number, assetUrl: string): Promise<string> {
+async function createASA(creatorAddress: string, unitName: string, assetName: string, total: number, decimals: number, assetUrl: string, connectType: ConnectType): Promise<string> {
     let suggestedParams = await getSuggestedParams();
     const createTxn: Transaction = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
         from: creatorAddress,
@@ -101,11 +101,11 @@ async function createASA(creatorAddress: string, unitName: string, assetName: st
         defaultFrozen: true,
     });
 
-    return await signTxn(createTxn);
+    return await signTxn(createTxn, connectType, creatorAddress);
 }
 
-export async function createNFT(creatorAddress: string, unitName: string, assetName: string, assetUrl: string): Promise<string> {
-    return await createASA(creatorAddress, unitName, assetName, 1, 0, assetUrl);
+export async function createNFT(creatorAddress: string, unitName: string, assetName: string, assetUrl: string, connectType: ConnectType): Promise<string> {
+    return await createASA(creatorAddress, unitName, assetName, 1, 0, assetUrl, connectType);
 }
 
 export async function createApplication(approvalProgram: string, clearProgram: string, globalInts: number, globalByteSlices: number, localInts: number, localByteSlices: number, appArgs: Uint8Array[], foreignAssets: number[]): Promise<number> {
