@@ -44,6 +44,7 @@ function EpisodeTile(props: EpisodeTileProps) {
           display: "flex",
           cursor: "pointer",
           flexDirection: "row",
+          border: "none",
           gap: "32px",
           padding: "16px 32px 16px 16px",
           borderRadius: "32px",
@@ -114,7 +115,6 @@ function EpisodeTile(props: EpisodeTileProps) {
                   margin: "0 1rem",
                 }}
               >
-                {" "}
                 <img src="/icons/dot.svg" width="2px" height="2px" />
               </div>)}
               <div

@@ -64,6 +64,9 @@
         .view-story-button button{
           width:100%;
         }
+        .view-story-button button{
+          width:100%;
+        }
     }
 
   @media only screen and (max-width: 768px){
@@ -112,7 +115,6 @@
       margin-top: 16px;
     }
   }
-
   @media only screen and (max-width: 375px){
     img.episode-tile-img{
       width:35% !important;
