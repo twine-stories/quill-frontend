@@ -2,7 +2,7 @@ import React from 'react';
 import {Button} from "@mui/joy";
 
 interface ButtonProps {
-    action: () => Promise<void>;
+    action: () => Promise<void> | void;
     name: string | JSX.Element;
     enabled?: boolean;
     icon?: string;
