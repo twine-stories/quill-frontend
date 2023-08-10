@@ -37,6 +37,24 @@ function CreateArtwork() {
                     <TwineInput label='Nickname' placeholder='Enter a nickname for your asset (max 8 characters)' inputAttrs={{
                         id: 'nickname'
                     }}/>
+                    <Grid container alignItems='center' justifyContent='center'>
+                        {assetImg.preview ? 
+                            <img
+                                src = {assetImg.preview}
+                                alt = ""
+                                onClick = {() => setAssetImg({
+                                    ...assetImg,
+                                    openUpload: true
+                                })}
+                                id='feedback-upload'
+                            />
+                            :
+                            <TwineButton icon='/icons/purple_plus_light.svg' name='Upload' color='darkpurple' action={() => setAssetImg({
+                                ...assetImg,
+                                openUpload: true
+                            })} />
+                        }
+                    </Grid>
                     <UploadImage 
                         open = {assetImg.openUpload}
                         close = {() => setAssetImg({
@@ -59,9 +77,9 @@ function CreateArtwork() {
                         const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;
                         
                         if (unitName && assetName && assetImg.file) {
-                            const response = await genericPost('/api/algo/upload-to-ipfs/file', {
-                                file: assetImg.file
-                            });
+                            let formData = new FormData();
+                            formData.append("file", assetImg.file);
+                            const response = await genericPost('/api/algo/upload-to-ipfs/file', formData);
                             console.log(response);
                             // mintNFT(user.walletAddress, unitName.value, assetName.value, assetUrl.value);
                         }
