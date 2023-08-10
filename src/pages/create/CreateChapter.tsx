@@ -24,7 +24,15 @@ import Sheet from '@mui/joy/Sheet';
 import TwineInput from "../../components/TwineInput.tsx";
 import TwoColumnLayout from "../../components/TwoColumnLayout.tsx";
 import TwineButton from "../../components/TwineButton.tsx";
-import {episodeAdd, episodeGetByUrl, genericGet, genericPost, workAdd, workGetByUrl} from "../../utils/api.ts";
+import {
+    episodeAdd,
+    episodeGetByUrl,
+    episodesGetByWorkId,
+    genericGet,
+    genericPost,
+    workAdd,
+    workGetByUrl
+} from "../../utils/api.ts";
 import {v4 as uuidv4} from 'uuid';
 import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER, MAX_COLLABORATORS} from "../../utils/constants.ts";
 import Collaborator from "../../components/Collaborator.tsx";
@@ -51,6 +59,7 @@ function CreateChapter(props: CreateChapterProps) {
     const context: object = useContext(UserContext);
     const user: User = context['user'];
     const [chapter, setChapter] = useState<Episode>(null);
+    const [chapters, setChapters] = useState<Array<Episode>>( []);
 
     const [uploading, setUploading] = useState<boolean>(false);
     const [inputList, setInputList, inputListRef] = useState<JSX.Element[]>([]);
@@ -99,6 +108,14 @@ function CreateChapter(props: CreateChapterProps) {
     }, [props.edit, user]);
 
     useEffect(() => {
+        if (work && props.edit) {
+            episodesGetByWorkId(work['id'], () => {
+                console.log('fail');
+            }).then((response) => {setChapters(response)})
+        }
+    }, [props.edit, work]);
+
+    useEffect(() => {
         if (user && props.edit && chapter && !populatedForEdit) {
             setWork(chapter.work);
 
@@ -113,12 +130,12 @@ function CreateChapter(props: CreateChapterProps) {
                 response.forEach((item: ProfitSplit) => {
                     if (item.creator.userName !== chapter.work.creator.userName) {
                         collabs.push(<Collaborator profitSplit={true} defaultCreator={item.creator.userName}
-                            defaultWallet={item.creator.walletAddress} defaultProfit={item.percentage} principle={false} id={uuidv4()}
-                            key={uuidv4()}/>);
+                                                   defaultWallet={item.creator.walletAddress} defaultProfit={item.percentage} principle={false} id={uuidv4()}
+                                                   key={uuidv4()}/>);
                     } else {
                         collabs[0] = <Collaborator profitSplit={true} defaultCreator={item.creator.userName}
-                            defaultWallet={item.creator.walletAddress} defaultProfit={item.percentage} principle={true} id={uuidv4()}
-                            key={uuidv4()}/>
+                                                   defaultWallet={item.creator.walletAddress} defaultProfit={item.percentage} principle={true} id={uuidv4()}
+                                                   key={uuidv4()}/>
                     }
                 })
                 setCollaborators(collabs);
@@ -391,9 +408,9 @@ function CreateChapter(props: CreateChapterProps) {
                                 'removeItem': removeItem
                             }}>
                                 <Stack id='create-chapter-stack'
-                                    alignItems="center"
-                                    spacing={3}
-                                    sx={{width: "100%"}}>
+                                       alignItems="center"
+                                       spacing={3}
+                                       sx={{width: "100%"}}>
                                     {inputList}
                                 </Stack>
                             </ChapterContext.Provider>
@@ -493,21 +510,21 @@ function CreateChapter(props: CreateChapterProps) {
 
                                      {/*TODO: FIX THIS LATER*/}
                                      {(!props.edit || chapter) && <Typography sx={{backgroundColor: "#14100E", borderRadius: "10px", p: "10px"}}
-                                                 level="h6" endDecorator={<Switch defaultChecked={props.edit ? chapter['mature'] : false} id="mature" sx={{ml: 1}}/>}>
+                                                                              level="h6" endDecorator={<Switch defaultChecked={props.edit ? chapter['mature'] : false} id="mature" sx={{ml: 1}}/>}>
                                          Mature
                                      </Typography>}
 
 
                                      {/*TODO: FIX THIS LATER TOO*/}
                                      <Grid container alignItems='center' justifyContent='space-around' flexWrap='nowrap'>
-                                        <Checkbox defaultChecked={props.edit} color='purple' sx={{marginRight: '20px', marginBottom: '2px'}} size='sm' label='' slotProps={{
-                                            input: {
-                                                id: 'guidelines',
-                                                'aria-label': 'primary checkbox'
-                                            }
-                                        }} />
-                                        <Typography fontSize={'14px'} level='h6' color='white'>I verify this work is mine and follows the <a id='comm-guidelines' href='https://twine-legal.s3.amazonaws.com/COMMUNITY_POLICY_AND_UPLOADING_GUIDELINES.pdf' target='_blank'>community guidelines</a>.</Typography>
-                                    </Grid>
+                                         <Checkbox defaultChecked={props.edit} color='purple' sx={{marginRight: '20px', marginBottom: '2px'}} size='sm' label='' slotProps={{
+                                             input: {
+                                                 id: 'guidelines',
+                                                 'aria-label': 'primary checkbox'
+                                             }
+                                         }} />
+                                         <Typography fontSize={'14px'} level='h6' color='white'>I verify this work is mine and follows the <a id='comm-guidelines' href='https://twine-legal.s3.amazonaws.com/COMMUNITY_POLICY_AND_UPLOADING_GUIDELINES.pdf' target='_blank'>community guidelines</a>.</Typography>
+                                     </Grid>
 
                                      {!view && <Button variant="outlined" color="neutral" onClick={() => {
                                          setView(true);
@@ -654,13 +671,6 @@ function CreateChapter(props: CreateChapterProps) {
     }
 
     async function postEpisode(published: boolean, currentChapter?: Episode) {
-        if (published) {
-            setErrorMessage('Oops! Publishing is temporarily disabled. We\'re working behind the scenes to enhance your story-sharing experience. But don\'t worry, you can still save your incredible story as a draft and get it ready for the world.');
-            setUploading(false);
-            setOpenError(true);
-            return;
-        }
-
         const title: HTMLInputElement = document.getElementById("title") as HTMLInputElement;
         if (!title.value) {
             setErrorMessage('Please enter a title for your chapter!');
@@ -703,6 +713,36 @@ function CreateChapter(props: CreateChapterProps) {
             return;
         }
 
+        // Set episode number.
+        var episodeNumber;
+        // This means the chapter is already published
+        if (currentChapter && currentChapter['episodeNumber'] !== -1 && published) {
+            episodeNumber = currentChapter['episodeNumber']
+        }
+        else if (published) {
+            const totalPubChapters = await genericGet("/api/episode/numpublished/work/url/" + work.url);
+            if (totalPubChapters == null) {
+                setErrorMessage('Sorry, something went wrong. Please try again.');
+                setOpenError(true);
+                return;
+            }
+            episodeNumber = totalPubChapters;
+        } else {
+            episodeNumber = -1;
+        }
+
+        // Fix episode number for other chapters if transferring published to drafts.
+        if (currentChapter && currentChapter['episodeNumber'] !== -1 && !published) {
+            const origChapNumber = currentChapter['episodeNumber']
+            for (let i = 0; i < chapters.length; i++) {
+                var chapAtIndex = chapters[i];
+                if (chapAtIndex.episodeNumber > origChapNumber) {
+                    chapAtIndex.episodeNumber = chapAtIndex.episodeNumber - 1;
+                    genericPost("/api/episode/update", chapAtIndex);
+                }
+            }
+        }
+
         const url: string = work.url + "_" + title.value.replace(/\s/g, "-").toLowerCase();
         if (title.value && !title.value.includes('/') && guidelines.checked && profitSplitMap && (cover.name || (chapter && chapter.cover)) && allContent.length > 0) {
             let newEpisode: Episode = {
@@ -714,7 +754,7 @@ function CreateChapter(props: CreateChapterProps) {
                 url: url,
                 endOfChapterMessage: endOfChapterMessage.value,
                 mature: mature.checked,
-                episodeNumber: -1,
+                episodeNumber: episodeNumber,
                 flags: 0,
                 publishStamp: publishStamp,
                 published: published,
@@ -751,7 +791,7 @@ function CreateChapter(props: CreateChapterProps) {
                             creator: user,
                             percentage: value,
                         };
-    
+
                         let found: boolean = false;
                         for (i = 0; i < response.length; i++) {
                             if (response[i].creator.userName === user.userName) {
@@ -761,12 +801,12 @@ function CreateChapter(props: CreateChapterProps) {
                                 foundEntries.add(i);
                             }
                         }
-    
+
                         if (!found) {
                             genericPost("/api/profitSplit/add", newSplit);
                         }
                     });
-    
+
                     for (i = 0; i < response.length; i++) {
                         if (!foundEntries.has(i)) {
                             genericPost('/api/profitSplit/delete', response[i]);

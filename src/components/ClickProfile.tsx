@@ -1,5 +1,5 @@
 import './ClickProfile.css';
-import { Menu, MenuItem, Modal, Sheet, Grid, ModalClose, Typography } from '@mui/joy';
+import { Menu, MenuItem, Modal, Sheet, Grid, ModalClose, Typography, Box } from '@mui/joy';
 import React, { useContext, useState, } from 'react';
 import { User } from '../types';
 import { UserContext } from "../App.tsx";
@@ -12,7 +12,6 @@ import { PROFILE_IMGS_BUCKET } from '../config.ts';
 export default function ClickProfile({ isLoggedIn, logOutFunc, connectAlgoFunc, connectPeraFunc} ) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-
     const context: object = useContext(UserContext);
     const user: User = context['user'];
 
@@ -66,18 +65,22 @@ export default function ClickProfile({ isLoggedIn, logOutFunc, connectAlgoFunc, 
         ) : (
             <div className='navBar-login'>
                 <a id='navbarLogin' onClick={handleClick}>Login</a>
-                <Modal open={open} onClose={() => handleClose("")}>
+                <Modal  open={open} onClose={() => handleClose("")}>
                     <Sheet
                     variant="outlined"
                     sx={{
                         maxWidth: '650px',
                         width: '50vw',
-                        borderRadius: 'md',
+                        borderRadius: '35px',
                         p: 4,
                         boxShadow: 'lg',
                     }}>
-                        <Typography id='loginPopupHeader' color='green' level='h2'>Select Wallet</Typography>
-                        <ModalClose />
+                         <Box className="closeButton">
+                         <Typography id='loginPopupHeader' color='green' level='h2'>Select Wallet</Typography>
+                        <img className='closelogo' onClick={()=>setAnchorEl(null)} src='/icons/arrow.topright.svg' alt='closeArrow' /> 
+                        </Box>
+                        
+                        {/* <ModalClose color="success" /> */}
                         <Grid id='loginPopup'>
                             <Typography id='loginPopupTop' color='white' level='h3'>
                                 to tip, buy art, get tipped on your comments, become a creator or interact with the site, create or link a wallet.
