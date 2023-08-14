@@ -30,8 +30,8 @@ function Beta() {
     return (
         <Grid container alignItems='center' justifyContent='space-around' sx={{minWidth: '360px',width:"100%"}}>
             <Grid container direction='column' alignItems='center' justifyContent='space-around' xs={10} columns={1} sx={{margin: '0px 0px 60px',width: "100%"}}>
-                <img className="logo-twine" src='/icons/TwineLogo.png' width='50%'/>
-                <Typography color='green' level='h1' sx={{marginTop: '-10px', marginBottom: '20px'}}>We Create Worlds</Typography>
+                <img className="logo-twine" src='/icons/TwineLogo.png' width='50%' style={{margin: '10px'}}/>
+                <Typography color='green' level='h1' sx={{marginBottom: '20px'}}>We Create Worlds</Typography>
 
                 <Grid container rowSpacing={3} direction='column' sx={{maxWidth: '450px', minWidth: '350px', width: '30vw', justifyContent: "center"}} className="beta-field-container" >
                     <Grid container alignItems='center' justifyContent='center' sx={{marginTop: '20px'}}>
