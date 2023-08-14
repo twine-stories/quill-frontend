@@ -2,8 +2,8 @@ import React, {useState, useContext, useEffect} from 'react';
 import './Chapter.css';
 import Navbar from "../components/Navbar.tsx";
 import {UserContext} from "../App.tsx";
-import {Episode, User, Like, ProfitSplit, Tip, Work} from '../utils/types.ts';
-import {episodeGetByUrl, genericGet, genericPost, episodesGetByWorkId} from '../utils/api.ts';
+import {Episode, User, Like, ProfitSplit, Tip} from '../utils/types.ts';
+import {episodeGetByUrl, genericGet, genericPost} from '../utils/api.ts';
 import {AspectRatio, Box, Typography, Grid, Link, CircularProgress} from "@mui/joy";
 import IconButton from "../components/IconButton.tsx";
 import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants.ts";
@@ -22,8 +22,6 @@ import { microToAlgo, algoToMicro, TWINE_CUT } from '../utils/blockchain/constan
 function Chapter() {
 
     const [episode, setEpisode] = useState<Episode>([]);
-    const [work, setWork] = useState<Work>(null);
-    const [episodes, setEpisodes] = useState<Array<Episode>>([]);
     const context: object = useContext(UserContext);
     const user: User = context['user'];
     const [liked, setLiked] = useState<boolean>(false);
@@ -46,7 +44,6 @@ function Chapter() {
             console.log('fail');
         });
     }, []);
-
 
     useEffect(() => {
         if (episode && episode.id) {
@@ -72,7 +69,6 @@ function Chapter() {
                 setCreators(creators);
                 setPercentages(percentages);
             });
-            setWork(episode.work);
         }
     }, [episode, user]);
 
@@ -84,14 +80,6 @@ function Chapter() {
             });
         }
     }, [episode]);
-
-    useEffect(() => {
-        if (work) {
-            episodesGetByWorkId(work['id'], () => {
-                console.log('fail');
-            }).then((response) => {setEpisodes(response)})
-        }
-    }, [work]);
 
     const likeAction = () => {
         if (user) {
@@ -122,24 +110,6 @@ function Chapter() {
         }
     }
 
-    const moveToNextChapter = () => {
-        if (episodes && episodes.length > 0) {
-            const index: number = episodes.findIndex((ep: Episode) => ep.id === episode.id);
-            if (index !== -1 && index < episodes.length - 1) {
-                window.location.href = episodes[index + 1].url;
-            }
-        }
-    }
-
-    const moveToPreviousChapter = () => {
-        if (episodes && episodes.length > 0) {
-            const index: number = episodes.findIndex((ep: Episode) => ep.id === episode.id);
-            if (index !== -1 && index > 0) {
-                window.location.href = episodes[index - 1].url;
-            }
-        }
-    }
-
     return (
         <div>
             <Navbar/>
@@ -165,10 +135,8 @@ function Chapter() {
                                 <Typography level='h6' sx={{marginLeft: '10px'}}>{String(numLikes) + ' like' + (numLikes === 1 ? '' : 's')}</Typography>
                             </Grid>
                         </Grid>
-                        <Grid container alignItems='center' justifyContent='flex-start' >
-                            <IconButton icon='/icons/arrow_left.svg' color='green' action={moveToPreviousChapter} />
+                        <Grid container alignItems='center' justifyContent='flex-start'>
                             <Typography sx={{marginRight: '20px'}} level="h3" color='white'>{episode.title}</Typography>
-                            <IconButton icon='/icons/arrow_right.svg' color='green' action={moveToNextChapter} />
                         </Grid>
                         <TwoColumnLayout
                             rightWidth='25%'
