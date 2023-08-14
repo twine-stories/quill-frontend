@@ -8,8 +8,11 @@ import { User, ImageUpload } from '../../utils/types.ts';
 import { createNFT } from '../../utils/blockchain/transactionRepository.ts';
 import UploadImage from '../../components/UploadImage.tsx';
 import { genericPost } from '../../utils/api.ts';
+import MintNftPopup from '../../components/MintNftPopup.tsx';
 
 function CreateArtwork() {
+
+    const encoder = new TextEncoder();
 
     const context: object = useContext(UserContext);
     const user: User = context['user'];
@@ -21,8 +24,37 @@ function CreateArtwork() {
         openUpload: false
     });
 
-    const mintNFT = async (walletAddress: string, unitName: string, assetName: string, assetUrl: string) => {
-        await createNFT(walletAddress, unitName, assetName, assetUrl, user.connectType);
+    const [openNftPopup, setOpenNftPopup] = useState<boolean>(false);
+
+    const [arc69, setArc69] = useState<object>();
+    const [imgHash, setImgHash] = useState<string>();
+
+    useEffect(() => {
+        if (arc69 && imgHash) {
+            setOpenNftPopup(true);
+        }
+    }, [arc69, imgHash])
+
+    const mintNft = async () => {
+        const unitName: HTMLInputElement = document.getElementById('nickname') as HTMLInputElement;
+        const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;
+        const numAssets: HTMLInputElement = document.getElementById('numAssets') as HTMLInputElement;
+
+        if (arc69) {
+            await createNFT(user.walletAddress, unitName.value, assetName.value, "ipfs://" + imgHash + "#i", encoder.encode(JSON.stringify(arc69)), parseInt(numAssets.value), user.connectType);
+            setArc69(undefined);
+            setImgHash(undefined);
+            setOpenNftPopup(false);
+        }
+    }
+
+    const inputFieldsAreValid = () => {
+        const unitName: HTMLInputElement = document.getElementById('nickname') as HTMLInputElement;
+        const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;
+        const assetDescription: HTMLInputElement = document.getElementById('assetDescription') as HTMLInputElement;
+        const numAssets: HTMLInputElement = document.getElementById('numAssets') as HTMLInputElement;
+
+        return unitName && unitName.value && unitName.value.length <= 8 && assetName && assetName.value && assetDescription && assetDescription.value && numAssets && numAssets.value
     }
 
     return (
@@ -37,6 +69,13 @@ function CreateArtwork() {
                     <TwineInput label='Nickname' placeholder='Enter a nickname for your asset (max 8 characters)' inputAttrs={{
                         id: 'nickname'
                     }}/>
+                    <TwineInput label='Description' placeholder='Enter a description for your asset' inputAttrs={{
+                        id: 'assetDescription'
+                    }}/>
+                    <TwineInput defaultValue='1' label='Number of Assets' placeholder='Number of this asset to mint' inputAttrs={{
+                        id: 'numAssets'
+                    }}/>
+
                     <Grid container alignItems='center' justifyContent='center'>
                         {assetImg.preview ? 
                             <img
@@ -72,18 +111,28 @@ function CreateArtwork() {
                         height='200px'
                         contain={true}
                     />
-                    <TwineButton name='Mint NFT' action={async (e) => {
-                        const unitName: HTMLInputElement = document.getElementById('nickname') as HTMLInputElement;
-                        const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;
+                    <TwineButton name='Upload Data' action={async (e) => {
+                        const assetDescription: HTMLInputElement = document.getElementById('assetDescription') as HTMLInputElement;
                         
-                        if (unitName && assetName && assetImg.file) {
+                        if (inputFieldsAreValid() && assetImg.file) {
                             let formData = new FormData();
                             formData.append("file", assetImg.file);
-                            const response = await genericPost('/api/algo/upload-to-ipfs/file', formData);
-                            console.log(response);
-                            // mintNFT(user.walletAddress, unitName.value, assetName.value, assetUrl.value);
+                            const imgUpload = await genericPost('/api/algo/upload-to-ipfs/file', formData);
+                            
+                            setArc69({
+                                standard: "arc69",
+                                description: assetDescription.value,
+                                media_url: "ipfs://" + imgUpload.IpfsHash + "#i",
+                                properties: {
+                                    minter: "test",
+                                    number: 1,
+                                },
+                            });
+
+                            setImgHash(imgUpload.IpfsHash);
                         }
                     }}/>
+                    <MintNftPopup isOpen={openNftPopup} onClose={() => setOpenNftPopup(false)} mintNft={() => mintNft()} />
                 </div>
             </Grid>
         </div>

@@ -7,7 +7,6 @@ import TwineInput from '../../components/TwineInput.tsx';
 import {Genre} from '../../utils/enums.ts';
 import {User, Work, Artwork, NFTCollection, ProfitSplit} from '../../utils/types.ts';
 import {
-    createNFT,
     createApplication,
     changeAssetManagement,
     escrowProgramToAddress,

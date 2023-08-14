@@ -84,7 +84,7 @@ export async function paySign(sender: string, receiver: string, amount: number |
     return await signTxn(paymentTxn);
 }
 
-async function createASA(creatorAddress: string, unitName: string, assetName: string, total: number, decimals: number, assetUrl: string, connectType: ConnectType): Promise<string> {
+async function createASA(creatorAddress: string, unitName: string, assetName: string, note: Uint8Array, total: number, decimals: number, assetUrl: string, connectType: ConnectType): Promise<string> {
     let suggestedParams = await getSuggestedParams();
     const createTxn: Transaction = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
         from: creatorAddress,
@@ -99,13 +99,14 @@ async function createASA(creatorAddress: string, unitName: string, assetName: st
         freeze: creatorAddress,
         clawback: creatorAddress,
         defaultFrozen: true,
+        note: note
     });
 
     return await signTxn(createTxn, connectType, creatorAddress);
 }
 
-export async function createNFT(creatorAddress: string, unitName: string, assetName: string, assetUrl: string, connectType: ConnectType): Promise<string> {
-    return await createASA(creatorAddress, unitName, assetName, 1, 0, assetUrl, connectType);
+export async function createNFT(creatorAddress: string, unitName: string, assetName: string, assetUrl: string, note: Uint8Array, numAssets: number, connectType: ConnectType): Promise<string> {
+    return await createASA(creatorAddress, unitName, assetName, note, numAssets, 0, assetUrl, connectType);
 }
 
 export async function createApplication(approvalProgram: string, clearProgram: string, globalInts: number, globalByteSlices: number, localInts: number, localByteSlices: number, appArgs: Uint8Array[], foreignAssets: number[]): Promise<number> {
