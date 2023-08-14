@@ -165,8 +165,10 @@ function Chapter() {
                                 <Typography level='h6' sx={{marginLeft: '10px'}}>{String(numLikes) + ' like' + (numLikes === 1 ? '' : 's')}</Typography>
                             </Grid>
                         </Grid>
-                        <Grid container alignItems='center' justifyContent='flex-start'>
+                        <Grid container alignItems='center' justifyContent='flex-start' >
+                            <IconButton icon='/icons/arrow_left.svg' color='green' action={moveToPreviousChapter} />
                             <Typography sx={{marginRight: '20px'}} level="h3" color='white'>{episode.title}</Typography>
+                            <IconButton icon='/icons/arrow_right.svg' color='green' action={moveToNextChapter} />
                         </Grid>
                         <TwoColumnLayout
                             rightWidth='25%'
@@ -217,8 +219,6 @@ function Chapter() {
                                             setProcessingTip(false);
                                         }} />
                                     </Grid>
-                                    <TwineButton icon='purple_check.svg' color='purple' name='Next' action={moveToNextChapter} />
-                                    <TwineButton icon='purple_check.svg' color='purple' name='Previous' action={moveToPreviousChapter} />
                                 </Grid>
                             }
                         />
