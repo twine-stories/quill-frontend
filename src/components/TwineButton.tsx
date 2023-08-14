@@ -11,6 +11,9 @@ interface ButtonProps {
     sx?: object;
     paddingTop?:string;
     className?:string;
+    textOverflow?:string;
+    whiteSpace?:string;
+    overflow?:string;
 }
 
 function TwineButton(props: ButtonProps) {
@@ -27,7 +30,7 @@ function TwineButton(props: ButtonProps) {
             onClick={props.action}
             disabled={!(props.enabled === undefined || props.enabled)}
         >
-           <span style={{paddingTop: props.paddingTop || ''}}>{props.name}</span>
+           <span style={{paddingTop: props.paddingTop || '',textOverflow: props.textOverflow || '', whiteSpace: props.whiteSpace || '',overflow: props.overflow}}>{props.name}</span>
         </Button>
     )
 }

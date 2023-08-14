@@ -7,7 +7,6 @@ import { CHAPTER_IMGS_BUCKET } from "../config.ts";
 import { COVER_PATH } from "../utils/aws.ts";
 import { EpisodeOrderContext } from "../pages/Story.tsx";
 
-
 interface EpisodeTileProps {
   episode: Episode;
   isCreator: boolean;
@@ -24,8 +23,9 @@ function EpisodeTile(props: EpisodeTileProps) {
   let navigate = useNavigate();
 
   const stringToDate = (dateString: string) => {
+    const options = { day: "numeric", month: "long", year: "numeric" };
     const date = new Date(dateString);
-    return date.toLocaleDateString();
+    return date.toLocaleDateString("en-US", options);
   };
 
   return (
@@ -37,11 +37,16 @@ function EpisodeTile(props: EpisodeTileProps) {
     >
       <Card
         variant="outlined"
+        className="card-view-story"
         style={{
           backgroundColor: "#14100E",
           width: "100%",
           display: "flex",
+          cursor: "pointer",
           flexDirection: "row",
+          gap: "32px",
+          padding: "16px 32px 16px 16px",
+          borderRadius: "32px",
         }}
         onClick={() => {
           navigate("/chapter/" + props.episode["url"]);
@@ -49,6 +54,7 @@ function EpisodeTile(props: EpisodeTileProps) {
       >
         {/*<AspectRatio variant="outlined" ratio="16/9">*/}
         <img
+          className="episode-tile-img"
           src={
             props.episode &&
             "https://" +
@@ -65,9 +71,10 @@ function EpisodeTile(props: EpisodeTileProps) {
           alt=""
           style={{
             aspectRatio: "1.5/1",
-            width: "18%",
+            width: "25%",
             height: "18%",
             objectFit: "cover",
+            borderRadius: "20px",
           }}
         />
         {/*</AspectRatio>*/}
@@ -84,14 +91,49 @@ function EpisodeTile(props: EpisodeTileProps) {
           <Typography
             level="h6"
             color="white"
-            sx={{ marginLeft: "10px", marginTop: "0px", marginBottom: "0px" }}
+            sx={{ margin: "0px" }}
+            className="view-story-h6"
           >
-            {props.episode && stringToDate(props.episode["publishStamp"])}
+            <div style={{ display: "flex", alignItems: "center" }}>
+            {props.publishedEpisodes && (<div
+                className="chapter-num"
+                style={{
+                  fontSize: "16px",
+                  fontStyle: "Oxanium",
+                  color: "#E4E5FF",
+                }}
+              >
+                Ch.{props.idx + 1}
+              </div>)}
+              {props.publishedEpisodes && (<div
+                className="dot-icon"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  margin: "0 1rem",
+                }}
+              >
+                {" "}
+                <img src="/icons/dot.svg" width="2px" height="2px" />
+              </div>)}
+              <div
+                className="episode-date"
+                style={{
+                  fontSize: "16px",
+                  fontStyle: "Oxanium",
+                  color: "#E4E5FF",
+                }}
+              >
+                {props.episode && stringToDate(props.episode["publishStamp"])}
+              </div>
+            </div>
           </Typography>
           <Typography
             level="h2"
             color="white"
-            sx={{ marginLeft: "10px", minWidth: "600px" }}
+            sx={{ minWidth: "600px", margin: "0px", fontSize: "40px" }}
+            className="view-story-h2"
           >
             {props.episode && props.episode["title"]}
           </Typography>
