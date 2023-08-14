@@ -38,6 +38,123 @@
           left: -20px;
           width: 89px;
         } 
+        h1.title-styling {
+          font-size: 38px;
+        }
+        h6.description-styling{
+          width:100%;
+        }
+        h2.published-chapter{
+          font-size: 28px;
+        }
+        h2.draft-chapter{
+          font-size: 28px;
+          margin: 10px 0px;
+        }
+        h2.view-story-h2{
+          font-size: 21px; 
+        }
+        .left-components{
+          display: block !important;
+        }
+        .card-view-story{
+          gap: 14px !important;
+          padding: 12px 12px 12px 12px !important;
+        }
+        .view-story-button button{
+          width:100%;
+        }
     }
 
-   
+  @media only screen and (max-width: 768px){
+   .left-components{
+    display: block !important;
+    }
+   }
+
+ @media (min-width: 540px) and (max-width: 768px) {
+  h6.description-styling{
+    width:100%; 
+    }
+   .card-view-story{
+    width:90% !important;
+    }
+  }
+
+ @media (min-width: 900px) and (max-width: 1025px){
+  h6.description-styling{
+    width:80%;
+    }
+   .view-story-button{
+    width:85%;
+    }
+   .card-view-story{
+    width:70% !important;
+    }
+   .left-components{
+      margin: 0px !important;
+    }
+    .create-story-container{
+       width: 600px;
+     }
+     h2.view-story-h2{
+      font-size: 25px;
+    }
+  }
+
+  h6.view-story-h6{
+    margin-bottom:6px;
+  }
+  
+
+  @media only screen and (width: 1440px){
+    .date-title{
+      margin-top: 16px;
+    }
+  }
+
+  @media only screen and (max-width: 375px){
+    img.episode-tile-img{
+      width:35% !important;
+     }
+     h2.view-story-h2 {
+      font-size: 17px;
+    }
+   .dot-icon{
+    margin: 0px 0.5rem !important;
+   }
+   .chapter-num{
+    font-size: 12px !important;
+   }
+   .episode-date{
+    font-size: 12px !important;
+   }
+  }
+
+@media (min-width: 1026px) and (max-width: 1300px){
+  .create-story-container{
+    width: 560px;
+  }
+ }
+@media only screen and (max-width: 768px){
+ .creater-container {
+   display: flex;
+   flex-wrap: wrap;
+  }
+  .creater-box{
+    min-width: 204px !important;
+  }
+}
+@media only screen and (max-width: 425px){
+  .creater-box{
+    min-width: 168px !important;
+  }
+}
+@media only screen and (max-width: 375px){
+ .creater-box {
+    min-width: 128px !important;
+ }
+ .creater-box h4{
+  font-size: 14px;
+ }
+}
