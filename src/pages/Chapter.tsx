@@ -3,7 +3,7 @@ import './Chapter.css';
 import Navbar from "../components/Navbar.tsx";
 import {UserContext} from "../App.tsx";
 import {Episode, User, Like, ProfitSplit, Tip, Work} from '../utils/types.ts';
-import {episodeGetByUrl, genericGet, genericPost, episodesGetByWorkId} from '../utils/api.ts';
+import {episodeGetByUrl, genericGet, genericPost} from '../utils/api.ts';
 import {AspectRatio, Box, Typography, Grid, Link, CircularProgress} from "@mui/joy";
 import IconButton from "../components/IconButton.tsx";
 import {CHAPTER_DELIMETER, CHAPTER_IMG_DELIMETER} from "../utils/constants.ts";
