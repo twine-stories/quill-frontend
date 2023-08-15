@@ -96,7 +96,7 @@ function Navbar() {
                     {!isMenuOpen && <Hamburger/>}
                     <Box className='nav-logo'>
                         <a href="/" id='navbarLogo'>
-                            <img src="/icons/twine_logo_2.svg" width="100%" />
+                            <img src="/icons/twine_logo_3.svg" width="100%" />
                         </a>
                     </Box>
                     <Box className='nav-items-names'>
@@ -127,7 +127,7 @@ function Navbar() {
                         {!isMenuOpen && <Hamburger/>}
                         <Box className='nav-logo'>
                         <a href="/" id='navbarLogo'>
-                            <img alt="" src="/icons/twine_logo_2.svg" width="100%"/>
+                            <img alt="" src="/icons/twine_logo_3.svg" width="80%"/>
                         </a>
                         </Box>
                         <Box className='nav-items-names'>
