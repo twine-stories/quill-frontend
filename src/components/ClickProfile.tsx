@@ -64,7 +64,7 @@ export default function ClickProfile({ isLoggedIn, logOutFunc, connectAlgoFunc, 
             </div>
         ) : (
             <div className='navBar-login'>
-                <a id='navbarLogin' onClick={handleClick}>Login</a>
+                <a id='navbarLogin' onClick={handleClick}>login</a>
                 <Modal  open={open} onClose={() => handleClose("")}>
                     <Sheet
                     variant="outlined"
