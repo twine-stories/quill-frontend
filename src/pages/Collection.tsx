@@ -85,7 +85,7 @@ function Collection() {
     }
 
     const buyArtwork = async (art: Artwork): Promise<void> => {
-        if (!user.walletAddress || !assets) {
+        if (!user.walletAddress || !assets || !coll) {
             return;
         }
 
@@ -105,11 +105,8 @@ function Collection() {
             wallets.push(item.creator.walletAddress);
         });
 
-        console.log(percents);
-        console.log(wallets);
-
         // TODO: change hardcoded 2000, addresses, and splits
-        if ((coll.collType === CollectionType.SALE || coll.collType === CollectionType.SHUFFLE) && asset.asaPrice) {
+        if (coll.collType === CollectionType.SALE && asset.asaPrice) {
             console.log('in here and buying');
             buy = buyAsset(id, art.appId, asset.asaOwner, user.walletAddress, asset.asaPrice + 2000, asset.escrowAddress, getApplicationAddress(art.appId));
         } else if (coll.collType === CollectionType.REV_AUCTION) {
@@ -132,6 +129,9 @@ function Collection() {
         // update active in db if sold out
     }
 
+    /**
+     * legacy shuffle code that is not called anywhere and should not be used :)
+     */
     const buyShuffle = async (): Promise<void> => {
         if (!user.walletAddress || !assets || !artwork || coll.collType !== CollectionType.SHUFFLE) {
             return;
@@ -184,7 +184,7 @@ function Collection() {
     }
 
     let listings: JSX.Element[] = [];
-    if (coll && coll.collType !== CollectionType.SHUFFLE) {
+    if (coll) {
         artwork?.forEach((elem: Artwork) => {
             if (!assets || !elem.appId || !(elem.id in assets)) {
                 return;
@@ -205,10 +205,6 @@ function Collection() {
                 <div>
                     <p>{coll.name}</p>
                     {listings}
-                    {
-                        coll.collType === CollectionType.SHUFFLE &&
-                        <TwineButton action={buyShuffle} name="Buy Shuffle" enabled={initLoad} />
-                    }
                 </div>
             }
         </div>

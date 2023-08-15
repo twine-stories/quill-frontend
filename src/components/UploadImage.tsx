@@ -6,8 +6,8 @@ import { Modal, Sheet, Typography, Grid } from "@mui/joy";
 
 interface UploaderProps {
     open: boolean;
-    close: () => Promise<void>;
-    handleUpload: (file: File) => Promise<void>;
+    close: () => Promise<void> | void;
+    handleUpload: (file: File) => Promise<void> | void;
     circle: boolean;
     width: string;
     height: string;

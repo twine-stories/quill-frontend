@@ -24,7 +24,6 @@ const Search = () => {
         setIsSearching(false);
     }
     const onChange = async (e: React.SyntheticEvent<Element, Event>, value: string | dyad | null) => {
-        console.log(value);
         if (value !== null && typeof value !== 'string') {
             window.location.href = value.link;
         }

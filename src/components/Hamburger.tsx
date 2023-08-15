@@ -15,7 +15,7 @@ import Search from './Search.tsx';
 
 
 
-const Hamburger = (props:SearchStylingprops) => {
+const Hamburger = () => {
     const [openCollab, setOpenCollab] = useState<boolean>(false);
     const [openCreator, setOpenCreator] = useState<boolean>(false);
     const context: object = useContext(UserContext);
@@ -24,18 +24,11 @@ const Hamburger = (props:SearchStylingprops) => {
     const buttonRef = React.useRef(null);
     const [open, setOpen] = React.useState(false);
     const [openLogin, setOpenLogin] = React.useState(false);
-    const handleToggle = () => {
-        setMenuOpen(!isMenuOpen)
-        console.log("togglelisworking")
-    }
+
     const blockAccess = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         e.preventDefault();
         setOpenLogin(true);
     }
-
-   
-
-    
 
     const navToCreate = () => {
         setOpenCreator(false);
@@ -50,13 +43,11 @@ const Hamburger = (props:SearchStylingprops) => {
             setOpenCreator(true);
         }
     }
+
     const openSearch = async () => {
         setIsSearching(true);
     }
 
-    const closeSearch = async () => {
-        setIsSearching(false);
-    }
     const closeWall = (): void => {
         setOpenLogin(false);
     }
@@ -93,7 +84,6 @@ const Hamburger = (props:SearchStylingprops) => {
                     </Menu>
             </div>
             <CollabPopup open={openCollab} close={() => setOpenCollab(false)} />
-            {console.log(open,'open')}
             <LoginWall open={openLogin} closeWall={closeWall} />
         </>
     )

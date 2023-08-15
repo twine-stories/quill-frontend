@@ -98,7 +98,7 @@ export type Follow = {
 
 export type ImageUpload = {
     name: string;
-    file: File;
+    file: File | null;
     preview: string;
     openUpload: boolean;
 
