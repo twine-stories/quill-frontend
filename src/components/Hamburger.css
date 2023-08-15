@@ -1,0 +1,107 @@
+a{
+  font-family: 'Twine';
+  text-decoration: none;
+  font-style: normal;
+  font-weight: 400;
+  cursor: pointer;
+  font-size: 36px;
+  line-height: 100%;
+  color: #a3b832;
+}
+.search-inputfield.Joy-focused.css-8un9o9-JoyAutocomplete-root {
+  --Input-focusedHighlight: #241D19 !important;
+
+}
+.search-inputfield{
+  background-color: #0d0603!important;
+}
+ .MuiAutocomplete-listbox{
+  background-color: #14100E !important;
+}
+.MuiAutocomplete-listbox li{
+  background-color: #14100E !important;
+}
+
+
+@media screen and (max-width: 620px) {
+.basics-demo-button{
+  background-color: #0d0603 !important;
+}
+}
+
+
+@media screen and (min-width: 620px) {
+.basics-demo-button{
+  display: none !important;
+  width: 100% !important;
+}
+}
+@media screen and (max-width: 620px) {
+  .basics-demo-button{
+    width: 100% !important;
+    padding: 0px 0px 20px 31px  !important;
+  }
+  }
+.optionss:hover{
+  background-color: #241D19;
+  border-radius: 10px;
+  width: 200px;
+}
+.options-name{
+  color:#9E9FEB;
+}
+@media screen and (max-width: 575px) {
+.basic-menu-option-1{
+color:blue;
+}
+
+}
+
+
+
+.optionss{
+  display: 'flex';
+  flex-direction: 'column';
+  align-items: 'left';
+  gap: '0px';
+}
+
+
+
+
+@media screen and (max-width:575px) and (min-width:320px){
+      .basics-demo-button{
+        width: 100% !important;
+        padding: 0px 18px 0px 20px !important;
+      }
+      .search-icon{
+       margin-left: -4px;
+      }
+
+     
+      
+      .optionss{
+        display: 'flex';
+        flex-direction: 'column';
+        align-items: 'left';
+        gap: '0px';
+      }
+     
+      .auto-complete{
+        width:70%;
+      }
+}
+@media screen and (max-width:575px) and (min-width:450px){
+  .basics-demo-button{
+      padding: 0px 18px 20px 48px !important;
+    }
+  }
+@media screen and (max-width:425px) and (min-width:400px){
+.basics-demo-button{
+    padding: 0px 18px 20px 30px !important;
+  }
+}
+
+
+
+

@@ -12,7 +12,7 @@ type CookieParams = {
     walletAddress: string;
 }
 
-export const genericGet = async (endpoint: string): Promise<object | null> => {
+export const genericGet = async (endpoint: string) => {
     const response = await axios.get(proxy + endpoint);
     if (response.status === 200) {
         return response.data;
@@ -23,7 +23,7 @@ export const genericGet = async (endpoint: string): Promise<object | null> => {
 }
 
 
-export const genericPost = async (endpoint: string, requestBody: object): Promise<object | null> => {
+export const genericPost = async (endpoint: string, requestBody: object) => {
     const response = await axios.post(proxy + endpoint, requestBody);
     if (response.status === 200) {
         return response.data;
@@ -202,8 +202,8 @@ export const collectionCreateWithArt = async (collection: NFTCollection, artwork
     return null;
 }
 
-export const getEscrowProgram = async (saleType: string, assetIds: string, appId: number): Promise<string> => {
-    const escrowResponse = await axios.get('/algo/escrow/' + saleType + '?nft_ids=' + assetIds + '&app_id=' + appId);
+export const getEscrowProgram = async (saleType: string, assetId: string, appId: number): Promise<string> => {
+    const escrowResponse = await axios.get('/algo/escrow/' + saleType + '?nft_id=' + assetId + '&app_id=' + appId);
     const escrowData = escrowResponse.data;
     return escrowData;
 }

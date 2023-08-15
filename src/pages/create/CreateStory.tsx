@@ -74,7 +74,7 @@ function CreateStory(props: CreateStoryProps) {
     const genres: object = Object.keys(Genre);
     for (let i in Object.values(Genre)) {
         let val: string = genres[i];
-        genreOptions.push(<Option key={val.toLowerCase()} value={val.toLowerCase()}>{val.toLowerCase()}</Option>);
+        genreOptions.push(<Option className='dropdown-option' key={val.toLowerCase()} value={val.toLowerCase()}>{val.toLowerCase()}</Option>);
     }
 
     const prepareAndUpload = async (uploadType: string) => {
@@ -155,11 +155,12 @@ function CreateStory(props: CreateStoryProps) {
                         {(!props.edit || work) &&
                             <TwineInput defaultValue={(work && props.edit) ? work['hook'] : ""} id='hook' label='Hook'
                                         placeholder='Enter Hook...' multiline={true}/>}
-                        {(!props.edit || work) && <TwineSelect id="genre1" label="Genre" options={genreOptions}
+                                        
+                        {(!props.edit || work) && <TwineSelect id="genre1"  label="Genre" options={genreOptions}
                                                             defaultValue={(props.edit) ? work['genre1'].toLowerCase() : ""}/>}
-                        {(!props.edit || work) && <TwineSelect id="genre2" label="Genre 2 (optional)" options={genreOptions}
+                        {(!props.edit || work) && <TwineSelect id="genre2"  label="Genre 2 (optional)" options={genreOptions}
                                                             defaultValue={(props.edit) ? work['genre2'].toLowerCase() : "none"}/>}
-                        {(!props.edit || work) && <TwineSelect id="genre3" label="Genre 3 (optional)" options={genreOptions}
+                        {(!props.edit || work) && <TwineSelect id="genre3"  label="Genre 3 (optional)" options={genreOptions}
                                                             defaultValue={(props.edit) ? work['genre3'].toLowerCase() : "none"}/>}
 
                         <Grid container direction='column' alignItems='flex-start' justifyContent='space-around' className='create-image-upload'>

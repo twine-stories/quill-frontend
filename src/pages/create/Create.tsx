@@ -7,7 +7,6 @@ import TwineInput from '../../components/TwineInput.tsx';
 import {Genre} from '../../utils/enums.ts';
 import {User, Work, Artwork, NFTCollection, ProfitSplit} from '../../utils/types.ts';
 import {
-    createNFT,
     createApplication,
     changeAssetManagement,
     escrowProgramToAddress,
@@ -138,13 +137,10 @@ function Create() {
         window.location.href = '/';
     }
 
-
-    const mintNFT = async (walletAddress: string, unitName: string, assetName: string, assetUrl: string) => {
-        const response: object = await createNFT(walletAddress, unitName, assetName, assetUrl);
-        setUpdateAssets(!updateAssets);
-    }
-
     const genContract = async (assetId: number, data: object): Promise<AssetInfo | null> => {
+        // create application from backend, have backend communicate with fast api
+        // pretty much move whole contract logic to backend bc the user only needs to sign away the asset (can send the transaction once we have completed the application/escrow setup)
+        // will probably need to change the escrow logic, but wont be too bad hopefully
         const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], [assetId]);
         const escrowProgram: string = await getEscrowProgram(contractType.toLowerCase(), assetId.toString(), id);
 
@@ -207,36 +203,16 @@ function Create() {
         const data = initResponse.data;
         let contractInfo: Record<number, AssetInfo> = {};
         if (data) {
-            if (contractType === CollectionType.SHUFFLE) {
-                const id: number = await createApplication(data['approval'], data['clear'], data['global_uints'], data['global_byte_slices'], data['local_uints'], data['local_byte_slices'], [decodeAddress(user.walletAddress).publicKey, decodeAddress(adminAddr).publicKey], nftList);
-                const escrowProgram: string = await getEscrowProgram('shuffle', nftList.toString(), id);
-                if (escrowProgram) {
-                    const escrowAddress: string = await escrowProgramToAddress(escrowProgram);
-                    await Promise.all([
-                        callApplicationSign(id, adminAddr, algosdk.OnApplicationComplete.NoOpOC, [INIT_ESCROW, decodeAddress(escrowAddress).publicKey], undefined, undefined, true),
-                        paySign(adminAddr, escrowAddress, 100000 + (100000 * nftList.length), true)
-                    ])
-                    for (const assetId of nftList) {
-                        contractInfo[assetId] = {
-                            appId: id,
-                            assetId: assetId,
-                            escrowAddress: escrowAddress,
-                            price: 1000000
-                        };
-                    }
-                }
-            } else {
-                let promises: Promise<AssetInfo | null>[] = [];
-                for (const assetId of nftList) {
-                    promises.push(genContract(assetId, data));
-                }
-                const values: (AssetInfo | null)[] = await Promise.all(promises);
-                values.forEach((val: AssetInfo | null) => {
-                    if (val !== null) {
-                        contractInfo[val.assetId] = val;
-                    }
-                });
+            let promises: Promise<AssetInfo | null>[] = [];
+            for (const assetId of nftList) {
+                promises.push(genContract(assetId, data));
             }
+            const values: (AssetInfo | null)[] = await Promise.all(promises);
+            values.forEach((val: AssetInfo | null) => {
+                if (val !== null) {
+                    contractInfo[val.assetId] = val;
+                }
+            });
 
             setSmartContractInfo(contractInfo);
             setSelectedNFTs(nftList);
@@ -257,36 +233,27 @@ function Create() {
             txns.push(changeAssetManagement(assetId, user.walletAddress, undefined, undefined, undefined, info.escrowAddress, false));
         }
 
-        if (contractType === CollectionType.SHUFFLE) {
-            const nftIds: number[] = Object.keys(smartContractInfo).map((elem: string) => parseInt(elem));
-            const dummyInfo: AssetInfo = smartContractInfo[nftIds[0]];
-            if (dummyInfo.price) {
-                const price: Uint8Array = encodeUint64(dummyInfo.price);
-                txns.push(callApplication(dummyInfo.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], nftIds));
-            }
-        } else {
-            for (const id in smartContractInfo) {
-                const assetId: number = parseInt(id);
-                const info: AssetInfo = smartContractInfo[assetId];
+        for (const id in smartContractInfo) {
+            const assetId: number = parseInt(id);
+            const info: AssetInfo = smartContractInfo[assetId];
 
-                if (info.price && contractType === CollectionType.SALE) {
-                    const price: Uint8Array = encodeUint64(info.price);
-                    txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId]));
-                } else if (info.startPrice && info.endPrice && info.duration && contractType === CollectionType.REV_AUCTION) {
-                    const startPrice: Uint8Array = encodeUint64(info.startPrice);
-                    const endPrice: Uint8Array = encodeUint64(info.endPrice);
-                    const duration: Uint8Array = encodeUint64(info.duration);
-                    txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, startPrice, endPrice, duration], [assetId]));
-                } else {
-                    // incorrect behavior here
-                    txns.pop();
-                    console.log('encountered incomplete asset info');
-                }
+            if (info.price && contractType === CollectionType.SALE) {
+                const price: Uint8Array = encodeUint64(info.price);
+                txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, price], [assetId]));
+            } else if (info.startPrice && info.endPrice && info.duration && contractType === CollectionType.REV_AUCTION) {
+                const startPrice: Uint8Array = encodeUint64(info.startPrice);
+                const endPrice: Uint8Array = encodeUint64(info.endPrice);
+                const duration: Uint8Array = encodeUint64(info.duration);
+                txns.push(callApplication(info.appId, user.walletAddress, algosdk.OnApplicationComplete.NoOpOC, [MAKE_SELL_OFFER, startPrice, endPrice, duration], [assetId]));
+            } else {
+                // incorrect behavior here
+                txns.pop();
+                console.log('encountered incomplete asset info');
             }
         }
 
         // algosdk.assignGroupID(txns);
-        const response = await signTxns(txns);
+        await signTxns(txns);
 
         const work: HTMLInputElement = document.getElementById('works') as HTMLInputElement;
         const name: HTMLInputElement = document.getElementById('collName') as HTMLInputElement;
@@ -400,31 +367,49 @@ function Create() {
                         className="custom-start-decorator"/>
                     </Sheet>
                 </Stack>
+            </Grid>
 
- <Typography level="h2" color='purple' marginTop='30px'>
-                    Create Art Coming Soon!
-                </Typography>
-                {env === 'dev' &&
+            <Typography level="h2" color='green' sx={{paddingLeft: "16px",marginTop:"74px"}}>Create Art</Typography>
+            <Grid container direction='column' alignItems='flex-start' justifyContent='space-around'>
+                <Stack
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    flexWrap='wrap'
+                    width="100%"
+                >
+                    <Sheet color="green_dashed" variant="rounded">
+                        <span
+                            onMouseEnter={()=>setOnHover(true)}
+                            onMouseLeave={()=>setOnHover(false)}
+                        >
+                        <TwineButton
+                                sx={{
+                                    display: 'flex', 
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    paddingBlock: '2rem',
+                                    paddingInline: '2.4rem', 
+                                    borderRadius: '15px',
+                                    transition: 'background-color 0.3s ease',
+                                    ':hover': { 
+                                        backgroundColor: "#5C720D", 
+                                        color: '#A3B832',
+                                    },}}
+                                icon={hover ? "/icons/green_plus_hover.svg" : "/icons/green_plus.svg"}
+                                color="green"
+                                name="Create Artwork" action={() => {
+                                    window.location.href = '/create/art/'
+                        }}
+                        paddingTop="10px"
+                        className="custom-start-decorator"
+                        />
+                        </span>
+                    </Sheet>
+                </Stack>
+            </Grid>
+            {env === 'dev' &&
                 <div>
-                    <div>
-                        <TwineInput placeholder='Unit name' inputAttrs={{
-                            id: 'unitName'
-                        }}/>
-                        <TwineInput placeholder='Asset name' inputAttrs={{
-                            id: 'assetName'
-                        }}/>
-                        <TwineInput placeholder='Asset url' inputAttrs={{
-                            id: 'assetUrl'
-                        }}/>
-                        <TwineButton name='Mint NFT' action={(e) => {
-                            const unitName: HTMLInputElement = document.getElementById('unitName') as HTMLInputElement;
-                            const assetName: HTMLInputElement = document.getElementById('assetName') as HTMLInputElement;
-                            const assetUrl: HTMLInputElement = document.getElementById('assetUrl') as HTMLInputElement;
-                            if (unitName && assetName && assetUrl) {
-                                mintNFT(user.walletAddress, unitName.value, assetName.value, assetUrl.value);
-                            }
-                        }}/>
-                    </div>
                     {allAssets}
                     <label htmlFor="saleType">Choose a sale type:</label>
                     <select name="saleType" id="saleType" onChange={(e) => {
@@ -462,9 +447,7 @@ function Create() {
                         <TwineButton name='Post NFT(s) for Sale' enabled={enableSell} action={(e) => makeSellOffer()}/>
                     </div>
                 </div>
-                }
-                
-            </Grid>
+            }
         </div>
     );
 }

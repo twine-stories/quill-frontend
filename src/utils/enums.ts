@@ -18,8 +18,7 @@ export const enum WorkType {
 
 export const enum CollectionType {
     SALE = 'SALE',
-    REV_AUCTION = 'REV_AUCTION',
-    SHUFFLE = 'SHUFFLE'
+    REV_AUCTION = 'REV_AUCTION'
 }
 
 export const enum ConnectType {

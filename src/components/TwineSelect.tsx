@@ -1,5 +1,5 @@
 import React from 'react';
-import {FormControl, FormLabel, Input, Select} from "@mui/joy";
+import {Box, FormControl, FormLabel, Input, Select} from "@mui/joy";
 
 interface TwineSelectProps {
     id: string;
@@ -8,14 +8,17 @@ interface TwineSelectProps {
     defaultValue?: string;
 }
 
+
 function TwineSelect(props: TwineSelectProps) {
     return (
-        <FormControl id={props.id}>
+       <Box className="dropdown-field">
+         <FormControl id={props.id}>
             <FormLabel>{props.label}</FormLabel>
             <Select defaultValue={props.defaultValue}>
                 {props.options}
             </Select>
         </FormControl>
+       </Box>
     )
 }
 
