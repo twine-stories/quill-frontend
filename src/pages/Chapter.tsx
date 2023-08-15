@@ -87,9 +87,10 @@ function Chapter() {
 
     useEffect(() => {
         if (work) {
-            episodesGetByWorkId(work['id'], () => {
-                console.log('fail');
-            }).then((response) => {setEpisodes(response)})
+            genericGet('/api/episode/published/work/url/' + work.url).then((response: Episode[]) => {
+                let sorted = response.sort((a,b) => a.episodeNumber - b.episodeNumber);
+                setEpisodes(sorted);
+            });
         }
     }, [work]);
 
