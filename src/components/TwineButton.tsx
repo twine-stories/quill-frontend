@@ -19,7 +19,7 @@ function TwineButton(props: ButtonProps) {
     return (
         <Button
           className={props.className}
-            sx={props.sx}
+            sx={{borderRadius: '10px' ,...props.sx}}
             size={size}
             color={color}
             startDecorator={props.icon && <img width="18px" height="18px" src={props.icon} />}

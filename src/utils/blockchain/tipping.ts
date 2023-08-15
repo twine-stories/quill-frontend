@@ -38,7 +38,7 @@ export const tip = async (sender: string, wallets: string[], percentages: number
     const twineCut: bigint = (totalTip) / BigInt(TWINE_CUT * 100);
     const creatorsCut: bigint = totalTip - twineCut;
 
-    let suggestedParams: SuggestedParams = await genericGet('/api/algo/suggestedParams');
+    let suggestedParams: SuggestedParams = await genericGet('/api/algo/suggested-params');
 
     let txns: Transaction[] = tipHelper(sender, wallets, percentages, creatorsCut, suggestedParams);
 

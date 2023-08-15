@@ -17,7 +17,7 @@ export const sendTransaction = async (signedTxn: Uint8Array): Promise<string> =>
 }
 
 export const getSuggestedParams = async (): Promise<SuggestedParams> => {
-    return await genericGet('/api/algo/suggestedParams');
+    return await genericGet('/api/algo/suggested-params');
 }
 
 export async function waitForTxn(txnId: string): Promise<Record<string, any>> {
