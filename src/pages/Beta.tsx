@@ -30,7 +30,7 @@ function Beta() {
     return (
         <Grid container alignItems='center' justifyContent='space-around' sx={{minWidth: '360px',width:"100%"}}>
             <Grid container direction='column' alignItems='center' justifyContent='space-around' xs={10} columns={1} sx={{margin: '0px 0px 60px',width: "100%"}}>
-                <img className="logo-twine" src='/icons/TwineLogo.png' width='50%' style={{margin: '10px'}}/>
+                <img className="logo-twine" src='/icons/TwineLogo.png' width='45%' style={{margin: '75px'}}/>
                 <Typography color='green' level='h1' sx={{marginBottom: '20px'}}>We Create Worlds</Typography>
 
                 <Grid container rowSpacing={3} direction='column' sx={{maxWidth: '450px', minWidth: '350px', width: '30vw', justifyContent: "center"}} className="beta-field-container" >
@@ -54,8 +54,7 @@ function Beta() {
                 </Grid>
 
                 <iframe style={{borderRadius: '5px', border: 'none', height: '30vw', width: '50vw', maxWidth: '900px', maxHeight: '540px', minWidth: '350px', minHeight: '210px', padding: '15px', margin: '30px 0px', borderRadius: '15px', border: '1px solid #241D19', justifyContent: "center"}}
-                src="https://www.youtube.com/embed/4jjeJMxQibQ" className="i-frame">
-                
+                src="https://www.youtube.com/embed/tHqrUH23_dU" className="i-frame">
                 </iframe>
                
                 <Grid container rowSpacing={3} direction='column' sx={{maxWidth: '450px', minWidth: '350px', width: '30vw', justifyContent: "center", marginTop: '30px'}} className="beta-field-container" >
