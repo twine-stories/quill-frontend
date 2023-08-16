@@ -1,76 +1,117 @@
-import React, { useState, useContext } from 'react';
-import { UserContext } from "../App.tsx";
-import { User } from '../utils/types.ts';
-import TwineButton from './TwineButton.tsx';
-import TwineInput from './TwineInput.tsx';
-import { Modal, Sheet, Typography, Grid } from '@mui/joy';
-import { genericPost } from '../utils/api.ts';
-import ErrorPopup from './ErrorPopup.tsx';
+import React, { useState, useContext } from 'react'
+import { UserContext } from '../App.tsx'
+import { User } from '../utils/types.ts'
+import TwineButton from './TwineButton.tsx'
+import TwineInput from './TwineInput.tsx'
+import { Modal, Sheet, Typography, Grid } from '@mui/joy'
+import { genericPost } from '../utils/api.ts'
+import ErrorPopup from './ErrorPopup.tsx'
 
 interface RegisterCreatorProps {
-    open: boolean;
-    close: () => void;
-    updateUser: (user: User) => void;
-    navigate: () => void;
+    open: boolean
+    close: () => void
+    updateUser: (user: User) => void
+    navigate: () => void
 }
 
 function RegisterCreator(props: RegisterCreatorProps) {
-    const [openError, setOpenError] = useState<boolean>(false);
-    const context: object = useContext(UserContext);
+    const [openError, setOpenError] = useState<boolean>(false)
+    const context: object = useContext(UserContext)
 
     return (
         <Modal open={props.open} onClose={props.close}>
             <Sheet
-            variant="outlined"
-            sx={{
-                maxWidth: '600px',
-                width: '50vw',
-                borderRadius: 'md',
-                p: 3,
-                boxShadow: 'lg',
-            }}>
-                <Typography level='h2' color='green'>Register as a Creator</Typography>
-                <Grid container direction='column' sx={{marginLeft: '30px', marginBottom: '20px'}} rowSpacing={2}>
-                    <Grid><TwineInput placeholder='Enter email...' label='email address' inputAttrs={{id: 'emailInput'}} /></Grid>
-                    <Grid><TwineInput placeholder='Enter phone number...' label='phone number' inputAttrs={{id: 'phoneInput'}} /></Grid>
+                variant="outlined"
+                sx={{
+                    maxWidth: '600px',
+                    width: '50vw',
+                    borderRadius: 'md',
+                    p: 3,
+                    boxShadow: 'lg',
+                }}
+            >
+                <Typography level="h2" color="green">
+                    Register as a Creator
+                </Typography>
+                <Grid
+                    container
+                    direction="column"
+                    sx={{ marginLeft: '30px', marginBottom: '20px' }}
+                    rowSpacing={2}
+                >
+                    <Grid>
+                        <TwineInput
+                            placeholder="Enter email..."
+                            label="email address"
+                            inputAttrs={{ id: 'emailInput' }}
+                        />
+                    </Grid>
+                    <Grid>
+                        <TwineInput
+                            placeholder="Enter phone number..."
+                            label="phone number"
+                            inputAttrs={{ id: 'phoneInput' }}
+                        />
+                    </Grid>
                 </Grid>
-                <Grid container alignItems='center' justifyContent='center'>
-                    <TwineButton color='green' action={(e) => {
-                        const email = document.getElementById('emailInput') as HTMLInputElement;
-                        const phone = document.getElementById('phoneInput') as HTMLInputElement;
-                        if (email && phone) {
-                            let newUser: User = JSON.parse(JSON.stringify(context['user']));
-                            if (!(email.value.includes('@') && email.value.includes('.'))) {
-                                setOpenError(true);
-                                return;
-                            }
-
-                            newUser.email = email.value;
-                            newUser.creator = true;
-
-                            let phoneNumber: string = "";
-                            const reg = new RegExp('^[0-9]+$');
-                            for (let i = 0; i < phone.value.length; i++) {
-                                if (reg.test(phone.value[i])) {
-                                    phoneNumber += phone.value[i];
+                <Grid container alignItems="center" justifyContent="center">
+                    <TwineButton
+                        color="green"
+                        action={(e) => {
+                            const email = document.getElementById(
+                                'emailInput'
+                            ) as HTMLInputElement
+                            const phone = document.getElementById(
+                                'phoneInput'
+                            ) as HTMLInputElement
+                            if (email && phone) {
+                                let newUser: User = JSON.parse(
+                                    JSON.stringify(context['user'])
+                                )
+                                if (
+                                    !(
+                                        email.value.includes('@') &&
+                                        email.value.includes('.')
+                                    )
+                                ) {
+                                    setOpenError(true)
+                                    return
                                 }
+
+                                newUser.email = email.value
+                                newUser.creator = true
+
+                                let phoneNumber: string = ''
+                                const reg = new RegExp('^[0-9]+$')
+                                for (let i = 0; i < phone.value.length; i++) {
+                                    if (reg.test(phone.value[i])) {
+                                        phoneNumber += phone.value[i]
+                                    }
+                                }
+
+                                newUser.phoneNumber = phoneNumber
+
+                                genericPost('/api/user/update', newUser).then(
+                                    (response: User) => {
+                                        props.updateUser(response)
+                                        props.navigate()
+                                    }
+                                )
+                            } else {
+                                setOpenError(true)
                             }
-
-                            newUser.phoneNumber = phoneNumber;
-
-                            genericPost('/api/user/update', newUser).then((response: User) => {
-                                props.updateUser(response);
-                                props.navigate();  
-                            });
-                        } else {
-                            setOpenError(true);
-                        }
-                    }} name='Register' />
+                        }}
+                        name="Register"
+                    />
                 </Grid>
-                <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message='There was an error with one or more of the fields. Please check them and try again.' />
+                <ErrorPopup
+                    isOpen={openError}
+                    onClose={() => setOpenError(false)}
+                    message="There was an error with one or more of the fields. Please check them and try again."
+                />
             </Sheet>
         </Modal>
     )
 }
 
-export default RegisterCreator;
+export default RegisterCreator

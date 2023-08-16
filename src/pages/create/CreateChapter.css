@@ -4,7 +4,7 @@
 }
 
 #create-chapter-stack .MuiTextarea-root {
-    width: 100%
+    width: 100%;
 }
 
 #chapter-content .chapter-text {
@@ -12,9 +12,10 @@
 }
 
 #comm-guidelines {
-    color: #9E9FEB;
+    color: #9e9feb;
 }
-img.hover-arrow-up-img, img.hover-arrow-button-down {
+img.hover-arrow-up-img,
+img.hover-arrow-button-down {
     position: absolute;
     opacity: 0;
     transition: 0.1s;
@@ -22,7 +23,6 @@ img.hover-arrow-up-img, img.hover-arrow-button-down {
 img.hover-arrow-up-img:hover {
     opacity: 1;
 }
-
 
 img.hover-arrow-button-down:hover {
     opacity: 1;

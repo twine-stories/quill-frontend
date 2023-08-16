@@ -2,17 +2,15 @@
     display: flex;
     align-items: start;
     margin-top: 30px;
-  }
-  
-.profile-pic {
-margin-right: 24px;
-margin-left: 7%;
-margin-top : 15px;
-border-radius: 50%;
-object-fit: cover;
-
 }
 
+.profile-pic {
+    margin-right: 24px;
+    margin-left: 7%;
+    margin-top: 15px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 
 .profile-info h1 {
     margin-top: -10px;
@@ -27,7 +25,6 @@ object-fit: cover;
     width: 65%;
     margin-right: 2%;
 }
-
 
 .name-username p {
     text-align: left;
@@ -57,7 +54,7 @@ object-fit: cover;
 .works {
     margin-right: 24px;
     margin-left: 7%;
-    margin-top : 15px;
+    margin-top: 15px;
 }
 
 .works-list {
@@ -66,26 +63,26 @@ object-fit: cover;
     flex-wrap: wrap;
     gap: 10px;
 }
-@media screen and (min-width : 2560px) {
-    .edit-notif{
-     width: 70%;
+@media screen and (min-width: 2560px) {
+    .edit-notif {
+        width: 70%;
     }
-  }
+}
 
 @media only screen and (max-width: 575px) {
     .bell-class {
         width: initial !important;
     }
     .profile-info .profile-pic {
-    width: 50px !important;
-    height: 50px !important;
-    margin: 0 !important;
+        width: 50px !important;
+        height: 50px !important;
+        margin: 0 !important;
     }
     .edit-profile-class {
         font-size: 10px !important;
     }
 
-    .edit-profile-class img{
+    .edit-profile-class img {
         width: 14px !important;
     }
 
@@ -95,5 +92,4 @@ object-fit: cover;
     .bell-class img {
         width: 10px !important;
     }
-
 }
