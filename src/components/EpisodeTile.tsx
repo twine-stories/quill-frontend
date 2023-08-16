@@ -30,6 +30,7 @@ function EpisodeTile(props: EpisodeTileProps) {
 
   return (
     <Stack
+      className="card-view-story-parent"
       direction="row"
       spacing={2}
       alignItems="center"
@@ -207,7 +208,7 @@ function EpisodeTile(props: EpisodeTileProps) {
             )}
         </Stack>
       )}
-      <Stack direction="column" alignItems="center">
+      <Stack direction="column" alignItems="center" className="remove-del-img">
         {props.episode.episodeNumber === -1 && (
           <IconButton
             onClick={function () {
