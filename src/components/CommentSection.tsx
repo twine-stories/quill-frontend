@@ -1,24 +1,35 @@
-import React, {useState, useContext, useEffect} from 'react';
-import {UserContext} from "../App.tsx";
-import { Box, Button, FormControl, FormLabel, Textarea, IconButton, Menu, MenuItem, ListItemDecorator, Typography} from "@mui/joy";
-import { User, Comment } from '../utils/types.ts';
-import { genericPost, genericGet } from '../utils/api.ts';
-import { PROFILE_IMGS_BUCKET } from '../config.ts';
-import TwineButton from './TwineButton.tsx';
-import ErrorPopup from './ErrorPopup.tsx';
+import React, { useState, useContext, useEffect } from 'react'
+import { UserContext } from '../App.tsx'
+import {
+    Box,
+    Button,
+    FormControl,
+    FormLabel,
+    Textarea,
+    IconButton,
+    Menu,
+    MenuItem,
+    ListItemDecorator,
+    Typography,
+} from '@mui/joy'
+import { User, Comment } from '../utils/types.ts'
+import { genericPost, genericGet } from '../utils/api.ts'
+import { PROFILE_IMGS_BUCKET } from '../config.ts'
+import TwineButton from './TwineButton.tsx'
+import ErrorPopup from './ErrorPopup.tsx'
 
-export default function CommentSection({episode}) {
+export default function CommentSection({ episode }) {
+    const context: object = useContext(UserContext)
+    const user: User = context['user']
 
-    const context: object = useContext(UserContext);
-    const user: User = context['user'];
+    const [comments, setComments] = useState<Comment[]>([])
+    const [openError, setOpenError] = useState<boolean>(false)
 
-    const [comments, setComments] = useState<Comment[]>([]);
-    const [openError, setOpenError] = useState<boolean>(false);
-
-    const  onComment = async () => {
+    const onComment = async () => {
         if (user && episode) {
-            const data: string = document.getElementsByClassName("commentBox")[0].getElementsByTagName("textarea")[0].value;
-
+            const data: string = document
+                .getElementsByClassName('commentBox')[0]
+                .getElementsByTagName('textarea')[0].value
 
             const comment: Comment = {
                 commenter: user,
@@ -26,89 +37,138 @@ export default function CommentSection({episode}) {
                 content: data,
             }
 
-            const response = await genericPost('/api/comment/comment', comment);
-            
-            genericGet('/api/comment/comments/' + episode.id).then((response: any) => {
-                setComments(response);
-            });
+            const response = await genericPost('/api/comment/comment', comment)
 
+            genericGet('/api/comment/comments/' + episode.id).then(
+                (response: any) => {
+                    setComments(response)
+                }
+            )
         } else {
-            setOpenError(true);
+            setOpenError(true)
         }
-        
     }
 
     useEffect(() => {
         if (episode) {
-            genericGet('/api/comment/comments/' + episode.id).then((response: any) => {
-                setComments(response);
-            });
+            genericGet('/api/comment/comments/' + episode.id).then(
+                (response: any) => {
+                    setComments(response)
+                }
+            )
         }
-    }, [episode]);
+    }, [episode])
 
     const formatDate = (date: String) => {
         // only include month, day, year
-        date = new Date(date).toLocaleString();
-        date = date.split(',')[0];
-        return date;
+        date = new Date(date).toLocaleString()
+        date = date.split(',')[0]
+        return date
     }
-    
+
     return (
         <div>
-            <Typography level="h2" sx={{color: "#9e9feb",}}>Comments</Typography>
+            <Typography level="h2" sx={{ color: '#9e9feb' }}>
+                Comments
+            </Typography>
             <FormControl>
                 <Textarea
                     className="commentBox"
                     placeholder="Type something here…"
                     minRows={1}
                     endDecorator={
-                    <Box
-                        sx={{
-                        display: 'flex',
-                        gap: 'var(--Textarea-paddingBlock)',
-                        pt: 'var(--Textarea-paddingBlock)',
-                        borderTop: '1px solid',
-                        borderColor: 'divider',
-                        flex: 'auto',
-                        }}
-                    >
-
-                        <TwineButton name="send" action={onComment} sx={{ ml: 'auto' }} />
-                        
-                    </Box>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: 'var(--Textarea-paddingBlock)',
+                                pt: 'var(--Textarea-paddingBlock)',
+                                borderTop: '1px solid',
+                                borderColor: 'divider',
+                                flex: 'auto',
+                            }}
+                        >
+                            <TwineButton
+                                name="send"
+                                action={onComment}
+                                sx={{ ml: 'auto' }}
+                            />
+                        </Box>
                     }
                     sx={{
-                    minWidth: 300,
-                    marginBottom: '15px'
+                        minWidth: 300,
+                        marginBottom: '15px',
                     }}
                 />
             </FormControl>
-            <div className='comments'>
+            <div className="comments">
                 {comments.map((comment, index) => (
-                    <div key={index} className='comment' style={{display: "flex", alignItems: "center", marginBottom: "1rem"}}>
+                    <div
+                        key={index}
+                        className="comment"
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginBottom: '1rem',
+                        }}
+                    >
                         <div>
-                            <img 
-                            src={'https://' + PROFILE_IMGS_BUCKET + '.s3.amazonaws.com/' + comment.commenter.profileImg} 
-                            onError={e => {
-                                e.currentTarget.src = 'https://'+PROFILE_IMGS_BUCKET+'.s3.amazonaws.com/default.jpeg'
-                            }}
-                            width={64}
-                            height={64}
-                            style={{borderRadius: "50%", objectFit: "cover"}}
-                            className='profileImg' 
+                            <img
+                                src={
+                                    'https://' +
+                                    PROFILE_IMGS_BUCKET +
+                                    '.s3.amazonaws.com/' +
+                                    comment.commenter.profileImg
+                                }
+                                onError={(e) => {
+                                    e.currentTarget.src =
+                                        'https://' +
+                                        PROFILE_IMGS_BUCKET +
+                                        '.s3.amazonaws.com/default.jpeg'
+                                }}
+                                width={64}
+                                height={64}
+                                style={{
+                                    borderRadius: '50%',
+                                    objectFit: 'cover',
+                                }}
+                                className="profileImg"
                             />
                         </div>
-                        <div className='name-comment' style={{marginLeft: "1rem"}}>
-                            <Typography level="h3" sx={{marginBottom: '6px'}} color='purple'>{comment.commenter.userName}</Typography>
-                            <Typography level="h6" sx={{marginBottom: '6px', marginTop: '0px'}} color='white'>{comment.content}</Typography>
-                            <Typography level="h6" sx={{fontSize: '14px', marginTop: '0px'}} color='purple'>{comment.publishStamp && formatDate(comment.publishStamp)}</Typography>
+                        <div
+                            className="name-comment"
+                            style={{ marginLeft: '1rem' }}
+                        >
+                            <Typography
+                                level="h3"
+                                sx={{ marginBottom: '6px' }}
+                                color="purple"
+                            >
+                                {comment.commenter.userName}
+                            </Typography>
+                            <Typography
+                                level="h6"
+                                sx={{ marginBottom: '6px', marginTop: '0px' }}
+                                color="white"
+                            >
+                                {comment.content}
+                            </Typography>
+                            <Typography
+                                level="h6"
+                                sx={{ fontSize: '14px', marginTop: '0px' }}
+                                color="purple"
+                            >
+                                {comment.publishStamp &&
+                                    formatDate(comment.publishStamp)}
+                            </Typography>
                         </div>
-                        
                     </div>
                 ))}
             </div>
-            <ErrorPopup isOpen={openError} onClose={() => setOpenError(false)} message='Please log in to comment.' />
-
+            <ErrorPopup
+                isOpen={openError}
+                onClose={() => setOpenError(false)}
+                message="Please log in to comment."
+            />
         </div>
     )
 }

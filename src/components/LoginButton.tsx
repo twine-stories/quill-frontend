@@ -1,13 +1,11 @@
-import React from 'react';
+import React from 'react'
 
 interface LoginButtonProps {
-    connectToMyAlgo: () => Promise<void>;
+    connectToMyAlgo: () => Promise<void>
 }
 
 function LoginButton(props: LoginButtonProps) {
-    return (
-        <button onClick={props.connectToMyAlgo}>Connect</button>
-    )
+    return <button onClick={props.connectToMyAlgo}>Connect</button>
 }
 
-export default LoginButton;
+export default LoginButton

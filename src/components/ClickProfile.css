@@ -6,7 +6,8 @@
     margin-left: 0px;
 }
 
-#loginPopupTop, #loginPopupBottom {
+#loginPopupTop,
+#loginPopupBottom {
     text-align: center;
 }
 
@@ -18,9 +19,7 @@
     font-size: 20px;
 }
 
-
 .closeButton {
-
     justify-content: space-between;
 
     display: flex;
@@ -34,15 +33,15 @@
     transition: 0.3s;
 }
 .closeButton img:hover {
-    background: #14100E;
+    background: #14100e;
 }
 
 #loginPopup {
-    background-color: #14100E;
+    background-color: #14100e;
     padding: 20px;
     border-radius: 20px;
 }
-#navbarLogin{
+#navbarLogin {
     font-size: 30px !important;
 }
 
@@ -72,13 +71,13 @@
 }
 @media screen and (max-width: 800px) and (min-width: 300px) {
     .profile-img {
-      width: 48px;
-      height: 48px;
+        width: 48px;
+        height: 48px;
     }
-  }
+}
 @media screen and (max-width: 575px) {
     .profile-img {
         width: 50px !important;
         height: 50px !important;
-      }
-  }
+    }
+}

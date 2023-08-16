@@ -1,43 +1,41 @@
 @media only screen and (min-width: 1440px) {
-.create-published-button {
-    margin-right: 34px;
-  }
+    .create-published-button {
+        margin-right: 34px;
+    }
 }
 @media only screen and (min-width: 375px) {
-  .create-published-button {
-     margin-left: 6px;
-    }
-  }
- @media only screen and (min-width: 425px) {
     .create-published-button {
-       margin-left: -15px;
-      }
-  }
-  @media only screen and (max-width: 425px) {
-     .gallery-columns {
-          display: block !important;
-      }
-      .gallery-columns {
-        margin-right: 0 !important;
-      }
-      .profile-pic {
-          width: 60px;
-          height: 60px;
-      }
-      .name-username h4 {
-          font-size: 16px;
-          margin-left: 11px;
-          margin-top: 0;
-        }
-      .profile-info h1 {
-          font-size: 22px;
-          margin-left: 11px;
-      }
-      .sidebar button{
-          position: relative;
-          left: -20px;
-          width: 89px;
-        } 
+        margin-left: 6px;
     }
-
-   
+}
+@media only screen and (min-width: 425px) {
+    .create-published-button {
+        margin-left: -15px;
+    }
+}
+@media only screen and (max-width: 425px) {
+    .gallery-columns {
+        display: block !important;
+    }
+    .gallery-columns {
+        margin-right: 0 !important;
+    }
+    .profile-pic {
+        width: 60px;
+        height: 60px;
+    }
+    .name-username h4 {
+        font-size: 16px;
+        margin-left: 11px;
+        margin-top: 0;
+    }
+    .profile-info h1 {
+        font-size: 22px;
+        margin-left: 11px;
+    }
+    .sidebar button {
+        position: relative;
+        left: -20px;
+        width: 89px;
+    }
+}

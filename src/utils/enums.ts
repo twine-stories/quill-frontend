@@ -8,20 +8,20 @@ export const enum Genre {
     SLICE_OF_LIFE = 'SLICE_OF_LIFE',
     SUPERNATURAL = 'SUPERNATURAL',
     HORROR = 'HORROR',
-    NONE = "NONE"
+    NONE = 'NONE',
 }
 
 export const enum WorkType {
     ILLUSTRATED = 'ILLUSTRATED',
-    WRITTEN = 'WRITTEN'
+    WRITTEN = 'WRITTEN',
 }
 
 export const enum CollectionType {
     SALE = 'SALE',
-    REV_AUCTION = 'REV_AUCTION'
+    REV_AUCTION = 'REV_AUCTION',
 }
 
 export const enum ConnectType {
     MY_ALGO = 'MY_ALGO',
-    PERA = 'PERA'
+    PERA = 'PERA',
 }

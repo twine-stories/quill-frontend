@@ -7,7 +7,7 @@
     width: 130px;
     height: 40px;
     background-color: #4546ab;
-    color: #9E9FEB;
+    color: #9e9feb;
     border-radius: 12px;
     font-family: Oxanium;
     src: url('../../public/fonts/Oxanium/Oxanium-Regular.ttf');
@@ -17,12 +17,12 @@
 }
 
 #profile-file-upload::file-selector-button:active {
-    background-color: #5758B3;
-    border: #5758B3;
+    background-color: #5758b3;
+    border: #5758b3;
 }
 
 #profile-upload-preview {
-    background: #14100E;
+    background: #14100e;
     padding: 15px 25px;
     margin: 20px;
     border-radius: 20px;
@@ -33,7 +33,7 @@
 }
 
 #profile-preview-wrapper {
-    border: 1px #241D19 solid;
+    border: 1px #241d19 solid;
     border-radius: 15px;
     margin: 10px;
 }

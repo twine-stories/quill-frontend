@@ -1,6 +1,6 @@
 #feedback-upload-wrapper {
     margin-bottom: 10px;
-    background: #14100E;
+    background: #14100e;
     border-radius: 20px;
     padding: 25px;
     padding-top: 10px;
@@ -16,7 +16,7 @@
     width: 45vw;
     height: 35vw;
     border-radius: 15px;
-    border: 1px #241D19 dashed;
+    border: 1px #241d19 dashed;
 }
 
 #feedback-image-upload #feedback-upload {

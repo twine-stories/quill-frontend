@@ -19,13 +19,13 @@
 }
 
 .gallery-tile .gallery-tile-img {
-    width: 180px; 
-    height:  270px; 
+    width: 180px;
+    height: 270px;
     border-radius: 25px;
     object-fit: cover;
 }
 
-.gallery-tile-title-container{
+.gallery-tile-title-container {
     display: flex;
     justify-content: left;
     margin-left: 16px;

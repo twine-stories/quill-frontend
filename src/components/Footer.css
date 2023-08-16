@@ -11,32 +11,32 @@
 #footer-links a {
     text-decoration: none;
     font-family: 'Oxanium';
-    color: #E4E5FF;
+    color: #e4e5ff;
     font-size: 16px;
 }
 
 #footer-links a:hover {
-    color: #9E9FEB;
+    color: #9e9feb;
 }
 
 @media only screen and (max-width: 320px) {
     #footer {
-       margin-left: 90px; 
+        margin-left: 90px;
     }
-  }
-  
-  @media only screen and (min-width: 320px) and (max-width: 375px) {
-    #footer{
-      margin-left: 57px;
+}
+
+@media only screen and (min-width: 320px) and (max-width: 375px) {
+    #footer {
+        margin-left: 57px;
     }
-    
-     #footer{
-      margin-left: 0px;
+
+    #footer {
+        margin-left: 0px;
     }
-  }
-  
+}
+
 @media (min-width: 320px) and (max-width: 375px) {
-    .about{
-      padding:0px;
+    .about {
+        padding: 0px;
     }
-  }
+}

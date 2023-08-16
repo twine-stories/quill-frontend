@@ -1,33 +1,50 @@
-import React from 'react';
-import './GalleryTile.css';
-import {NFTCollection, Work} from '../utils/types.ts';
-import {AspectRatio, Card, Typography, Grid} from "@mui/joy";
-import {STORY_IMGS_BUCKET} from "../config.ts";
-import {COVER_PATH} from "../utils/aws.ts";
+import React from 'react'
+import './GalleryTile.css'
+import { NFTCollection, Work } from '../utils/types.ts'
+import { AspectRatio, Card, Typography, Grid } from '@mui/joy'
+import { STORY_IMGS_BUCKET } from '../config.ts'
+import { COVER_PATH } from '../utils/aws.ts'
 
 interface GalleryTileProps {
-    work: Work;
-    coll?: NFTCollection;
-    story: boolean;
+    work: Work
+    coll?: NFTCollection
+    story: boolean
 }
 
 function GalleryTile(props: GalleryTileProps) {
-    let imgSrc = 'https://' + STORY_IMGS_BUCKET + '.s3.amazonaws.com/' + COVER_PATH + props.work.cover;
+    let imgSrc =
+        'https://' +
+        STORY_IMGS_BUCKET +
+        '.s3.amazonaws.com/' +
+        COVER_PATH +
+        props.work.cover
     if (props.story) {
         return (
-            <Card variant="outlined" sx={{backgroundColor: "#14100E",borderRadius: "32px",border: "2px solid #241D19",padding: "13px"}} onClick={() => {window.location.href = '/story/' + props.work['url']}} className='gallery-tile'>
-                <Grid container alignItems='center' justifyContent='center'>
+            <Card
+                variant="outlined"
+                sx={{
+                    backgroundColor: '#14100E',
+                    borderRadius: '32px',
+                    border: '2px solid #241D19',
+                    padding: '13px',
+                }}
+                onClick={() => {
+                    window.location.href = '/story/' + props.work['url']
+                }}
+                className="gallery-tile"
+            >
+                <Grid container alignItems="center" justifyContent="center">
                     {/* <AspectRatio sx={{my: 2, height: '150px', width: '100px'}}> */}
-                        <img
-                            className='gallery-tile-img'
-                            src={imgSrc}
-                            loading="lazy"
-                            alt=""
-                        />
+                    <img
+                        className="gallery-tile-img"
+                        src={imgSrc}
+                        loading="lazy"
+                        alt=""
+                    />
                     {/* </AspectRatio> */}
                 </Grid>
                 <div className="gallery-tile-title-container">
-                    <Typography level="h2" sx={{color: "#9E9FEB"}}>
+                    <Typography level="h2" sx={{ color: '#9E9FEB' }}>
                         {props.work && props.work['title']}
                     </Typography>
                     {/*<Typography level="h6" sx={{color: "#E4E5FF"}}>*/}
@@ -38,11 +55,18 @@ function GalleryTile(props: GalleryTileProps) {
                     {/*</Typography>*/}
                 </div>
             </Card>
-        );
+        )
     } else {
         return (
-            <Card variant="outlined" sx={{backgroundColor: "#14100E"}} onClick={() => {window.location.href = '/collection/' + props.coll.url}} className='gallery-tile'>
-                <AspectRatio minHeight="120px" maxHeight="200px" sx={{my: 2}}>
+            <Card
+                variant="outlined"
+                sx={{ backgroundColor: '#14100E' }}
+                onClick={() => {
+                    window.location.href = '/collection/' + props.coll.url
+                }}
+                className="gallery-tile"
+            >
+                <AspectRatio minHeight="120px" maxHeight="200px" sx={{ my: 2 }}>
                     <img
                         src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
                         srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
@@ -50,18 +74,19 @@ function GalleryTile(props: GalleryTileProps) {
                         alt=""
                     />
                 </AspectRatio>
-                <Typography level="h2" sx={{color: "#9E9FEB"}}>
+                <Typography level="h2" sx={{ color: '#9E9FEB' }}>
                     {props.coll && props.coll.name}
                 </Typography>
-                <Typography level="h6" sx={{color: "#E4E5FF"}}>
+                <Typography level="h6" sx={{ color: '#E4E5FF' }}>
                     Total:
                 </Typography>
-                <Typography level="h6" sx={{color: "#E4E5FF"}}>
-                    Published on {props.coll && props.coll.publishStamp.toString()}
+                <Typography level="h6" sx={{ color: '#E4E5FF' }}>
+                    Published on{' '}
+                    {props.coll && props.coll.publishStamp.toString()}
                 </Typography>
             </Card>
-        );
+        )
     }
 }
 
-export default GalleryTile;
+export default GalleryTile

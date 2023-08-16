@@ -1,6 +1,6 @@
 @font-face {
     font-family: Twine;
-    src: url("../../public/fonts/Twine.otf") format("opentype");
+    src: url('../../public/fonts/Twine.otf') format('opentype');
 }
 
 @font-face {
@@ -32,14 +32,24 @@
     src: url('../../public/fonts/Oxanium/Oxanium-ExtraLight.ttf');
     font-weight: 100;
 }
-  
+
 body {
     margin: 0;
     padding: 0;
     background: #0d0603;
-    font-family: 'Oxanium', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    font-family:
+        'Oxanium',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        'Roboto',
+        'Oxygen',
+        'Ubuntu',
+        'Cantarell',
+        'Fira Sans',
+        'Droid Sans',
+        'Helvetica Neue',
+        sans-serif;
     color: #ffffff;
     display: flex;
     justify-content: space-around;
@@ -52,7 +62,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type='number'] {
     -moz-appearance: textfield;
 }
 
@@ -71,7 +81,7 @@ input[type=number] {
     padding-bottom: 140px;
     margin: 0px 70px;
 }
-@media screen and (max-width : 2560px)and (min-width:1024px) {
+@media screen and (max-width: 2560px) and (min-width: 1024px) {
     #content-wrapper {
         padding-bottom: 140px;
         width: 75%;
@@ -83,13 +93,14 @@ input[type=number] {
         width: 85%;
         margin: auto !important;
     }
-  }
-@media screen and (max-width : 800px)and (min-width:300px) {
+}
+@media screen and (max-width: 800px) and (min-width: 300px) {
     #content-wrapper {
         margin: 0px 27px;
     }
 }
-#pera-wallet-connect-modal-wrapper, #pera-wallet-sign-txn-toast-wrapper {
+#pera-wallet-connect-modal-wrapper,
+#pera-wallet-sign-txn-toast-wrapper {
     position: fixed;
     z-index: 99999; /* Ensures that the pera popup is positioned above everything else */
 }
