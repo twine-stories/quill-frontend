@@ -311,7 +311,7 @@ function Story() {
             rightComponent={
               <div
                 className="right-components"
-                style={{ backgroundColor: "#150f0e", borderRadius: "32px" }}
+                style={{ backgroundColor: "#14100E", borderRadius: "32px" }}
               >
                 <Typography
                   level="h5"

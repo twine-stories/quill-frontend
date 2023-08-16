@@ -46,6 +46,7 @@
         }
         h2.published-chapter{
           font-size: 28px;
+          height: 26px;
         }
         h2.draft-chapter{
           font-size: 28px;
@@ -176,7 +177,7 @@ justify-content: right;
   }
   .creater-box h4 {
     font-size: 15px;
-}
+  }
 } 
 
 @media (min-width: 381px) and (max-width: 399px){
@@ -187,7 +188,6 @@ justify-content: right;
     font-size: 14px;
 }
 } 
-
 
 @media (min-width: 400px) and (max-width: 420px){
   .creater-box.MuiBox-root{
@@ -373,6 +373,71 @@ justify-content: right;
 
 @media only screen and (max-width: 540px){
   .MuiStack-root.remove-del-img{
-    margin-left: 0px;;
+    margin-left: 0px;
   }
 }
+
+@media (min-width: 425px) and (max-width: 460px){
+.MuiCard-root.MuiCard-vertical.MuiCard-variantOutlined.MuiCard-colorNeutral.MuiCard-sizeMd.card-view-story {
+  max-width: 289px;
+}
+}
+
+@media (min-width: 461px) and (max-width: 490px){
+  .MuiCard-root.MuiCard-vertical.MuiCard-variantOutlined.MuiCard-colorNeutral.MuiCard-sizeMd.card-view-story {
+    max-width: 321px;
+  }
+  }
+
+  @media (min-width: 491px) and (max-width: 539px){
+    .MuiCard-root.MuiCard-vertical.MuiCard-variantOutlined.MuiCard-colorNeutral.MuiCard-sizeMd.card-view-story {
+      max-width: 321px;
+    }
+    }
+
+    @media (min-width: 651px) and (max-width: 750px){
+      h2.view-story-h2{
+        font-size:30px;
+      }
+      .chapter-num {
+        font-size: 17px;
+      }
+      .episode-date {
+        font-size: 17px;
+      }
+    }
+
+      
+    @media (min-width: 550px) and (max-width: 650px){
+      h2.view-story-h2{
+        font-size:30px;
+      }
+      .chapter-num {
+        font-size: 17px;
+      }
+      .episode-date {
+        font-size: 17px;
+      }
+    }
+
+    @media (min-width: 370px) and (max-width: 424px){
+     .card-view-story{
+      max-width: 252px;
+    }
+    }
+
+
+    @media (min-width: 320px) and (max-width: 369px){
+      .card-view-story{
+       max-width: 200px;
+     }
+     h2.view-story-h2 {
+      font-size: 13px;
+     }
+     .chapter-num {
+      font-size: 9px !important;
+     }
+    .episode-date {
+    font-size: 9px !important;
+    }
+     }
