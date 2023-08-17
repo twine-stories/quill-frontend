@@ -1,7 +1,7 @@
 @media only screen and (min-width: 1440px) {
-.create-published-button {
-    margin-right: 34px;
-  }
+    .create-published-button {
+        margin-right: 34px;
+    }
 }
 @media only screen and (min-width: 375px) {
   .create-published-button {

@@ -1,4 +1,4 @@
- .edit-profile h3 {
+.edit-profile h3 {
     font-size: 22px;
 }
 
@@ -6,15 +6,15 @@
     margin-bottom: 25px !important;
 }
 @media only screen and (max-width: 545px) {
-    .edit-profile{
-     display:block !important;
+    .edit-profile {
+        display: block !important;
     }
 
-    .container-grid{
+    .container-grid {
         width: 100% !important;
     }
 
-    #sidebar{
+    #sidebar {
         width: 100% !important;
     }
 }

@@ -1,20 +1,21 @@
-import {Button} from "@mui/joy";
-import './ProfileSidebar.css';
-import TwineButton from "./TwineButton.tsx";
-import { useNavigate } from 'react-router-dom';
-    
+import { Button } from '@mui/joy'
+import './ProfileSidebar.css'
+import TwineButton from './TwineButton.tsx'
+import { useNavigate } from 'react-router-dom'
 
-const ProfileSidebar = ({goToDrafts}) => {
-
-    let navigate = useNavigate();
-
-
+const ProfileSidebar = ({ goToDrafts }) => {
+    let navigate = useNavigate()
 
     return (
-        <div className = "sidebar">
-            <TwineButton icon='/icons/Paper.svg' name = "Drafts" action = {goToDrafts} color='green' />
+        <div className="sidebar">
+            <TwineButton
+                icon="/icons/Paper.svg"
+                name="Drafts"
+                action={goToDrafts}
+                color="green"
+            />
         </div>
     )
 }
 
-export default ProfileSidebar;
+export default ProfileSidebar

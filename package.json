@@ -1,66 +1,67 @@
 {
-  "name": "quill-frontend",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
-    "@mui/joy": "^5.0.0-alpha.70",
-    "@perawallet/connect": "^1.1.1",
-    "@randlabs/myalgo-connect": "^1.1.3",
-    "@reach-sh/stdlib": "^0.1.11-rc.1",
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.3.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/node": "^20.5.0",
-    "algosdk": "^2.1.0",
-    "aws-sdk": "^2.1353.0",
-    "axios": "^0.27.2",
-    "buffer": "^6.0.3",
-    "crypto-browserify": "^3.12.0",
-    "http-proxy-middleware": "^2.0.6",
-    "immer": "^9.0.19",
-    "marked": "^4.3.0",
-    "process": "^0.11.10",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.3.0",
-    "react-scripts": "5.0.1",
-    "react-usestateref": "^1.0.8",
-    "stream-browserify": "^3.0.0",
-    "styled-components": "^5.3.5",
-    "use-immer": "^0.9.0",
-    "uuid": "^8.3.2",
-    "web-vitals": "^2.1.0"
-  },
-  "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "react-app-rewired": "^2.2.1",
-    "typescript": "^4.7.4",
-    "webpack": "^5.73.0",
-    "webpack-cli": "^4.10.0"
-  }
+    "name": "quill-frontend",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@emotion/react": "^11.10.6",
+        "@emotion/styled": "^11.10.6",
+        "@mui/joy": "^5.0.0-alpha.70",
+        "@perawallet/connect": "^1.1.1",
+        "@randlabs/myalgo-connect": "^1.1.3",
+        "@reach-sh/stdlib": "^0.1.11-rc.1",
+        "@testing-library/jest-dom": "^5.16.4",
+        "@testing-library/react": "^13.3.0",
+        "@testing-library/user-event": "^13.5.0",
+        "@types/node": "^20.5.0",
+        "algosdk": "^2.1.0",
+        "aws-sdk": "^2.1353.0",
+        "axios": "^0.27.2",
+        "buffer": "^6.0.3",
+        "crypto-browserify": "^3.12.0",
+        "http-proxy-middleware": "^2.0.6",
+        "immer": "^9.0.19",
+        "marked": "^4.3.0",
+        "process": "^0.11.10",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.3.0",
+        "react-scripts": "5.0.1",
+        "react-usestateref": "^1.0.8",
+        "stream-browserify": "^3.0.0",
+        "styled-components": "^5.3.5",
+        "use-immer": "^0.9.0",
+        "uuid": "^8.3.2",
+        "web-vitals": "^2.1.0"
+    },
+    "scripts": {
+        "start": "react-app-rewired start",
+        "build": "react-app-rewired build",
+        "test": "react-app-rewired test",
+        "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "prettier": "3.0.2",
+        "react-app-rewired": "^2.2.1",
+        "typescript": "^4.7.4",
+        "webpack": "^5.73.0",
+        "webpack-cli": "^4.10.0"
+    }
 }
