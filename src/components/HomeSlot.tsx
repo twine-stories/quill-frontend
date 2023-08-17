@@ -40,7 +40,7 @@ function HomeSlot(props: HomeProps) {
         }
     }, [props.work])
 
-    const unHoveredContent = (
+    const hoveredContent = (
         <Grid
             container
             direction="column"
@@ -75,7 +75,7 @@ function HomeSlot(props: HomeProps) {
         </Grid>
     )
 
-    const hoveredContent = (
+    const unHoveredContent = (
         <Grid sx={{ width: '250px', height: '100%' }}>
             {props.work && (
                 <Typography level="h3" color="purple">
