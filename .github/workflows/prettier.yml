@@ -1,5 +1,6 @@
 name: Prettier Continuous Integration
 
+
 on:
   pull_request:
     branches: [master]
@@ -27,3 +28,5 @@ jobs:
           # This part is also where you can pass other options, for example:
           prettier_options: --write .
           only_changed: True
+          token: ${{ secrets.GITHUB_TOKEN }}
+
