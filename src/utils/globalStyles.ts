@@ -232,6 +232,17 @@ export const theme = extendTheme({
                         margin: '10px',
                         backgroundColor: '#0d0603',
                     }),
+                    ...(ownerState.color === 'purple_dashed' && {
+                        backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='20' ry='20' stroke='%239E9FEB' stroke-width='4' stroke-dasharray='6%2c 13' stroke-dashoffset='2' stroke-linecap='square'/%3e%3c/svg%3e")`,
+                        padding: '0px 20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '340px',
+                        width: '200px',
+                        margin: '10px',
+                        backgroundColor: '#0d0603',
+                    }),
                     ...(ownerState.variant === 'rounded' && {
                         borderRadius: '20px',
                     }),
