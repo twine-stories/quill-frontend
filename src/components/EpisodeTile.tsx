@@ -39,17 +39,7 @@ function EpisodeTile(props: EpisodeTileProps) {
       <Card
         variant="outlined"
         className="card-view-story"
-        style={{
-          backgroundColor: "#14100E",
-          width: "100%",
-          display: "flex",
-          cursor: "pointer",
-          flexDirection: "row",
-          border: "none",
-          gap: "32px",
-          padding: "16px 32px 16px 16px",
-          borderRadius: "32px",
-        }}
+        id="card-view-story-id"
         onClick={() => {
           navigate("/chapter/" + props.episode["url"]);
         }}
@@ -57,6 +47,7 @@ function EpisodeTile(props: EpisodeTileProps) {
         {/*<AspectRatio variant="outlined" ratio="16/9">*/}
         <img
           className="episode-tile-img"
+          id='img-episode'
           src={
             props.episode &&
             "https://" +
@@ -99,32 +90,19 @@ function EpisodeTile(props: EpisodeTileProps) {
             <div style={{ display: "flex", alignItems: "center" }}>
             {props.publishedEpisodes && (<div
                 className="chapter-num"
-                style={{
-                  fontSize: "16px",
-                  fontStyle: "Oxanium",
-                  color: "#E4E5FF",
-                }}
+                id="chapter-num-id"
               >
                 Ch.{props.idx + 1}
               </div>)}
               {props.publishedEpisodes && (<div
                 className="dot-icon"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  margin: "0 1rem",
-                }}
+                id="dot-icon-id"
               >
                 <img src="/icons/dot.svg" width="2px" height="2px" />
               </div>)}
               <div
                 className="episode-date"
-                style={{
-                  fontSize: "16px",
-                  fontStyle: "Oxanium",
-                  color: "#E4E5FF",
-                }}
+                id="episode-date-id"
               >
                 {props.episode && stringToDate(props.episode["publishStamp"])}
               </div>
@@ -148,164 +126,64 @@ function EpisodeTile(props: EpisodeTileProps) {
                 onClick={function () {
                   moveUp(props.episode.episodeNumber);
                 }}
-                onClick={() => {
-                    navigate('/chapter/' + props.episode['url'])
+                variant="plain"
+                color="neutral"
+                sx={{
+                  ml: "auto",
+                  "&:hover": {
+                    backgroundColor: "#0d0603",
+                  },
                 }}
-            >
-                {/*<AspectRatio variant="outlined" ratio="16/9">*/}
-                <img
-                    src={
-                        props.episode &&
-                        'https://' +
-                            CHAPTER_IMGS_BUCKET +
-                            '.s3.amazonaws.com/' +
-                            COVER_PATH +
-                            props.episode['cover']
-                    }
-                    onError={(e) => {
-                        e.target.src =
-                            'https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286'
-                    }}
-                    loading="lazy"
-                    alt=""
-                    style={{
-                        aspectRatio: '1.5/1',
-                        width: '18%',
-                        height: '18%',
-                        objectFit: 'cover',
-                    }}
-                />
-                {/*</AspectRatio>*/}
-                <div
-                    className="date-title"
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'left',
-                        alignItems: 'left',
-                        width: '100%',
-                    }}
-                >
-                    <Typography
-                        level="h6"
-                        color="white"
-                        sx={{
-                            marginLeft: '10px',
-                            marginTop: '0px',
-                            marginBottom: '0px',
-                        }}
-                    >
-                        {props.episode &&
-                            stringToDate(props.episode['publishStamp'])}
-                    </Typography>
-                    <Typography
-                        level="h2"
-                        color="white"
-                        sx={{ marginLeft: '10px', minWidth: '600px' }}
-                    >
-                        {props.episode && props.episode['title']}
-                    </Typography>
+              >
+                <div className="arrow-button">
+                  <img
+                    className="hover-arrow-up-img"
+                    alt="arrowimg"
+                    src="/icons/hover-purple-arrow-up.svg"
+                    width="30px"
+                    height="30px"
+                  />
+                  <img
+                    className="arrow-up-img"
+                    alt="arrowimg"
+                    src="/icons/purple_arrow_up.svg"
+                    width="30px"
+                    height="30px"
+                  />
                 </div>
-            </Card>
-            {props.isCreator && (
-                <Stack direction="column" alignItems="center">
-                    {props.episode.episodeNumber !== -1 &&
-                        props.episode.episodeNumber !== 0 && (
-                            <IconButton
-                                onClick={function () {
-                                    moveUp(props.episode.episodeNumber)
-                                }}
-                                variant="plain"
-                                color="neutral"
-                                sx={{
-                                    ml: 'auto',
-                                    '&:hover': {
-                                        backgroundColor: '#0d0603',
-                                    },
-                                }}
-                            >
-                                <div className="arrow-button">
-                                    <img
-                                        className="hover-arrow-up-img"
-                                        alt="arrowimg"
-                                        src="/icons/hover-purple-arrow-up.svg"
-                                        width="30px"
-                                        height="30px"
-                                    />
-                                    <img
-                                        className="arrow-up-img"
-                                        alt="arrowimg"
-                                        src="/icons/purple_arrow_up.svg"
-                                        width="30px"
-                                        height="30px"
-                                    />{' '}
-                                </div>
-                            </IconButton>
-                        )}
-                    {props.episode.episodeNumber !== -1 &&
-                        props.episode.episodeNumber !==
-                            props.totalEpisodes - 1 && (
-                            <IconButton
-                                onClick={function () {
-                                    moveDown(props.episode.episodeNumber)
-                                }}
-                                variant="plain"
-                                color="neutral"
-                                sx={{
-                                    ml: 'auto',
-                                    '&:hover': {
-                                        backgroundColor: '#0d0603',
-                                    },
-                                }}
-                            >
-                                <img
-                                    className="arrow-button-down"
-                                    alt="arrowimg"
-                                    src="/icons/purple_arrow_down.svg"
-                                    width="30px"
-                                    height="30px"
-                                />
-                                <img
-                                    className="hover-arrow-button-down"
-                                    alt="arrowimg"
-                                    src="/icons/hover-purple-arrow-down.svg"
-                                    width="30px"
-                                    height="30px"
-                                />
-                            </IconButton>
-                        )}
-                </Stack>
+              </IconButton>
             )}
-            <Stack direction="column" alignItems="center">
-                {props.episode.episodeNumber === -1 && (
-                    <IconButton
-                        onClick={function () {
-                            deleteDraftChapter(props.episode.id)
-                        }}
-                        variant="plain"
-                        color="neutral"
-                        sx={{
-                            ml: 'auto',
-                            '&:hover': {
-                                backgroundColor: '#0d0603',
-                            },
-                        }}
-                    >
-                        <img
-                            src="/icons/red_remove.svg"
-                            width="30px"
-                            height="30px"
-                            className="remove-img"
-                        />
-                        <img
-                            src="/icons/hover_red_remove.svg"
-                            width="30px"
-                            height="30px"
-                            className="remove-img-hover"
-                        />
-                    </IconButton>
-                )}
-            </Stack>
+          {props.episode.episodeNumber !== -1 &&
+            props.episode.episodeNumber !== props.totalEpisodes - 1 && (
+              <IconButton
+                onClick={function () {
+                  moveDown(props.episode.episodeNumber);
+                }}
+                variant="plain"
+                color="neutral"
+                sx={{
+                  ml: "auto",
+                  "&:hover": {
+                    backgroundColor: "#0d0603",
+                  },
+                }}
+              >
+                <img
+                  className="arrow-button-down"
+                  alt="arrowimg"
+                  src="/icons/purple_arrow_down.svg"
+                  width="30px"
+                  height="30px"
+                />
+                <img
+                  className="hover-arrow-button-down"
+                  alt="arrowimg"
+                  src="/icons/hover-purple-arrow-down.svg"
+                  width="30px"
+                  height="30px"
+                />
+              </IconButton>
+            )}
         </Stack>
       )}
       <Stack direction="column" alignItems="center" className="remove-del-img">

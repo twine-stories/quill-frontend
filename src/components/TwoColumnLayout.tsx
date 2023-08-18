@@ -6,6 +6,7 @@ interface TwoColumnLayoutProps {
     rightWidth?: string
     className?: string
     marginRight?: string
+    id?:string
 }
 
 function TwoColumnLayout(props: TwoColumnLayoutProps) {
@@ -14,11 +15,13 @@ function TwoColumnLayout(props: TwoColumnLayoutProps) {
     return (
         <div
             className={props.className}
+            id={props.id}
             style={{ display: 'flex', flexDirection: 'row', width: '100%' }}
         >
             <div
                 style={{ flex: leftFlex, marginRight: '5%' }}
                 className={props.className}
+                id={props.id}
             >
                 {props.leftComponent}
             </div>

@@ -58,9 +58,9 @@
         .left-components{
           display: block !important;
         }
-        .card-view-story{
-          gap: 14px !important;
-          padding: 12px 12px 12px 12px !important;
+        div#card-view-story-id {
+          gap: 14px;
+          padding: 12px 12px 12px 12px;
         }
         .view-story-button button{
           width:100%;
@@ -68,75 +68,48 @@
         .view-story-button button{
           width:100%;
         }
-    }
-
-  @media only screen and (max-width: 900px){
-   .left-components{
-    display: block !important;
-    }
-   }
-
- @media (min-width: 540px) and (max-width: 900px) {
-  h6.description-styling{
-    width:100%; 
-    }
-   .card-view-story{
-    width:90% !important;
-    }
-  }
-
- @media (min-width: 901px) and (max-width: 1025px){
-  h6.description-styling{
-    width:80%;
-    }
-   .view-story-button{
-    width:85%;
-    }
-   .card-view-story{
-    width:70% !important;
-    }
-   .left-components{
-      margin: 0px !important;
-    }
-    .create-story-container{
-       width: 600px;
      }
-     h2.view-story-h2{
-      font-size: 25px;
-    }
+
+    @media only screen and (max-width: 900px){
+      .left-components{
+        display: block !important;
+        }
+     }
+
+   @media (min-width: 540px) and (max-width: 900px) {
+      h6.description-styling{
+        width:100%; 
+      }
+      div#card-view-story-id {
+        width:90%;
+      }
   }
 
   h6.view-story-h6{
     margin-bottom:6px;
   }
   
-
-  @media only screen and (width: 1440px){
-    .date-title{
-      margin-top: 16px;
-    }
-  }
   @media only screen and (max-width: 375px){
-    img.episode-tile-img{
-      width:35% !important;
-     }
+     img#img-episode {
+      min-width: 30%;
+    }
      h2.view-story-h2 {
       font-size: 17px;
     }
-   .dot-icon{
-    margin: 0px 0.5rem !important;
+   div#dot-icon-id {
+    margin: 0px 0.5rem;
    }
-   .chapter-num{
-    font-size: 12px !important;
+   div#chapter-num-id {
+    font-size: 12px;
    }
-   .episode-date{
-    font-size: 12px !important;
+   div#episode-date-id {
+    font-size: 12px;
    }
   }
 
-@media (min-width: 1026px) and (max-width: 1300px){
+@media (min-width: 1026px) and (max-width: 1130px){
   .create-story-container{
-    width: 560px;
+    width: 500px;
   }
  }
 @media only screen and (max-width: 900px){
@@ -304,6 +277,15 @@ justify-content: right;
     height:80px;
     width:80px;
  }
+ .view-story-button{
+    display: block;
+  }
+ .view-story-button button{
+    width:100%;
+  }
+ .view-story-button button{
+    width:100%;
+  }
 } 
 
 @media (min-width: 711px) and (max-width: 760px){
@@ -317,6 +299,15 @@ justify-content: right;
     height:85px;
     width:85px;
  }
+ .view-story-button{
+    display: block;
+  }
+ .view-story-button button{
+    width:100%;
+  }
+ .view-story-button button{
+    width:100%;
+  }
 } 
 
 @media (min-width: 761px) and (max-width: 800px){
@@ -330,6 +321,15 @@ justify-content: right;
     height:90px;
     width:90px;
  }
+ .view-story-button{
+    display: block;
+ }
+ .view-story-button button{
+    width:100%;
+  }
+  .view-story-button button{
+    width:100%;
+  }
 }
 
 @media (min-width: 801px) and (max-width: 840px){
@@ -343,6 +343,15 @@ justify-content: right;
     height:95px;
     width:95px;
  }
+ .view-story-button{
+    display: block;
+  }
+ .view-story-button button{
+    width:100%;
+  }
+ .view-story-button button{
+    width:85%;
+  }
 }
 
 @media (min-width: 841px) and (max-width: 875px){
@@ -356,6 +365,15 @@ justify-content: right;
     height:95px;
     width:95px;
  }
+ .view-story-button{
+   display: block;
+  }
+ .view-story-button button{
+   width:100%;
+  }
+ .view-story-button button{
+   width:85%;
+  }
 }
 
 @media (min-width: 876px) and (max-width: 900px){
@@ -369,6 +387,15 @@ justify-content: right;
     height:100px;
     width:100px;
  }
+  .view-story-button{
+    display: block;
+   }
+  .view-story-button button{
+    width:100%;
+   }
+  .view-story-button button{
+    width:100%;
+   }
 }
 
 @media only screen and (max-width: 540px){
@@ -399,9 +426,11 @@ justify-content: right;
       h2.view-story-h2{
         font-size:30px;
       }
-      .chapter-num {
+
+      div#chapter-num-id {
         font-size: 17px;
       }
+      
       .episode-date {
         font-size: 17px;
       }
@@ -434,10 +463,142 @@ justify-content: right;
      h2.view-story-h2 {
       font-size: 13px;
      }
-     .chapter-num {
-      font-size: 9px !important;
+     div#chapter-num-id {
+       font-size: 9px;
      }
-    .episode-date {
-    font-size: 9px !important;
+     div#episode-date-id {
+       font-size: 9px;
+     }
     }
+    .dot-icon{
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 1rem;
+      }
+      .chapter-num{
+        font-size: 16px;
+        color:#E4E5FF;
+      }
+      .episode-date{
+        font-size: 16px;
+      }
+
+      #card-view-story-id{
+        background-color:#14100E;
+        width:100%;
+        display: flex;
+        cursor: pointer;
+        flex-direction: row;
+        border: none;
+        gap:32px;
+        padding:16px 32px 16px 16px;
+        border-radius:32px;
+      }
+
+@media (min-width: 901px) and (max-width: 1023px){
+     h6.description-styling{
+       width:80%;
      }
+     .view-story-button{
+       width:85%;
+     }
+     .card-view-story{
+       max-width: 400px;
+     }
+     .left-components{
+       margin: 0px !important;
+     }
+      h2.view-story-h2{
+       font-size: 25px;
+      }
+      div#card-view-story-id {
+        max-width: 365px;
+      } 
+     .view-story-button{
+        display: block;
+      }
+      .view-story-button button{
+        width:100%;
+      }
+      .view-story-button button{
+        width:100%;
+      }
+ }
+
+ @media (min-width: 1024px) and (max-width: 1100px){
+       h6.description-styling{
+         width:85%;
+       }
+       .card-view-story{
+         max-width: 400px;
+       }
+       .left-components {
+          justify-content: flex-start;
+          margin: 0px !important;
+          max-width: 90%;
+       }
+       h2.view-story-h2{
+          font-size: 25px;
+       }
+      div#card-view-story-id {
+         max-width: 400px;
+       }
+    }
+
+  @media (min-width: 1101px) and (max-width: 1240px){
+      h6.description-styling{
+        width:85%;
+      }
+      .card-view-story{
+         max-width: 400px;
+      }
+      .left-components {
+        justify-content: flex-start;
+        margin: 0px !important;
+        max-width: 94%;
+       }
+        h2.view-story-h2{
+          font-size: 25px;
+        }
+        div#card-view-story-id {
+          max-width: 400px;
+        }
+      }
+      @media (min-width: 1024px) and (max-width: 1169px){
+        .date-title{
+          margin-top: 3px;
+         }
+        }
+
+      @media (min-width: 1170px) and (max-width: 1240px){
+        div#card-view-story-id {
+          max-width: 480px;
+      }
+      .date-title{
+        margin-top: 10px;
+       }
+      }
+
+  @media (min-width: 1241px) and (max-width: 2560px){
+    h6.description-styling{
+       width:90%;
+   }
+   .card-view-story{
+       max-width: 400px;
+   }
+   .left-components {
+       justify-content: flex-start;
+       margin: 0px !important;
+       max-width: 94%;
+    }
+    h2.view-story-h2{
+       font-size: 25px;
+    }
+   div#card-view-story-id {
+    max-width: 480px;
+   }
+   .date-title{
+    margin-top: 10px;
+   }
+  }
