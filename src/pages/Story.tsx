@@ -47,540 +47,709 @@ function Story() {
     useEffect(() => {
         var tempPublishedEpisodes = []
 
-    // loop over all episodes
-    for (let i = 0; i < episodes.length; i++) {
-      const currEp = episodes[i];
-      if (currEp["published"]) {
-        tempPublishedEpisodes.push(currEp);
-      }
+        // loop over all episodes
+        for (let i = 0; i < episodes.length; i++) {
+            const currEp = episodes[i]
+            if (currEp['published']) {
+                tempPublishedEpisodes.push(currEp)
+            }
 
-      genericGet("/api/profitSplit/episode/" + currEp["id"]).then(
-        (response) => {
-          for (let j = 0; j < response.length; j++) {
-            const currSplit = response[j];
-            const tuple = [currSplit["creator"], currSplit["percentage"]];
+            genericGet('/api/profitSplit/episode/' + currEp['id']).then(
+                (response) => {
+                    for (let j = 0; j < response.length; j++) {
+                        const currSplit = response[j]
+                        const tuple = [
+                            currSplit['creator'],
+                            currSplit['percentage'],
+                        ]
 
-            setCreators((creators) => {
-              const newCreators = new Set(creators);
-              newCreators.add(JSON.stringify(tuple));
-              return newCreators;
-            });
-          }
+                        setCreators((creators) => {
+                            const newCreators = new Set(creators)
+                            newCreators.add(JSON.stringify(tuple))
+                            return newCreators
+                        })
+                    }
+                }
+            )
         }
-      );
-    }
-    setPublishedEpisodes(tempPublishedEpisodes);
-  }, [episodes]);
+        setPublishedEpisodes(tempPublishedEpisodes)
+    }, [episodes])
 
-  const goTo = async (link: string): Promise<void> => {
-    window.open(link, "_blank");
-  };
-
-  let navigate = useNavigate();
-
-  const goToSameTab = async (link: string): Promise<void> => {
-    navigate(link);
-  };
-
-  const moveChapterUp = async (chapterNumber: number): void => {
-    const lowerChapterNumberToSwap = chapterNumber - 1;
-    let newPublishedEpisodes: JSX.Element[] = [];
-    for (let i = 0; i < publishedEpisodes.length; i++) {
-      var currPubEp = publishedEpisodes[i];
-
-      let newPubEp = currPubEp;
-      if (currPubEp.episodeNumber === chapterNumber) {
-        newPubEp.episodeNumber = currPubEp.episodeNumber - 1;
-      } else if (currPubEp.episodeNumber === lowerChapterNumberToSwap) {
-        newPubEp.episodeNumber = currPubEp.episodeNumber + 1;
-      }
-
-      genericPost("/api/episode/update", newPubEp);
-
-      newPublishedEpisodes.push(newPubEp);
+    const goTo = async (link: string): Promise<void> => {
+        window.open(link, '_blank')
     }
 
-    setPublishedEpisodes(newPublishedEpisodes);
-  };
+    let navigate = useNavigate()
 
-  const moveChapterDown = async (chapterNumber: number): void => {
-    const higherChapterNumberToSwap = chapterNumber + 1;
-    let newPublishedEpisodes: JSX.Element[] = [];
-    for (let i = 0; i < publishedEpisodes.length; i++) {
-      var currPubEp = publishedEpisodes[i];
-
-      let newPubEp = currPubEp;
-      if (currPubEp.episodeNumber === chapterNumber) {
-        newPubEp.episodeNumber = currPubEp.episodeNumber + 1;
-      } else if (currPubEp.episodeNumber === higherChapterNumberToSwap) {
-        newPubEp.episodeNumber = currPubEp.episodeNumber - 1;
-      }
-
-      genericPost("/api/episode/update", newPubEp);
-
-      newPublishedEpisodes.push(newPubEp);
+    const goToSameTab = async (link: string): Promise<void> => {
+        navigate(link)
     }
 
-    setPublishedEpisodes(newPublishedEpisodes);
-  };
+    const moveChapterUp = async (chapterNumber: number): void => {
+        const lowerChapterNumberToSwap = chapterNumber - 1
+        let newPublishedEpisodes: JSX.Element[] = []
+        for (let i = 0; i < publishedEpisodes.length; i++) {
+            var currPubEp = publishedEpisodes[i]
 
-  const deleteDraftChapter = async (chapterId: number): void => {
-    let newEpisodes: JSX.Element[] = [];
-    for (let i = 0; i < episodes.length; i++) {
-      var currEp = episodes[i];
-      if (currEp.id === chapterId) {
-        genericPost("/api/episode/delete/" + chapterId.toString(), null);
-      } else {
-        newEpisodes.push(currEp);
-      }
-    }
-
-    setEpisodes(newEpisodes);
-  };
-
-  return (
-    <div>
-      <Navbar />
-      <Grid container direction="column" alignItems="center">
-        <Grid sx={{ width: "80vw" }}>
-          <TwoColumnLayout
-            className="left-components"
-            id="left-cpmponents-id"
-            leftComponent={
-              <div className="create-story-container">
-                {work && work.creator && (
-                  <Box
-                  className="parent-container"
-                    sx={{
-                      py: 2,
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 1,
-                      alignItems: "left",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <Typography
-                      className="title-styling"
-                      level="h1"
-                      sx={{ color: "#9E9FEB", margin: "0px", fontSize: "65px" }}
-                    >
-                      {work["title"]}
-                    </Typography>
-                    <Typography
-                      className="description-styling"
-                      level="h6"
-                      sx={{
-                        margin: "0px",
-                        textAlign: "initial",
-                        width: "90%",
-                        marginBottom: "20px",
-                      }}
-                    >
-                      {work["description"]}
-                    </Typography>
-
-                    {user &&
-                      user.walletAddress === work.creator.walletAddress && (
-                        <div
-                          className="view-story-button"
-                          style={{ gap: "10px" }}
-                        >
-                          <TwineButton
-                            className="wrap-button"
-                            sx={{
-                              width: "45%",
-                              padding: "12px 24px 12px 24px",
-                              borderRadius: "15px",
-                              gap: "16px",
-                            }}
-                            whiteSpace="nowrap"
-                            overflow="hidden"
-                            textOverflow="ellipsis"
-                            icon="/icons/purple_settings.svg"
-                            color="blackpurple"
-                            name="Edit Story"
-                            action={() => {
-                              window.location.href =
-                                "/edit/story/" + work["url"];
-                            }}
-                          />
-                          {/* FYI: publishedEpisodes.length is the new chapter's number */}
-                          <TwineButton
-                            className="wrap-button"
-                            sx={{
-                              width: "45%",
-                              padding: "12px 24px 12px 24px",
-                              borderRadius: "15px",
-                              gap: "16px",
-                            }}
-                            whiteSpace="nowrap"
-                            overflow="hidden"
-                            textOverflow="ellipsis"
-                            icon="/icons/purple_plus.svg"
-                            color="purple"
-                            name="Create New Episode"
-                            action={() => {
-                              window.location.href =
-                                "/create/chapter/" +
-                                work["url"] +
-                                "/" +
-                                publishedEpisodes.length;
-                            }}
-                          />
-                        </div>
-                      )}
-
-                    {episodes && (
-                      <>
-                        <Typography
-                          className="published-chapter"
-                          level="h2"
-                          sx={{ color: "#9E9FEB" }}
-                        >
-                          Chapters
-                        </Typography>
-
-                        {
-                          <EpisodeOrderContext.Provider
-                            value={{
-                              moveUp: moveChapterUp,
-                              moveDown: moveChapterDown,
-                              deleteDraftChapter: deleteDraftChapter,
-                            }}
-                          >
-                            {publishedEpisodes
-                              .toSorted((e1, e2, idx) => {
-                                return e1.episodeNumber - e2.episodeNumber;
-                              })
-                              .map((episode, idx) => {
-                                return (
-                                  <EpisodeTile
-                                    isCreator={
-                                      user &&
-                                      user.walletAddress ===
-                                        work.creator.walletAddress
-                                    }
-                                    episode={episode}
-                                    idx={idx}
-                                    publishedEpisodes={publishedEpisodes}
-                                    totalEpisodes={publishedEpisodes.length}
-                                  />
-                                );
-                              })}
-                          </EpisodeOrderContext.Provider>
-                        }
-
-                        {user &&
-                          user.walletAddress === work.creator.walletAddress && (
-                            <EpisodeOrderContext.Provider
-                              value={{
-                                moveUp: moveChapterUp,
-                                moveDown: moveChapterDown,
-                                deleteDraftChapter: deleteDraftChapter,
-                              }}
-                            >
-                              <Typography
-                                className="draft-chapter"
-                                level="h2"
-                                sx={{ color: "#9E9FEB" }}
-                              >
-                                Draft Chapters
-                              </Typography>
-                              {episodes.map((episode) => {
-                                if (!episode["published"]) {
-                                  return (
-                                    <EpisodeTile
-                                      isCreator={
-                                        user &&
-                                        user.walletAddress ===
-                                          work.creator.walletAddress
-                                      }
-                                      episode={episode}
-                                    />
-                                  );
-                                }
-                              })}
-                            </EpisodeOrderContext.Provider>
-                          )}
-                      </>
-                    )}
-                  </Box>
-                )}
-              </div>
+            let newPubEp = currPubEp
+            if (currPubEp.episodeNumber === chapterNumber) {
+                newPubEp.episodeNumber = currPubEp.episodeNumber - 1
+            } else if (currPubEp.episodeNumber === lowerChapterNumberToSwap) {
+                newPubEp.episodeNumber = currPubEp.episodeNumber + 1
             }
-            rightComponent={
-              <div
-                className="right-components"
-                style={{ backgroundColor: "#14100E", borderRadius: "32px" }}
-              >
-                <Typography
-                  level="h5"
-                  sx={{
-                    color: "#9E9FEB",
-                    padding: "30px 0px 0px 40px",
-                    fontFamily: "Twine",
-                    fontStyle: "normal",
-                    fontWeight: "400",
-                  }}
-                >
-                  Creators
-                </Typography>
-                <div className="creator-list">
-                  {creators && creators.size > 0 && (
-                    <div className="creater-container">
-                      {Array.from(creators)
-                        .map((str_json) => {
-                          const [creator, percentage] = JSON.parse(str_json);
-                          return [creator, percentage];
-                        })
-                        .sort((a, b) => {
-                          return b[1] - a[1];
-                        })
-                        .map(([creator, percentage]) => {
-                          return (
-                            <div
-                              className="creators"
-                              style={{ marginBottom: "42px" }}
-                            >
-                              {creator && (
-                                <Box
-                                className="creater-box"
-                                  sx={{
-                                    py: 2,
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: 1,
-                                    alignItems: "center",
-                                    flexWrap: "wrap",
-                                    padding: "0px",
-                                    minWidth: "256px",
-                                  }}
-                                >
-                                  <img
-                                    src={
-                                      creator &&
-                                      "https://" +
-                                        PROFILE_IMGS_BUCKET +
-                                        ".s3.amazonaws.com/" +
-                                        creator.profileImg
-                                    }
-                                    alt=""
-                                    width="128"
-                                    height="128"
-                                    onError={(e) => {
-                                      e.currentTarget.src =
-                                        "https://" +
-                                        PROFILE_IMGS_BUCKET +
-                                        ".s3.amazonaws.com/default.jpeg";
-                                    }}
-                                    className="profile-pic"
-                                    onClick={() =>
-                                      goToSameTab(
-                                        "/profile/" + creator["userName"]
-                                      )
-                                    }
-                                    style={{ cursor: "pointer" }}
-                                  />
-                                  <Typography
-                                    level="h4"
-                                    sx={{
-                                      color: "#E4E5FF",
-                                      fontFamily: "Twine",
-                                      fontStyle: "normal",
-                                      fontWeight: "400",
-                                      marginTop: "12px",
-                                    }}
-                                  >
-                                    {creator["userName"]}
-                                  </Typography>
 
-                                  <Stack
-                                    direction="row"
-                                    spacing={1}
-                                    alignItems="center"
-                                  >
-                                    {creator.website && (
-                                      <IconButton
-                                        sx={{ margin: "0px" }}
-                                        color="darkpurple"
-                                        icon="/icons/socials/website.svg"
-                                        action={() =>
-                                          goTo(creator.website as string)
-                                        }
-                                      />
-                                    )}
-                                    {creator.twitter && (
-                                      <IconButton
-                                        sx={{ margin: "0px" }}
-                                        color="darkpurple"
-                                        icon="/icons/socials/twitter.svg"
-                                        action={() =>
-                                          goTo(creator.twitter as string)
-                                        }
-                                      />
-                                    )}
-                                    {creator.instagram && (
-                                      <IconButton
-                                        sx={{ margin: "0px" }}
-                                        color="darkpurple"
-                                        icon="/icons/socials/instagram.svg"
-                                        action={() =>
-                                          goTo(creator.instagram as string)
-                                        }
-                                      />
-                                    )}
-                                    {creator.reddit && (
-                                      <IconButton
-                                        sx={{ margin: "0px" }}
-                                        color="darkpurple"
-                                        icon="/icons/socials/reddit.svg"
-                                        action={() =>
-                                          goTo(creator.reddit as string)
-                                        }
-                                      />
-                                    )}
-                                    {creator.discord && (
-                                      <IconButton
-                                        sx={{ margin: "0px" }}
-                                        color="darkpurple"
-                                        icon="/icons/socials/discord.svg"
-                                        action={() =>
-                                          goTo(creator.discord as string)
-                                        }
-                                      />
-                                    )}
-                                  </Stack>
-                                </Box>
-                              )}
+            genericPost('/api/episode/update', newPubEp)
+
+            newPublishedEpisodes.push(newPubEp)
+        }
+
+        setPublishedEpisodes(newPublishedEpisodes)
+    }
+
+    const moveChapterDown = async (chapterNumber: number): void => {
+        const higherChapterNumberToSwap = chapterNumber + 1
+        let newPublishedEpisodes: JSX.Element[] = []
+        for (let i = 0; i < publishedEpisodes.length; i++) {
+            var currPubEp = publishedEpisodes[i]
+
+            let newPubEp = currPubEp
+            if (currPubEp.episodeNumber === chapterNumber) {
+                newPubEp.episodeNumber = currPubEp.episodeNumber + 1
+            } else if (currPubEp.episodeNumber === higherChapterNumberToSwap) {
+                newPubEp.episodeNumber = currPubEp.episodeNumber - 1
+            }
+
+            genericPost('/api/episode/update', newPubEp)
+
+            newPublishedEpisodes.push(newPubEp)
+        }
+
+        setPublishedEpisodes(newPublishedEpisodes)
+    }
+
+    const deleteDraftChapter = async (chapterId: number): void => {
+        let newEpisodes: JSX.Element[] = []
+        for (let i = 0; i < episodes.length; i++) {
+            var currEp = episodes[i]
+            if (currEp.id === chapterId) {
+                genericPost('/api/episode/delete/' + chapterId.toString(), null)
+            } else {
+                newEpisodes.push(currEp)
+            }
+        }
+
+        setEpisodes(newEpisodes)
+    }
+
+    return (
+        <div>
+            <Navbar />
+            <Grid container direction="column" alignItems="center">
+                <Grid sx={{ width: '80vw' }}>
+                    <TwoColumnLayout
+                        className="left-components"
+                        id="left-cpmponents-id"
+                        leftComponent={
+                            <div className="create-story-container">
+                                {work && work.creator && (
+                                    <Box
+                                        className="parent-container"
+                                        sx={{
+                                            py: 2,
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 1,
+                                            alignItems: 'left',
+                                            flexWrap: 'wrap',
+                                        }}
+                                    >
+                                        <Typography
+                                            className="title-styling"
+                                            level="h1"
+                                            sx={{
+                                                color: '#9E9FEB',
+                                                margin: '0px',
+                                                fontSize: '65px',
+                                            }}
+                                        >
+                                            {work['title']}
+                                        </Typography>
+                                        <Typography
+                                            className="description-styling"
+                                            level="h6"
+                                            sx={{
+                                                margin: '0px',
+                                                textAlign: 'initial',
+                                                width: '90%',
+                                                marginBottom: '20px',
+                                            }}
+                                        >
+                                            {work['description']}
+                                        </Typography>
+
+                                        {user &&
+                                            user.walletAddress ===
+                                                work.creator.walletAddress && (
+                                                <div
+                                                    className="view-story-button"
+                                                    style={{ gap: '10px' }}
+                                                >
+                                                    <TwineButton
+                                                        className="wrap-button"
+                                                        sx={{
+                                                            width: '45%',
+                                                            padding:
+                                                                '12px 24px 12px 24px',
+                                                            borderRadius:
+                                                                '15px',
+                                                            gap: '16px',
+                                                        }}
+                                                        whiteSpace="nowrap"
+                                                        overflow="hidden"
+                                                        textOverflow="ellipsis"
+                                                        icon="/icons/purple_settings.svg"
+                                                        color="blackpurple"
+                                                        name="Edit Story"
+                                                        action={() => {
+                                                            window.location.href =
+                                                                '/edit/story/' +
+                                                                work['url']
+                                                        }}
+                                                    />
+                                                    {/* FYI: publishedEpisodes.length is the new chapter's number */}
+                                                    <TwineButton
+                                                        className="wrap-button"
+                                                        sx={{
+                                                            width: '45%',
+                                                            padding:
+                                                                '12px 24px 12px 24px',
+                                                            borderRadius:
+                                                                '15px',
+                                                            gap: '16px',
+                                                        }}
+                                                        whiteSpace="nowrap"
+                                                        overflow="hidden"
+                                                        textOverflow="ellipsis"
+                                                        icon="/icons/purple_plus.svg"
+                                                        color="purple"
+                                                        name="Create New Episode"
+                                                        action={() => {
+                                                            window.location.href =
+                                                                '/create/chapter/' +
+                                                                work['url'] +
+                                                                '/' +
+                                                                publishedEpisodes.length
+                                                        }}
+                                                    />
+                                                </div>
+                                            )}
+
+                                        {episodes && (
+                                            <>
+                                                <Typography
+                                                    className="published-chapter"
+                                                    level="h2"
+                                                    sx={{ color: '#9E9FEB' }}
+                                                >
+                                                    Chapters
+                                                </Typography>
+
+                                                {
+                                                    <EpisodeOrderContext.Provider
+                                                        value={{
+                                                            moveUp: moveChapterUp,
+                                                            moveDown:
+                                                                moveChapterDown,
+                                                            deleteDraftChapter:
+                                                                deleteDraftChapter,
+                                                        }}
+                                                    >
+                                                        {publishedEpisodes
+                                                            .toSorted(
+                                                                (
+                                                                    e1,
+                                                                    e2,
+                                                                    idx
+                                                                ) => {
+                                                                    return (
+                                                                        e1.episodeNumber -
+                                                                        e2.episodeNumber
+                                                                    )
+                                                                }
+                                                            )
+                                                            .map(
+                                                                (
+                                                                    episode,
+                                                                    idx
+                                                                ) => {
+                                                                    return (
+                                                                        <EpisodeTile
+                                                                            isCreator={
+                                                                                user &&
+                                                                                user.walletAddress ===
+                                                                                    work
+                                                                                        .creator
+                                                                                        .walletAddress
+                                                                            }
+                                                                            episode={
+                                                                                episode
+                                                                            }
+                                                                            idx={
+                                                                                idx
+                                                                            }
+                                                                            publishedEpisodes={
+                                                                                publishedEpisodes
+                                                                            }
+                                                                            totalEpisodes={
+                                                                                publishedEpisodes.length
+                                                                            }
+                                                                        />
+                                                                    )
+                                                                }
+                                                            )}
+                                                    </EpisodeOrderContext.Provider>
+                                                }
+
+                                                {user &&
+                                                    user.walletAddress ===
+                                                        work.creator
+                                                            .walletAddress && (
+                                                        <EpisodeOrderContext.Provider
+                                                            value={{
+                                                                moveUp: moveChapterUp,
+                                                                moveDown:
+                                                                    moveChapterDown,
+                                                                deleteDraftChapter:
+                                                                    deleteDraftChapter,
+                                                            }}
+                                                        >
+                                                            <Typography
+                                                                className="draft-chapter"
+                                                                level="h2"
+                                                                sx={{
+                                                                    color: '#9E9FEB',
+                                                                }}
+                                                            >
+                                                                Draft Chapters
+                                                            </Typography>
+                                                            {episodes.map(
+                                                                (episode) => {
+                                                                    if (
+                                                                        !episode[
+                                                                            'published'
+                                                                        ]
+                                                                    ) {
+                                                                        return (
+                                                                            <EpisodeTile
+                                                                                isCreator={
+                                                                                    user &&
+                                                                                    user.walletAddress ===
+                                                                                        work
+                                                                                            .creator
+                                                                                            .walletAddress
+                                                                                }
+                                                                                episode={
+                                                                                    episode
+                                                                                }
+                                                                            />
+                                                                        )
+                                                                    }
+                                                                }
+                                                            )}
+                                                        </EpisodeOrderContext.Provider>
+                                                    )}
+                                            </>
+                                        )}
+                                    </Box>
+                                )}
                             </div>
-                          );
-                        })}
-                    </div>
-                  )}
-                  {creators && creators.size === 0 && (
-                    <div>
-                      <div>
-                        {work && work["creator"] && (
-                          <Box
-                            sx={{
-                              py: 2,
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: 1,
-                              alignItems: "center",
-                              flexWrap: "wrap",
-                              padding: "0px",
-                              minWidth: "256px",
-                            }}
-                          >
-                            <img
-                              src={
-                                work["creator"] &&
-                                "https://" +
-                                  PROFILE_IMGS_BUCKET +
-                                  ".s3.amazonaws.com/" +
-                                  work["creator"].profileImg
-                              }
-                              alt=""
-                              width="128"
-                              height="128"
-                              onError={(e) => {
-                                e.currentTarget.src =
-                                  "https://" +
-                                  PROFILE_IMGS_BUCKET +
-                                  ".s3.amazonaws.com/default.jpeg";
-                              }}
-                              className="profile-pic"
-                              onClick={() =>
-                                goToSameTab(
-                                  "/profile/" + work["creator"]["userName"]
-                                )
-                              }
-                              style={{ cursor: "pointer" }}
-                            />
-                            <Typography
-                              level="h4"
-                              sx={{
-                                color: "#E4E5FF",
-                                margin: "0px",
-                                fontFamily: "Twine",
-                                fontStyle: "normal",
-                                fontWeight: "400",
-                              }}
+                        }
+                        rightComponent={
+                            <div
+                                className="right-components"
+                                style={{
+                                    backgroundColor: '#14100E',
+                                    borderRadius: '32px',
+                                }}
                             >
-                              {work["creator"]["userName"]}{" "}
-                            </Typography>
+                                <Typography
+                                    level="h5"
+                                    sx={{
+                                        color: '#9E9FEB',
+                                        padding: '30px 0px 0px 40px',
+                                        fontFamily: 'Twine',
+                                        fontStyle: 'normal',
+                                        fontWeight: '400',
+                                    }}
+                                >
+                                    Creators
+                                </Typography>
+                                <div className="creator-list">
+                                    {creators && creators.size > 0 && (
+                                        <div className="creater-container">
+                                            {Array.from(creators)
+                                                .map((str_json) => {
+                                                    const [
+                                                        creator,
+                                                        percentage,
+                                                    ] = JSON.parse(str_json)
+                                                    return [creator, percentage]
+                                                })
+                                                .sort((a, b) => {
+                                                    return b[1] - a[1]
+                                                })
+                                                .map(
+                                                    ([creator, percentage]) => {
+                                                        return (
+                                                            <div
+                                                                className="creators"
+                                                                style={{
+                                                                    marginBottom:
+                                                                        '42px',
+                                                                }}
+                                                            >
+                                                                {creator && (
+                                                                    <Box
+                                                                        className="creater-box"
+                                                                        sx={{
+                                                                            py: 2,
+                                                                            display:
+                                                                                'flex',
+                                                                            flexDirection:
+                                                                                'column',
+                                                                            gap: 1,
+                                                                            alignItems:
+                                                                                'center',
+                                                                            flexWrap:
+                                                                                'wrap',
+                                                                            padding:
+                                                                                '0px',
+                                                                            minWidth:
+                                                                                '256px',
+                                                                        }}
+                                                                    >
+                                                                        <img
+                                                                            src={
+                                                                                creator &&
+                                                                                'https://' +
+                                                                                    PROFILE_IMGS_BUCKET +
+                                                                                    '.s3.amazonaws.com/' +
+                                                                                    creator.profileImg
+                                                                            }
+                                                                            alt=""
+                                                                            width="128"
+                                                                            height="128"
+                                                                            onError={(
+                                                                                e
+                                                                            ) => {
+                                                                                e.currentTarget.src =
+                                                                                    'https://' +
+                                                                                    PROFILE_IMGS_BUCKET +
+                                                                                    '.s3.amazonaws.com/default.jpeg'
+                                                                            }}
+                                                                            className="profile-pic"
+                                                                            onClick={() =>
+                                                                                goToSameTab(
+                                                                                    '/profile/' +
+                                                                                        creator[
+                                                                                            'userName'
+                                                                                        ]
+                                                                                )
+                                                                            }
+                                                                            style={{
+                                                                                cursor: 'pointer',
+                                                                            }}
+                                                                        />
+                                                                        <Typography
+                                                                            level="h4"
+                                                                            sx={{
+                                                                                color: '#E4E5FF',
+                                                                                fontFamily:
+                                                                                    'Twine',
+                                                                                fontStyle:
+                                                                                    'normal',
+                                                                                fontWeight:
+                                                                                    '400',
+                                                                                marginTop:
+                                                                                    '12px',
+                                                                            }}
+                                                                        >
+                                                                            {
+                                                                                creator[
+                                                                                    'userName'
+                                                                                ]
+                                                                            }
+                                                                        </Typography>
 
-                            <Stack
-                              direction="row"
-                              spacing={1}
-                              alignItems="center"
-                            >
-                              {work["creator"].website && (
-                                <IconButton
-                                  sx={{ margin: "0px" }}
-                                  color="darkpurple"
-                                  icon="/icons/socials/website.svg"
-                                  action={() =>
-                                    goTo(work["creator"].website as string)
-                                  }
-                                />
-                              )}
-                              {work["creator"].twitter && (
-                                <IconButton
-                                  sx={{ margin: "0px" }}
-                                  color="darkpurple"
-                                  icon="/icons/socials/twitter.svg"
-                                  action={() =>
-                                    goTo(work["creator"].twitter as string)
-                                  }
-                                />
-                              )}
-                              {work["creator"].instagram && (
-                                <IconButton
-                                  sx={{ margin: "0px" }}
-                                  color="darkpurple"
-                                  icon="/icons/socials/instagram.svg"
-                                  action={() =>
-                                    goTo(work["creator"].instagram as string)
-                                  }
-                                />
-                              )}
-                              {work["creator"].reddit && (
-                                <IconButton
-                                  sx={{ margin: "0px" }}
-                                  color="darkpurple"
-                                  icon="/icons/socials/reddit.svg"
-                                  action={() =>
-                                    goTo(work["creator"].reddit as string)
-                                  }
-                                />
-                              )}
-                              {work["creator"].discord && (
-                                <IconButton
-                                  sx={{ margin: "0px" }}
-                                  color="darkpurple"
-                                  icon="/icons/socials/discord.svg"
-                                  action={() =>
-                                    goTo(work["creator"].discord as string)
-                                  }
-                                />
-                              )}
-                            </Stack>
-                          </Box>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            }
-          />
-        </Grid>
-      </Grid>
-    </div>
-  );
+                                                                        <Stack
+                                                                            direction="row"
+                                                                            spacing={
+                                                                                1
+                                                                            }
+                                                                            alignItems="center"
+                                                                        >
+                                                                            {creator.website && (
+                                                                                <IconButton
+                                                                                    sx={{
+                                                                                        margin: '0px',
+                                                                                    }}
+                                                                                    color="darkpurple"
+                                                                                    icon="/icons/socials/website.svg"
+                                                                                    action={() =>
+                                                                                        goTo(
+                                                                                            creator.website as string
+                                                                                        )
+                                                                                    }
+                                                                                />
+                                                                            )}
+                                                                            {creator.twitter && (
+                                                                                <IconButton
+                                                                                    sx={{
+                                                                                        margin: '0px',
+                                                                                    }}
+                                                                                    color="darkpurple"
+                                                                                    icon="/icons/socials/twitter.svg"
+                                                                                    action={() =>
+                                                                                        goTo(
+                                                                                            creator.twitter as string
+                                                                                        )
+                                                                                    }
+                                                                                />
+                                                                            )}
+                                                                            {creator.instagram && (
+                                                                                <IconButton
+                                                                                    sx={{
+                                                                                        margin: '0px',
+                                                                                    }}
+                                                                                    color="darkpurple"
+                                                                                    icon="/icons/socials/instagram.svg"
+                                                                                    action={() =>
+                                                                                        goTo(
+                                                                                            creator.instagram as string
+                                                                                        )
+                                                                                    }
+                                                                                />
+                                                                            )}
+                                                                            {creator.reddit && (
+                                                                                <IconButton
+                                                                                    sx={{
+                                                                                        margin: '0px',
+                                                                                    }}
+                                                                                    color="darkpurple"
+                                                                                    icon="/icons/socials/reddit.svg"
+                                                                                    action={() =>
+                                                                                        goTo(
+                                                                                            creator.reddit as string
+                                                                                        )
+                                                                                    }
+                                                                                />
+                                                                            )}
+                                                                            {creator.discord && (
+                                                                                <IconButton
+                                                                                    sx={{
+                                                                                        margin: '0px',
+                                                                                    }}
+                                                                                    color="darkpurple"
+                                                                                    icon="/icons/socials/discord.svg"
+                                                                                    action={() =>
+                                                                                        goTo(
+                                                                                            creator.discord as string
+                                                                                        )
+                                                                                    }
+                                                                                />
+                                                                            )}
+                                                                        </Stack>
+                                                                    </Box>
+                                                                )}
+                                                            </div>
+                                                        )
+                                                    }
+                                                )}
+                                        </div>
+                                    )}
+                                    {creators && creators.size === 0 && (
+                                        <div>
+                                            <div>
+                                                {work && work['creator'] && (
+                                                    <Box
+                                                        sx={{
+                                                            py: 2,
+                                                            display: 'flex',
+                                                            flexDirection:
+                                                                'column',
+                                                            gap: 1,
+                                                            alignItems:
+                                                                'center',
+                                                            flexWrap: 'wrap',
+                                                            padding: '0px',
+                                                            minWidth: '256px',
+                                                        }}
+                                                    >
+                                                        <img
+                                                            src={
+                                                                work[
+                                                                    'creator'
+                                                                ] &&
+                                                                'https://' +
+                                                                    PROFILE_IMGS_BUCKET +
+                                                                    '.s3.amazonaws.com/' +
+                                                                    work[
+                                                                        'creator'
+                                                                    ].profileImg
+                                                            }
+                                                            alt=""
+                                                            width="128"
+                                                            height="128"
+                                                            onError={(e) => {
+                                                                e.currentTarget.src =
+                                                                    'https://' +
+                                                                    PROFILE_IMGS_BUCKET +
+                                                                    '.s3.amazonaws.com/default.jpeg'
+                                                            }}
+                                                            className="profile-pic"
+                                                            onClick={() =>
+                                                                goToSameTab(
+                                                                    '/profile/' +
+                                                                        work[
+                                                                            'creator'
+                                                                        ][
+                                                                            'userName'
+                                                                        ]
+                                                                )
+                                                            }
+                                                            style={{
+                                                                cursor: 'pointer',
+                                                            }}
+                                                        />
+                                                        <Typography
+                                                            level="h4"
+                                                            sx={{
+                                                                color: '#E4E5FF',
+                                                                margin: '0px',
+                                                                fontFamily:
+                                                                    'Twine',
+                                                                fontStyle:
+                                                                    'normal',
+                                                                fontWeight:
+                                                                    '400',
+                                                            }}
+                                                        >
+                                                            {
+                                                                work['creator'][
+                                                                    'userName'
+                                                                ]
+                                                            }{' '}
+                                                        </Typography>
+
+                                                        <Stack
+                                                            direction="row"
+                                                            spacing={1}
+                                                            alignItems="center"
+                                                        >
+                                                            {work['creator']
+                                                                .website && (
+                                                                <IconButton
+                                                                    sx={{
+                                                                        margin: '0px',
+                                                                    }}
+                                                                    color="darkpurple"
+                                                                    icon="/icons/socials/website.svg"
+                                                                    action={() =>
+                                                                        goTo(
+                                                                            work[
+                                                                                'creator'
+                                                                            ]
+                                                                                .website as string
+                                                                        )
+                                                                    }
+                                                                />
+                                                            )}
+                                                            {work['creator']
+                                                                .twitter && (
+                                                                <IconButton
+                                                                    sx={{
+                                                                        margin: '0px',
+                                                                    }}
+                                                                    color="darkpurple"
+                                                                    icon="/icons/socials/twitter.svg"
+                                                                    action={() =>
+                                                                        goTo(
+                                                                            work[
+                                                                                'creator'
+                                                                            ]
+                                                                                .twitter as string
+                                                                        )
+                                                                    }
+                                                                />
+                                                            )}
+                                                            {work['creator']
+                                                                .instagram && (
+                                                                <IconButton
+                                                                    sx={{
+                                                                        margin: '0px',
+                                                                    }}
+                                                                    color="darkpurple"
+                                                                    icon="/icons/socials/instagram.svg"
+                                                                    action={() =>
+                                                                        goTo(
+                                                                            work[
+                                                                                'creator'
+                                                                            ]
+                                                                                .instagram as string
+                                                                        )
+                                                                    }
+                                                                />
+                                                            )}
+                                                            {work['creator']
+                                                                .reddit && (
+                                                                <IconButton
+                                                                    sx={{
+                                                                        margin: '0px',
+                                                                    }}
+                                                                    color="darkpurple"
+                                                                    icon="/icons/socials/reddit.svg"
+                                                                    action={() =>
+                                                                        goTo(
+                                                                            work[
+                                                                                'creator'
+                                                                            ]
+                                                                                .reddit as string
+                                                                        )
+                                                                    }
+                                                                />
+                                                            )}
+                                                            {work['creator']
+                                                                .discord && (
+                                                                <IconButton
+                                                                    sx={{
+                                                                        margin: '0px',
+                                                                    }}
+                                                                    color="darkpurple"
+                                                                    icon="/icons/socials/discord.svg"
+                                                                    action={() =>
+                                                                        goTo(
+                                                                            work[
+                                                                                'creator'
+                                                                            ]
+                                                                                .discord as string
+                                                                        )
+                                                                    }
+                                                                />
+                                                            )}
+                                                        </Stack>
+                                                    </Box>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        }
+                    />
+                </Grid>
+            </Grid>
+        </div>
+    )
 }
 
 export default Story

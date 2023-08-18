@@ -4,601 +4,595 @@
     }
 }
 @media only screen and (min-width: 375px) {
-  .create-published-button {
-     margin-left: 6px;
-    }
-  }
- @media only screen and (min-width: 650px) {
     .create-published-button {
-       margin-left: -15px;
-      }
-  }
-  @media only screen and (max-width: 650px) {
-     .gallery-columns {
-          display: block !important;
-      }
-      .gallery-columns {
-        margin-right: 0 !important;
-      }
-      .profile-pic {
-          width: 60px;
-          height: 60px;
-      }
-      .name-username h4 {
-          font-size: 16px;
-          margin-left: 11px;
-          margin-top: 0;
-        }
-      .profile-info h1 {
-          font-size: 22px;
-          margin-left: 11px;
-      }
-      .sidebar button{
-          position: relative;
-          left: -20px;
-          width: 89px;
-        } 
-        h1.title-styling {
-          font-size: 38px;
-        }
-        h6.description-styling{
-          width:100%;
-        }
-        h2.published-chapter{
-          font-size: 28px;
-          height: 26px;
-        }
-        h2.draft-chapter{
-          font-size: 28px;
-          margin: 10px 0px;
-        }
-        h2.view-story-h2{
-          font-size: 21px; 
-        }
-        .left-components{
-          display: block !important;
-        }
-        div#card-view-story-id {
-          gap: 14px;
-          padding: 12px 12px 12px 12px;
-        }
-        .view-story-button button{
-          width:100%;
-        }
-        .view-story-button button{
-          width:100%;
-        }
-     }
-
-    @media only screen and (max-width: 900px){
-      .left-components{
+        margin-left: 6px;
+    }
+}
+@media only screen and (min-width: 650px) {
+    .create-published-button {
+        margin-left: -15px;
+    }
+}
+@media only screen and (max-width: 650px) {
+    .gallery-columns {
         display: block !important;
-        }
-     }
-
-   @media (min-width: 540px) and (max-width: 900px) {
-      h6.description-styling{
-        width:100%; 
-      }
-      div#card-view-story-id {
-        width:90%;
-      }
-  }
-
-  h6.view-story-h6{
-    margin-bottom:6px;
-  }
-  
-  @media only screen and (max-width: 375px){
-     img#img-episode {
-      min-width: 30%;
     }
-     h2.view-story-h2 {
-      font-size: 17px;
+    .gallery-columns {
+        margin-right: 0 !important;
     }
-   div#dot-icon-id {
-    margin: 0px 0.5rem;
-   }
-   div#chapter-num-id {
-    font-size: 12px;
-   }
-   div#episode-date-id {
-    font-size: 12px;
-   }
-  }
-
-@media (min-width: 1026px) and (max-width: 1130px){
-  .create-story-container{
-    width: 500px;
-  }
- }
-@media only screen and (max-width: 900px){
- .creater-container {
-   display: flex;
-   flex-wrap: wrap;
-  }
+    .profile-pic {
+        width: 60px;
+        height: 60px;
+    }
+    .name-username h4 {
+        font-size: 16px;
+        margin-left: 11px;
+        margin-top: 0;
+    }
+    .profile-info h1 {
+        font-size: 22px;
+        margin-left: 11px;
+    }
+    .sidebar button {
+        position: relative;
+        left: -20px;
+        width: 89px;
+    }
+    h1.title-styling {
+        font-size: 38px;
+    }
+    h6.description-styling {
+        width: 100%;
+    }
+    h2.published-chapter {
+        font-size: 28px;
+        height: 26px;
+    }
+    h2.draft-chapter {
+        font-size: 28px;
+        margin: 10px 0px;
+    }
+    h2.view-story-h2 {
+        font-size: 21px;
+    }
+    .left-components {
+        display: block !important;
+    }
+    div#card-view-story-id {
+        gap: 14px;
+        padding: 12px 12px 12px 12px;
+    }
+    .view-story-button button {
+        width: 100%;
+    }
+    .view-story-button button {
+        width: 100%;
+    }
 }
 
-.left-components{
-justify-content: right;
+@media only screen and (max-width: 900px) {
+    .left-components {
+        display: block !important;
+    }
 }
 
-
-@media (min-width: 901px) and (max-width: 1026px){
-  .left-components{
-    justify-content: space-around;
- }
-}
-@media only screen and (width: 540px){ 
-  h2.view-story-h2{
-    font-size: 25px;
-  }
+@media (min-width: 540px) and (max-width: 900px) {
+    h6.description-styling {
+        width: 100%;
+    }
+    div#card-view-story-id {
+        width: 90%;
+    }
 }
 
-@media (min-width: 320px) and (max-width: 355px){
-  .creater-box.MuiBox-root {
-    min-width: 126px;
-  }
- .creater-box h4 {
-    font-size: 15px;
+h6.view-story-h6 {
+    margin-bottom: 6px;
 }
-} 
 
-@media (min-width: 356px) and (max-width: 380px){
-  .creater-box.MuiBox-root{
-    min-width: 142px;
-  }
-  .creater-box h4 {
-    font-size: 15px;
-  }
-} 
-
-@media (min-width: 381px) and (max-width: 399px){
-  .creater-box.MuiBox-root{
-    min-width: 101px;
-  }
-  .creater-box h4 {
-    font-size: 14px;
+@media only screen and (max-width: 375px) {
+    img#img-episode {
+        min-width: 30%;
+    }
+    h2.view-story-h2 {
+        font-size: 17px;
+    }
+    div#dot-icon-id {
+        margin: 0px 0.5rem;
+    }
+    div#chapter-num-id {
+        font-size: 12px;
+    }
+    div#episode-date-id {
+        font-size: 12px;
+    }
 }
-} 
 
-@media (min-width: 400px) and (max-width: 420px){
-  .creater-box.MuiBox-root{
-    min-width: 106px;
-  }
-  .creater-box h4 {
-    font-size: 14px;
+@media (min-width: 1026px) and (max-width: 1130px) {
+    .create-story-container {
+        width: 500px;
+    }
 }
-} 
-
-@media (min-width: 421px) and (max-width: 450px){
-  .creater-box.MuiBox-root{
-    min-width: 112px;
-  }
-  .creater-box h4 {
-    font-size: 15px;
+@media only screen and (max-width: 900px) {
+    .creater-container {
+        display: flex;
+        flex-wrap: wrap;
+    }
 }
-} 
 
-@media (min-width: 451px) and (max-width: 480px){
-  .creater-box.MuiBox-root{
-    min-width: 120px;
-  }
-  .creater-box h4 {
-    font-size: 15px;
+.left-components {
+    justify-content: right;
 }
-} 
 
+@media (min-width: 901px) and (max-width: 1026px) {
+    .left-components {
+        justify-content: space-around;
+    }
+}
+@media only screen and (width: 540px) {
+    h2.view-story-h2 {
+        font-size: 25px;
+    }
+}
 
-@media (min-width: 481px) and (max-width: 500px){
-  .creater-box.MuiBox-root{
-    min-width: 128px;
-  }
-  .creater-box h4 {
+@media (min-width: 320px) and (max-width: 355px) {
+    .creater-box.MuiBox-root {
+        min-width: 126px;
+    }
+    .creater-box h4 {
+        font-size: 15px;
+    }
+}
+
+@media (min-width: 356px) and (max-width: 380px) {
+    .creater-box.MuiBox-root {
+        min-width: 142px;
+    }
+    .creater-box h4 {
+        font-size: 15px;
+    }
+}
+
+@media (min-width: 381px) and (max-width: 399px) {
+    .creater-box.MuiBox-root {
+        min-width: 101px;
+    }
+    .creater-box h4 {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 400px) and (max-width: 420px) {
+    .creater-box.MuiBox-root {
+        min-width: 106px;
+    }
+    .creater-box h4 {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 421px) and (max-width: 450px) {
+    .creater-box.MuiBox-root {
+        min-width: 112px;
+    }
+    .creater-box h4 {
+        font-size: 15px;
+    }
+}
+
+@media (min-width: 451px) and (max-width: 480px) {
+    .creater-box.MuiBox-root {
+        min-width: 120px;
+    }
+    .creater-box h4 {
+        font-size: 15px;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 500px) {
+    .creater-box.MuiBox-root {
+        min-width: 128px;
+    }
+    .creater-box h4 {
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 501px) and (max-width: 540px) {
+    .creater-box.MuiBox-root {
+        min-width: 133px;
+    }
+    .creater-box h4 {
+        font-size: 17px;
+    }
+    .profile-pic {
+        height: 70px;
+        width: 70px;
+    }
+}
+
+@media (min-width: 541px) and (max-width: 575px) {
+    .creater-box.MuiBox-root {
+        min-width: 144px;
+    }
+    .creater-box h4 {
+        font-size: 17px;
+    }
+    .profile-pic {
+        height: 70px;
+        width: 70px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 599px) {
+    .creater-box.MuiBox-root {
+        min-width: 153px;
+    }
+    .creater-box h4 {
+        font-size: 17px;
+    }
+    .profile-pic {
+        height: 75px;
+        width: 75px;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 640px) {
+    .creater-box.MuiBox-root {
+        min-width: 158px;
+    }
+    .creater-box h4 {
+        font-size: 19px;
+    }
+    .profile-pic {
+        height: 75px;
+        width: 75px;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 670px) {
+    .creater-box.MuiBox-root {
+        min-width: 170px;
+    }
+    .creater-box h4 {
+        font-size: 19px;
+    }
+    .profile-pic {
+        height: 75px;
+        width: 75px;
+    }
+}
+
+@media (min-width: 671px) and (max-width: 710px) {
+    .creater-box.MuiBox-root {
+        min-width: 178px;
+    }
+    .creater-box h4 {
+        font-size: 21px;
+    }
+    .profile-pic {
+        height: 80px;
+        width: 80px;
+    }
+    .view-story-button {
+        display: block;
+    }
+    .view-story-button button {
+        width: 100%;
+    }
+    .view-story-button button {
+        width: 100%;
+    }
+}
+
+@media (min-width: 711px) and (max-width: 760px) {
+    .creater-box.MuiBox-root {
+        min-width: 189px;
+    }
+    .creater-box h4 {
+        font-size: 23px;
+    }
+    .profile-pic {
+        height: 85px;
+        width: 85px;
+    }
+    .view-story-button {
+        display: block;
+    }
+    .view-story-button button {
+        width: 100%;
+    }
+    .view-story-button button {
+        width: 100%;
+    }
+}
+
+@media (min-width: 761px) and (max-width: 800px) {
+    .creater-box.MuiBox-root {
+        min-width: 202px;
+    }
+    .creater-box h4 {
+        font-size: 25px;
+    }
+    .profile-pic {
+        height: 90px;
+        width: 90px;
+    }
+    .view-story-button {
+        display: block;
+    }
+    .view-story-button button {
+        width: 100%;
+    }
+    .view-story-button button {
+        width: 100%;
+    }
+}
+
+@media (min-width: 801px) and (max-width: 840px) {
+    .creater-box.MuiBox-root {
+        min-width: 213px;
+    }
+    .creater-box h4 {
+        font-size: 26px;
+    }
+    .profile-pic {
+        height: 95px;
+        width: 95px;
+    }
+    .view-story-button {
+        display: block;
+    }
+    .view-story-button button {
+        width: 100%;
+    }
+    .view-story-button button {
+        width: 85%;
+    }
+}
+
+@media (min-width: 841px) and (max-width: 875px) {
+    .creater-box.MuiBox-root {
+        min-width: 224px;
+    }
+    .creater-box h4 {
+        font-size: 26px;
+    }
+    .profile-pic {
+        height: 95px;
+        width: 95px;
+    }
+    .view-story-button {
+        display: block;
+    }
+    .view-story-button button {
+        width: 100%;
+    }
+    .view-story-button button {
+        width: 85%;
+    }
+}
+
+@media (min-width: 876px) and (max-width: 900px) {
+    .creater-box.MuiBox-root {
+        min-width: 233px;
+    }
+    .creater-box h4 {
+        font-size: 28px;
+    }
+    .profile-pic {
+        height: 100px;
+        width: 100px;
+    }
+    .view-story-button {
+        display: block;
+    }
+    .view-story-button button {
+        width: 100%;
+    }
+    .view-story-button button {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 540px) {
+    .MuiStack-root.remove-del-img {
+        margin-left: 0px;
+    }
+}
+
+@media (min-width: 425px) and (max-width: 460px) {
+    .MuiCard-root.MuiCard-vertical.MuiCard-variantOutlined.MuiCard-colorNeutral.MuiCard-sizeMd.card-view-story {
+        max-width: 289px;
+    }
+}
+
+@media (min-width: 461px) and (max-width: 490px) {
+    .MuiCard-root.MuiCard-vertical.MuiCard-variantOutlined.MuiCard-colorNeutral.MuiCard-sizeMd.card-view-story {
+        max-width: 321px;
+    }
+}
+
+@media (min-width: 491px) and (max-width: 539px) {
+    .MuiCard-root.MuiCard-vertical.MuiCard-variantOutlined.MuiCard-colorNeutral.MuiCard-sizeMd.card-view-story {
+        max-width: 321px;
+    }
+}
+
+@media (min-width: 651px) and (max-width: 750px) {
+    h2.view-story-h2 {
+        font-size: 30px;
+    }
+
+    div#chapter-num-id {
+        font-size: 17px;
+    }
+
+    .episode-date {
+        font-size: 17px;
+    }
+}
+
+@media (min-width: 550px) and (max-width: 650px) {
+    h2.view-story-h2 {
+        font-size: 30px;
+    }
+    .chapter-num {
+        font-size: 17px;
+    }
+    .episode-date {
+        font-size: 17px;
+    }
+}
+
+@media (min-width: 370px) and (max-width: 424px) {
+    .card-view-story {
+        max-width: 252px;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 369px) {
+    .card-view-story {
+        max-width: 200px;
+    }
+    h2.view-story-h2 {
+        font-size: 13px;
+    }
+    div#chapter-num-id {
+        font-size: 9px;
+    }
+    div#episode-date-id {
+        font-size: 9px;
+    }
+}
+.dot-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 1rem;
+}
+.chapter-num {
+    font-size: 16px;
+    color: #e4e5ff;
+}
+.episode-date {
     font-size: 16px;
 }
-} 
 
-
-@media (min-width: 501px) and (max-width: 540px){
-  .creater-box.MuiBox-root{
-    min-width: 133px;
-  }
-  .creater-box h4 {
-    font-size: 17px;
-}
- .profile-pic{
-    height:70px;
-    width:70px;
- }
-} 
-
-@media (min-width: 541px) and (max-width: 575px){
-  .creater-box.MuiBox-root{
-    min-width: 144px;
-  }
-  .creater-box h4 {
-    font-size: 17px;
-}
- .profile-pic{
-    height:70px;
-    width:70px;
- }
-} 
-
-@media (min-width: 576px) and (max-width: 599px){
-  .creater-box.MuiBox-root{
-    min-width: 153px;
-  }
-  .creater-box h4 {
-    font-size: 17px;
-}
- .profile-pic{
-    height:75px;
-    width:75px;
- }
-} 
-
-@media (min-width: 600px) and (max-width: 640px){
-  .creater-box.MuiBox-root{
-    min-width: 158px;
-  }
-  .creater-box h4 {
-    font-size: 19px;
-}
- .profile-pic{
-    height:75px;
-    width:75px;
- }
-} 
-
-@media (min-width: 641px) and (max-width: 670px){
-  .creater-box.MuiBox-root{
-    min-width: 170px;
-  }
-  .creater-box h4 {
-    font-size: 19px;
-}
- .profile-pic{
-    height:75px;
-    width:75px;
- }
-
-} 
-
-@media (min-width: 671px) and (max-width: 710px){
-  .creater-box.MuiBox-root{
-    min-width: 178px;
-  }
-  .creater-box h4 {
-    font-size: 21px;
-}
- .profile-pic{
-    height:80px;
-    width:80px;
- }
- .view-story-button{
-    display: block;
-  }
- .view-story-button button{
-    width:100%;
-  }
- .view-story-button button{
-    width:100%;
-  }
-} 
-
-@media (min-width: 711px) and (max-width: 760px){
-  .creater-box.MuiBox-root{
-    min-width: 189px;
-  }
-  .creater-box h4 {
-    font-size: 23px;
-}
- .profile-pic{
-    height:85px;
-    width:85px;
- }
- .view-story-button{
-    display: block;
-  }
- .view-story-button button{
-    width:100%;
-  }
- .view-story-button button{
-    width:100%;
-  }
-} 
-
-@media (min-width: 761px) and (max-width: 800px){
-  .creater-box.MuiBox-root{
-    min-width: 202px;
-  }
-  .creater-box h4 {
-    font-size: 25px;
-}
- .profile-pic{
-    height:90px;
-    width:90px;
- }
- .view-story-button{
-    display: block;
- }
- .view-story-button button{
-    width:100%;
-  }
-  .view-story-button button{
-    width:100%;
-  }
+#card-view-story-id {
+    background-color: #14100e;
+    width: 100%;
+    display: flex;
+    cursor: pointer;
+    flex-direction: row;
+    border: none;
+    gap: 32px;
+    padding: 16px 32px 16px 16px;
+    border-radius: 32px;
 }
 
-@media (min-width: 801px) and (max-width: 840px){
-  .creater-box.MuiBox-root{
-    min-width: 213px;
-  }
-  .creater-box h4 {
-    font-size: 26px;
-}
- .profile-pic{
-    height:95px;
-    width:95px;
- }
- .view-story-button{
-    display: block;
-  }
- .view-story-button button{
-    width:100%;
-  }
- .view-story-button button{
-    width:85%;
-  }
-}
-
-@media (min-width: 841px) and (max-width: 875px){
-  .creater-box.MuiBox-root{
-    min-width: 224px;
-  }
-  .creater-box h4 {
-    font-size: 26px;
-}
- .profile-pic{
-    height:95px;
-    width:95px;
- }
- .view-story-button{
-   display: block;
-  }
- .view-story-button button{
-   width:100%;
-  }
- .view-story-button button{
-   width:85%;
-  }
-}
-
-@media (min-width: 876px) and (max-width: 900px){
-  .creater-box.MuiBox-root{
-    min-width: 233px;
-  }
-  .creater-box h4 {
-    font-size: 28px;
-}
- .profile-pic{
-    height:100px;
-    width:100px;
- }
-  .view-story-button{
-    display: block;
-   }
-  .view-story-button button{
-    width:100%;
-   }
-  .view-story-button button{
-    width:100%;
-   }
-}
-
-@media only screen and (max-width: 540px){
-  .MuiStack-root.remove-del-img{
-    margin-left: 0px;
-  }
-}
-
-@media (min-width: 425px) and (max-width: 460px){
-.MuiCard-root.MuiCard-vertical.MuiCard-variantOutlined.MuiCard-colorNeutral.MuiCard-sizeMd.card-view-story {
-  max-width: 289px;
-}
-}
-
-@media (min-width: 461px) and (max-width: 490px){
-  .MuiCard-root.MuiCard-vertical.MuiCard-variantOutlined.MuiCard-colorNeutral.MuiCard-sizeMd.card-view-story {
-    max-width: 321px;
-  }
-  }
-
-  @media (min-width: 491px) and (max-width: 539px){
-    .MuiCard-root.MuiCard-vertical.MuiCard-variantOutlined.MuiCard-colorNeutral.MuiCard-sizeMd.card-view-story {
-      max-width: 321px;
+@media (min-width: 901px) and (max-width: 1023px) {
+    h6.description-styling {
+        width: 80%;
     }
+    .view-story-button {
+        width: 85%;
     }
-
-    @media (min-width: 651px) and (max-width: 750px){
-      h2.view-story-h2{
-        font-size:30px;
-      }
-
-      div#chapter-num-id {
-        font-size: 17px;
-      }
-      
-      .episode-date {
-        font-size: 17px;
-      }
+    .card-view-story {
+        max-width: 400px;
     }
-
-      
-    @media (min-width: 550px) and (max-width: 650px){
-      h2.view-story-h2{
-        font-size:30px;
-      }
-      .chapter-num {
-        font-size: 17px;
-      }
-      .episode-date {
-        font-size: 17px;
-      }
+    .left-components {
+        margin: 0px !important;
     }
-
-    @media (min-width: 370px) and (max-width: 424px){
-     .card-view-story{
-      max-width: 252px;
+    h2.view-story-h2 {
+        font-size: 25px;
     }
-    }
-
-
-    @media (min-width: 320px) and (max-width: 369px){
-      .card-view-story{
-       max-width: 200px;
-     }
-     h2.view-story-h2 {
-      font-size: 13px;
-     }
-     div#chapter-num-id {
-       font-size: 9px;
-     }
-     div#episode-date-id {
-       font-size: 9px;
-     }
-    }
-    .dot-icon{
-        display:flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 1rem;
-      }
-      .chapter-num{
-        font-size: 16px;
-        color:#E4E5FF;
-      }
-      .episode-date{
-        font-size: 16px;
-      }
-
-      #card-view-story-id{
-        background-color:#14100E;
-        width:100%;
-        display: flex;
-        cursor: pointer;
-        flex-direction: row;
-        border: none;
-        gap:32px;
-        padding:16px 32px 16px 16px;
-        border-radius:32px;
-      }
-
-@media (min-width: 901px) and (max-width: 1023px){
-     h6.description-styling{
-       width:80%;
-     }
-     .view-story-button{
-       width:85%;
-     }
-     .card-view-story{
-       max-width: 400px;
-     }
-     .left-components{
-       margin: 0px !important;
-     }
-      h2.view-story-h2{
-       font-size: 25px;
-      }
-      div#card-view-story-id {
+    div#card-view-story-id {
         max-width: 365px;
-      } 
-     .view-story-button{
-        display: block;
-      }
-      .view-story-button button{
-        width:100%;
-      }
-      .view-story-button button{
-        width:100%;
-      }
- }
-
- @media (min-width: 1024px) and (max-width: 1100px){
-       h6.description-styling{
-         width:85%;
-       }
-       .card-view-story{
-         max-width: 400px;
-       }
-       .left-components {
-          justify-content: flex-start;
-          margin: 0px !important;
-          max-width: 90%;
-       }
-       h2.view-story-h2{
-          font-size: 25px;
-       }
-      div#card-view-story-id {
-         max-width: 400px;
-       }
     }
+    .view-story-button {
+        display: block;
+    }
+    .view-story-button button {
+        width: 100%;
+    }
+    .view-story-button button {
+        width: 100%;
+    }
+}
 
-  @media (min-width: 1101px) and (max-width: 1240px){
-      h6.description-styling{
-        width:85%;
-      }
-      .card-view-story{
-         max-width: 400px;
-      }
-      .left-components {
+@media (min-width: 1024px) and (max-width: 1100px) {
+    h6.description-styling {
+        width: 85%;
+    }
+    .card-view-story {
+        max-width: 400px;
+    }
+    .left-components {
+        justify-content: flex-start;
+        margin: 0px !important;
+        max-width: 90%;
+    }
+    h2.view-story-h2 {
+        font-size: 25px;
+    }
+    div#card-view-story-id {
+        max-width: 400px;
+    }
+}
+
+@media (min-width: 1101px) and (max-width: 1240px) {
+    h6.description-styling {
+        width: 85%;
+    }
+    .card-view-story {
+        max-width: 400px;
+    }
+    .left-components {
         justify-content: flex-start;
         margin: 0px !important;
         max-width: 94%;
-       }
-        h2.view-story-h2{
-          font-size: 25px;
-        }
-        div#card-view-story-id {
-          max-width: 400px;
-        }
-      }
-      @media (min-width: 1024px) and (max-width: 1169px){
-        .date-title{
-          margin-top: 3px;
-         }
-        }
+    }
+    h2.view-story-h2 {
+        font-size: 25px;
+    }
+    div#card-view-story-id {
+        max-width: 400px;
+    }
+}
+@media (min-width: 1024px) and (max-width: 1169px) {
+    .date-title {
+        margin-top: 3px;
+    }
+}
 
-      @media (min-width: 1170px) and (max-width: 1240px){
-        div#card-view-story-id {
-          max-width: 480px;
-      }
-      .date-title{
+@media (min-width: 1170px) and (max-width: 1240px) {
+    div#card-view-story-id {
+        max-width: 480px;
+    }
+    .date-title {
         margin-top: 10px;
-       }
-      }
+    }
+}
 
-  @media (min-width: 1241px) and (max-width: 2560px){
-    h6.description-styling{
-       width:90%;
-   }
-   .card-view-story{
-       max-width: 400px;
-   }
-   .left-components {
-       justify-content: flex-start;
-       margin: 0px !important;
-       max-width: 94%;
+@media (min-width: 1241px) and (max-width: 2560px) {
+    h6.description-styling {
+        width: 90%;
     }
-    h2.view-story-h2{
-       font-size: 25px;
+    .card-view-story {
+        max-width: 400px;
     }
-   div#card-view-story-id {
-    max-width: 480px;
-   }
-   .date-title{
-    margin-top: 10px;
-   }
-  }
+    .left-components {
+        justify-content: flex-start;
+        margin: 0px !important;
+        max-width: 94%;
+    }
+    h2.view-story-h2 {
+        font-size: 25px;
+    }
+    div#card-view-story-id {
+        max-width: 480px;
+    }
+    .date-title {
+        margin-top: 10px;
+    }
+}

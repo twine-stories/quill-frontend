@@ -6,7 +6,7 @@ interface TwoColumnLayoutProps {
     rightWidth?: string
     className?: string
     marginRight?: string
-    id?:string
+    id?: string
 }
 
 function TwoColumnLayout(props: TwoColumnLayoutProps) {
