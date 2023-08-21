@@ -37,3 +37,16 @@
     border-radius: 15px;
     margin: 10px;
 }
+
+.MuiSheet-root.MuiSheet-variantOutlined.MuiSheet-colorNeutral.upload-image-popup {
+    border: 1px solid #241D19;
+    border-radius: 20px;
+}
+
+button.MuiButton-root.Joy-disabled.MuiButton-variantSolid.MuiButton-colorPurple.MuiButton-sizeMd.upload-button{
+    border-radius: 15px;
+}
+
+
+
+                        
