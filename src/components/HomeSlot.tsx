@@ -113,7 +113,7 @@ function HomeSlot(props: HomeProps) {
                     borderRadius: 'md',
                     p: 3,
                 }}
-                className="responsive-sheet gap-phone"
+                className="responsive-sheet gap-phone image-container"
             >
                 <Grid
                     container

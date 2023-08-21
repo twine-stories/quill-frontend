@@ -18,10 +18,6 @@
     font-size: 15px;
 }
 
-.home-slot .full-hook {
-    -webkit-line-clamp: 15;
-}
-
 .home-cover {
     border-radius: 15px;
     object-fit: cover;
@@ -52,4 +48,22 @@
     .gap-phone {
         width: 220px !important;
     }
+}
+
+
+.responsive-sheet.gap-phone.image-container {
+    padding:9px;
+    border-radius: 30px;
+}
+
+.MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-column.MuiGrid-grid-xs-12.home-slot-content {
+    padding-top: 5px;
+    border-radius: 18px;
+}
+
+.home-slot .full-hook {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 100%;
+    -webkit-line-clamp: 15;
 }
