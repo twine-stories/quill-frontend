@@ -144,9 +144,9 @@ export const theme = extendTheme({
                     }),
                     ...(ownerState.color === 'green' &&
                         ownerState.disabled === true && {
-                        color: '#404626',
-                        backgroundColor: '#A3B83280',
-                    }),
+                            color: '#404626',
+                            backgroundColor: '#A3B83280',
+                        }),
                     ...(ownerState.color === 'purple' && {
                         color: '#373867',
                         backgroundColor: '#9E9FEB',
@@ -156,9 +156,9 @@ export const theme = extendTheme({
                     }),
                     ...(ownerState.color === 'purple' &&
                         ownerState.disabled === true && {
-                        color: '#7A7BAF',
-                        backgroundColor: '#9E9FEB80',
-                    }),
+                            color: '#7A7BAF',
+                            backgroundColor: '#9E9FEB80',
+                        }),
                     ...(ownerState.color === 'darkpurple' && {
                         color: '#9E9FEB',
                         backgroundColor: '#4546AB',
@@ -168,9 +168,9 @@ export const theme = extendTheme({
                     }),
                     ...(ownerState.color === 'darkpurple' &&
                         ownerState.disabled === true && {
-                        color: '#4546AB',
-                        backgroundColor: '#23232E',
-                    }),
+                            color: '#4546AB',
+                            backgroundColor: '#23232E',
+                        }),
                     ...(ownerState.disabled && {
                         cursor: 'not-allowed',
                     }),

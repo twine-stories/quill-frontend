@@ -528,7 +528,11 @@ function Create() {
             <Typography
                 level="h2"
                 color="green"
-                sx={{ paddingLeft: '16px', marginTop: '74px', color:"#9E9FEB" }}
+                sx={{
+                    paddingLeft: '16px',
+                    marginTop: '74px',
+                    color: '#9E9FEB',
+                }}
             >
                 Create Art
             </Typography>
