@@ -144,9 +144,9 @@ export const theme = extendTheme({
                     }),
                     ...(ownerState.color === 'green' &&
                         ownerState.disabled === true && {
-                            color: '#404626',
-                            backgroundColor: '#A3B83280',
-                        }),
+                        color: '#404626',
+                        backgroundColor: '#A3B83280',
+                    }),
                     ...(ownerState.color === 'purple' && {
                         color: '#373867',
                         backgroundColor: '#9E9FEB',
@@ -156,9 +156,9 @@ export const theme = extendTheme({
                     }),
                     ...(ownerState.color === 'purple' &&
                         ownerState.disabled === true && {
-                            color: '#7A7BAF',
-                            backgroundColor: '#9E9FEB80',
-                        }),
+                        color: '#7A7BAF',
+                        backgroundColor: '#9E9FEB80',
+                    }),
                     ...(ownerState.color === 'darkpurple' && {
                         color: '#9E9FEB',
                         backgroundColor: '#4546AB',
@@ -168,9 +168,9 @@ export const theme = extendTheme({
                     }),
                     ...(ownerState.color === 'darkpurple' &&
                         ownerState.disabled === true && {
-                            color: '#4546AB',
-                            backgroundColor: '#23232E',
-                        }),
+                        color: '#4546AB',
+                        backgroundColor: '#23232E',
+                    }),
                     ...(ownerState.disabled && {
                         cursor: 'not-allowed',
                     }),
@@ -221,7 +221,7 @@ export const theme = extendTheme({
                             outline: '0',
                         },
                     },
-                    ...(ownerState.color === 'green_dashed' && {
+                    ...(ownerState.color === 'green-dashed' && {
                         padding: '0px 20px',
                         display: 'flex',
                         alignItems: 'center',
@@ -232,7 +232,7 @@ export const theme = extendTheme({
                         margin: '10px',
                         backgroundColor: '#0d0603',
                     }),
-                    ...(ownerState.color === 'purple_dashed' && {
+                    ...(ownerState.color === 'purple-dashed' && {
                         backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='20' ry='20' stroke='%239E9FEB' stroke-width='4' stroke-dasharray='6%2c 13' stroke-dashoffset='2' stroke-linecap='square'/%3e%3c/svg%3e")`,
                         padding: '0px 20px',
                         display: 'flex',

@@ -436,7 +436,7 @@ function Create() {
                     flexWrap="wrap"
                     width="100%"
                 >
-                    <Sheet color="green_dashed" variant="rounded">
+                    <Sheet color="green-dashed" variant="rounded">
                         <span
                             onMouseEnter={() => setOnHover(true)}
                             onMouseLeave={() => setOnHover(false)}
@@ -470,7 +470,7 @@ function Create() {
                             />
                         </span>
                     </Sheet>
-                    <Sheet color="green_dashed" variant="rounded">
+                    <Sheet color="green-dashed" variant="rounded">
                         <TwineButton
                             sx={{
                                 margin: '0px',
@@ -497,7 +497,7 @@ function Create() {
                             className="custom-start-decorator"
                         />
                     </Sheet>
-                    <Sheet color="green_dashed" variant="rounded">
+                    <Sheet color="green-dashed" variant="rounded">
                         <TwineButton
                             sx={{
                                 display: 'flex',
@@ -545,7 +545,7 @@ function Create() {
                     flexWrap="wrap"
                     width="100%"
                 >
-                    <Sheet color="purple_dashed" variant="rounded">
+                    <Sheet color="purple-dashed" variant="rounded">
                         <span
                             onMouseEnter={() => setOnHover(true)}
                             onMouseLeave={() => setOnHover(false)}
