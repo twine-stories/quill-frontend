@@ -7,14 +7,14 @@
     text-overflow: ellipsis;
 }
 
-.home-slot h6 {
+.home-slot h6, .home-slot .MuiTypography-h6 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     max-height: 70%;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .home-slot .full-hook {
