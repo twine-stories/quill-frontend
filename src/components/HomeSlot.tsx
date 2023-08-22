@@ -106,7 +106,7 @@ function HomeSlot(props: HomeProps) {
             </Typography>
             <Sheet
                 color="home"
-                variant={props.work ? 'outlined' : 'purpleDashed'}
+                variant={props.work ? 'outlined' : 'purple-dashed-varient'}
                 sx={{
                     width: '260px',
                     height: '450px',

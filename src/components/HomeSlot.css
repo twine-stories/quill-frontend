@@ -5,6 +5,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-left: 7px;
 }
 
 .home-slot h6,
@@ -14,8 +15,10 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-height: 70%;
+    max-height: 60%;
     font-size: 15px;
+    margin: 0px;
+    padding: 12px 12px 12px 12px;
 }
 
 .home-cover {
@@ -52,8 +55,8 @@
 
 
 .responsive-sheet.gap-phone.image-container {
-    padding:9px;
     border-radius: 30px;
+    padding: 12px 12px 32px 12px;
 }
 
 .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-column.MuiGrid-grid-xs-12.home-slot-content {
@@ -64,6 +67,6 @@
 .home-slot .full-hook {
     overflow: hidden;
     text-overflow: ellipsis;
-    max-height: 100%;
-    -webkit-line-clamp: 15;
+    max-height: 69%;
+    -webkit-line-clamp: 14;
 }

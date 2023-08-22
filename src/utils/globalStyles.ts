@@ -144,9 +144,9 @@ export const theme = extendTheme({
                     }),
                     ...(ownerState.color === 'green' &&
                         ownerState.disabled === true && {
-                            color: '#404626',
-                            backgroundColor: '#A3B83280',
-                        }),
+                        color: '#404626',
+                        backgroundColor: '#A3B83280',
+                    }),
                     ...(ownerState.color === 'purple' && {
                         color: '#373867',
                         backgroundColor: '#9E9FEB',
@@ -156,9 +156,9 @@ export const theme = extendTheme({
                     }),
                     ...(ownerState.color === 'purple' &&
                         ownerState.disabled === true && {
-                            color: '#7A7BAF',
-                            backgroundColor: '#9E9FEB80',
-                        }),
+                        color: '#7A7BAF',
+                        backgroundColor: '#9E9FEB80',
+                    }),
                     ...(ownerState.color === 'darkpurple' && {
                         color: '#9E9FEB',
                         backgroundColor: '#4546AB',
@@ -168,9 +168,9 @@ export const theme = extendTheme({
                     }),
                     ...(ownerState.color === 'darkpurple' &&
                         ownerState.disabled === true && {
-                            color: '#4546AB',
-                            backgroundColor: '#23232E',
-                        }),
+                        color: '#4546AB',
+                        backgroundColor: '#23232E',
+                    }),
                     ...(ownerState.disabled && {
                         cursor: 'not-allowed',
                     }),
@@ -258,8 +258,10 @@ export const theme = extendTheme({
                             cursor: 'pointer',
                         },
                     }),
-                    ...(ownerState.variant === 'purpleDashed' && {
-                        border: '1px #9E9FEB dashed',
+                    ...(ownerState.variant === 'purple-dashed-varient' && {
+                        borderRadius: "28px",
+                        border: "none",
+                        background: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='30' ry='30' stroke='%239E9FEB' stroke-width='4' stroke-dasharray='7%2c 15' stroke-dashoffset='7' stroke-linecap='square'/%3e%3c/svg%3e")`,
                     }),
                 }),
             },
