@@ -4,13 +4,7 @@ import useState from 'react-usestateref'
 import Navbar from '../../components/Navbar.tsx'
 import { UserContext } from '../../App.tsx'
 import { User, Work, ImageUpload } from '../../utils/types.ts'
-import {
-    Box,
-    Option,
-    Typography,
-    Grid,
-    CircularProgress,
-} from '@mui/joy'
+import { Box, Option, Typography, Grid, CircularProgress } from '@mui/joy'
 import { useImmer } from 'use-immer'
 import { enableMapSet } from 'immer'
 import TwoColumnLayout from '../../components/TwoColumnLayout.tsx'
@@ -560,7 +554,10 @@ function CreateStory(props: CreateStoryProps) {
         }
     }
 
-    function getStory(published: boolean, currentWork?: Work): Work | undefined {
+    function getStory(
+        published: boolean,
+        currentWork?: Work
+    ): Work | undefined {
         const title: HTMLInputElement = document.getElementById(
             'title'
         ) as HTMLInputElement
