@@ -169,10 +169,10 @@ function Story() {
                                             sx={{
                                                 color: '#9E9FEB',
                                                 margin: '0px',
-                                                fontSize: '65px',
+                                                fontSize: '50px',
                                             }}
                                         >
-                                            {work['title']}
+                                            {work.title}
                                         </Typography>
                                         <Typography
                                             className="description-styling"
@@ -248,7 +248,7 @@ function Story() {
                                             <>
                                                 <Typography
                                                     className="published-chapter"
-                                                    level="h2"
+                                                    level="h3"
                                                     sx={{ color: '#9E9FEB' }}
                                                 >
                                                     Chapters
@@ -325,7 +325,7 @@ function Story() {
                                                         >
                                                             <Typography
                                                                 className="draft-chapter"
-                                                                level="h2"
+                                                                level="h3"
                                                                 sx={{
                                                                     color: '#9E9FEB',
                                                                 }}
