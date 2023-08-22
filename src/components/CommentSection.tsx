@@ -66,25 +66,38 @@ export default function CommentSection({ episode }) {
             week: 604_800,
             day: 86_400,
             hour: 3_600,
-            minute: 60
-        };
-    
-        const secondsSinceComment = (new Date().getTime() - new Date(date).getTime()) / 1_000;
-    
+            minute: 60,
+        }
+
+        const secondsSinceComment =
+            (new Date().getTime() - new Date(date).getTime()) / 1_000
+
         if (secondsSinceComment < secondsIn.minute) {
-            return Math.floor(secondsSinceComment) + " seconds ago";
+            return Math.floor(secondsSinceComment) + ' seconds ago'
         } else if (secondsSinceComment < secondsIn.hour) {
-            return Math.floor(secondsSinceComment / secondsIn.minute) + " minutes ago";
+            return (
+                Math.floor(secondsSinceComment / secondsIn.minute) +
+                ' minutes ago'
+            )
         } else if (secondsSinceComment < secondsIn.day) {
-            return Math.floor(secondsSinceComment / secondsIn.hour) + " hours ago";
+            return (
+                Math.floor(secondsSinceComment / secondsIn.hour) + ' hours ago'
+            )
         } else if (secondsSinceComment < secondsIn.week) {
-            return Math.floor(secondsSinceComment / secondsIn.day) + " days ago";
+            return Math.floor(secondsSinceComment / secondsIn.day) + ' days ago'
         } else if (secondsSinceComment < secondsIn.month) {
-            return Math.floor(secondsSinceComment / secondsIn.week) + " weeks ago";
+            return (
+                Math.floor(secondsSinceComment / secondsIn.week) + ' weeks ago'
+            )
         } else if (secondsSinceComment < secondsIn.year) {
-            return Math.floor(secondsSinceComment / secondsIn.month) + " months ago";
+            return (
+                Math.floor(secondsSinceComment / secondsIn.month) +
+                ' months ago'
+            )
         } else {
-            return Math.floor(secondsSinceComment / secondsIn.year) + " years ago";
+            return (
+                Math.floor(secondsSinceComment / secondsIn.year) + ' years ago'
+            )
         }
     }
 
