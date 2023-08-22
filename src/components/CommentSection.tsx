@@ -49,6 +49,15 @@ export default function CommentSection({ episode }) {
         }
     }
 
+    const secondsIn = {
+        year: 31_536_000,
+        month: 2_628_000,
+        week: 604_800,
+        day: 86_400,
+        hour: 3_600,
+        minute: 60,
+    }
+
     useEffect(() => {
         if (episode) {
             genericGet('/api/comment/comments/' + episode.id).then(
@@ -60,15 +69,6 @@ export default function CommentSection({ episode }) {
     }, [episode])
 
     const getCommentTimeString = (date: string) => {
-        const secondsIn = {
-            year: 31_536_000,
-            month: 2_628_000,
-            week: 604_800,
-            day: 86_400,
-            hour: 3_600,
-            minute: 60,
-        }
-
         const secondsSinceComment =
             (new Date().getTime() - new Date(date).getTime()) / 1_000
 
