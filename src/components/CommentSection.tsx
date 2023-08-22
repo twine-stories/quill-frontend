@@ -59,11 +59,33 @@ export default function CommentSection({ episode }) {
         }
     }, [episode])
 
-    const formatDate = (date: String) => {
-        // only include month, day, year
-        date = new Date(date).toLocaleString()
-        date = date.split(',')[0]
-        return date
+    const getCommentTimeString = (date: string) => {
+        const secondsIn = {
+            year: 31_536_000,
+            month: 2_628_000,
+            week: 604_800,
+            day: 86_400,
+            hour: 3_600,
+            minute: 60
+        };
+    
+        const secondsSinceComment = (new Date().getTime() - new Date(date).getTime()) / 1_000;
+    
+        if (secondsSinceComment < secondsIn.minute) {
+            return Math.floor(secondsSinceComment) + " seconds ago";
+        } else if (secondsSinceComment < secondsIn.hour) {
+            return Math.floor(secondsSinceComment / secondsIn.minute) + " minutes ago";
+        } else if (secondsSinceComment < secondsIn.day) {
+            return Math.floor(secondsSinceComment / secondsIn.hour) + " hours ago";
+        } else if (secondsSinceComment < secondsIn.week) {
+            return Math.floor(secondsSinceComment / secondsIn.day) + " days ago";
+        } else if (secondsSinceComment < secondsIn.month) {
+            return Math.floor(secondsSinceComment / secondsIn.week) + " weeks ago";
+        } else if (secondsSinceComment < secondsIn.year) {
+            return Math.floor(secondsSinceComment / secondsIn.month) + " months ago";
+        } else {
+            return Math.floor(secondsSinceComment / secondsIn.year) + " years ago";
+        }
     }
 
     return (
@@ -158,7 +180,7 @@ export default function CommentSection({ episode }) {
                                 color="purple"
                             >
                                 {comment.publishStamp &&
-                                    formatDate(comment.publishStamp)}
+                                    getCommentTimeString(comment.publishStamp)}
                             </Typography>
                         </div>
                     </div>
