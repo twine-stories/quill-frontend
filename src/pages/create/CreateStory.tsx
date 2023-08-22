@@ -3,15 +3,11 @@ import './CreateStory.css'
 import useState from 'react-usestateref'
 import Navbar from '../../components/Navbar.tsx'
 import { UserContext } from '../../App.tsx'
-import { User, Episode, Work, ImageUpload } from '../../utils/types.ts'
+import { User, Work, ImageUpload } from '../../utils/types.ts'
 import {
     Box,
     Option,
     Typography,
-    Select,
-    FormControl,
-    FormLabel,
-    Input,
     Grid,
     CircularProgress,
 } from '@mui/joy'
@@ -19,10 +15,9 @@ import { useImmer } from 'use-immer'
 import { enableMapSet } from 'immer'
 import TwoColumnLayout from '../../components/TwoColumnLayout.tsx'
 import TwineButton from '../../components/TwineButton.tsx'
-import { genericPost, workAdd, workGetByUrl } from '../../utils/api.ts'
+import { genericPost, workGetByUrl } from '../../utils/api.ts'
 import { Genre } from '../../utils/enums.ts'
 import TwineInput from '../../components/TwineInput.tsx'
-import Collaborator from '../../components/Collaborator.tsx'
 import TwineSelect from '../../components/TwineSelect.tsx'
 import { useNavigate } from 'react-router-dom'
 import UploadImage from '../../components/UploadImage.tsx'
@@ -417,7 +412,7 @@ function CreateStory(props: CreateStoryProps) {
                                             )
                                         }
                                         icon="/icons/purple_checkmark.svg"
-                                        action={(e) => {
+                                        action={() => {
                                             setDraftClicked(true)
                                             postStory(getStory(false)).then(
                                                 () => {
@@ -439,7 +434,7 @@ function CreateStory(props: CreateStoryProps) {
                                         }
                                         color="green"
                                         icon="/icons/green_plus.svg"
-                                        action={(e) => {
+                                        action={() => {
                                             setCreateClicked(true)
                                             postStory(getStory(true)).then(
                                                 () => {
@@ -457,7 +452,7 @@ function CreateStory(props: CreateStoryProps) {
                                         name="Cancel Edit Story"
                                         color="blackgreen"
                                         icon="/icons/green_x.svg"
-                                        action={(e) => goBack()}
+                                        action={() => goBack()}
                                     />
                                 </>
                             )}
@@ -490,7 +485,7 @@ function CreateStory(props: CreateStoryProps) {
                         }
                         color="green"
                         icon="/icons/green_checkmark.svg"
-                        action={(e) => {
+                        action={() => {
                             setCreateClicked(true)
                             postStory(getStory(true, work)).then(() => {
                                 setCreateClicked(false)
@@ -509,7 +504,7 @@ function CreateStory(props: CreateStoryProps) {
                             )
                         }
                         icon="/icons/purple_paper.svg"
-                        action={(e) => {
+                        action={() => {
                             setDraftClicked(true)
                             postStory(getStory(false, work)).then(() => {
                                 setDraftClicked(false)
@@ -534,7 +529,7 @@ function CreateStory(props: CreateStoryProps) {
                         }
                         color="green"
                         icon="/icons/green_checkmark.svg"
-                        action={(e) => {
+                        action={() => {
                             setDraftClicked(true)
                             postStory(getStory(false, work)).then(() => {
                                 setDraftClicked(false)
@@ -553,7 +548,7 @@ function CreateStory(props: CreateStoryProps) {
                             )
                         }
                         icon="/icons/purple_paper.svg"
-                        action={(e) => {
+                        action={() => {
                             setCreateClicked(true)
                             postStory(getStory(true, work)).then(() => {
                                 setCreateClicked(false)
@@ -565,7 +560,7 @@ function CreateStory(props: CreateStoryProps) {
         }
     }
 
-    function getStory(published: boolean, currentWork?: Work): Work {
+    function getStory(published: boolean, currentWork?: Work): Work | undefined {
         const title: HTMLInputElement = document.getElementById(
             'title'
         ) as HTMLInputElement
@@ -655,10 +650,9 @@ function CreateStory(props: CreateStoryProps) {
             'Please make sure you have filled out all the fields before submitting.'
         )
         setOpenError(true)
-        return null
     }
 
-    async function postStory(workToPost: Work) {
+    async function postStory(workToPost: Work | undefined) {
         if (workToPost) {
             let urlModifier = props.edit ? 'update' : 'add'
 
