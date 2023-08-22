@@ -2,15 +2,18 @@ import React from 'react'
 import { Button } from '@mui/joy'
 
 interface ButtonProps {
-    action: () => Promise<void> | void
-    name: string | JSX.Element
-    enabled?: boolean
-    icon?: string
-    color?: string
-    size?: string
-    sx?: object
-    paddingTop?: string
-    className?: string
+    action: () => Promise<void> | void;
+    name: string | JSX.Element;
+    enabled?: boolean;
+    icon?: string;
+    color?: string;
+    size?: string;
+    sx?: object;
+    paddingTop?:string;
+    className?:string;
+    textOverflow?:string;
+    whiteSpace?:string;
+    overflow?:string;
 }
 
 function TwineButton(props: ButtonProps) {
@@ -31,9 +34,7 @@ function TwineButton(props: ButtonProps) {
             onClick={props.action}
             disabled={!(props.enabled === undefined || props.enabled)}
         >
-            <span style={{ paddingTop: props.paddingTop || '' }}>
-                {props.name}
-            </span>
+           <span style={{paddingTop: props.paddingTop || '',textOverflow: props.textOverflow || '', whiteSpace: props.whiteSpace || '',overflow: props.overflow}}>{props.name}</span>
         </Button>
     )
 }
