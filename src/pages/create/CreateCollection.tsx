@@ -8,9 +8,11 @@ import { v4 as uuidv4 } from 'uuid'
 import { MAX_COLLABORATORS_SMART_CONTRACTS } from '../../utils/constants.ts'
 import Collaborator from '../../components/Collaborator.tsx'
 import TwineButton from '../../components/TwineButton.tsx'
+import { User } from '../../utils/types.ts'
 
 function CreateCollection() {
 
+    const context: object = useContext(UserContext)
     const user: User = context['user'];
     const [collaborators, setCollaborators] = useState<JSX.Element[]>([]);
 
