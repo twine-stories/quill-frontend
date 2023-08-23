@@ -12,4 +12,138 @@
 
 #chapter-content .chapter-text {
     text-align: left;
+    line-height: 35.2px;
+    font-size: 20px;
+    color: #E4E5FF;
+}
+
+
+
+span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple{
+    margin: 15px 75px 0px 35px; 
+}
+
+.chapter-view-container{
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    max-width: 100%;
+    padding:0px 30px 5px 22px !important;
+    height: 96px;
+    background-color: #14100e;
+    border-radius: 32px;
+}
+
+@media screen and (max-width: 1190px) and (min-width: 770px) {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
+        margin: 10px 41px 0px 23px ;
+        font-size: 35px ;
+
+    }
+}
+
+@media screen and (max-width: 769px) and (min-width: 734px) {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
+        margin: 7px 31px 0px 17px;
+        font-size: 30px;
+ }
+}
+
+ @media screen and (max-width: 733px) and (min-width: 670px) {
+  span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {  
+    margin: 6px 22px 0px 11px;
+    font-size: 23px;
+    }
+}
+
+@media screen and (max-width: 669px) and (min-width: 582px) {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {  
+        margin: 5px 16px 0px 6px;
+        font-size: 20px;
+      }
+  }
+
+@media screen and (max-width: 581px) and (min-width: 500px) {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {  
+        margin: 0px 0px 0px 0px;
+        font-size: 18px;
+      }
+      h6.num-like{
+       margin-left: 1px;
+      }
+      .chapter-view-container {
+        height:101px;
+        padding: 0px 8px 5px 8px !important
+     }
+      
+  }
+
+  @media screen and (max-width: 500px) and (min-width: 425px) {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {  
+        font-size: 18px;
+        margin: 0px 0px 0px 0px;
+      }
+      button.MuiButton-root.MuiButton-variantSolid.MuiButton-colorGreen.MuiButton-sizeMd.left-arrow-icon {
+        height:25px;
+        width: 25px;
+    }
+    button.MuiButton-root.MuiButton-variantSolid.MuiButton-colorGreen.MuiButton-sizeMd.right-arrow-icon {
+        height:25px;
+        width: 25px;
+    }
+    .chapter-view-container {
+        padding: 0px 8px 5px 8px !important
+     }
+     h6.num-like{
+        margin-left: 1px;
+       }
+  }
+
+  @media screen and (max-width: 424px) and (min-width: 320px) {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {  
+        margin: 0px 16px 0px 6px;
+        font-size: 20px;
+      }
+
+    .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
+        padding: 0px 3px 3px 3px !important ; 
+    }
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
+        margin: 0px 0px 0px 0px;
+        font-size: 16px;
+ }
+ .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.like-heart-container {
+    margin-left: 80px;
+}
+.chapter-view-container {
+    height:105px;
+}
+}
+
+@media only screen and (max-width: 900px) {
+ .chapter-left-component {
+   display: block !important;
+}
+}
+
+
+@media screen and (max-width: 424px) and (min-width: 375px) {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple.css-121c77p-JoyTypography-root {
+        margin: 0px 0px 0px 0px;
+        font-size: 20px;
+   }
+}
+
+@media screen and (max-width: 450px) and (min-width: 438px) {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
+        margin: 0px 0px 0px 0px;
+        font-size: 17px;
+ }
+}
+ @media screen and (max-width: 439px) and (min-width: 425px) {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
+        margin: 0px 0px 0px 0px;
+        font-size: 15px;
+ }
+
 }

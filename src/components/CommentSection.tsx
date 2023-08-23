@@ -160,36 +160,36 @@ export default function CommentSection({ episode }) {
                                         PROFILE_IMGS_BUCKET +
                                         '.s3.amazonaws.com/default.jpeg'
                                 }}
-                                width={64}
-                                height={64}
+                                width={70}
+                                height={70}
                                 style={{
                                     borderRadius: '50%',
                                     objectFit: 'cover',
                                 }}
-                                className="profileImg"
+                                className="profile-img-comment"
                             />
                         </div>
                         <div
                             className="name-comment"
-                            style={{ marginLeft: '1rem' }}
+                            style={{ marginLeft: '1rem',padding: "8px 0px 8px 8px",marginTop: '23px'}}
                         >
                             <Typography
                                 level="h3"
-                                sx={{ marginBottom: '6px' }}
+                                sx={{fontSize:"24px",lineHeight: '20px'}}
                                 color="purple"
                             >
                                 {comment.commenter.userName}
                             </Typography>
                             <Typography
                                 level="h6"
-                                sx={{ marginBottom: '6px', marginTop: '0px' }}
+                                sx={{ lineHeight: '20px',margin:"0px",fontSize:'24px'}}
                                 color="white"
                             >
                                 {comment.content}
                             </Typography>
                             <Typography
                                 level="h6"
-                                sx={{ fontSize: '14px', marginTop: '0px' }}
+                                sx={{ fontSize: '16px' }}
                                 color="purple"
                             >
                                 {comment.publishStamp &&

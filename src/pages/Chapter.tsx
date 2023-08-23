@@ -194,6 +194,59 @@ function Chapter() {
             <Navbar />
             {episode && episode['content'] && (
                 <Grid xs={12} container justifyContent="center">
+                     <Grid
+                                xs={12}
+                                container
+                                alignItems="center"
+                                justifyContent="space-between"
+                                className="chapter-view-container"
+                            >
+                    <Link
+                                    sx={{
+                                        '&:hover': {
+                                            textDecoration: 'none',
+                                        },
+                                    }}
+                                    href={'/story/' + episode.work.url}
+                                >
+                                     <IconButton
+                                    buttonClassName="left-arrow-icon"
+                                    icon="/icons/arrow_left.svg"
+                                    color="green"
+                                    action={moveToPreviousChapter}
+                                />
+                                    <Typography level="h1" color="purple" className="view-chapter-title">
+                                        {episode.work.title}
+                                    </Typography>
+                                    <IconButton
+                                     buttonClassName="right-arrow-icon"
+                                    icon="/icons/arrow_right.svg"
+                                    color="green"
+                                    action={moveToNextChapter}
+                                />
+                                </Link>
+                                <Grid container direction="row" className="like-heart-container">
+                                    <IconButton
+                                    buttonClassName="like-heart-icon"
+                                        action={likeAction}
+                                        icon={
+                                            liked
+                                                ? '/icons/heart-red.svg'
+                                                : '/icons/heart.svg'
+                                        }
+                                        color="purple"
+                                    />
+                                    <Typography
+                                        level="h6"
+                                        className="num-like"
+                                        sx={{ marginLeft: '10px' }}
+                                    >
+                                        {String(numLikes) +
+                                            ' like' +
+                                            (numLikes === 1 ? '' : 's')}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
                     <Grid xs={12} id="chapter-content">
                         <Box
                             sx={{
@@ -206,53 +259,10 @@ function Chapter() {
                             }}
                         >
                             <Grid
-                                xs={12}
-                                container
-                                alignItems="center"
-                                justifyContent="space-between"
-                            >
-                                <Link
-                                    sx={{
-                                        '&:hover': {
-                                            textDecoration: 'none',
-                                        },
-                                    }}
-                                    href={'/story/' + episode.work.url}
-                                >
-                                    <Typography level="h1" color="purple">
-                                        {episode.work.title}
-                                    </Typography>
-                                </Link>
-                                <Grid container direction="row">
-                                    <IconButton
-                                        action={likeAction}
-                                        icon={
-                                            liked
-                                                ? '/icons/heart-red.svg'
-                                                : '/icons/heart.svg'
-                                        }
-                                        color="purple"
-                                    />
-                                    <Typography
-                                        level="h6"
-                                        sx={{ marginLeft: '10px' }}
-                                    >
-                                        {String(numLikes) +
-                                            ' like' +
-                                            (numLikes === 1 ? '' : 's')}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                            <Grid
                                 container
                                 alignItems="center"
                                 justifyContent="flex-start"
                             >
-                                <IconButton
-                                    icon="/icons/arrow_left.svg"
-                                    color="green"
-                                    action={moveToPreviousChapter}
-                                />
                                 <Typography
                                     sx={{ marginRight: '20px' }}
                                     level="h3"
@@ -260,14 +270,10 @@ function Chapter() {
                                 >
                                     {episode.title}
                                 </Typography>
-                                <IconButton
-                                    icon="/icons/arrow_right.svg"
-                                    color="green"
-                                    action={moveToNextChapter}
-                                />
                             </Grid>
                             <TwoColumnLayout
                                 rightWidth="25%"
+                                className="chapter-left-component"
                                 leftComponent={
                                     <div>
                                         {user &&
@@ -452,8 +458,6 @@ function Chapter() {
                         <AspectRatio
                             key={i}
                             variant="plain"
-                            minHeight="120px"
-                            maxHeight="300px"
                             objectFit="contain"
                         >
                             <img
@@ -470,16 +474,12 @@ function Chapter() {
                     )
                 }
             } else {
-                // compoundedElements.push(<Typography key={i} level="h6">{marked.parse(rawContentArray[i])}</Typography>)
-                compoundedElements.push(
-                    <div
-                        key={i}
-                        className="chapter-text"
-                        dangerouslySetInnerHTML={{
-                            __html: marked.parse(rawContentArray[i]),
-                        }}
-                    ></div>
-                )
+                compoundedElements.push(<Typography key={i} sx={{
+                    color:'#E4E5FF',
+                    textAlign: 'left',
+                    lineHeight: '35.2px',
+                    fontSize: '20px'
+                }} level="h6">{rawContentArray[i]}</Typography>)
             }
         }
         return compoundedElements
