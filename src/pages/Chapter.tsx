@@ -311,7 +311,7 @@ function Chapter() {
                                                 setShowTip(!showTip)
                                             }}
                                         />
-                                        <Grid 
+                                        <Grid
                                             container
                                             alignItems="center"
                                             direction="column"
@@ -327,115 +327,130 @@ function Chapter() {
                                                           visibility: 'hidden',
                                                       }
                                             }
-
-                                        > 
-                                        <img src={showAnimation ? "/icons/tipping-animation.gif" : "/icons/tipping-animation-first.png"} style={{"width": "100%"}}/>
-                                        <Grid
-                                            container
-                                            alignItems="center"
-                                            direction="column"
-                                            sx={
-                                                showTip
-                                                    ? {
-                                                          marginTop: '20px',
-                                                          background: '#202020',
-                                                          padding: '0px 20px',
-                                                          borderRadius: '15px',
-                                                      }
-                                                    : {
-                                                          visibility: 'hidden',
-                                                          padding: '20px',
-                                                      }
-                                            }
                                         >
-                                            <TwineInput
-                                                type="number"
-                                                label={"Send tip to @" + episode.work.creator.userName}
-                                                placeholder="tip amount"
-                                                inputAttrs={{ id: 'tipInput' }}
-                                                endDecorator="/icons/algo.svg"
-                                            />
-                                            <TwineButton
-                                                icon="/icons/green_checkmark.svg"
-                                                sx={{ marginTop: '20px' }}
-                                                color="green"
-                                                name={
-                                                    processingTip ? (
-                                                        <CircularProgress
-                                                            color="darkgreen"
-                                                            variant="plain"
-                                                        />
-                                                    ) : (
-                                                        'Confirm'
-                                                    )
+                                            <img
+                                                src={
+                                                    showAnimation
+                                                        ? '/icons/tipping-animation.gif'
+                                                        : '/icons/tipping-animation-first.png'
                                                 }
-                                                action={() => {
-                                                    if (user) {
-                                                        const tipVal =
-                                                            document.getElementById(
-                                                                'tipInput'
-                                                            ) as HTMLInputElement
-                                                        if (
-                                                            tipVal &&
-                                                            tipVal.value &&
-                                                            parseFloat(
-                                                                tipVal.value
-                                                            ) >= 0.1
-                                                        ) {
-                                                            const adjustedVal: bigint =
-                                                                algoToMicro(
-                                                                    parseFloat(
-                                                                        tipVal.value
+                                                style={{ width: '100%' }}
+                                            />
+                                            <Grid
+                                                container
+                                                alignItems="center"
+                                                direction="column"
+                                                sx={
+                                                    showTip
+                                                        ? {
+                                                              marginTop: '20px',
+                                                              background:
+                                                                  '#202020',
+                                                              padding:
+                                                                  '0px 20px',
+                                                              borderRadius:
+                                                                  '15px',
+                                                          }
+                                                        : {
+                                                              visibility:
+                                                                  'hidden',
+                                                              padding: '20px',
+                                                          }
+                                                }
+                                            >
+                                                <TwineInput
+                                                    type="number"
+                                                    label={
+                                                        'Send tip to @' +
+                                                        episode.work.creator
+                                                            .userName
+                                                    }
+                                                    placeholder="tip amount"
+                                                    inputAttrs={{
+                                                        id: 'tipInput',
+                                                    }}
+                                                    endDecorator="/icons/algo.svg"
+                                                />
+                                                <TwineButton
+                                                    icon="/icons/green_checkmark.svg"
+                                                    sx={{ marginTop: '20px' }}
+                                                    color="green"
+                                                    name={
+                                                        processingTip ? (
+                                                            <CircularProgress
+                                                                color="darkgreen"
+                                                                variant="plain"
+                                                            />
+                                                        ) : (
+                                                            'Confirm'
+                                                        )
+                                                    }
+                                                    action={() => {
+                                                        if (user) {
+                                                            const tipVal =
+                                                                document.getElementById(
+                                                                    'tipInput'
+                                                                ) as HTMLInputElement
+                                                            if (
+                                                                tipVal &&
+                                                                tipVal.value &&
+                                                                parseFloat(
+                                                                    tipVal.value
+                                                                ) >= 0.1
+                                                            ) {
+                                                                const adjustedVal: bigint =
+                                                                    algoToMicro(
+                                                                        parseFloat(
+                                                                            tipVal.value
+                                                                        )
                                                                     )
-                                                                )
-                                                            // BigInt(Math.floor(parseFloat(tipVal.value) * 1000000));
-                                                            tip(
-                                                                user.walletAddress,
-                                                                creators,
-                                                                percentages,
-                                                                adjustedVal,
-                                                                user.connectType ===
-                                                                    ConnectType.PERA,
-                                                                setProcessingTip
-                                                            ).then(() => {
-                                                                setShowAnimation(
+                                                                // BigInt(Math.floor(parseFloat(tipVal.value) * 1000000));
+                                                                tip(
+                                                                    user.walletAddress,
+                                                                    creators,
+                                                                    percentages,
+                                                                    adjustedVal,
+                                                                    user.connectType ===
+                                                                        ConnectType.PERA,
+                                                                    setProcessingTip
+                                                                ).then(() => {
+                                                                    setShowAnimation(
+                                                                        true
+                                                                    )
+                                                                    prepareSuccessAnimation()
+                                                                    tipVal.value =
+                                                                        ''
+                                                                    const tipObj: Tip =
+                                                                        {
+                                                                            tipper: user,
+                                                                            episode:
+                                                                                episode,
+                                                                            amount:
+                                                                                microToAlgo(
+                                                                                    adjustedVal
+                                                                                ) *
+                                                                                (1.0 -
+                                                                                    TWINE_CUT),
+                                                                        }
+                                                                    genericPost(
+                                                                        '/api/tip/tip',
+                                                                        tipObj
+                                                                    )
+                                                                })
+                                                            } else {
+                                                                setOpenTipError(
                                                                     true
                                                                 )
-                                                                prepareSuccessAnimation()
-                                                                tipVal.value =
-                                                                    ''
-                                                                const tipObj: Tip =
-                                                                    {
-                                                                        tipper: user,
-                                                                        episode:
-                                                                            episode,
-                                                                        amount:
-                                                                            microToAlgo(
-                                                                                adjustedVal
-                                                                            ) *
-                                                                            (1.0 -
-                                                                                TWINE_CUT),
-                                                                    }
-                                                                genericPost(
-                                                                    '/api/tip/tip',
-                                                                    tipObj
-                                                                )
-                                                            })
+                                                            }
                                                         } else {
-                                                            setOpenTipError(
-                                                                true
-                                                            )
+                                                            setOpenError(true)
                                                         }
-                                                    } else {
-                                                        setOpenError(true)
-                                                    }
-                                                    // make sure loading goes away
-                                                    setProcessingTip(false)
-                                                }}
-                                            />
+                                                        // make sure loading goes away
+                                                        setProcessingTip(false)
+                                                    }}
+                                                />
+                                            </Grid>
                                         </Grid>
-                                        </Grid>
-                                        
                                     </Grid>
                                 }
                             />
