@@ -41,6 +41,7 @@ function Chapter() {
 
     const [openError, setOpenError] = useState<boolean>(false)
     const [openTipError, setOpenTipError] = useState<boolean>(false)
+    const [showAnimation, setShowAnimation] = useState<boolean>(false)
     const [openTipSuccess, setOpenTipSuccess] = useState<boolean>(false)
 
     const [processingTip, setProcessingTip] = useState<boolean>(false)
@@ -189,6 +190,13 @@ function Chapter() {
         }
     }
 
+    const prepareSuccessAnimation = () => {
+        setTimeout(() => {
+            setOpenTipSuccess(true)
+            setShowAnimation(false)
+        }, 4700)
+    }
+
     return (
         <div>
             <Navbar />
@@ -303,6 +311,25 @@ function Chapter() {
                                                 setShowTip(!showTip)
                                             }}
                                         />
+                                        <Grid 
+                                            container
+                                            alignItems="center"
+                                            direction="column"
+                                            sx={
+                                                showTip
+                                                    ? {
+                                                          marginTop: '20px',
+                                                          background: '#202020',
+                                                          padding: '10px 0',
+                                                          borderRadius: '15px',
+                                                      }
+                                                    : {
+                                                          visibility: 'hidden',
+                                                      }
+                                            }
+
+                                        > 
+                                        <img src={showAnimation ? "/icons/tipping-animation.gif" : "/icons/tipping-animation-first.png"} style={{"width": "100%"}}/>
                                         <Grid
                                             container
                                             alignItems="center"
@@ -311,8 +338,8 @@ function Chapter() {
                                                 showTip
                                                     ? {
                                                           marginTop: '20px',
-                                                          background: '#14100E',
-                                                          padding: '20px 20px',
+                                                          background: '#202020',
+                                                          padding: '0px 20px',
                                                           borderRadius: '15px',
                                                       }
                                                     : {
@@ -323,7 +350,7 @@ function Chapter() {
                                         >
                                             <TwineInput
                                                 type="number"
-                                                label="Tip amount:"
+                                                label={"Send tip to @" + episode.work.creator.userName}
                                                 placeholder="tip amount"
                                                 inputAttrs={{ id: 'tipInput' }}
                                                 endDecorator="/icons/algo.svg"
@@ -371,9 +398,10 @@ function Chapter() {
                                                                     ConnectType.PERA,
                                                                 setProcessingTip
                                                             ).then(() => {
-                                                                setOpenTipSuccess(
+                                                                setShowAnimation(
                                                                     true
                                                                 )
+                                                                prepareSuccessAnimation()
                                                                 tipVal.value =
                                                                     ''
                                                                 const tipObj: Tip =
@@ -406,6 +434,8 @@ function Chapter() {
                                                 }}
                                             />
                                         </Grid>
+                                        </Grid>
+                                        
                                     </Grid>
                                 }
                             />
