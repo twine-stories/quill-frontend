@@ -24,7 +24,7 @@ const tipHelper = async (
     sender: string,
     wallets: string[],
     percentages: number[],
-    creatorTipShare: bigint,
+    creatorTipShare: bigint
 ): Promise<Transaction[]> => {
     let txns: Transaction[] = []
 
@@ -32,9 +32,7 @@ const tipHelper = async (
     let txnObj: BigPayment
     let suggestedParams: SuggestedParams
     for (i = 0; i < wallets.length; i++) {
-        suggestedParams = await genericGet(
-            '/api/algo/suggested-params'
-        )
+        suggestedParams = await genericGet('/api/algo/suggested-params')
 
         txnObj = {
             amount: (creatorTipShare * BigInt(percentages[i])) / 100n,
