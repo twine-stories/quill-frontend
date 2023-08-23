@@ -106,14 +106,14 @@ function HomeSlot(props: HomeProps) {
             </Typography>
             <Sheet
                 color="home"
-                variant={props.work ? 'outlined' : 'purpleDashed'}
+                variant={props.work ? 'outlined' : 'purple-dashed-varient'}
                 sx={{
                     width: '260px',
                     height: '450px',
                     borderRadius: 'md',
                     p: 3,
                 }}
-                className="responsive-sheet gap-phone"
+                className="responsive-sheet gap-phone image-container"
             >
                 <Grid
                     container

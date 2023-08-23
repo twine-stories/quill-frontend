@@ -10,13 +10,15 @@ interface ButtonProps {
     sx?: object
     buttonClassName?: string
     className?: string
-    backgroundColor?: string
+    backgroundColor?: string,
+    customSize?: string
 }
 
 function IconButton(props: ButtonProps) {
     const color: string = props.color ? props.color : 'purple'
     const size: string = props.size ? props.size : 'md'
-    const dim: string = size === 'sm' ? '10px' : '18px'
+    const dim: string = props?.customSize || (size === 'sm' ? '10px' : '18px')
+
     const sx = {
         borderRadius: '50%',
         height: '40px',
