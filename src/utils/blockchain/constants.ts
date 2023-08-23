@@ -29,5 +29,5 @@ export const microToAlgo = (micro_algo: bigint): number => {
     return Number(micro_algo / 1000000n) + Number(micro_algo % 1000000n)
 }
 export const algoToMicro = (algo: number): bigint => {
-    return BigInt(algo) * 1000000n
+    return BigInt(algo * 1000000)
 }
