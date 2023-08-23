@@ -20,18 +20,20 @@ type BigPayment = {
 
 const myAlgoConnect = new MyAlgoConnect()
 
-const tipHelper = (
+const tipHelper = async (
     sender: string,
     wallets: string[],
     percentages: number[],
-    creatorTipShare: bigint,
-    suggestedParams: SuggestedParams
-): Transaction[] => {
+    creatorTipShare: bigint
+): Promise<Transaction[]> => {
     let txns: Transaction[] = []
 
     let i: number
     let txnObj: BigPayment
+    let suggestedParams: SuggestedParams
     for (i = 0; i < wallets.length; i++) {
+        suggestedParams = await genericGet('/api/algo/suggested-params')
+
         txnObj = {
             amount: (creatorTipShare * BigInt(percentages[i])) / 100n,
             from: sender,
@@ -55,16 +57,15 @@ export const tip = async (
     const twineCut: bigint = totalTip / BigInt(TWINE_CUT * 100)
     const creatorsCut: bigint = totalTip - twineCut
 
-    let suggestedParams: SuggestedParams = await genericGet(
-        '/api/algo/suggested-params'
-    )
-
-    let txns: Transaction[] = tipHelper(
+    let txns: Transaction[] = await tipHelper(
         sender,
         wallets,
         percentages,
-        creatorsCut,
-        suggestedParams
+        creatorsCut
+    )
+
+    let suggestedParams: SuggestedParams = await genericGet(
+        '/api/algo/suggested-params'
     )
 
     const twinePaymentObj: BigPayment = {
