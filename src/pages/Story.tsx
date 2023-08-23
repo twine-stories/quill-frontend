@@ -145,12 +145,15 @@ function Story() {
         <div>
             <Navbar />
             <Grid container direction="column" alignItems="center">
-                <Grid sx={{ width: '65vw' }}>
+                <Grid sx={{ width: '80vw' }}>
                     <TwoColumnLayout
+                        className="left-components"
+                        id="left-cpmponents-id"
                         leftComponent={
-                            <div>
+                            <div className="create-story-container">
                                 {work && work.creator && (
                                     <Box
+                                        className="parent-container"
                                         sx={{
                                             py: 2,
                                             display: 'flex',
@@ -161,14 +164,25 @@ function Story() {
                                         }}
                                     >
                                         <Typography
+                                            className="title-styling"
                                             level="h1"
-                                            sx={{ color: '#E4E5FF' }}
+                                            sx={{
+                                                color: '#9E9FEB',
+                                                margin: '0px',
+                                                fontSize: '50px',
+                                            }}
                                         >
-                                            {work['title']}
+                                            {work.title}
                                         </Typography>
                                         <Typography
+                                            className="description-styling"
                                             level="h6"
-                                            sx={{ color: '#E4E5FF' }}
+                                            sx={{
+                                                margin: '0px',
+                                                textAlign: 'initial',
+                                                width: '90%',
+                                                marginBottom: '20px',
+                                            }}
                                         >
                                             {work['description']}
                                         </Typography>
@@ -177,13 +191,22 @@ function Story() {
                                             user.walletAddress ===
                                                 work.creator.walletAddress && (
                                                 <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        gap: '10px',
-                                                    }}
+                                                    className="view-story-button"
+                                                    style={{ gap: '10px' }}
                                                 >
                                                     <TwineButton
-                                                        sx={{ width: '50%' }}
+                                                        className="wrap-button"
+                                                        sx={{
+                                                            width: '45%',
+                                                            padding:
+                                                                '12px 24px 12px 24px',
+                                                            borderRadius:
+                                                                '15px',
+                                                            gap: '16px',
+                                                        }}
+                                                        whiteSpace="nowrap"
+                                                        overflow="hidden"
+                                                        textOverflow="ellipsis"
                                                         icon="/icons/purple_settings.svg"
                                                         color="blackpurple"
                                                         name="Edit Story"
@@ -195,10 +218,21 @@ function Story() {
                                                     />
                                                     {/* FYI: publishedEpisodes.length is the new chapter's number */}
                                                     <TwineButton
-                                                        sx={{ width: '50%' }}
+                                                        className="wrap-button"
+                                                        sx={{
+                                                            width: '45%',
+                                                            padding:
+                                                                '12px 24px 12px 24px',
+                                                            borderRadius:
+                                                                '15px',
+                                                            gap: '16px',
+                                                        }}
+                                                        whiteSpace="nowrap"
+                                                        overflow="hidden"
+                                                        textOverflow="ellipsis"
                                                         icon="/icons/purple_plus.svg"
                                                         color="purple"
-                                                        name="New Chapter"
+                                                        name="Create New Episode"
                                                         action={() => {
                                                             window.location.href =
                                                                 '/create/chapter/' +
@@ -213,11 +247,9 @@ function Story() {
                                         {episodes && (
                                             <>
                                                 <Typography
-                                                    level="h2"
-                                                    sx={{
-                                                        color: '#9E9FEB',
-                                                        marginTop: '30px',
-                                                    }}
+                                                    className="published-chapter"
+                                                    level="h3"
+                                                    sx={{ color: '#9E9FEB' }}
                                                 >
                                                     Chapters
                                                 </Typography>
@@ -234,32 +266,47 @@ function Story() {
                                                     >
                                                         {publishedEpisodes
                                                             .toSorted(
-                                                                (e1, e2) => {
+                                                                (
+                                                                    e1,
+                                                                    e2,
+                                                                    idx
+                                                                ) => {
                                                                     return (
                                                                         e1.episodeNumber -
                                                                         e2.episodeNumber
                                                                     )
                                                                 }
                                                             )
-                                                            .map((episode) => {
-                                                                return (
-                                                                    <EpisodeTile
-                                                                        isCreator={
-                                                                            user &&
-                                                                            user.walletAddress ===
-                                                                                work
-                                                                                    .creator
-                                                                                    .walletAddress
-                                                                        }
-                                                                        episode={
-                                                                            episode
-                                                                        }
-                                                                        totalEpisodes={
-                                                                            publishedEpisodes.length
-                                                                        }
-                                                                    />
-                                                                )
-                                                            })}
+                                                            .map(
+                                                                (
+                                                                    episode,
+                                                                    idx
+                                                                ) => {
+                                                                    return (
+                                                                        <EpisodeTile
+                                                                            isCreator={
+                                                                                user &&
+                                                                                user.walletAddress ===
+                                                                                    work
+                                                                                        .creator
+                                                                                        .walletAddress
+                                                                            }
+                                                                            episode={
+                                                                                episode
+                                                                            }
+                                                                            idx={
+                                                                                idx
+                                                                            }
+                                                                            publishedEpisodes={
+                                                                                publishedEpisodes
+                                                                            }
+                                                                            totalEpisodes={
+                                                                                publishedEpisodes.length
+                                                                            }
+                                                                        />
+                                                                    )
+                                                                }
+                                                            )}
                                                     </EpisodeOrderContext.Provider>
                                                 }
 
@@ -277,11 +324,10 @@ function Story() {
                                                             }}
                                                         >
                                                             <Typography
-                                                                level="h2"
+                                                                className="draft-chapter"
+                                                                level="h3"
                                                                 sx={{
                                                                     color: '#9E9FEB',
-                                                                    marginTop:
-                                                                        '30px',
                                                                 }}
                                                             >
                                                                 Draft Chapters
@@ -320,8 +366,9 @@ function Story() {
                         }
                         rightComponent={
                             <div
+                                className="right-components"
                                 style={{
-                                    backgroundColor: '#150f0e',
+                                    backgroundColor: '#14100E',
                                     borderRadius: '32px',
                                 }}
                             >
@@ -329,8 +376,7 @@ function Story() {
                                     level="h5"
                                     sx={{
                                         color: '#9E9FEB',
-                                        paddingTop: '15px',
-                                        paddingLeft: '15px',
+                                        padding: '30px 0px 0px 40px',
                                         fontFamily: 'Twine',
                                         fontStyle: 'normal',
                                         fontWeight: '400',
@@ -340,7 +386,7 @@ function Story() {
                                 </Typography>
                                 <div className="creator-list">
                                     {creators && creators.size > 0 && (
-                                        <div>
+                                        <div className="creater-container">
                                             {Array.from(creators)
                                                 .map((str_json) => {
                                                     const [
@@ -355,9 +401,16 @@ function Story() {
                                                 .map(
                                                     ([creator, percentage]) => {
                                                         return (
-                                                            <div className="creator">
+                                                            <div
+                                                                className="creators"
+                                                                style={{
+                                                                    marginBottom:
+                                                                        '42px',
+                                                                }}
+                                                            >
                                                                 {creator && (
                                                                     <Box
+                                                                        className="creater-box"
                                                                         sx={{
                                                                             py: 2,
                                                                             display:
@@ -369,8 +422,8 @@ function Story() {
                                                                                 'center',
                                                                             flexWrap:
                                                                                 'wrap',
-                                                                            marginTop:
-                                                                                '-35px',
+                                                                            padding:
+                                                                                '0px',
                                                                             minWidth:
                                                                                 '256px',
                                                                         }}
@@ -411,13 +464,14 @@ function Story() {
                                                                             level="h4"
                                                                             sx={{
                                                                                 color: '#E4E5FF',
-                                                                                margin: '0px',
                                                                                 fontFamily:
                                                                                     'Twine',
                                                                                 fontStyle:
                                                                                     'normal',
                                                                                 fontWeight:
                                                                                     '400',
+                                                                                marginTop:
+                                                                                    '12px',
                                                                             }}
                                                                         >
                                                                             {
@@ -515,7 +569,7 @@ function Story() {
                                     )}
                                     {creators && creators.size === 0 && (
                                         <div>
-                                            <div className="creator">
+                                            <div>
                                                 {work && work['creator'] && (
                                                     <Box
                                                         sx={{
@@ -527,7 +581,7 @@ function Story() {
                                                             alignItems:
                                                                 'center',
                                                             flexWrap: 'wrap',
-                                                            marginTop: '-35px',
+                                                            padding: '0px',
                                                             minWidth: '256px',
                                                         }}
                                                     >

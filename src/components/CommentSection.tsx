@@ -49,6 +49,15 @@ export default function CommentSection({ episode }) {
         }
     }
 
+    const secondsIn = {
+        year: 31_536_000,
+        month: 2_628_000,
+        week: 604_800,
+        day: 86_400,
+        hour: 3_600,
+        minute: 60,
+    }
+
     useEffect(() => {
         if (episode) {
             genericGet('/api/comment/comments/' + episode.id).then(
@@ -59,11 +68,36 @@ export default function CommentSection({ episode }) {
         }
     }, [episode])
 
-    const formatDate = (date: String) => {
-        // only include month, day, year
-        date = new Date(date).toLocaleString()
-        date = date.split(',')[0]
-        return date
+    const getCommentTimeString = (date: string) => {
+        const secondsSinceComment =
+            (new Date().getTime() - new Date(date).getTime()) / 1_000
+
+        if (secondsSinceComment < secondsIn.minute) {
+            return (
+                Math.floor(secondsSinceComment) +
+                (Math.floor(secondsSinceComment) === 1
+                    ? ' second ago'
+                    : ' seconds ago')
+            )
+        } else if (secondsSinceComment < secondsIn.hour) {
+            const minutes = Math.floor(secondsSinceComment / secondsIn.minute)
+            return minutes + (minutes === 1 ? ' minute ago' : ' minutes ago')
+        } else if (secondsSinceComment < secondsIn.day) {
+            const hours = Math.floor(secondsSinceComment / secondsIn.hour)
+            return hours + (hours === 1 ? ' hour ago' : ' hours ago')
+        } else if (secondsSinceComment < secondsIn.week) {
+            const days = Math.floor(secondsSinceComment / secondsIn.day)
+            return days + (days === 1 ? ' day ago' : ' days ago')
+        } else if (secondsSinceComment < secondsIn.month) {
+            const weeks = Math.floor(secondsSinceComment / secondsIn.week)
+            return weeks + (weeks === 1 ? ' week ago' : ' weeks ago')
+        } else if (secondsSinceComment < secondsIn.year) {
+            const months = Math.floor(secondsSinceComment / secondsIn.month)
+            return months + (months === 1 ? ' month ago' : ' months ago')
+        } else {
+            const years = Math.floor(secondsSinceComment / secondsIn.year)
+            return years + (years === 1 ? ' year ago' : ' years ago')
+        }
     }
 
     return (
@@ -158,7 +192,7 @@ export default function CommentSection({ episode }) {
                                 color="purple"
                             >
                                 {comment.publishStamp &&
-                                    formatDate(comment.publishStamp)}
+                                    getCommentTimeString(comment.publishStamp)}
                             </Typography>
                         </div>
                     </div>

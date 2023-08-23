@@ -436,7 +436,7 @@ function Create() {
                     flexWrap="wrap"
                     width="100%"
                 >
-                    <Sheet color="green_dashed" variant="rounded">
+                    <Sheet color="green-dashed" variant="rounded">
                         <span
                             onMouseEnter={() => setOnHover(true)}
                             onMouseLeave={() => setOnHover(false)}
@@ -470,7 +470,7 @@ function Create() {
                             />
                         </span>
                     </Sheet>
-                    <Sheet color="green_dashed" variant="rounded">
+                    <Sheet color="green-dashed" variant="rounded">
                         <TwineButton
                             sx={{
                                 margin: '0px',
@@ -497,7 +497,7 @@ function Create() {
                             className="custom-start-decorator"
                         />
                     </Sheet>
-                    <Sheet color="green_dashed" variant="rounded">
+                    <Sheet color="green-dashed" variant="rounded">
                         <TwineButton
                             sx={{
                                 display: 'flex',
@@ -528,7 +528,11 @@ function Create() {
             <Typography
                 level="h2"
                 color="green"
-                sx={{ paddingLeft: '16px', marginTop: '74px' }}
+                sx={{
+                    paddingLeft: '16px',
+                    marginTop: '74px',
+                    color: '#9E9FEB',
+                }}
             >
                 Create Art
             </Typography>
@@ -545,7 +549,7 @@ function Create() {
                     flexWrap="wrap"
                     width="100%"
                 >
-                    <Sheet color="green_dashed" variant="rounded">
+                    <Sheet color="purple-dashed" variant="rounded">
                         <span
                             onMouseEnter={() => setOnHover(true)}
                             onMouseLeave={() => setOnHover(false)}
@@ -558,18 +562,8 @@ function Create() {
                                     paddingBlock: '2rem',
                                     paddingInline: '2.4rem',
                                     borderRadius: '15px',
-                                    transition: 'background-color 0.3s ease',
-                                    ':hover': {
-                                        backgroundColor: '#5C720D',
-                                        color: '#A3B832',
-                                    },
                                 }}
-                                icon={
-                                    hover
-                                        ? '/icons/green_plus_hover.svg'
-                                        : '/icons/green_plus.svg'
-                                }
-                                color="green"
+                                icon="/icons/purple_plus.svg"
                                 name="Create Artwork"
                                 action={() => {
                                     window.location.href = '/create/art/'

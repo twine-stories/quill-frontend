@@ -73,6 +73,7 @@ function Home() {
                 <IconButton
                     sx={{ borderRadius: '50%', height: '45px', width: '45px' }}
                     icon="/icons/shuffle.svg"
+                    customSize='26px'
                     action={() => {
                         setToggle(!toggle)
                     }}

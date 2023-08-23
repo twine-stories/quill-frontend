@@ -221,12 +221,23 @@ export const theme = extendTheme({
                             outline: '0',
                         },
                     },
-                    ...(ownerState.color === 'green_dashed' && {
+                    ...(ownerState.color === 'green-dashed' && {
                         padding: '0px 20px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='20' ry='20' stroke='%23A3B832' stroke-width='4' stroke-dasharray='6%2c 13' stroke-dashoffset='2' stroke-linecap='square'/%3e%3c/svg%3e")`,
+                        height: '340px',
+                        width: '200px',
+                        margin: '10px',
+                        backgroundColor: '#0d0603',
+                    }),
+                    ...(ownerState.color === 'purple-dashed' && {
+                        backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='20' ry='20' stroke='%239E9FEB' stroke-width='4' stroke-dasharray='6%2c 13' stroke-dashoffset='2' stroke-linecap='square'/%3e%3c/svg%3e")`,
+                        padding: '0px 20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         height: '340px',
                         width: '200px',
                         margin: '10px',
@@ -247,8 +258,10 @@ export const theme = extendTheme({
                             cursor: 'pointer',
                         },
                     }),
-                    ...(ownerState.variant === 'purpleDashed' && {
-                        border: '1px #9E9FEB dashed',
+                    ...(ownerState.variant === 'purple-dashed-varient' && {
+                        borderRadius: '28px',
+                        border: 'none',
+                        background: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='30' ry='30' stroke='%239E9FEB' stroke-width='4' stroke-dasharray='7%2c 15' stroke-dashoffset='7' stroke-linecap='square'/%3e%3c/svg%3e")`,
                     }),
                 }),
             },

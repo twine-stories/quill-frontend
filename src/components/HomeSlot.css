@@ -5,20 +5,20 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-left: 7px;
 }
 
-.home-slot h6, .home-slot .MuiTypography-h6 {
+.home-slot h6,
+.home-slot .MuiTypography-h6 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-height: 70%;
+    max-height: 60%;
     font-size: 15px;
-}
-
-.home-slot .full-hook {
-    -webkit-line-clamp: 15;
+    margin: 0px;
+    padding: 12px 12px 12px 12px;
 }
 
 .home-cover {
@@ -51,4 +51,21 @@
     .gap-phone {
         width: 220px !important;
     }
+}
+
+.responsive-sheet.gap-phone.image-container {
+    border-radius: 30px;
+    padding: 12px 12px 32px 12px;
+}
+
+.MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-column.MuiGrid-grid-xs-12.home-slot-content {
+    padding-top: 5px;
+    border-radius: 18px;
+}
+
+.home-slot .full-hook {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 69%;
+    -webkit-line-clamp: 14;
 }
