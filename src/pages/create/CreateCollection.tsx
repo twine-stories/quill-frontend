@@ -17,14 +17,14 @@ function CreateCollection() {
     const [collaborators, setCollaborators] = useState<JSX.Element[]>([]);
 
     const removeCollaborator = (id: number): void => {
-        // let newCollaborators: JSX.Element[] = []
-        // collaborators.forEach((collaborator: JSX.Element) => {
-        //     if (collaborator.props.id !== id) {
-        //         newCollaborators.push(collaborator)
-        //     }
-        // })
+        let newCollaborators: JSX.Element[] = []
+        collaborators.forEach((collaborator: JSX.Element) => {
+            if (collaborator.props.id !== id) {
+                newCollaborators.push(collaborator)
+            }
+        })
 
-        // setCollaborators(newCollaborators)
+        setCollaborators(newCollaborators)
     }
     
     return (
