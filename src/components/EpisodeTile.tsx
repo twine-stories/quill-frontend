@@ -194,40 +194,42 @@ function EpisodeTile(props: EpisodeTileProps) {
                         )}
                 </Stack>
             )}
-            <Stack
-                direction="column"
-                alignItems="center"
-                className="remove-del-img"
-            >
-                {props.episode.episodeNumber === -1 && (
-                    <IconButton
-                        onClick={function () {
-                            deleteDraftChapter(props.episode.id)
-                        }}
-                        variant="plain"
-                        color="neutral"
-                        sx={{
-                            ml: 'auto',
-                            '&:hover': {
-                                backgroundColor: '#0d0603',
-                            },
-                        }}
-                    >
-                        <img
-                            src="/icons/red_remove.svg"
-                            width="30px"
-                            height="30px"
-                            className="remove-img"
-                        />
-                        <img
-                            src="/icons/hover_red_remove.svg"
-                            width="30px"
-                            height="30px"
-                            className="remove-img-hover"
-                        />
-                    </IconButton>
-                )}
-            </Stack>
+            {props.isCreator && (
+                <Stack
+                    direction="column"
+                    alignItems="center"
+                    className="remove-del-img"
+                >
+                    {props.episode.episodeNumber === -1 && (
+                        <IconButton
+                            onClick={function () {
+                                deleteDraftChapter(props.episode.id)
+                            }}
+                            variant="plain"
+                            color="neutral"
+                            sx={{
+                                ml: 'auto',
+                                '&:hover': {
+                                    backgroundColor: '#0d0603',
+                                },
+                            }}
+                        >
+                            <img
+                                src="/icons/red_remove.svg"
+                                width="30px"
+                                height="30px"
+                                className="remove-img"
+                            />
+                            <img
+                                src="/icons/hover_red_remove.svg"
+                                width="30px"
+                                height="30px"
+                                className="remove-img-hover"
+                            />
+                        </IconButton>
+                    )}
+                </Stack>
+            )}
         </Stack>
     )
 }
