@@ -566,7 +566,7 @@ function Create() {
                                 icon="/icons/purple_plus.svg"
                                 name="Create Artwork"
                                 action={() => {
-                                    window.location.href = '/create/art/'
+                                    window.location.href = '/create/art'
                                 }}
                                 paddingTop="10px"
                                 className="custom-start-decorator"
