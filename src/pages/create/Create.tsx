@@ -3,12 +3,7 @@ import { UserContext } from '../../App.tsx'
 import Navbar from '../../components/Navbar.tsx'
 import Collaborator from '../../components/Collaborator.tsx'
 import TwineButton from '../../components/TwineButton.tsx'
-import {
-    User,
-    Work,
-    Artwork,
-    NFTCollection,
-} from '../../utils/types.ts'
+import { User, Work, Artwork, NFTCollection } from '../../utils/types.ts'
 import {
     createApplication,
     changeAssetManagement,
