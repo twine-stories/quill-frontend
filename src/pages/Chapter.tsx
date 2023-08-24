@@ -302,6 +302,7 @@ function Chapter() {
                                 rightComponent={
                                     <Grid container direction="column">
                                         <TwineButton
+                                        className="tip-button"
                                             icon="/icons/tip_jar.svg"
                                             color="green"
                                             name="Tip"
