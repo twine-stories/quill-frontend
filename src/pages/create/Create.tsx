@@ -3,14 +3,11 @@ import { UserContext } from '../../App.tsx'
 import Navbar from '../../components/Navbar.tsx'
 import Collaborator from '../../components/Collaborator.tsx'
 import TwineButton from '../../components/TwineButton.tsx'
-import TwineInput from '../../components/TwineInput.tsx'
-import { Genre } from '../../utils/enums.ts'
 import {
     User,
     Work,
     Artwork,
     NFTCollection,
-    ProfitSplit,
 } from '../../utils/types.ts'
 import {
     createApplication,
@@ -23,12 +20,10 @@ import {
     signTxns,
 } from '../../utils/blockchain/transactionRepository.ts'
 import {
-    workAdd,
     worksGetByCreator,
     collectionCreateWithArt,
     getEscrowProgram,
     genericPost,
-    genericGet,
 } from '../../utils/api.ts'
 import algosdk, {
     decodeAddress,
