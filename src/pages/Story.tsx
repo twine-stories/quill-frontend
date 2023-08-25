@@ -232,7 +232,7 @@ function Story() {
                                                         textOverflow="ellipsis"
                                                         icon="/icons/purple_plus.svg"
                                                         color="purple"
-                                                        name="Create New Episode"
+                                                        name="Create New Chapter"
                                                         action={() => {
                                                             window.location.href =
                                                                 '/create/chapter/' +
