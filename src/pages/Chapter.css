@@ -14,11 +14,8 @@
     text-align: left;
 }
 
-
-
-
-span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple{
-    margin: 15px 75px 0px 35px; 
+span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
+    margin: 15px 75px 0px 35px;
 }
 
 .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
@@ -26,29 +23,27 @@ span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorP
     top: 0;
     z-index: 1;
     max-width: 100%;
-    padding:0px 30px 5px 22px;
+    padding: 0px 30px 5px 22px;
     height: 100px;
     background-color: #14100e;
-    border-radius: 32px; 
+    border-radius: 32px;
 }
 
 @media only screen and (max-width: 900px) {
     .chapter-left-component {
-      display: block !important;
-   }
-   }
+        display: block !important;
+    }
+}
 @media screen and (max-width: 1190px) and (min-width: 770px) {
     span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
-        margin: 10px 41px 0px 23px ;
-        font-size: 33px; 
-
+        margin: 10px 41px 0px 23px;
+        font-size: 33px;
     }
 }
 @media screen and (max-width: 810px) and (min-width: 801px) {
     span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
         margin: 10px 37px 0px 23px;
         font-size: 33px;
-
     }
 }
 
@@ -56,126 +51,126 @@ span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorP
     span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
         margin: 7px 31px 0px 17px;
         font-size: 30px;
- }
+    }
 }
 
- @media screen and (max-width: 733px) and (min-width: 670px) {
-  span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {  
-    margin: 6px 22px 0px 11px;
-    font-size: 23px;
+@media screen and (max-width: 733px) and (min-width: 670px) {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
+        margin: 6px 22px 0px 11px;
+        font-size: 23px;
     }
 }
 
 @media screen and (max-width: 669px) and (min-width: 582px) {
-    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {  
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
         margin: 5px 16px 0px 6px;
         font-size: 20px;
-      }
-  }
+    }
+}
 
 @media screen and (max-width: 581px) and (min-width: 521px) {
-    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {  
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
         margin: 0px 0px 0px 0px;
         font-size: 18px;
-      }
-      h6.num-like{
-       margin-left: 1px;
-      }
     }
-  @media screen and (max-width: 499px) and (min-width: 426px) {
+    h6.num-like {
+        margin-left: 1px;
+    }
+}
+@media screen and (max-width: 499px) and (min-width: 426px) {
     .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
-       height:115px;
+        height: 115px;
     }
-  }
-  
-  @media screen and (max-width: 499px) and (min-width: 426px) {
+}
+
+@media screen and (max-width: 499px) and (min-width: 426px) {
     .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
         max-width: 80%;
     }
-  }
-  @media screen and (max-width: 425px) and (min-width: 320px) {
+}
+@media screen and (max-width: 425px) and (min-width: 320px) {
     .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
-        height:105px;
+        height: 105px;
         max-width: 95%;
     }
- }
+}
 
-    @media screen and (max-width: 500px) and (min-width: 320px) {
-        .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container{
-            justify-content: center;
-        }
+@media screen and (max-width: 500px) and (min-width: 320px) {
+    .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
+        justify-content: center;
     }
+}
 
-    @media screen and (max-width: 400px) and (min-width: 320px) {
+@media screen and (max-width: 400px) and (min-width: 320px) {
     span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
         margin: 5px 0px 0px 10px;
         font-size: 17px;
     }
     .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
-    padding: 0px 15px 5px 15px ;
+        padding: 0px 15px 5px 15px;
     }
- }
+}
 
-   @media screen and (max-width: 425px) and (min-width: 401px) {
+@media screen and (max-width: 425px) and (min-width: 401px) {
     span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
         margin: 3px 0px 0px 0px;
         font-size: 19px;
     }
+}
+
+@media screen and (max-width: 470px) and (min-width: 426px) {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
+        margin: 3px 0px 0px 0px;
+        font-size: 17px;
+    }
+}
+
+@media screen and (max-width: 500px) and (min-width: 471px) {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
+        margin: 3px 0px 0px 0px;
+        font-size: 19px;
+    }
+}
+
+@media screen and (max-width: 520px) and (min-width: 501px) {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
+        margin: 3px 0px 0px 0px;
+        font-size: 17px;
     }
 
-    @media screen and (max-width: 470px) and (min-width: 426px) {
-        span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
-            margin: 3px 0px 0px 0px;
-            font-size: 17px;
-        }
-        }
-
-    @media screen and (max-width: 500px) and (min-width: 471px) {
-        span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
-            margin: 3px 0px 0px 0px;
-            font-size: 19px;
-        }
-      }
-
-      @media screen and (max-width: 520px) and (min-width: 501px) {
-        span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
-            margin: 3px 0px 0px 0px;
-            font-size: 17px;
-        }
-        
-        .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
-            padding: 0px 13px 5px 13px;
-        }
-      }
-
-    @media screen and (max-width: 500px) and (min-width: 401px) {
-        .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
-            padding: 0px 6px 5px 6px;
-        }
+    .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
+        padding: 0px 13px 5px 13px;
     }
+}
 
-    @media screen and (max-width: 500px) and (min-width: 320px) {    
-       .tip-button{
-        width:100%
-       } 
+@media screen and (max-width: 500px) and (min-width: 401px) {
+    .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
+        padding: 0px 6px 5px 6px;
     }
+}
 
-  @media screen and (max-width: 375px) and (min-width: 321px) {
+@media screen and (max-width: 500px) and (min-width: 320px) {
+    .tip-button {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 375px) and (min-width: 321px) {
     .MuiTextarea-root.MuiTextarea-variantOutlined.MuiTextarea-colorNeutral.MuiTextarea-sizeMd.MuiTextarea-formControl.commentBox {
         min-width: 230px;
     }
-   }
+}
 
 @media only screen and (max-width: 900px) {
-.MuiTextarea-root.MuiTextarea-variantOutlined.MuiTextarea-colorNeutral.MuiTextarea-sizeMd.MuiTextarea-formControl.commentBox {
+    .MuiTextarea-root.MuiTextarea-variantOutlined.MuiTextarea-colorNeutral.MuiTextarea-sizeMd.MuiTextarea-formControl.commentBox {
         min-width: 210px;
     }
 }
-.like-heart-container{
+.like-heart-container {
     align-items: center;
 }
 
-.title-chapter-block{
+.title-chapter-block {
     display: block;
 }
 
@@ -183,7 +178,7 @@ span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorP
     align-items: baseline;
 }
 
-h3.episode-title{
+h3.episode-title {
     font-size: 17px;
     margin: 0px;
     font-weight: 500;
