@@ -201,7 +201,14 @@ function Chapter() {
                                 justifyContent="space-between"
                                 className="chapter-view-container"
                             >
-                    <Link
+                                     <IconButton
+                                    buttonClassName="left-arrow-icon"
+                                    icon="/icons/arrow_left.svg"
+                                    color="green"
+                                    action={moveToPreviousChapter}
+                                />
+                                <div className='title-block'>
+                                 <Link
                                     sx={{
                                         '&:hover': {
                                             textDecoration: 'none',
@@ -209,22 +216,32 @@ function Chapter() {
                                     }}
                                     href={'/story/' + episode.work.url}
                                 >
-                                     <IconButton
-                                    buttonClassName="left-arrow-icon"
-                                    icon="/icons/arrow_left.svg"
-                                    color="green"
-                                    action={moveToPreviousChapter}
-                                />
                                     <Typography level="h1" color="purple" className="view-chapter-title">
                                         {episode.work.title}
                                     </Typography>
+                                    </Link>
+                                    <Grid
+                                container
+                                alignItems="center"
+                                justifyContent="flex-start"
+                            >
+                                <Typography
+                                    className="episode-title"
+                                    // sx={{ marginRight: '20px',fontSize:'15px' }}
+                                    level="h3"
+                                    color="white"
+                                >
+                                    {episode.title}
+                                </Typography>
+                            </Grid>
+                                    </div>
                                     <IconButton
                                      buttonClassName="right-arrow-icon"
                                     icon="/icons/arrow_right.svg"
                                     color="green"
                                     action={moveToNextChapter}
                                 />
-                                </Link>
+                      
                                 <Grid container direction="row" className="like-heart-container">
                                     <IconButton
                                     buttonClassName="like-heart-icon"
@@ -258,19 +275,6 @@ function Chapter() {
                                 flexWrap: 'wrap',
                             }}
                         >
-                            <Grid
-                                container
-                                alignItems="center"
-                                justifyContent="flex-start"
-                            >
-                                <Typography
-                                    sx={{ marginRight: '20px' }}
-                                    level="h3"
-                                    color="white"
-                                >
-                                    {episode.title}
-                                </Typography>
-                            </Grid>
                             <TwoColumnLayout
                                 rightWidth="25%"
                                 className="chapter-left-component"
@@ -475,12 +479,9 @@ function Chapter() {
                     )
                 }
             } else {
-                compoundedElements.push(<Typography key={i} sx={{
-                    color:'#E4E5FF',
-                    textAlign: 'left',
-                    lineHeight: '35.2px',
-                    fontSize: '20px'
-                }} level="h6">{rawContentArray[i]}</Typography>)
+                compoundedElements.push(
+                <Typography key={i} sx={{textAlign: 'left',lineHeight: '32px',fontSize: '17px', color:'white',fontWeight:"500"}} level="h6">{rawContentArray[i]}</Typography>
+                )
             }
         }
         return compoundedElements
