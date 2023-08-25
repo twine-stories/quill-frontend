@@ -37,12 +37,12 @@ button.MuiButton-root.MuiButton-variantSolid.MuiButton-colorDarkpurple.MuiButton
     --Button-gap: 0px;
 }
 
-.submit-button{
+.submit-button {
     width: 240px;
     height: 50px;
 }
 
-.upload-button{
+.upload-button {
     height: 75px;
-    width:75px;
+    width: 75px;
 }
