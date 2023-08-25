@@ -39,7 +39,7 @@
 }
 
 .upload-image-popup {
-    border: 1px solid #241D19;
+    border: 1px solid #241d19;
     border-radius: 20px;
 }
 .upload-image-popup {
@@ -48,9 +48,8 @@
     height: 585px;
     border-radius: 'md';
     box-shadow: 'lg';
-
 }
-button.MuiButton-root.Joy-disabled.MuiButton-variantSolid.MuiButton-colorPurple.MuiButton-sizeMd.upload-button{
+button.MuiButton-root.Joy-disabled.MuiButton-variantSolid.MuiButton-colorPurple.MuiButton-sizeMd.upload-button {
     border-radius: 15px;
 }
 
@@ -63,10 +62,5 @@ button.MuiButton-root.Joy-disabled.MuiButton-variantSolid.MuiButton-colorPurple.
     #profile-upload-preview {
         padding: 10px 12px;
         margin: 12px;
-       
     }
 }
-
-
-
-                        
