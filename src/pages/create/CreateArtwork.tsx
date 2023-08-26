@@ -8,7 +8,7 @@ import TwineButton from '../../components/TwineButton.tsx'
 import { User, ImageUpload } from '../../utils/types.ts'
 import { createNFT } from '../../utils/blockchain/transactionRepository.ts'
 import UploadImage from '../../components/UploadImage.tsx'
-import { genericGet, genericPost } from '../../utils/api.ts'
+import { genericPost } from '../../utils/api.ts'
 import MintNftPopup from '../../components/MintNftPopup.tsx'
 import SuccessPopup from '../../components/SuccessPopup.tsx'
 import { env } from '../../config.ts'
@@ -268,9 +268,6 @@ function CreateArtwork() {
                                         '/api/algo/upload-to-ipfs/file',
                                         formData
                                     )
-                                    const mintNumber = await genericGet(
-                                        '/api/algo/mint-number'
-                                    )
 
                                     setArc69({
                                         standard: 'arc69',
@@ -281,7 +278,6 @@ function CreateArtwork() {
                                             '#i',
                                         properties: {
                                             minter: minter,
-                                            number: mintNumber,
                                         },
                                     })
 

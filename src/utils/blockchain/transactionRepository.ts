@@ -149,9 +149,9 @@ async function createASA(
             decimals: decimals,
             manager: creatorAddress,
             reserve: creatorAddress,
-            freeze: creatorAddress,
-            clawback: creatorAddress,
-            defaultFrozen: true,
+            freeze: undefined,
+            clawback: undefined,
+            defaultFrozen: false,
             note: note,
         })
 
