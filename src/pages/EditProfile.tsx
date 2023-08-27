@@ -76,9 +76,22 @@ function EditProfile() {
         let discord: string = document
             .getElementsByClassName('discord')[0]
             .getElementsByTagName('textarea')[0].value
-
+        console.log(website.substring(0, 8))
         if ('@' === username[0]) {
             username = username.substring(1)
+        }
+        if ('https://' === website.substring(0, 8)) {
+            website = website.substring(8)
+            console.log(website)
+        } 
+        if ('https://twitter.com/' === twitter.substring(0, 20)) {
+            twitter = twitter.substring(20)
+        } 
+        if ('https://instagram.com/' === instagram.substring(0, 22)) {
+            instagram = instagram.substring(22)
+        } 
+        if ('https://reddit.com/u/' === reddit.substring(0, 21)) {
+            reddit = reddit.substring(21)
         }
 
         const response = await genericGet('/api/user/taken/' + username)
@@ -111,7 +124,7 @@ function EditProfile() {
         navigate('/profile')
     }
 
-    const handleKeyPress = () => {
+    const handleUsernameKeyPress = () => {
         let username: string = document
             .getElementsByClassName('username')[0]
             .getElementsByTagName('textarea')[0].value
@@ -127,6 +140,83 @@ function EditProfile() {
                 .getElementsByTagName('textarea')[0].value = '@' + afterAt
         }
     }
+
+    const handleWebsiteKeyPress = () => {
+        let website: string = document
+            .getElementsByClassName('website')[0]
+            .getElementsByTagName('textarea')[0].value
+        if (website.length < 8) {
+            document
+                .getElementsByClassName('website')[0]
+                .getElementsByTagName('textarea')[0].value = 'https://'
+        } else if ('https://' !== website.substring(0, 8)) {
+            let httpsIdx = website.indexOf('https://')
+            let afterHttps = website.substring(httpsIdx + 1, website.length)
+            document
+                .getElementsByClassName('website')[0]
+                .getElementsByTagName('textarea')[0].value =
+                'https://' + afterHttps
+        }
+    }
+
+    const handleTwitterKeyPress = () => {
+        let twitter: string = document
+            .getElementsByClassName('twitter')[0]
+            .getElementsByTagName('textarea')[0].value
+        if (twitter.length < 20) {
+            document
+                .getElementsByClassName('twitter')[0]
+                .getElementsByTagName('textarea')[0].value = 'https://twitter.com/'
+        } else if ('https://twitter.com/' !== twitter.substring(0, 20)) {
+            let twitterIdx = twitter.indexOf('https://twitter.com/')
+            let afterTwitter = twitter.substring(
+                twitterIdx + 1,
+                twitter.length
+            )
+            document
+                .getElementsByClassName('twitter')[0]
+                .getElementsByTagName('textarea')[0].value =
+                'https://twitter.com/' + afterTwitter
+        }
+    }
+
+    const handleInstagramKeyPress = () => {
+        let instagram: string = document
+            .getElementsByClassName('instagram')[0]
+            .getElementsByTagName('textarea')[0].value
+        if (instagram.length < 22) {
+            document
+                .getElementsByClassName('instagram')[0]
+                .getElementsByTagName('textarea')[0].value = 'https://instagram.com/'
+        } else if ('https://instagram.com/' !== instagram.substring(0, 22)) {
+            let instagramIdx = instagram.indexOf('https://instagram.com/')
+            let afterInstagram = instagram.substring(
+                instagramIdx + 1,
+                instagram.length
+            )
+            document
+                .getElementsByClassName('instagram')[0]
+                .getElementsByTagName('textarea')[0].value =
+                'https://instagram.com/' + afterInstagram
+        }
+    }
+
+    const handleRedditKeyPress = () => {
+        let reddit: string = document
+            .getElementsByClassName('reddit')[0]
+            .getElementsByTagName('textarea')[0].value
+        if (reddit.length < 21) {
+            document
+                .getElementsByClassName('reddit')[0]
+                .getElementsByTagName('textarea')[0].value = 'https://reddit.com/u/'
+        } else if ('https://reddit.com/u/' !== reddit.substring(0, 21)) {
+            document
+                .getElementsByClassName('reddit')[0]
+                .getElementsByTagName('textarea')[0].value = 'https://reddit.com/u/'
+        }
+    }
+
+
 
     return (
         <div>
@@ -175,7 +265,7 @@ function EditProfile() {
                                     className="username"
                                     defaultValue={user && '@' + user.userName}
                                     maxRows={1}
-                                    onChange={handleKeyPress}
+                                    onChange={handleUsernameKeyPress}
                                 />
                             </Grid>
                         </Grid>
@@ -224,29 +314,33 @@ function EditProfile() {
                             <Grid>
                                 <Textarea
                                     className="website"
-                                    defaultValue={user && user.website}
+                                    defaultValue={user && "https://" + user.website}
                                     placeholder="Add personal website..."
+                                    onChange={handleWebsiteKeyPress}
                                 />
                             </Grid>
                             <Grid>
                                 <Textarea
                                     className="twitter"
-                                    defaultValue={user && user.twitter}
+                                    defaultValue={user && "https://twitter.com/" + user.twitter}
                                     placeholder="Add twitter..."
+                                    onChange={handleTwitterKeyPress}
                                 />
                             </Grid>
                             <Grid>
                                 <Textarea
                                     className="instagram"
-                                    defaultValue={user && user.instagram}
+                                    defaultValue={user && "https://instagram.com/" + user.instagram}
                                     placeholder="Add instagram..."
+                                    onChange={handleInstagramKeyPress}
                                 />
                             </Grid>
                             <Grid>
                                 <Textarea
                                     className="reddit"
-                                    defaultValue={user && user.reddit}
+                                    defaultValue={user && "https://reddit.com/u/" + user.reddit}
                                     placeholder="Add reddit..."
+                                    onChange={handleRedditKeyPress}
                                 />
                             </Grid>
                             <Grid>
