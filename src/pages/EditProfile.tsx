@@ -158,15 +158,15 @@ function EditProfile() {
                         >
                             <Grid xs={4}>
                                 <Textarea
-                                    className="lastname"
-                                    defaultValue={user && user.lastName}
+                                    className="firstname"
+                                    defaultValue={user && user.firstName}
                                     maxRows={1}
                                 />
                             </Grid>
                             <Grid xs={4}>
                                 <Textarea
-                                    className="firstname"
-                                    defaultValue={user && user.firstName}
+                                    className="lastname"
+                                    defaultValue={user && user.lastName}
                                     maxRows={1}
                                 />
                             </Grid>
