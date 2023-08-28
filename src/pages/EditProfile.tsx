@@ -76,9 +76,23 @@ function EditProfile() {
         let discord: string = document
             .getElementsByClassName('discord')[0]
             .getElementsByTagName('textarea')[0].value
-
         if ('@' === username[0]) {
             username = username.substring(1)
+        }
+        if ('https://' === website.substring(0, 8)) {
+            website = website.substring(8)
+        }
+        if ('https://twitter.com/' === twitter.substring(0, 20)) {
+            twitter = twitter.substring(20)
+        }
+        if ('https://instagram.com/' === instagram.substring(0, 22)) {
+            instagram = instagram.substring(22)
+        }
+        if ('https://reddit.com/u/' === reddit.substring(0, 21)) {
+            reddit = reddit.substring(21)
+        }
+        if ('https://discord.gg/' === discord.substring(0, 19)) {
+            discord = discord.substring(19)
         }
 
         const response = await genericGet('/api/user/taken/' + username)
@@ -111,7 +125,7 @@ function EditProfile() {
         navigate('/profile')
     }
 
-    const handleKeyPress = () => {
+    const handleUsernameKeyPress = () => {
         let username: string = document
             .getElementsByClassName('username')[0]
             .getElementsByTagName('textarea')[0].value
@@ -125,6 +139,77 @@ function EditProfile() {
             document
                 .getElementsByClassName('username')[0]
                 .getElementsByTagName('textarea')[0].value = '@' + afterAt
+        }
+    }
+
+    const handleWebsiteKeyPress = () => {
+        let website: string = document
+            .getElementsByClassName('website')[0]
+            .getElementsByTagName('textarea')[0].value
+        if (website.length < 8 || 'https://' !== website.substring(0, 8)) {
+            document
+                .getElementsByClassName('website')[0]
+                .getElementsByTagName('textarea')[0].value = 'https://'
+        }
+    }
+
+    const handleTwitterKeyPress = () => {
+        let twitter: string = document
+            .getElementsByClassName('twitter')[0]
+            .getElementsByTagName('textarea')[0].value
+        if (
+            twitter.length < 20 ||
+            'https://twitter.com/' !== twitter.substring(0, 20)
+        ) {
+            document
+                .getElementsByClassName('twitter')[0]
+                .getElementsByTagName('textarea')[0].value =
+                'https://twitter.com/'
+        }
+    }
+
+    const handleInstagramKeyPress = () => {
+        let instagram: string = document
+            .getElementsByClassName('instagram')[0]
+            .getElementsByTagName('textarea')[0].value
+        if (
+            instagram.length < 22 ||
+            'https://instagram.com/' !== instagram.substring(0, 22)
+        ) {
+            document
+                .getElementsByClassName('instagram')[0]
+                .getElementsByTagName('textarea')[0].value =
+                'https://instagram.com/'
+        }
+    }
+
+    const handleRedditKeyPress = () => {
+        let reddit: string = document
+            .getElementsByClassName('reddit')[0]
+            .getElementsByTagName('textarea')[0].value
+        if (
+            reddit.length < 21 ||
+            'https://reddit.com/u/' !== reddit.substring(0, 21)
+        ) {
+            document
+                .getElementsByClassName('reddit')[0]
+                .getElementsByTagName('textarea')[0].value =
+                'https://reddit.com/u/'
+        }
+    }
+
+    const handleDiscordKeyPress = () => {
+        let discord: string = document
+            .getElementsByClassName('discord')[0]
+            .getElementsByTagName('textarea')[0].value
+        if (
+            discord.length < 19 ||
+            'https://discord.gg/' !== discord.substring(0, 19)
+        ) {
+            document
+                .getElementsByClassName('discord')[0]
+                .getElementsByTagName('textarea')[0].value =
+                'https://discord.gg/'
         }
     }
 
@@ -175,7 +260,7 @@ function EditProfile() {
                                     className="username"
                                     defaultValue={user && '@' + user.userName}
                                     maxRows={1}
-                                    onChange={handleKeyPress}
+                                    onChange={handleUsernameKeyPress}
                                 />
                             </Grid>
                         </Grid>
@@ -224,36 +309,56 @@ function EditProfile() {
                             <Grid>
                                 <Textarea
                                     className="website"
-                                    defaultValue={user && user.website}
+                                    defaultValue={
+                                        user && 'https://' + user.website
+                                    }
                                     placeholder="Add personal website..."
+                                    onChange={handleWebsiteKeyPress}
                                 />
                             </Grid>
                             <Grid>
                                 <Textarea
                                     className="twitter"
-                                    defaultValue={user && user.twitter}
+                                    defaultValue={
+                                        user &&
+                                        'https://twitter.com/' + user.twitter
+                                    }
                                     placeholder="Add twitter..."
+                                    onChange={handleTwitterKeyPress}
                                 />
                             </Grid>
                             <Grid>
                                 <Textarea
                                     className="instagram"
-                                    defaultValue={user && user.instagram}
+                                    defaultValue={
+                                        user &&
+                                        'https://instagram.com/' +
+                                            user.instagram
+                                    }
                                     placeholder="Add instagram..."
+                                    onChange={handleInstagramKeyPress}
                                 />
                             </Grid>
                             <Grid>
                                 <Textarea
                                     className="reddit"
-                                    defaultValue={user && user.reddit}
+                                    defaultValue={
+                                        user &&
+                                        'https://reddit.com/u/' + user.reddit
+                                    }
                                     placeholder="Add reddit..."
+                                    onChange={handleRedditKeyPress}
                                 />
                             </Grid>
                             <Grid>
                                 <Textarea
                                     className="discord"
-                                    defaultValue={user && user.discord}
+                                    defaultValue={
+                                        user &&
+                                        'https://discord.gg/' + user.discord
+                                    }
                                     placeholder="Add discord..."
+                                    onChange={handleDiscordKeyPress}
                                 />
                             </Grid>
                         </Grid>
