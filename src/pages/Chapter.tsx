@@ -469,7 +469,6 @@ function Chapter() {
 
                 if (imgSrc) {
                     compoundedElements.push(
-
                         <AspectRatio
                             key={i}
                             variant="plain"
@@ -486,12 +485,23 @@ function Chapter() {
                                 alt=""
                             />
                         </AspectRatio>
-                       
                     )
                 }
             } else {
                 compoundedElements.push(
-                <Typography color='white' key={i} sx={{textAlign: 'left',lineHeight: '32px',fontSize: '17px',fontWeight:"500"}} level="h6">{rawContentArray[i]}</Typography>
+                    <Typography
+                        color="white"
+                        key={i}
+                        sx={{
+                            textAlign: 'left',
+                            lineHeight: '32px',
+                            fontSize: '17px',
+                            fontWeight: '500',
+                        }}
+                        level="h6"
+                    >
+                        {rawContentArray[i]}
+                    </Typography>
                 )
             }
         }
