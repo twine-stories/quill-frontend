@@ -46,7 +46,7 @@ function UploadImage({
     return (
         <Modal open={open} onClose={close}>
             <Sheet
-            className="upload-image-popup"
+                className="upload-image-popup"
                 variant="outlined"
                 sx={{
                     maxWidth: '600px',
@@ -54,7 +54,7 @@ function UploadImage({
                     borderRadius: '20',
                     p: 3,
                     boxShadow: 'lg',
-                    border: '1px #241d19 solid'
+                    border: '1px #241d19 solid',
                 }}
             >
                 <Grid
