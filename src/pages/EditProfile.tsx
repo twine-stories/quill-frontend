@@ -76,13 +76,11 @@ function EditProfile() {
         let discord: string = document
             .getElementsByClassName('discord')[0]
             .getElementsByTagName('textarea')[0].value
-        console.log(website.substring(0, 8))
         if ('@' === username[0]) {
             username = username.substring(1)
         }
         if ('https://' === website.substring(0, 8)) {
             website = website.substring(8)
-            console.log(website)
         }
         if ('https://twitter.com/' === twitter.substring(0, 20)) {
             twitter = twitter.substring(20)
