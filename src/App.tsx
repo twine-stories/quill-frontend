@@ -379,6 +379,10 @@ function App() {
                                             path="/create/collection"
                                             element={<CreateCollection />}
                                         ></Route>
+                                        <Route
+                                            path="/create/collection/*"
+                                            element={<CreateCollection edit={true} />}
+                                        ></Route>
 
                                         <Route
                                             path="/edit/story/*"
