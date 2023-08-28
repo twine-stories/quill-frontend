@@ -93,6 +93,9 @@ function EditProfile() {
         if ('https://reddit.com/u/' === reddit.substring(0, 21)) {
             reddit = reddit.substring(21)
         }
+        if ('https://discord.gg/' === discord.substring(0, 19)) {
+            discord = discord.substring(19)
+        }
 
         const response = await genericGet('/api/user/taken/' + username)
 
@@ -145,74 +148,54 @@ function EditProfile() {
         let website: string = document
             .getElementsByClassName('website')[0]
             .getElementsByTagName('textarea')[0].value
-        if (website.length < 8) {
+        if (website.length < 8 || 'https://' !== website.substring(0, 8)) {
             document
                 .getElementsByClassName('website')[0]
                 .getElementsByTagName('textarea')[0].value = 'https://'
-        } else if ('https://' !== website.substring(0, 8)) {
-            let httpsIdx = website.indexOf('https://')
-            let afterHttps = website.substring(httpsIdx + 1, website.length)
-            document
-                .getElementsByClassName('website')[0]
-                .getElementsByTagName('textarea')[0].value =
-                'https://' + afterHttps
-        }
+        } 
     }
 
     const handleTwitterKeyPress = () => {
         let twitter: string = document
             .getElementsByClassName('twitter')[0]
             .getElementsByTagName('textarea')[0].value
-        if (twitter.length < 20) {
+        if (twitter.length < 20 || 'https://twitter.com/' !== twitter.substring(0, 20)) {
             document
                 .getElementsByClassName('twitter')[0]
                 .getElementsByTagName('textarea')[0].value = 'https://twitter.com/'
-        } else if ('https://twitter.com/' !== twitter.substring(0, 20)) {
-            let twitterIdx = twitter.indexOf('https://twitter.com/')
-            let afterTwitter = twitter.substring(
-                twitterIdx + 1,
-                twitter.length
-            )
-            document
-                .getElementsByClassName('twitter')[0]
-                .getElementsByTagName('textarea')[0].value =
-                'https://twitter.com/' + afterTwitter
-        }
+        } 
     }
 
     const handleInstagramKeyPress = () => {
         let instagram: string = document
             .getElementsByClassName('instagram')[0]
             .getElementsByTagName('textarea')[0].value
-        if (instagram.length < 22) {
+        if (instagram.length < 22 || 'https://instagram.com/' !== instagram.substring(0, 22)) {
             document
                 .getElementsByClassName('instagram')[0]
                 .getElementsByTagName('textarea')[0].value = 'https://instagram.com/'
-        } else if ('https://instagram.com/' !== instagram.substring(0, 22)) {
-            let instagramIdx = instagram.indexOf('https://instagram.com/')
-            let afterInstagram = instagram.substring(
-                instagramIdx + 1,
-                instagram.length
-            )
-            document
-                .getElementsByClassName('instagram')[0]
-                .getElementsByTagName('textarea')[0].value =
-                'https://instagram.com/' + afterInstagram
-        }
+        } 
     }
 
     const handleRedditKeyPress = () => {
         let reddit: string = document
             .getElementsByClassName('reddit')[0]
             .getElementsByTagName('textarea')[0].value
-        if (reddit.length < 21) {
+        if (reddit.length < 21 || 'https://reddit.com/u/' !== reddit.substring(0, 21)) {
             document
                 .getElementsByClassName('reddit')[0]
                 .getElementsByTagName('textarea')[0].value = 'https://reddit.com/u/'
-        } else if ('https://reddit.com/u/' !== reddit.substring(0, 21)) {
+        }
+    }
+
+    const handleDiscordKeyPress = () => {
+        let discord: string = document
+            .getElementsByClassName('discord')[0]
+            .getElementsByTagName('textarea')[0].value
+        if (discord.length < 19 || 'https://discord.gg/' !== discord.substring(0, 19)) {
             document
-                .getElementsByClassName('reddit')[0]
-                .getElementsByTagName('textarea')[0].value = 'https://reddit.com/u/'
+                .getElementsByClassName('discord')[0]
+                .getElementsByTagName('textarea')[0].value = 'https://discord.gg/'
         }
     }
 
@@ -346,8 +329,9 @@ function EditProfile() {
                             <Grid>
                                 <Textarea
                                     className="discord"
-                                    defaultValue={user && user.discord}
+                                    defaultValue={user && "https://discord.gg/" + user.discord}
                                     placeholder="Add discord..."
+                                    onChange={handleDiscordKeyPress}
                                 />
                             </Grid>
                         </Grid>
