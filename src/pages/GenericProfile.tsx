@@ -165,7 +165,10 @@ function GenericProfile() {
                                         color="darkpurple"
                                         icon="/icons/socials/website.svg"
                                         action={() =>
-                                            goTo("https://" + (user.website as String))
+                                            goTo(
+                                                'https://' +
+                                                    (user.website as String)
+                                            )
                                         }
                                     />
                                 )}
@@ -174,7 +177,10 @@ function GenericProfile() {
                                         color="darkpurple"
                                         icon="/icons/socials/twitter.svg"
                                         action={() =>
-                                            goTo("https://twitter.com/" + (user.twitter as String))
+                                            goTo(
+                                                'https://twitter.com/' +
+                                                    (user.twitter as String)
+                                            )
                                         }
                                     />
                                 )}
@@ -183,7 +189,10 @@ function GenericProfile() {
                                         color="darkpurple"
                                         icon="/icons/socials/instagram.svg"
                                         action={() =>
-                                            goTo("https://instagram.com/" + (user.instagram as String))
+                                            goTo(
+                                                'https://instagram.com/' +
+                                                    (user.instagram as String)
+                                            )
                                         }
                                     />
                                 )}
@@ -192,7 +201,10 @@ function GenericProfile() {
                                         color="darkpurple"
                                         icon="/icons/socials/reddit.svg"
                                         action={() =>
-                                            goTo("https://reddit.com/u/" + (user.reddit as string))
+                                            goTo(
+                                                'https://reddit.com/u/' +
+                                                    (user.reddit as string)
+                                            )
                                         }
                                     />
                                 )}
@@ -201,7 +213,10 @@ function GenericProfile() {
                                         color="darkpurple"
                                         icon="/icons/socials/discord.svg"
                                         action={() =>
-                                            goTo("https://discord.gg/" + (user.discord as string))
+                                            goTo(
+                                                'https://discord.gg/' +
+                                                    (user.discord as string)
+                                            )
                                         }
                                     />
                                 )}
