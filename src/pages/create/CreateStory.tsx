@@ -300,8 +300,8 @@ function CreateStory(props: CreateStoryProps) {
                                     handleUpload(file, 'banner')
                                 }
                                 circle={false}
-                                width="440px"
-                                height="100px"
+                                width="160px"
+                                height="240px"
                             />
                         </Grid>
                     </Box>

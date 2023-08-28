@@ -46,13 +46,15 @@ function UploadImage({
     return (
         <Modal open={open} onClose={close}>
             <Sheet
+                className="upload-image-popup"
                 variant="outlined"
                 sx={{
                     maxWidth: '600px',
                     width: '50vw',
-                    borderRadius: 'md',
+                    borderRadius: '20',
                     p: 3,
                     boxShadow: 'lg',
+                    border: '1px #241d19 solid',
                 }}
             >
                 <Grid
@@ -119,6 +121,7 @@ function UploadImage({
                     </Grid>
                     <Grid>
                         <TwineButton
+                            className="upload-button"
                             sx={{ width: '130px' }}
                             name="Upload"
                             action={() => {

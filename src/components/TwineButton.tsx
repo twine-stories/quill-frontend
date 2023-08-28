@@ -22,7 +22,7 @@ function TwineButton(props: ButtonProps) {
     return (
         <Button
             className={props.className}
-            sx={{ borderRadius: '10px', ...props.sx }}
+            sx={{ borderRadius: '12px', ...props.sx }}
             size={size}
             color={color}
             startDecorator={
