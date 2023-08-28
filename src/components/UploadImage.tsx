@@ -48,6 +48,14 @@ function UploadImage({
             <Sheet
             className="upload-image-popup"
                 variant="outlined"
+                sx={{
+                    maxWidth: '600px',
+                    width: '50vw',
+                    borderRadius: '20',
+                    p: 3,
+                    boxShadow: 'lg',
+                    border: '1px #241d19 solid'
+                }}
             >
                 <Grid
                     container

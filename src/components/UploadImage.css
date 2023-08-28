@@ -50,9 +50,9 @@
     box-shadow: 'lg';
 
 }
-button.MuiButton-root.Joy-disabled.MuiButton-variantSolid.MuiButton-colorPurple.MuiButton-sizeMd.upload-button{
+/* button.MuiButton-root.Joy-disabled.MuiButton-variantSolid.MuiButton-colorPurple.MuiButton-sizeMd.upload-button{
     border-radius: 15px;
-}
+} */
 
 @media screen and (max-width: 600px) and (min-width: 320px) {
     .MuiSheet-root.MuiSheet-variantOutlined.MuiSheet-colorNeutral.upload-image-popup {
