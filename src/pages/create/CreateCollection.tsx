@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useEffect, useContext } from 'react'
+import useState from 'react-usestateref'
 import './CreateArtwork.css'
 import { UserContext } from '../../App.tsx'
 import Navbar from '../../components/Navbar.tsx'
@@ -15,18 +16,26 @@ interface CreateCollectionProps {
     edit?: boolean
 }
 
+type AlgorandAsset = {
+    id: number
+    url: string
+}
+
 function CreateCollection(props: CreateCollectionProps) {
 
     const context: object = useContext(UserContext)
     const user: User = context['user'];
 
-    const [collection, setCollection] = useState<NFTCollection>(null)
+    const [collection, setCollection] = useState<NFTCollection>();
     const [collaborators, setCollaborators] = useState<JSX.Element[]>([])
     const [populatedForEdit, setPopulatedForEdit] = useState<boolean>(false)
-    const [gotAssets, setGotAssets] = useState<boolean>(false)
+
+    // const [nfts, setNfts, nftsRef] = useState<Set<AlgorandAsset>>(new Set());
+    const [nfts, setNfts, nftsRef] = useState<Map<number, AlgorandAsset>>(new Map());
+
+    const [sellableNfts, setSellableNfts] = useState<JSX.Element[]>([]);
 
     useEffect(() => {
-        console.log(user);
         if (user && !props.edit && collaborators.length === 0) {
             setCollaborators([
                 <Collaborator
@@ -41,10 +50,13 @@ function CreateCollection(props: CreateCollectionProps) {
             ])
         }
 
-        if (user && !gotAssets) {
-            setGotAssets(true)
-            genericGet('/api/algo/assets/' + user.walletAddress).then(response => {
-                console.log(response)
+        if (user) {
+            genericGet('/api/algo/assets/' + user.walletAddress).then((response: AlgorandAsset[]) => {
+                let assets: Map<number, AlgorandAsset> = new Map()
+                response.forEach((asset) => {
+                    assets.set(asset.id, asset)
+                })
+                setNfts(new Map([...assets, ...nftsRef.current]))
             })
         }
     }, [user])
@@ -100,6 +112,15 @@ function CreateCollection(props: CreateCollectionProps) {
         }
     }, [props.edit, user, collection]);
 
+    useEffect(() => {
+        let nftImgs: JSX.Element[] = []
+        nfts.forEach((nft) => {
+            nftImgs.push(<img src={nft.url} />)
+        })
+
+        setSellableNfts(nftImgs);
+    }, [nfts])
+
     const removeCollaborator = (id: number): void => {
         let newCollaborators: JSX.Element[] = []
         collaborators.forEach((collaborator: JSX.Element) => {
@@ -111,6 +132,9 @@ function CreateCollection(props: CreateCollectionProps) {
         setCollaborators(newCollaborators)
     }
     
+
+    console.log(nfts);
+
     return (
         <div>
             <Navbar />
@@ -122,6 +146,7 @@ function CreateCollection(props: CreateCollectionProps) {
                 >
                     Publish Art Collection
                 </Typography>
+                {sellableNfts}
                 <Grid>
                     <Typography level='h3' color='green' sx={{fontSize: "18px"}}>Profit Split</Typography>
                     <CollaboratorContext.Provider
