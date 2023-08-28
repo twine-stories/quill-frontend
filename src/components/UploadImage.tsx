@@ -121,7 +121,7 @@ function UploadImage({
                     </Grid>
                     <Grid>
                         <TwineButton
-                        className="upload-button"
+                            className="upload-button"
                             sx={{ width: '130px' }}
                             name="Upload"
                             action={() => {
