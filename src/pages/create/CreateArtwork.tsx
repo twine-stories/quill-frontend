@@ -266,10 +266,17 @@ function CreateArtwork() {
                                     setUploadDataLoading(true)
                                     let formData = new FormData()
                                     formData.append('key', assetImg.name)
-                                    formData.append('bucketName', MINT_IMGS_BUCKET)
-                                    
-                                    sendToS3(MINT_IMGS_BUCKET, assetImg.name, assetImg.file)
-                                    
+                                    formData.append(
+                                        'bucketName',
+                                        MINT_IMGS_BUCKET
+                                    )
+
+                                    sendToS3(
+                                        MINT_IMGS_BUCKET,
+                                        assetImg.name,
+                                        assetImg.file
+                                    )
+
                                     const imgUpload = await genericPost(
                                         '/api/algo/upload-to-ipfs/s3',
                                         formData
