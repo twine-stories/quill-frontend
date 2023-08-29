@@ -6,7 +6,9 @@
     border: 1px solid #241d19;
     margin-top: 20px;
 }
-
+a{
+    font-size: 18px;
+}
 .help-content {
     margin-bottom: 20px;
 }
