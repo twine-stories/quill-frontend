@@ -139,7 +139,10 @@ function Profile() {
                                         color="darkpurple"
                                         icon="/icons/socials/website.svg"
                                         action={() =>
-                                            goTo(user.website as string)
+                                            goTo(
+                                                'https://' +
+                                                    (user.website as String)
+                                            )
                                         }
                                     />
                                 )}
@@ -148,7 +151,10 @@ function Profile() {
                                         color="darkpurple"
                                         icon="/icons/socials/twitter.svg"
                                         action={() =>
-                                            goTo(user.twitter as string)
+                                            goTo(
+                                                'https://twitter.com/' +
+                                                    (user.twitter as String)
+                                            )
                                         }
                                     />
                                 )}
@@ -157,7 +163,10 @@ function Profile() {
                                         color="darkpurple"
                                         icon="/icons/socials/instagram.svg"
                                         action={() =>
-                                            goTo(user.instagram as string)
+                                            goTo(
+                                                'https://instagram.com/' +
+                                                    (user.instagram as String)
+                                            )
                                         }
                                     />
                                 )}
@@ -166,7 +175,10 @@ function Profile() {
                                         color="darkpurple"
                                         icon="/icons/socials/reddit.svg"
                                         action={() =>
-                                            goTo(user.reddit as string)
+                                            goTo(
+                                                'https://reddit.com/u/' +
+                                                    (user.reddit as string)
+                                            )
                                         }
                                     />
                                 )}
@@ -175,7 +187,10 @@ function Profile() {
                                         color="darkpurple"
                                         icon="/icons/socials/discord.svg"
                                         action={() =>
-                                            goTo(user.discord as string)
+                                            goTo(
+                                                'https://discord.gg/' +
+                                                    (user.discord as string)
+                                            )
                                         }
                                     />
                                 )}

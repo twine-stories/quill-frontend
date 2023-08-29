@@ -238,8 +238,8 @@ function CreateArtwork() {
                             })
                         }
                         circle={false}
-                        width="200px"
-                        height="200px"
+                        width="160px"
+                        height="240px"
                         contain={true}
                     />
                     <Grid xs={11}>

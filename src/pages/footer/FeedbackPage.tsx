@@ -114,6 +114,7 @@ function FeedbackPage() {
                                     />
                                 ) : (
                                     <TwineButton
+                                        className="upload-button"
                                         icon="/icons/purple_plus_light.svg"
                                         name="Upload"
                                         color="darkpurple"
@@ -149,6 +150,7 @@ function FeedbackPage() {
                         >
                             <TwineButton
                                 name="Submit"
+                                className="submit-button"
                                 color="darkpurple"
                                 action={() => {
                                     const desc: string = (
