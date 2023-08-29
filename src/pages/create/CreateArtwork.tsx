@@ -12,6 +12,8 @@ import { genericPost } from '../../utils/api.ts'
 import MintNftPopup from '../../components/MintNftPopup.tsx'
 import SuccessPopup from '../../components/SuccessPopup.tsx'
 import { env } from '../../config.ts'
+import { sendToS3 } from '../../utils/aws.ts'
+import { MINT_IMGS_BUCKET } from '../../config.ts'
 
 function CreateArtwork() {
     const encoder = new TextEncoder()
@@ -263,9 +265,20 @@ function CreateArtwork() {
                                 if (inputFieldsAreValid() && assetImg.file) {
                                     setUploadDataLoading(true)
                                     let formData = new FormData()
-                                    formData.append('file', assetImg.file)
+                                    formData.append('key', assetImg.name)
+                                    formData.append(
+                                        'bucketName',
+                                        MINT_IMGS_BUCKET
+                                    )
+
+                                    sendToS3(
+                                        MINT_IMGS_BUCKET,
+                                        assetImg.name,
+                                        assetImg.file
+                                    )
+
                                     const imgUpload = await genericPost(
-                                        '/api/algo/upload-to-ipfs/file',
+                                        '/api/algo/upload-to-ipfs/s3',
                                         formData
                                     )
 
