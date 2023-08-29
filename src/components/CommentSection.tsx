@@ -181,14 +181,14 @@ export default function CommentSection({ episode }) {
                             </Typography>
                             <Typography
                                 level="h6"
-                                sx={{ lineHeight: '20px',margin:"0px",fontSize:'24px'}}
+                                sx={{ lineHeight: '20px',margin:"0px",fontSize:'18px'}}
                                 color="white"
                             >
                                 {comment.content}
                             </Typography>
                             <Typography
                                 level="h6"
-                                sx={{ fontSize: '16px' }}
+                                sx={{ fontSize: '14px' }}
                                 color="purple"
                             >
                                 {comment.publishStamp &&

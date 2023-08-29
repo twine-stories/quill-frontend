@@ -174,10 +174,6 @@ span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorP
     display: block;
 }
 
-.MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
-    align-items: baseline;
-}
-
 h3.episode-title {
     font-size: 17px;
     margin: 0px;
