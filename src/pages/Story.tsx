@@ -264,13 +264,7 @@ function Story() {
                                                                 deleteDraftChapter,
                                                         }}
                                                     >
-                                                        {publishedEpisodes
-                                                            .toSorted(
-                                                                (
-                                                                    e1,
-                                                                    e2,
-                                                                    idx
-                                                                ) => {
+                                                        {publishedEpisodes.toSorted((e1,e2,idx) => {
                                                                     return (
                                                                         e1.episodeNumber -
                                                                         e2.episodeNumber
