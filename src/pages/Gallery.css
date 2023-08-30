@@ -41,7 +41,8 @@
     h1.title-styling {
         font-size: 38px;
     }
-    h6.description-styling, span.description-styling {
+    h6.description-styling,
+    span.description-styling {
         width: 100%;
     }
     h2.published-chapter {
@@ -77,7 +78,8 @@
 }
 
 @media (min-width: 540px) and (max-width: 900px) {
-    h6.description-styling, span.description-styling {
+    h6.description-styling,
+    span.description-styling {
         width: 100%;
     }
     div#card-view-story-id {
@@ -491,7 +493,8 @@ h6.view-story-h6 {
 }
 
 @media (min-width: 901px) and (max-width: 1023px) {
-    h6.description-styling, span.description-styling {
+    h6.description-styling,
+    span.description-styling {
         width: 80%;
     }
     .view-story-button {
@@ -521,7 +524,8 @@ h6.view-story-h6 {
 }
 
 @media (min-width: 1024px) and (max-width: 1100px) {
-    h6.description-styling, span.description-styling {
+    h6.description-styling,
+    span.description-styling {
         width: 85%;
     }
     .card-view-story {
@@ -541,7 +545,8 @@ h6.view-story-h6 {
 }
 
 @media (min-width: 1101px) and (max-width: 1240px) {
-    h6.description-styling, span.description-styling {
+    h6.description-styling,
+    span.description-styling {
         width: 85%;
     }
     .card-view-story {
@@ -575,7 +580,8 @@ h6.view-story-h6 {
 }
 
 @media (min-width: 1241px) and (max-width: 2560px) {
-    h6.description-styling, span.description-styling {
+    h6.description-styling,
+    span.description-styling {
         width: 90%;
     }
     .card-view-story {

@@ -89,14 +89,15 @@ function EpisodeTile(props: EpisodeTileProps) {
                         className="view-story-h6"
                     >
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            {props.publishedEpisodes && props.idx != undefined && (
-                                <div
-                                    className="chapter-num"
-                                    id="chapter-num-id"
-                                >
-                                    Ch. {props.idx + 1}
-                                </div>
-                            )}
+                            {props.publishedEpisodes &&
+                                props.idx != undefined && (
+                                    <div
+                                        className="chapter-num"
+                                        id="chapter-num-id"
+                                    >
+                                        Ch. {props.idx + 1}
+                                    </div>
+                                )}
                             {props.publishedEpisodes && (
                                 <div className="dot-icon" id="dot-icon-id">
                                     <img
@@ -161,7 +162,8 @@ function EpisodeTile(props: EpisodeTileProps) {
                                 </div>
                             </IconButton>
                         )}
-                    {props.episode.episodeNumber !== -1 && props.totalEpisodes &&
+                    {props.episode.episodeNumber !== -1 &&
+                        props.totalEpisodes &&
                         props.episode.episodeNumber !==
                             props.totalEpisodes - 1 && (
                             <IconButton
