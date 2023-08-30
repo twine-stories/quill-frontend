@@ -514,10 +514,10 @@ function Chapter() {
 
                 if (imgSrc) {
                     compoundedElements.push(
-                        <AspectRatio
+                        <Grid
                             key={i}
-                            variant="plain"
-                            objectFit="contain"
+                            xs={12}
+                            sx={{ marginBottom: '10px', marginTop: '10px' }}
                         >
                             <img
                                 src={
@@ -528,8 +528,9 @@ function Chapter() {
                                 }
                                 loading="lazy"
                                 alt=""
+                                style={{ width: '100%', height: 'auto' }}
                             />
-                        </AspectRatio>
+                        </Grid>
                     )
                 }
             } else {
