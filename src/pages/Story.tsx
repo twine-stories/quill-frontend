@@ -27,7 +27,9 @@ function Story() {
     )
     const context: object = useContext(UserContext)
     const user: User = context['user']
-    const [creators, setCreators, creatorsRef] = useState<Map<number, string>>(new Map())
+    const [creators, setCreators, creatorsRef] = useState<Map<number, string>>(
+        new Map()
+    )
 
     useEffect(() => {
         workGetByUrl(window.location.href.split('/')[4], setWork, () => {
@@ -57,7 +59,7 @@ function Story() {
 
             genericGet('/api/profitSplit/episode/' + currEp['id']).then(
                 (response) => {
-                    let newCreators: Map<number, string> = new Map();
+                    let newCreators: Map<number, string> = new Map()
                     for (let j = 0; j < response.length; j++) {
                         const currSplit = response[j]
                         const tuple = [
@@ -68,7 +70,12 @@ function Story() {
                         newCreators.set(tuple[0].id, JSON.stringify(tuple))
                     }
 
-                    setCreators(new Map<number, string>([...creatorsRef.current, ...newCreators]))
+                    setCreators(
+                        new Map<number, string>([
+                            ...creatorsRef.current,
+                            ...newCreators,
+                        ])
+                    )
                 }
             )
         }
@@ -487,7 +494,10 @@ function Story() {
                                                                                 1
                                                                             }
                                                                             alignItems="center"
-                                                                            sx={{ marginBottom: '15px' }}
+                                                                            sx={{
+                                                                                marginBottom:
+                                                                                    '15px',
+                                                                            }}
                                                                         >
                                                                             {creator.website && (
                                                                                 <IconButton
