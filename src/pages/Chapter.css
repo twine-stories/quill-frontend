@@ -12,6 +12,15 @@
 
 #chapter-content .chapter-text {
     text-align: left;
+    line-height: 32px;
+    font-size: 17px;
+    font-weight: 500;
+    color: #e4e5ff;
+}
+
+#chapter-content .chapter-img {
+    width: 100%;
+    height: auto;
 }
 
 span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {

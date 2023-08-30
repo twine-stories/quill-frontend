@@ -528,26 +528,20 @@ function Chapter() {
                                 }
                                 loading="lazy"
                                 alt=""
-                                style={{ width: '100%', height: 'auto' }}
+                                className="chapter-img"
                             />
                         </Grid>
                     )
                 }
             } else {
                 compoundedElements.push(
-                    <Typography
-                        color="white"
+                    <div
                         key={i}
-                        sx={{
-                            textAlign: 'left',
-                            lineHeight: '32px',
-                            fontSize: '17px',
-                            fontWeight: '500',
+                        className="chapter-text"
+                        dangerouslySetInnerHTML={{
+                            __html: marked.parse(rawContentArray[i]),
                         }}
-                        level="h6"
-                    >
-                        {rawContentArray[i]}
-                    </Typography>
+                    ></div>
                 )
             }
         }
