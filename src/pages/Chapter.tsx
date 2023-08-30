@@ -535,7 +535,13 @@ function Chapter() {
                 }
             } else {
                 compoundedElements.push(
-                    <div key={i} className='chapter-text' dangerouslySetInnerHTML={{__html: marked.parse(rawContentArray[i])}}></div>
+                    <div
+                        key={i}
+                        className="chapter-text"
+                        dangerouslySetInnerHTML={{
+                            __html: marked.parse(rawContentArray[i]),
+                        }}
+                    ></div>
                 )
             }
         }
