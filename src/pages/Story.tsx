@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom'
 export const EpisodeOrderContext = createContext(null as any)
 
 function Story() {
-    const [work, setWork] = useState<Work>(null)
+    const [work, setWork] = useState<Work>()
     const [episodes, setEpisodes] = useState<Array<Episode>>([])
     const [publishedEpisodes, setPublishedEpisodes] = useState<Array<Episode>>(
         []
@@ -38,8 +38,8 @@ function Story() {
     }, [])
 
     useEffect(() => {
-        if (work) {
-            episodesGetByWorkId(work['id'], () => {
+        if (work && work.id) {
+            episodesGetByWorkId(work.id, () => {
                 console.log('fail')
             }).then((response) => {
                 setEpisodes(response)
@@ -48,7 +48,7 @@ function Story() {
     }, [work])
 
     useEffect(() => {
-        var tempPublishedEpisodes = []
+        var tempPublishedEpisodes: Episode[] = []
 
         // loop over all episodes
         for (let i = 0; i < episodes.length; i++) {
@@ -189,9 +189,10 @@ function Story() {
                                                 textAlign: 'initial',
                                                 width: '90%',
                                                 marginBottom: '20px',
+                                                fontSize: '17px',
                                             }}
                                         >
-                                            {work['description']}
+                                            {work.description}
                                         </Typography>
 
                                         {user &&
@@ -220,7 +221,7 @@ function Story() {
                                                         action={() => {
                                                             window.location.href =
                                                                 '/edit/story/' +
-                                                                work['url']
+                                                                work.url
                                                         }}
                                                     />
                                                     {/* FYI: publishedEpisodes.length is the new chapter's number */}
@@ -243,7 +244,7 @@ function Story() {
                                                         action={() => {
                                                             window.location.href =
                                                                 '/create/chapter/' +
-                                                                work['url'] +
+                                                                work.url +
                                                                 '/' +
                                                                 publishedEpisodes.length
                                                         }}
@@ -380,10 +381,10 @@ function Story() {
                                 }}
                             >
                                 <Typography
-                                    level="h5"
+                                    level="h4"
                                     sx={{
                                         color: '#9E9FEB',
-                                        padding: '30px 0px 0px 40px',
+                                        padding: '20px 0px 0px 30px',
                                         fontFamily: 'Twine',
                                         fontStyle: 'normal',
                                         fontWeight: '400',

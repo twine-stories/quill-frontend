@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
-import { Episode, NFTCollection, Work } from '../utils/types.ts'
-import { AspectRatio, Card, IconButton, Stack, Typography } from '@mui/joy'
-import TwineButton from './TwineButton.tsx'
+import { Episode } from '../utils/types.ts'
+import { Card, IconButton, Stack, Typography } from '@mui/joy'
 import { useNavigate } from 'react-router-dom'
 import { CHAPTER_IMGS_BUCKET } from '../config.ts'
 import { COVER_PATH } from '../utils/aws.ts'
@@ -11,6 +10,8 @@ interface EpisodeTileProps {
     episode: Episode
     isCreator: boolean
     totalEpisodes?: number
+    publishedEpisodes?: Episode[]
+    idx?: number
 }
 
 function EpisodeTile(props: EpisodeTileProps) {
@@ -88,12 +89,12 @@ function EpisodeTile(props: EpisodeTileProps) {
                         className="view-story-h6"
                     >
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            {props.publishedEpisodes && (
+                            {props.publishedEpisodes && props.idx != undefined && (
                                 <div
                                     className="chapter-num"
                                     id="chapter-num-id"
                                 >
-                                    Ch.{props.idx + 1}
+                                    Ch. {props.idx + 1}
                                 </div>
                             )}
                             {props.publishedEpisodes && (
@@ -160,7 +161,7 @@ function EpisodeTile(props: EpisodeTileProps) {
                                 </div>
                             </IconButton>
                         )}
-                    {props.episode.episodeNumber !== -1 &&
+                    {props.episode.episodeNumber !== -1 && props.totalEpisodes &&
                         props.episode.episodeNumber !==
                             props.totalEpisodes - 1 && (
                             <IconButton
@@ -202,7 +203,9 @@ function EpisodeTile(props: EpisodeTileProps) {
                 {props.episode.episodeNumber === -1 && (
                     <IconButton
                         onClick={function () {
-                            deleteDraftChapter(props.episode.id)
+                            if (props.episode.id) {
+                                deleteDraftChapter(props.episode.id)
+                            }
                         }}
                         variant="plain"
                         color="neutral"
