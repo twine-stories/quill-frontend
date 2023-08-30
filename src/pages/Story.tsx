@@ -1,7 +1,8 @@
-import React, { useState, useContext, useEffect, createContext } from 'react'
+import React, { useContext, useEffect, createContext } from 'react'
+import useState from 'react-usestateref'
 import Navbar from '../components/Navbar.tsx'
 import { UserContext } from '../App.tsx'
-import { Episode, User, Work, Pr } from '../utils/types.ts'
+import { Episode, User, Work } from '../utils/types.ts'
 import {
     episodesGetByWorkId,
     genericGet,
@@ -26,7 +27,9 @@ function Story() {
     )
     const context: object = useContext(UserContext)
     const user: User = context['user']
-    const [creators, setCreators] = useState<Set<string>>(new Set())
+    const [creators, setCreators, creatorsRef] = useState<Map<number, string>>(
+        new Map()
+    )
 
     useEffect(() => {
         workGetByUrl(window.location.href.split('/')[4], setWork, () => {
@@ -56,6 +59,7 @@ function Story() {
 
             genericGet('/api/profitSplit/episode/' + currEp['id']).then(
                 (response) => {
+                    let newCreators: Map<number, string> = new Map()
                     for (let j = 0; j < response.length; j++) {
                         const currSplit = response[j]
                         const tuple = [
@@ -63,12 +67,15 @@ function Story() {
                             currSplit['percentage'],
                         ]
 
-                        setCreators((creators) => {
-                            const newCreators = new Set(creators)
-                            newCreators.add(JSON.stringify(tuple))
-                            return newCreators
-                        })
+                        newCreators.set(tuple[0].id, JSON.stringify(tuple))
                     }
+
+                    setCreators(
+                        new Map<number, string>([
+                            ...creatorsRef.current,
+                            ...newCreators,
+                        ])
+                    )
                 }
             )
         }
@@ -85,9 +92,9 @@ function Story() {
         navigate(link)
     }
 
-    const moveChapterUp = async (chapterNumber: number): void => {
+    const moveChapterUp = async (chapterNumber: number): Promise<void> => {
         const lowerChapterNumberToSwap = chapterNumber - 1
-        let newPublishedEpisodes: JSX.Element[] = []
+        let newPublishedEpisodes: Episode[] = []
         for (let i = 0; i < publishedEpisodes.length; i++) {
             var currPubEp = publishedEpisodes[i]
 
@@ -106,9 +113,9 @@ function Story() {
         setPublishedEpisodes(newPublishedEpisodes)
     }
 
-    const moveChapterDown = async (chapterNumber: number): void => {
+    const moveChapterDown = async (chapterNumber: number): Promise<void> => {
         const higherChapterNumberToSwap = chapterNumber + 1
-        let newPublishedEpisodes: JSX.Element[] = []
+        let newPublishedEpisodes: Episode[] = []
         for (let i = 0; i < publishedEpisodes.length; i++) {
             var currPubEp = publishedEpisodes[i]
 
@@ -127,12 +134,12 @@ function Story() {
         setPublishedEpisodes(newPublishedEpisodes)
     }
 
-    const deleteDraftChapter = async (chapterId: number): void => {
-        let newEpisodes: JSX.Element[] = []
+    const deleteDraftChapter = async (chapterId: number): Promise<void> => {
+        let newEpisodes: Episode[] = []
         for (let i = 0; i < episodes.length; i++) {
             var currEp = episodes[i]
             if (currEp.id === chapterId) {
-                genericPost('/api/episode/delete/' + chapterId.toString(), null)
+                genericPost('/api/episode/delete/' + chapterId.toString(), {})
             } else {
                 newEpisodes.push(currEp)
             }
@@ -387,7 +394,7 @@ function Story() {
                                 <div className="creator-list">
                                     {creators && creators.size > 0 && (
                                         <div className="creater-container">
-                                            {Array.from(creators)
+                                            {Array.from(creators.values())
                                                 .map((str_json) => {
                                                     const [
                                                         creator,
@@ -405,7 +412,7 @@ function Story() {
                                                                 className="creators"
                                                                 style={{
                                                                     marginBottom:
-                                                                        '42px',
+                                                                        '22px',
                                                                 }}
                                                             >
                                                                 {creator && (
@@ -487,6 +494,10 @@ function Story() {
                                                                                 1
                                                                             }
                                                                             alignItems="center"
+                                                                            sx={{
+                                                                                marginBottom:
+                                                                                    '15px',
+                                                                            }}
                                                                         >
                                                                             {creator.website && (
                                                                                 <IconButton

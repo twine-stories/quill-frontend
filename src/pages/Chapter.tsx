@@ -514,10 +514,10 @@ function Chapter() {
 
                 if (imgSrc) {
                     compoundedElements.push(
-                        <AspectRatio
+                        <Grid
                             key={i}
-                            variant="plain"
-                            objectFit="contain"
+                            xs={12}
+                            sx={{ marginBottom: '10px', marginTop: '10px' }}
                         >
                             <img
                                 src={
@@ -528,25 +528,20 @@ function Chapter() {
                                 }
                                 loading="lazy"
                                 alt=""
+                                className="chapter-img"
                             />
-                        </AspectRatio>
+                        </Grid>
                     )
                 }
             } else {
                 compoundedElements.push(
-                    <Typography
-                        color="white"
+                    <div
                         key={i}
-                        sx={{
-                            textAlign: 'left',
-                            lineHeight: '32px',
-                            fontSize: '17px',
-                            fontWeight: '500',
+                        className="chapter-text"
+                        dangerouslySetInnerHTML={{
+                            __html: marked.parse(rawContentArray[i]),
                         }}
-                        level="h6"
-                    >
-                        {rawContentArray[i]}
-                    </Typography>
+                    ></div>
                 )
             }
         }

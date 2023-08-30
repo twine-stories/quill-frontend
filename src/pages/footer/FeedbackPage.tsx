@@ -114,7 +114,7 @@ function FeedbackPage() {
                                     />
                                 ) : (
                                     <TwineButton
-                                        className="upload-button"
+                                        className="feedback-upload-button"
                                         icon="/icons/purple_plus_light.svg"
                                         name="Upload"
                                         color="darkpurple"
