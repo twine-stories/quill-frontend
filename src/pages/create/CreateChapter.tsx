@@ -1030,19 +1030,18 @@ function CreateChapter(props: CreateChapterProps) {
                 } else {
                     // need to change src to pull from s3 when editing if they havent changed that image
                     compoundedElements.push(
-                        <AspectRatio
-                            variant="plain"
-                            minHeight="120px"
-                            maxHeight="300px"
-                            objectFit="contain"
-                            sx={{ my: 2 }}
+                        <Grid
+                            key={i}
+                            xs={12}
+                            sx={{ marginBottom: '10px', marginTop: '10px' }}
                         >
                             <img
                                 src={content['preview']}
                                 loading="lazy"
                                 alt=""
+                                className="chapter-img"
                             />
-                        </AspectRatio>
+                        </Grid>
                     )
                 }
             } else if (content !== '') {
