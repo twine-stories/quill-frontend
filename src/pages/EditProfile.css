@@ -5,6 +5,11 @@
 .edit-inner {
     margin-bottom: 25px !important;
 }
+
+.edit-inner .MuiTextarea-root {
+    margin-bottom: 25px;
+}
+
 @media only screen and (max-width: 545px) {
     .edit-profile {
         display: block !important;

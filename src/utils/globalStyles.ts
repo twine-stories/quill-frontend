@@ -315,6 +315,7 @@ export const theme = extendTheme({
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        background: '#0d0603',
                     },
                 }),
             },
