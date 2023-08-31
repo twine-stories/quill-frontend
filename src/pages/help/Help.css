@@ -6,10 +6,6 @@
     border: 1px solid #241d19;
     margin-top: 20px;
 }
-a{
-    font-size: 18px;
-    font-family: "Oxanium";
-}
 .help-content {
     margin-bottom: 20px;
 }
@@ -32,4 +28,10 @@ a{
 
 .help-content a:hover {
     text-decoration: underline;
+}
+
+.twine-highlighted-link{
+    font-size: 18px;
+    font-family: 'Oxanium';
+    font-weight: normal;
 }

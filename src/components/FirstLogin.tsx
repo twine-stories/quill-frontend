@@ -73,6 +73,7 @@ function FirstLogin() {
                         container
                         alignItems="center"
                         justifyContent="space-around"
+                        flexWrap="nowrap"
                     >
                         <Checkbox
                             color="green"

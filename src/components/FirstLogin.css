@@ -1,6 +1,9 @@
 #login-tos {
     color: #a5bb2d;
     text-decoration: none;
+    font-size: 14px;
+    font-family: 'Oxanium';
+    font-weight: normal;
 }
 
 #login-tos:hover {
