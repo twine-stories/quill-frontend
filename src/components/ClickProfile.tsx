@@ -142,7 +142,10 @@ export default function ClickProfile({
                                         src="/icons/pera.svg"
                                         alt="pera"
                                     />
-                                    <Typography level="h5" className="popup-wallet-option">
+                                    <Typography
+                                        level="h5"
+                                        className="popup-wallet-option"
+                                    >
                                         Pera Wallet (Recommended)
                                     </Typography>
                                 </Grid>
@@ -155,7 +158,10 @@ export default function ClickProfile({
                                         src="/icons/myalgo.svg"
                                         alt="myalgo"
                                     />
-                                    <Typography level="h5" className="popup-wallet-option">
+                                    <Typography
+                                        level="h5"
+                                        className="popup-wallet-option"
+                                    >
                                         My Algo Wallet
                                     </Typography>
                                 </Grid>
