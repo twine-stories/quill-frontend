@@ -13,7 +13,11 @@ import TwoColumnLayout from '../components/TwoColumnLayout.tsx'
 import { Box, Stack, Grid, Typography } from '@mui/joy'
 import TwineButton from '../components/TwineButton.tsx'
 import EpisodeTile from '../components/EpisodeTile.tsx'
-import {CHAPTER_IMGS_BUCKET, PROFILE_IMGS_BUCKET, STORY_IMGS_BUCKET} from '../config.ts'
+import {
+    CHAPTER_IMGS_BUCKET,
+    PROFILE_IMGS_BUCKET,
+    STORY_IMGS_BUCKET,
+} from '../config.ts'
 import IconButton from '../components/IconButton.tsx'
 import { useNavigate } from 'react-router-dom'
 import { STORY_BANNER_PATH } from '../utils/aws.ts'
@@ -152,7 +156,7 @@ function Story() {
     return (
         <div>
             <Navbar />
-            {work && work['banner'] &&
+            {work && work['banner'] && (
                 <img
                     className="episode-tile-img"
                     id="img-episode"
@@ -177,7 +181,7 @@ function Story() {
                         borderRadius: '20px',
                     }}
                 />
-            }
+            )}
             <Grid container direction="column" alignItems="center">
                 <Grid sx={{ width: '80vw' }}>
                     <TwoColumnLayout
