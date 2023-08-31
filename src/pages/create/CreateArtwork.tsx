@@ -12,6 +12,8 @@ import { genericPost } from '../../utils/api.ts'
 import MintNftPopup from '../../components/MintNftPopup.tsx'
 import SuccessPopup from '../../components/SuccessPopup.tsx'
 import { env } from '../../config.ts'
+import { sendToS3 } from '../../utils/aws.ts'
+import { MINT_IMGS_BUCKET } from '../../config.ts'
 
 function CreateArtwork() {
     const encoder = new TextEncoder()
@@ -56,15 +58,13 @@ function CreateArtwork() {
         const fields: HTMLInputElement[] = [
             document.getElementById('nickname') as HTMLInputElement,
             document.getElementById('asset-name') as HTMLInputElement,
-            document.getElementById('num-assets') as HTMLInputElement,
+            document.getElementById('asset-description') as HTMLInputElement,
         ]
 
         fields.forEach((field) => {
             field.value = ''
-        })
-        ;(
-            document.getElementById('asset-description') as HTMLInputElement
-        ).value = '1'
+        });
+        (document.getElementById('num-assets') as HTMLInputElement).value = '1'
     }
 
     const mintNft = async () => {
@@ -263,9 +263,20 @@ function CreateArtwork() {
                                 if (inputFieldsAreValid() && assetImg.file) {
                                     setUploadDataLoading(true)
                                     let formData = new FormData()
-                                    formData.append('file', assetImg.file)
+                                    formData.append('key', assetImg.name)
+                                    formData.append(
+                                        'bucketName',
+                                        MINT_IMGS_BUCKET
+                                    )
+
+                                    sendToS3(
+                                        MINT_IMGS_BUCKET,
+                                        assetImg.name,
+                                        assetImg.file
+                                    )
+
                                     const imgUpload = await genericPost(
-                                        '/api/algo/upload-to-ipfs/file',
+                                        '/api/algo/upload-to-ipfs/s3',
                                         formData
                                     )
 

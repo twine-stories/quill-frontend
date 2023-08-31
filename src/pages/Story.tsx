@@ -1,7 +1,8 @@
-import React, { useState, useContext, useEffect, createContext } from 'react'
+import React, { useContext, useEffect, createContext } from 'react'
+import useState from 'react-usestateref'
 import Navbar from '../components/Navbar.tsx'
 import { UserContext } from '../App.tsx'
-import { Episode, User, Work, Pr } from '../utils/types.ts'
+import { Episode, User, Work } from '../utils/types.ts'
 import {
     episodesGetByWorkId,
     genericGet,
@@ -19,14 +20,16 @@ import { useNavigate } from 'react-router-dom'
 export const EpisodeOrderContext = createContext(null as any)
 
 function Story() {
-    const [work, setWork] = useState<Work>(null)
+    const [work, setWork] = useState<Work>()
     const [episodes, setEpisodes] = useState<Array<Episode>>([])
     const [publishedEpisodes, setPublishedEpisodes] = useState<Array<Episode>>(
         []
     )
     const context: object = useContext(UserContext)
     const user: User = context['user']
-    const [creators, setCreators] = useState<Set<string>>(new Set())
+    const [creators, setCreators, creatorsRef] = useState<Map<number, string>>(
+        new Map()
+    )
 
     useEffect(() => {
         workGetByUrl(window.location.href.split('/')[4], setWork, () => {
@@ -35,8 +38,8 @@ function Story() {
     }, [])
 
     useEffect(() => {
-        if (work) {
-            episodesGetByWorkId(work['id'], () => {
+        if (work && work.id) {
+            episodesGetByWorkId(work.id, () => {
                 console.log('fail')
             }).then((response) => {
                 setEpisodes(response)
@@ -45,7 +48,7 @@ function Story() {
     }, [work])
 
     useEffect(() => {
-        var tempPublishedEpisodes = []
+        var tempPublishedEpisodes: Episode[] = []
 
         // loop over all episodes
         for (let i = 0; i < episodes.length; i++) {
@@ -56,6 +59,7 @@ function Story() {
 
             genericGet('/api/profitSplit/episode/' + currEp['id']).then(
                 (response) => {
+                    let newCreators: Map<number, string> = new Map()
                     for (let j = 0; j < response.length; j++) {
                         const currSplit = response[j]
                         const tuple = [
@@ -63,12 +67,15 @@ function Story() {
                             currSplit['percentage'],
                         ]
 
-                        setCreators((creators) => {
-                            const newCreators = new Set(creators)
-                            newCreators.add(JSON.stringify(tuple))
-                            return newCreators
-                        })
+                        newCreators.set(tuple[0].id, JSON.stringify(tuple))
                     }
+
+                    setCreators(
+                        new Map<number, string>([
+                            ...creatorsRef.current,
+                            ...newCreators,
+                        ])
+                    )
                 }
             )
         }
@@ -85,9 +92,9 @@ function Story() {
         navigate(link)
     }
 
-    const moveChapterUp = async (chapterNumber: number): void => {
+    const moveChapterUp = async (chapterNumber: number): Promise<void> => {
         const lowerChapterNumberToSwap = chapterNumber - 1
-        let newPublishedEpisodes: JSX.Element[] = []
+        let newPublishedEpisodes: Episode[] = []
         for (let i = 0; i < publishedEpisodes.length; i++) {
             var currPubEp = publishedEpisodes[i]
 
@@ -106,9 +113,9 @@ function Story() {
         setPublishedEpisodes(newPublishedEpisodes)
     }
 
-    const moveChapterDown = async (chapterNumber: number): void => {
+    const moveChapterDown = async (chapterNumber: number): Promise<void> => {
         const higherChapterNumberToSwap = chapterNumber + 1
-        let newPublishedEpisodes: JSX.Element[] = []
+        let newPublishedEpisodes: Episode[] = []
         for (let i = 0; i < publishedEpisodes.length; i++) {
             var currPubEp = publishedEpisodes[i]
 
@@ -127,12 +134,12 @@ function Story() {
         setPublishedEpisodes(newPublishedEpisodes)
     }
 
-    const deleteDraftChapter = async (chapterId: number): void => {
-        let newEpisodes: JSX.Element[] = []
+    const deleteDraftChapter = async (chapterId: number): Promise<void> => {
+        let newEpisodes: Episode[] = []
         for (let i = 0; i < episodes.length; i++) {
             var currEp = episodes[i]
             if (currEp.id === chapterId) {
-                genericPost('/api/episode/delete/' + chapterId.toString(), null)
+                genericPost('/api/episode/delete/' + chapterId.toString(), {})
             } else {
                 newEpisodes.push(currEp)
             }
@@ -182,9 +189,10 @@ function Story() {
                                                 textAlign: 'initial',
                                                 width: '90%',
                                                 marginBottom: '20px',
+                                                fontSize: '17px',
                                             }}
                                         >
-                                            {work['description']}
+                                            {work.description}
                                         </Typography>
 
                                         {user &&
@@ -213,7 +221,7 @@ function Story() {
                                                         action={() => {
                                                             window.location.href =
                                                                 '/edit/story/' +
-                                                                work['url']
+                                                                work.url
                                                         }}
                                                     />
                                                     {/* FYI: publishedEpisodes.length is the new chapter's number */}
@@ -236,7 +244,7 @@ function Story() {
                                                         action={() => {
                                                             window.location.href =
                                                                 '/create/chapter/' +
-                                                                work['url'] +
+                                                                work.url +
                                                                 '/' +
                                                                 publishedEpisodes.length
                                                         }}
@@ -373,10 +381,10 @@ function Story() {
                                 }}
                             >
                                 <Typography
-                                    level="h5"
+                                    level="h4"
                                     sx={{
                                         color: '#9E9FEB',
-                                        padding: '30px 0px 0px 40px',
+                                        padding: '20px 0px 0px 30px',
                                         fontFamily: 'Twine',
                                         fontStyle: 'normal',
                                         fontWeight: '400',
@@ -387,7 +395,7 @@ function Story() {
                                 <div className="creator-list">
                                     {creators && creators.size > 0 && (
                                         <div className="creater-container">
-                                            {Array.from(creators)
+                                            {Array.from(creators.values())
                                                 .map((str_json) => {
                                                     const [
                                                         creator,
@@ -405,7 +413,7 @@ function Story() {
                                                                 className="creators"
                                                                 style={{
                                                                     marginBottom:
-                                                                        '42px',
+                                                                        '22px',
                                                                 }}
                                                             >
                                                                 {creator && (
@@ -487,6 +495,10 @@ function Story() {
                                                                                 1
                                                                             }
                                                                             alignItems="center"
+                                                                            sx={{
+                                                                                marginBottom:
+                                                                                    '15px',
+                                                                            }}
                                                                         >
                                                                             {creator.website && (
                                                                                 <IconButton

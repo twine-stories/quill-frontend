@@ -44,6 +44,10 @@ export default function CommentSection({ episode }) {
                     setComments(response)
                 }
             )
+
+            document
+                .getElementsByClassName('commentBox')[0]
+                .getElementsByTagName('textarea')[0].value = ''
         } else {
             setOpenError(true)
         }
@@ -170,25 +174,33 @@ export default function CommentSection({ episode }) {
                         </div>
                         <div
                             className="name-comment"
-                            style={{ marginLeft: '1rem',padding: "8px 0px 8px 8px",marginTop: '23px'}}
+                            style={{
+                                marginLeft: '1rem',
+                                padding: '8px 0px 8px 8px',
+                                marginTop: '23px',
+                            }}
                         >
                             <Typography
                                 level="h3"
-                                sx={{fontSize:"24px",lineHeight: '20px'}}
+                                sx={{ fontSize: '24px', lineHeight: '20px' }}
                                 color="purple"
                             >
                                 {comment.commenter.userName}
                             </Typography>
                             <Typography
                                 level="h6"
-                                sx={{ lineHeight: '20px',margin:"0px",fontSize:'24px'}}
+                                sx={{
+                                    lineHeight: '20px',
+                                    margin: '0px',
+                                    fontSize: '18px',
+                                }}
                                 color="white"
                             >
                                 {comment.content}
                             </Typography>
                             <Typography
                                 level="h6"
-                                sx={{ fontSize: '16px' }}
+                                sx={{ fontSize: '14px' }}
                                 color="purple"
                             >
                                 {comment.publishStamp &&

@@ -1,4 +1,4 @@
-#loginPopup h5 {
+#loginPopup .popup-wallet-option {
     margin-left: 15px;
 }
 
@@ -41,8 +41,10 @@
     padding: 20px;
     border-radius: 20px;
 }
-#navbarLogin {
-    font-size: 30px !important;
+#navbar-login {
+    font-size: 30px;
+    text-align: center;
+    cursor: pointer;
 }
 
 #loginPopup img {
