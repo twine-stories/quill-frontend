@@ -11,6 +11,7 @@ import Collaborator from '../../components/Collaborator.tsx'
 import TwineButton from '../../components/TwineButton.tsx'
 import { User, ProfitSplit, NFTCollection } from '../../utils/types.ts'
 import { genericGet } from '../../utils/api.ts'
+import GalleryTile from '../../components/GalleryTile.tsx'
 
 interface CreateCollectionProps {
     edit?: boolean
@@ -52,11 +53,13 @@ function CreateCollection(props: CreateCollectionProps) {
 
         if (user) {
             genericGet('/api/algo/assets/' + user.walletAddress).then((response: AlgorandAsset[]) => {
-                let assets: Map<number, AlgorandAsset> = new Map()
-                response.forEach((asset) => {
-                    assets.set(asset.id, asset)
-                })
-                setNfts(new Map([...assets, ...nftsRef.current]))
+                if (response) {
+                    let assets: Map<number, AlgorandAsset> = new Map()
+                    response.forEach((asset) => {
+                        assets.set(asset.id, asset)
+                    })
+                    setNfts(new Map([...assets, ...nftsRef.current]))
+                }
             })
         }
     }, [user])
@@ -114,8 +117,14 @@ function CreateCollection(props: CreateCollectionProps) {
 
     useEffect(() => {
         let nftImgs: JSX.Element[] = []
+        let count: number = 0
         nfts.forEach((nft) => {
-            nftImgs.push(<img src={nft.url} />)
+            nftImgs.push(
+                <Grid container justifyContent='center' alignItems='center' sx={{ margin: '10px' }} key={count} className="create-collection-gallery">
+                    <GalleryTile img={nft.url} noBorder={true} />
+                </Grid>
+            )
+            count++
         })
 
         setSellableNfts(nftImgs);
@@ -146,9 +155,8 @@ function CreateCollection(props: CreateCollectionProps) {
                 >
                     Publish Art Collection
                 </Typography>
-                {sellableNfts}
-                <Grid>
-                    <Typography level='h3' color='green' sx={{fontSize: "18px"}}>Profit Split</Typography>
+                <Grid sx={{ marginLeft: '32px' }}>
+                    <Typography level='h3' color='green' sx={{fontSize: "22px"}}>Profit Split</Typography>
                     <CollaboratorContext.Provider
                         value={{
                             remove: removeCollaborator,
@@ -189,6 +197,14 @@ function CreateCollection(props: CreateCollectionProps) {
                             />
                         </Grid>
                     </CollaboratorContext.Provider>
+                </Grid>
+                <Grid sx={{ marginTop: '40px' }}>
+                    <Typography level='h3' color='green' sx={{ fontSize: "22px", paddingLeft: '32px' }}>
+                        Select Artwork
+                    </Typography>
+                    <Grid container direction='row' alignItems='center' justifyContent='space-around' flexWrap='wrap'>
+                        {sellableNfts}
+                    </Grid>
                 </Grid>
             </Grid>
         </div>

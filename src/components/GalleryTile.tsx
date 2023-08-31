@@ -10,7 +10,9 @@ import { Artwork } from '../utils/types.ts'
 interface GalleryTileProps {
     work?: Work
     coll?: NFTCollection
-    story: boolean
+    img?: string
+    story?: boolean
+    noBorder?: boolean
 }
 
 function GalleryTile(props: GalleryTileProps) {
@@ -18,7 +20,7 @@ function GalleryTile(props: GalleryTileProps) {
     const [imgSrc, setImgSrc] = useState<string>();
 
     useEffect(() => {
-        console.log('here')
+        // console.log('here')
         if (props.work) {
             setImgSrc(
                 'https://' +
@@ -29,8 +31,12 @@ function GalleryTile(props: GalleryTileProps) {
             )
         } else if (props.coll) {
             genericGet('/api/cover-artwork/collection/' + props.coll.id).then((response: Artwork) => {
-                response.id
+                genericGet('/api/algo/asset-img/' + response.id).then((assetImg: string) => {
+                    setImgSrc(assetImg)
+                })
             })
+        } else if (props.img) {
+            setImgSrc(props.img)
         }
     }, [])
     
@@ -97,6 +103,46 @@ function GalleryTile(props: GalleryTileProps) {
                         {props.coll && props.coll.name}
                     </Typography>
                 </div>
+            </Card>
+        )
+    } else if (props.img) {
+        let borderStyling: object
+        if (props.noBorder) {
+            borderStyling = {
+                border: 'none'
+            }
+        } else {
+            borderStyling = {}
+        }
+
+        return (
+            <Card
+                variant="outlined"
+                sx={{
+                    backgroundColor: '#14100E',
+                    borderRadius: '32px',
+                    border: '2px solid #241D19',
+                    padding: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: 'auto',
+                    ...borderStyling
+                }}
+                onClick={() => {
+                    console.log('here1');
+                }}
+                className="gallery-tile"
+            >
+                <Grid container alignItems="center" justifyContent="center">
+                    <img
+                        className="gallery-tile-img"
+                        src={imgSrc}
+                        loading="lazy"
+                        alt=""
+                        style={{ objectFit: 'contain' }}
+                    />
+                </Grid>
             </Card>
         )
     }
