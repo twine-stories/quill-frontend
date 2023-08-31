@@ -63,8 +63,8 @@ function CreateArtwork() {
 
         fields.forEach((field) => {
             field.value = ''
-        })
-        ;(document.getElementById('num-assets') as HTMLInputElement).value = '1'
+        });
+        (document.getElementById('num-assets') as HTMLInputElement).value = '1'
     }
 
     const mintNft = async () => {
