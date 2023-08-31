@@ -170,8 +170,7 @@ function App() {
     const checkForTwinePass = (addr: string, isPera?: boolean): void => {
         let assetId: string
         if (env === 'prod') {
-            // assetId = "1180056515"
-            assetId = '1'
+            assetId = '1180056515'
         } else {
             assetId = '275215927'
         }
