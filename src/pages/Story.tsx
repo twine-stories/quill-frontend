@@ -13,9 +13,10 @@ import TwoColumnLayout from '../components/TwoColumnLayout.tsx'
 import { Box, Stack, Grid, Typography } from '@mui/joy'
 import TwineButton from '../components/TwineButton.tsx'
 import EpisodeTile from '../components/EpisodeTile.tsx'
-import { PROFILE_IMGS_BUCKET } from '../config.ts'
+import {CHAPTER_IMGS_BUCKET, PROFILE_IMGS_BUCKET, STORY_IMGS_BUCKET} from '../config.ts'
 import IconButton from '../components/IconButton.tsx'
 import { useNavigate } from 'react-router-dom'
+import { STORY_BANNER_PATH } from '../utils/aws.ts'
 
 export const EpisodeOrderContext = createContext(null as any)
 
@@ -151,6 +152,32 @@ function Story() {
     return (
         <div>
             <Navbar />
+            {work && work['banner'] &&
+                <img
+                    className="episode-tile-img"
+                    id="img-episode"
+                    src={
+                        'https://' +
+                        STORY_IMGS_BUCKET +
+                        '.s3.amazonaws.com/' +
+                        STORY_BANNER_PATH +
+                        work['banner']
+                    }
+                    onError={(e) => {
+                        e.target.src =
+                            'https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286'
+                    }}
+                    loading="lazy"
+                    alt=""
+                    style={{
+                        aspectRatio: '4.4/1',
+                        width: '100%',
+                        height: '1',
+                        objectFit: 'cover',
+                        borderRadius: '20px',
+                    }}
+                />
+            }
             <Grid container direction="column" alignItems="center">
                 <Grid sx={{ width: '80vw' }}>
                     <TwoColumnLayout
