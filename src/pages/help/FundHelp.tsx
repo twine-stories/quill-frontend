@@ -22,7 +22,7 @@ function FundHelp() {
                     <Grid>
                         <Typography level="h5">
                             Step 1: Go to{' '}
-                            <a 
+                            <a
                                 className="twine-highlighted-link"
                                 href="https://global.transak.com/"
                                 target="_blank"
@@ -78,7 +78,12 @@ function FundHelp() {
                     <Grid>
                         <Typography level="h5">
                             If you're interested, check out our guide on{' '}
-                            <a className="twine-highlighted-link" href="/help/swap">swapping your Algo to USDC!</a>
+                            <a
+                                className="twine-highlighted-link"
+                                href="/help/swap"
+                            >
+                                swapping your Algo to USDC!
+                            </a>
                         </Typography>
                     </Grid>
                 </Grid>
