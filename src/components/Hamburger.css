@@ -1,4 +1,4 @@
-a {
+.basics-demo-button a {
     font-family: 'Twine';
     text-decoration: none;
     font-style: normal;
@@ -8,6 +8,7 @@ a {
     line-height: 100%;
     color: #a3b832;
 }
+
 .search-inputfield.Joy-focused.css-8un9o9-JoyAutocomplete-root {
     --Input-focusedHighlight: #241d19 !important;
 }
