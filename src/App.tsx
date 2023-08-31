@@ -1,7 +1,26 @@
-import React, { useEffect, useState, createContext, lazy } from 'react'
+import React, { useEffect, useState, createContext } from 'react'
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
-
+import RouteNotFound from './pages/RouteNotFound.tsx'
+import Beta from './pages/Beta.tsx'
+import FeedbackPage from './pages/footer/FeedbackPage.tsx'
+import Home from './pages/Home.tsx'
+import Create from './pages/create/Create.tsx'
+import Profile from './pages/Profile.tsx'
+import EditProfile from './pages/EditProfile.tsx'
+import GenericProfile from './pages/GenericProfile.tsx'
+import Story from './pages/Story.tsx'
+import Art from './pages/Art.tsx'
+import Gallery from './pages/Gallery.tsx'
+import Collection from './pages/Collection.tsx'
+import CreateStory from './pages/create/CreateStory.tsx'
+import Footer from './components/Footer.tsx'
+import WalletWalkthrough from './pages/help/WalletWalkthrough.tsx'
+import FundHelp from './pages/help/FundHelp.tsx'
+import SwapHelp from './pages/help/SwapHelp.tsx'
+import Terms from './pages/footer/Terms.tsx'
+import About from './pages/footer/About.tsx'
+import AlgoHelp from './pages/footer/AlgoHelp.tsx'
 import {
     ALGO_MyAlgoConnect as MyAlgoConnect,
     loadStdlib,
@@ -21,36 +40,13 @@ import GlobalStyle from './utils/globalStyles.ts'
 import { PeraWalletConnect } from '@perawallet/connect'
 import { ConnectType } from './utils/enums.ts'
 import { theme } from './utils/globalStyles.ts'
+import CreateChapter from './pages/create/CreateChapter.tsx'
+import Chapter from './pages/Chapter.tsx'
+import FirstLogin from './components/FirstLogin.tsx'
+import ErrorPopup from './components/ErrorPopup.tsx'
 import { env } from './config.ts'
 import { AlgorandChainIDs } from '@perawallet/connect/dist/util/peraWalletTypes'
-
-const Home = lazy(() => import('./pages/Home.tsx'))
-const Create = lazy(() => import('./pages/create/Create.tsx'))
-const Profile = lazy(() => import('./pages/Profile.tsx'))
-const EditProfile = lazy(() => import('./pages/EditProfile.tsx'))
-const FeedbackPage = lazy(() => import('./pages/footer/FeedbackPage.tsx'))
-const GenericProfile = lazy(() => import('./pages/GenericProfile.tsx'))
-const Story = lazy(() => import('./pages/Story.tsx'))
-const Art = lazy(() => import('./pages/Art.tsx'))
-const Gallery = lazy(() => import('./pages/Gallery.tsx'))
-const Collection = lazy(() => import('./pages/Collection.tsx'))
-const CreateStory = lazy(() => import('./pages/create/CreateStory.tsx'))
-const Beta = lazy(() => import('./pages/Beta.tsx'))
-const RouteNotFound = lazy(() => import('./pages/RouteNotFound.tsx'))
-const Footer = lazy(() => import('./components/Footer.tsx'))
-const WalletWalkthrough = lazy(
-    () => import('./pages/help/WalletWalkthrough.tsx')
-)
-const FundHelp = lazy(() => import('./pages/help/FundHelp.tsx'))
-const SwapHelp = lazy(() => import('./pages/help/SwapHelp.tsx'))
-const Terms = lazy(() => import('./pages/footer/Terms.tsx'))
-const About = lazy(() => import('./pages/footer/About.tsx'))
-const AlgoHelp = lazy(() => import('./pages/footer/AlgoHelp.tsx'))
-const CreateArtwork = lazy(() => import('./pages/create/CreateArtwork.tsx'))
-const ErrorPopup = lazy(() => import('./components/ErrorPopup.tsx'))
-const FirstLogin = lazy(() => import('./components/FirstLogin.tsx'))
-const Chapter = lazy(() => import('./pages/Chapter.tsx'))
-const CreateChapter = lazy(() => import('./pages/create/CreateChapter.tsx'))
+import CreateArtwork from './pages/create/CreateArtwork.tsx'
 
 const reach = loadStdlib('ALGO')
 let chainId: AlgorandChainIDs
