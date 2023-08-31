@@ -169,24 +169,26 @@ function App() {
 
     const checkForTwinePass = (addr: string, isPera?: boolean): void => {
         let assetId: string
-        if (env === "prod") {
+        if (env === 'prod') {
             // assetId = "1180056515"
-            assetId = "1"
+            assetId = '1'
         } else {
-            assetId = "275215927"
+            assetId = '275215927'
         }
 
-        genericGet("/api/algo/has-asset/" + addr + "/" + assetId).then((response: boolean) => {
-            console.log(response)
-            if (response) {
-                onComplete(addr)
-            } else {
-                if (isPera) {
-                    peraWallet.disconnect();
+        genericGet('/api/algo/has-asset/' + addr + '/' + assetId).then(
+            (response: boolean) => {
+                console.log(response)
+                if (response) {
+                    onComplete(addr)
+                } else {
+                    if (isPera) {
+                        peraWallet.disconnect()
+                    }
+                    setNeedPass(true)
                 }
-                setNeedPass(true)
             }
-        })
+        )
     }
 
     const getAndSetUser = (addr: string): void => {

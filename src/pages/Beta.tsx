@@ -59,12 +59,8 @@ function Beta() {
                     <ClickProfile
                         isLoggedIn={false}
                         logOutFunc={() => {}}
-                        connectAlgoFunc={
-                            context['connectToMyAlgo']
-                        }
-                        connectPeraFunc={
-                            context['connectToPera']
-                        }
+                        connectAlgoFunc={context['connectToMyAlgo']}
+                        connectPeraFunc={context['connectToPera']}
                         displayText="enter site with early access pass"
                         checkForPass={true}
                     />

@@ -1,13 +1,5 @@
 import './ClickProfile.css'
-import {
-    Menu,
-    MenuItem,
-    Modal,
-    Sheet,
-    Grid,
-    Typography,
-    Box,
-} from '@mui/joy'
+import { Menu, MenuItem, Modal, Sheet, Grid, Typography, Box } from '@mui/joy'
 import React, { useContext, useState } from 'react'
 import { User } from '../types'
 import { UserContext } from '../App.tsx'
@@ -25,7 +17,14 @@ interface ClickProfileProps {
 }
 
 export default function ClickProfile(props: ClickProfileProps) {
-    const { isLoggedIn, logOutFunc, connectAlgoFunc, connectPeraFunc, checkForPass, displayText } = props
+    const {
+        isLoggedIn,
+        logOutFunc,
+        connectAlgoFunc,
+        connectPeraFunc,
+        checkForPass,
+        displayText,
+    } = props
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
@@ -97,7 +96,7 @@ export default function ClickProfile(props: ClickProfileProps) {
                 <div className="navbar-login">
                     <Typography level='h2' color={checkForPass ? 'purple' : 'green'} id="navbar-login">
                         <a onClick={handleClick}>
-                            {displayText ? displayText : "login"}
+                            {displayText ? displayText : 'login'}
                         </a>
                     </Typography>
                     <Modal open={open} onClose={() => handleClose('')}>
