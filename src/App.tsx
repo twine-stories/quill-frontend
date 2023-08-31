@@ -73,9 +73,6 @@ export const peraWallet = new PeraWalletConnect({
     chainId: chainId,
 })
 
-// probably move to secrets manager but this doesn't really need to be that secure
-const accessCode: string = 'twinebeta!!'
-
 function App() {
     const [user, setUser] = useState<User>()
     const [address, setAddress] = useState<string>()
@@ -83,7 +80,7 @@ function App() {
     const [getUserToggle, setGetUserToggle] = useState<boolean>(false)
     const [initUserLoad, setInitUserLoad] = useState<boolean>(false)
     const [connType, setConnType] = useState<ConnectType>(ConnectType.PERA)
-    const [beta, setBeta] = useState<boolean>(true)
+    const [needPass, setNeedPass] = useState<boolean>(false)
     const [usePera, setUsePera] = useState<boolean>(false)
     const [useMyAlgo, setUseMyAlgo] = useState<boolean>(false)
 
@@ -92,7 +89,7 @@ function App() {
             peraWallet.disconnect()
         }
         deleteCookie('session')
-        setUser(null)
+        setUser(undefined)
     }
 
     const setUserCookie = (walletAddress: string, cookie: string) => {
@@ -122,7 +119,7 @@ function App() {
         return false
     }
 
-    const connectToMyAlgo = async (): Promise<void> => {
+    const connectToMyAlgo = async (checkForPass: boolean): Promise<void> => {
         try {
             setConnType(ConnectType.MY_ALGO)
             const accounts = await reach.getDefaultAccount()
@@ -131,7 +128,12 @@ function App() {
                 ConnectType.MY_ALGO
             )
             if (shouldContinue) {
-                onComplete(accounts['networkAccount']['addr'])
+                const account = accounts['networkAccount']['addr']
+                if (checkForPass) {
+                    checkForTwinePass(account)
+                } else {
+                    onComplete(account)
+                }
             } else {
                 setUsePera(true)
             }
@@ -140,7 +142,7 @@ function App() {
         }
     }
 
-    const connectToPera = async (): Promise<void> => {
+    const connectToPera = async (checkForPass: boolean): Promise<void> => {
         try {
             setConnType(ConnectType.PERA)
             const newAccounts = await peraWallet.connect()
@@ -150,7 +152,12 @@ function App() {
                 ConnectType.PERA
             )
             if (shouldContinue) {
-                onComplete(newAccounts[0])
+                const account = newAccounts[0]
+                if (checkForPass) {
+                    checkForTwinePass(account, true)
+                } else {
+                    onComplete(account)
+                }
             } else {
                 peraWallet.disconnect()
                 setUseMyAlgo(true)
@@ -158,6 +165,30 @@ function App() {
         } catch (err) {
             console.error(err)
         }
+    }
+
+    const checkForTwinePass = (addr: string, isPera?: boolean): void => {
+        let assetId: string
+        if (env === 'prod') {
+            // assetId = "1180056515"
+            assetId = '1'
+        } else {
+            assetId = '275215927'
+        }
+
+        genericGet('/api/algo/has-asset/' + addr + '/' + assetId).then(
+            (response: boolean) => {
+                console.log(response)
+                if (response) {
+                    onComplete(addr)
+                } else {
+                    if (isPera) {
+                        peraWallet.disconnect()
+                    }
+                    setNeedPass(true)
+                }
+            }
+        )
     }
 
     const getAndSetUser = (addr: string): void => {
@@ -173,7 +204,7 @@ function App() {
         const cookie = uuidv4()
         const newUser: User = {
             walletAddress: walletAddress,
-            email: null,
+            email: undefined,
             firstName: firstName,
             lastName: lastName,
             profileImg: 'default.jpeg',
@@ -197,20 +228,6 @@ function App() {
         setAddress('')
     }
 
-    const enterBeta = (code: string) => {
-        if (code === accessCode) {
-            setCookie('beta_session', 'active')
-            setBeta(false)
-        }
-    }
-
-    useEffect(() => {
-        const cookie = getCookie('beta_session')
-        if (cookie === 'active') {
-            setBeta(false)
-        }
-    }, [])
-
     useEffect(() => {
         const cookie = getCookie('session')
         if (cookie === '') {
@@ -229,7 +246,9 @@ function App() {
         }
         genericGet('/api/user/cookie/' + cookie).then(
             (response: User | null) => {
-                setUser(response)
+                if (response) {
+                    setUser(response)
+                }
             }
         )
     }, [getUserToggle])
@@ -298,7 +317,6 @@ function App() {
                         closeLogin: cancelLogin,
                         addUser: addUser,
                         updateUser: setUser,
-                        enterBeta: enterBeta,
                     }}
                 >
                     <FirstLogin />
@@ -316,7 +334,14 @@ function App() {
                         }}
                         message="Your account is associated with MyAlgo Wallet. Please log in with MyAlgo Wallet instead."
                     />
-                    {beta ? (
+                    <ErrorPopup
+                        isOpen={needPass}
+                        onClose={() => {
+                            setNeedPass(false)
+                        }}
+                        message="You need to have a Twine Pass in your wallet to access the site!"
+                    />
+                    {!user ? (
                         <Routes>
                             <Route path="/*" element={<Beta />}></Route>
                         </Routes>
