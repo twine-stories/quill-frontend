@@ -24,31 +24,33 @@ import { theme } from './utils/globalStyles.ts'
 import { env } from './config.ts'
 import { AlgorandChainIDs } from '@perawallet/connect/dist/util/peraWalletTypes'
 
-const Home = lazy(() => import('./pages/Home.tsx'));
-const Create = lazy(() => import('./pages/create/Create.tsx'));
-const Profile = lazy(() => import('./pages/Profile.tsx'));
-const EditProfile = lazy(() => import('./pages/EditProfile.tsx'));
-const FeedbackPage = lazy(() => import('./pages/footer/FeedbackPage.tsx'));
-const GenericProfile = lazy(() => import('./pages/GenericProfile.tsx'));
-const Story = lazy(() => import('./pages/Story.tsx'));
-const Art = lazy(() => import('./pages/Art.tsx'));
-const Gallery = lazy(() => import('./pages/Gallery.tsx'));
-const Collection = lazy(() => import('./pages/Collection.tsx'));
-const CreateStory = lazy(() => import('./pages/create/CreateStory.tsx'));
-const Beta = lazy(() => import('./pages/Beta.tsx'));
-const RouteNotFound = lazy(() => import('./pages/RouteNotFound.tsx'));
-const Footer = lazy(() => import('./components/Footer.tsx'));
-const WalletWalkthrough = lazy(() => import('./pages/help/WalletWalkthrough.tsx'));
-const FundHelp = lazy(() => import('./pages/help/FundHelp.tsx'));
-const SwapHelp = lazy(() => import('./pages/help/SwapHelp.tsx'));
-const Terms = lazy(() => import('./pages/footer/Terms.tsx'));
-const About = lazy(() => import('./pages/footer/About.tsx'));
-const AlgoHelp = lazy(() => import('./pages/footer/AlgoHelp.tsx'));
-const CreateArtwork = lazy(() => import('./pages/create/CreateArtwork.tsx'));
-const ErrorPopup = lazy(() => import('./components/ErrorPopup.tsx'));
-const FirstLogin = lazy(() => import('./components/FirstLogin.tsx'));
-const Chapter = lazy(() => import('./pages/Chapter.tsx'));
-const CreateChapter = lazy(() => import('./pages/create/CreateChapter.tsx'));
+const Home = lazy(() => import('./pages/Home.tsx'))
+const Create = lazy(() => import('./pages/create/Create.tsx'))
+const Profile = lazy(() => import('./pages/Profile.tsx'))
+const EditProfile = lazy(() => import('./pages/EditProfile.tsx'))
+const FeedbackPage = lazy(() => import('./pages/footer/FeedbackPage.tsx'))
+const GenericProfile = lazy(() => import('./pages/GenericProfile.tsx'))
+const Story = lazy(() => import('./pages/Story.tsx'))
+const Art = lazy(() => import('./pages/Art.tsx'))
+const Gallery = lazy(() => import('./pages/Gallery.tsx'))
+const Collection = lazy(() => import('./pages/Collection.tsx'))
+const CreateStory = lazy(() => import('./pages/create/CreateStory.tsx'))
+const Beta = lazy(() => import('./pages/Beta.tsx'))
+const RouteNotFound = lazy(() => import('./pages/RouteNotFound.tsx'))
+const Footer = lazy(() => import('./components/Footer.tsx'))
+const WalletWalkthrough = lazy(
+    () => import('./pages/help/WalletWalkthrough.tsx')
+)
+const FundHelp = lazy(() => import('./pages/help/FundHelp.tsx'))
+const SwapHelp = lazy(() => import('./pages/help/SwapHelp.tsx'))
+const Terms = lazy(() => import('./pages/footer/Terms.tsx'))
+const About = lazy(() => import('./pages/footer/About.tsx'))
+const AlgoHelp = lazy(() => import('./pages/footer/AlgoHelp.tsx'))
+const CreateArtwork = lazy(() => import('./pages/create/CreateArtwork.tsx'))
+const ErrorPopup = lazy(() => import('./components/ErrorPopup.tsx'))
+const FirstLogin = lazy(() => import('./components/FirstLogin.tsx'))
+const Chapter = lazy(() => import('./pages/Chapter.tsx'))
+const CreateChapter = lazy(() => import('./pages/create/CreateChapter.tsx'))
 
 const reach = loadStdlib('ALGO')
 let chainId: AlgorandChainIDs
