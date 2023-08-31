@@ -44,6 +44,10 @@ export default function CommentSection({ episode }) {
                     setComments(response)
                 }
             )
+
+            document
+                .getElementsByClassName('commentBox')[0]
+                .getElementsByTagName('textarea')[0].value = ''
         } else {
             setOpenError(true)
         }
