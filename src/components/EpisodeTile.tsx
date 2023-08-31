@@ -205,7 +205,10 @@ function EpisodeTile(props: EpisodeTileProps) {
                 {props.episode.episodeNumber === -1 && (
                     <IconButton
                         onClick={function () {
-                            if (props.episode.id !== undefined && props.episode.id !== null) {
+                            if (
+                                props.episode.id !== undefined &&
+                                props.episode.id !== null
+                            ) {
                                 deleteDraftChapter(props.episode.id)
                             }
                         }}
