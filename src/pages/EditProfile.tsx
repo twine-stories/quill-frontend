@@ -229,11 +229,7 @@ function EditProfile() {
                     <Typography color="purple" level="h3">
                         About Profile
                     </Typography>
-                    <Grid
-                        container
-                        direction="column"
-                        className="edit-inner"
-                    >
+                    <Grid container direction="column" className="edit-inner">
                         <Grid
                             container
                             columnSpacing={1}
