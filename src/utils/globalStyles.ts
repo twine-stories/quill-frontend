@@ -276,7 +276,6 @@ export const theme = extendTheme({
                         background: '#0d0603',
                         borderRadius: '15px',
                         padding: '13px',
-                        marginBottom: '10px'
                     },
                 }),
             },
