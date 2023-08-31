@@ -232,7 +232,6 @@ function EditProfile() {
                     <Grid
                         container
                         direction="column"
-                        rowSpacing={3}
                         className="edit-inner"
                     >
                         <Grid
@@ -240,6 +239,7 @@ function EditProfile() {
                             columnSpacing={1}
                             alignItems="center"
                             justifyContent="space-between"
+                            className="edit-profile-about"
                         >
                             <Grid xs={4}>
                                 <Textarea
@@ -264,7 +264,7 @@ function EditProfile() {
                                 />
                             </Grid>
                         </Grid>
-                        <Grid>
+                        <Grid className="edit-profile-about">
                             <Textarea
                                 className="desc"
                                 defaultValue={user && user.description}
@@ -303,7 +303,6 @@ function EditProfile() {
                         <Grid
                             container
                             direction="column"
-                            rowSpacing={3}
                             className="edit-inner"
                         >
                             <Grid>
