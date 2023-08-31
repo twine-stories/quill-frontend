@@ -5,7 +5,6 @@ import {
     Modal,
     Sheet,
     Grid,
-    ModalClose,
     Typography,
     Box,
 } from '@mui/joy'
@@ -14,15 +13,20 @@ import { User } from '../types'
 import { UserContext } from '../App.tsx'
 import { useNavigate } from 'react-router-dom'
 import { String } from 'aws-sdk/clients/cloudhsm'
-import IconButton from './IconButton.tsx'
 import { PROFILE_IMGS_BUCKET } from '../config.ts'
 
-export default function ClickProfile({
-    isLoggedIn,
-    logOutFunc,
-    connectAlgoFunc,
-    connectPeraFunc,
-}) {
+interface ClickProfileProps {
+    isLoggedIn: boolean
+    logOutFunc: () => void
+    connectAlgoFunc: (checkForPass: boolean) => Promise<void>
+    connectPeraFunc: (checkForPass: boolean) => Promise<void>
+    checkForPass: boolean
+    displayText?: string
+}
+
+export default function ClickProfile(props: ClickProfileProps) {
+    const { isLoggedIn, logOutFunc, connectAlgoFunc, connectPeraFunc, checkForPass, displayText } = props
+
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
     const context: object = useContext(UserContext)
@@ -42,9 +46,9 @@ export default function ClickProfile({
             logOutFunc()
             navigate('/')
         } else if (button == 'algo') {
-            connectAlgoFunc()
+            connectAlgoFunc(checkForPass)
         } else if (button == 'pera') {
-            connectPeraFunc()
+            connectPeraFunc(checkForPass)
         }
     }
 
@@ -90,10 +94,12 @@ export default function ClickProfile({
                     </Menu>
                 </div>
             ) : (
-                <div className="navBar-login">
-                    <a id="navbarLogin" onClick={handleClick}>
-                        login
-                    </a>
+                <div className="navbar-login">
+                    <Typography level='h2' color='purple' id="navbar-login">
+                        <a onClick={handleClick}>
+                            {displayText ? displayText : "login"}
+                        </a>
+                    </Typography>
                     <Modal open={open} onClose={() => handleClose('')}>
                         <Sheet
                             variant="outlined"

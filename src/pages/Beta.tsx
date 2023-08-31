@@ -6,22 +6,13 @@ import TwineInput from '../components/TwineInput.tsx'
 import IconButton from '../components/IconButton.tsx'
 import { genericPost } from '../utils/api.ts'
 import SuccessPopup from '../components/SuccessPopup.tsx'
+import ClickProfile from '../components/ClickProfile.tsx'
 import './Beta.css'
 
 function Beta() {
     const [openPopup, setOpenPopup] = useState<Boolean>(false)
 
     const context: object = useContext(UserContext)
-    const enterBeta: (code: string) => void = context['enterBeta']
-
-    const submitBetaInput = (e: BaseSyntheticEvent) => {
-        if (e.nativeEvent['keyCode'] === 13) {
-            enterBeta(
-                (document.getElementById('betaAccess') as HTMLInputElement)
-                    .value
-            )
-        }
-    }
 
     const submitMailingListInput = () => {
         genericPost(
@@ -64,6 +55,20 @@ function Beta() {
                 >
                     We Create Worlds
                 </Typography>
+                <Grid sx={{ position: 'relative' }} id="early-access">
+                    <ClickProfile
+                        isLoggedIn={false}
+                        logOutFunc={() => {}}
+                        connectAlgoFunc={
+                            context['connectToMyAlgo']
+                        }
+                        connectPeraFunc={
+                            context['connectToPera']
+                        }
+                        displayText="enter site with early access pass"
+                        checkForPass={true}
+                    />
+                </Grid>
 
                 <Grid
                     container
@@ -139,73 +144,6 @@ function Beta() {
                     className="i-frame"
                 ></iframe>
 
-                <Grid
-                    container
-                    rowSpacing={3}
-                    direction="column"
-                    sx={{
-                        maxWidth: '450px',
-                        minWidth: '350px',
-                        width: '30vw',
-                        justifyContent: 'center',
-                        marginTop: '30px',
-                    }}
-                    className="beta-field-container"
-                >
-                    <Grid sx={{ position: 'relative' }} className="beta-field">
-                        <TwineInput
-                            sx={{
-                                marginTop: '21px',
-                                position: 'relative',
-                                fontFamily: 'Oxanium',
-                            }}
-                            placeholder="Enter passcode..."
-                            inputAttrs={{
-                                type: 'password',
-                                onKeyDown: submitBetaInput,
-                                id: 'betaAccess',
-                            }}
-                        ></TwineInput>
-                        <Box
-                            sx={{
-                                width: '86px',
-                                position: 'absolute',
-                                height: '18px',
-                                backgroundColor: '#0d0603',
-                                top: '28px',
-                                left: '9px',
-                                zIndex: 1,
-                                fontStyle: 'Oxanium',
-                            }}
-                        >
-                            Passcode
-                        </Box>
-                    </Grid>
-                    <Grid>
-                        <TwineButton
-                            sx={{
-                                width: '175px',
-                                height: '55px',
-                                borderRadius: '20px',
-                                padding: '24px',
-                                fontSize: '14px',
-                            }}
-                            color="green"
-                            size="lg"
-                            icon="/icons/twine_logo_dark.svg"
-                            name="Enter Beta"
-                            action={() => {
-                                enterBeta(
-                                    (
-                                        document.getElementById(
-                                            'betaAccess'
-                                        ) as HTMLInputElement
-                                    ).value
-                                )
-                            }}
-                        />
-                    </Grid>
-                </Grid>
                 <Stack
                     className="stack-icon-button"
                     direction="row"

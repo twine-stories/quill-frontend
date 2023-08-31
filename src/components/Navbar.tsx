@@ -5,10 +5,7 @@ import { UserContext } from '../App.tsx'
 import LoginWall from './LoginWall.tsx'
 import RegisterCreator from './RegisterCreator.tsx'
 import ClickProfile from './ClickProfile.tsx'
-import { Autocomplete, AutocompleteOption, Typography, Box } from '@mui/joy'
-import IconButton from './IconButton.tsx'
-import { Work, User } from '../utils/types.ts'
-import { genericGet } from '../utils/api.ts'
+import { Box } from '@mui/joy'
 import './Navbar.css'
 import Hamburger from './Hamburger.tsx'
 import Search from './Search.tsx'
@@ -128,8 +125,9 @@ function Navbar() {
                                     <ClickProfile
                                         isLoggedIn={true}
                                         logOutFunc={context['logOut']}
-                                        connectAlgoFunc={() => {}}
-                                        connectPeraFunc={() => {}}
+                                        connectAlgoFunc={async () => {}}
+                                        connectPeraFunc={async () => {}}
+                                        checkForPass={false}
                                     />
                                 </a>
                             </Box>
@@ -187,6 +185,7 @@ function Navbar() {
                                         connectPeraFunc={
                                             context['connectToPera']
                                         }
+                                        checkForPass={false}
                                     />
                                 </a>
                             </Box>
