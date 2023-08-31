@@ -58,15 +58,13 @@ function CreateArtwork() {
         const fields: HTMLInputElement[] = [
             document.getElementById('nickname') as HTMLInputElement,
             document.getElementById('asset-name') as HTMLInputElement,
-            document.getElementById('num-assets') as HTMLInputElement,
+            document.getElementById('asset-description') as HTMLInputElement,
         ]
 
         fields.forEach((field) => {
             field.value = ''
-        })
-        ;(
-            document.getElementById('asset-description') as HTMLInputElement
-        ).value = '1'
+        });
+        (document.getElementById('num-assets') as HTMLInputElement).value = '1'
     }
 
     const mintNft = async () => {
