@@ -177,7 +177,6 @@ function App() {
 
         genericGet('/api/algo/has-asset/' + addr + '/' + assetId).then(
             (response: boolean) => {
-                console.log(response)
                 if (response) {
                     onComplete(addr)
                 } else {
