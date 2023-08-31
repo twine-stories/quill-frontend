@@ -94,7 +94,11 @@ export default function ClickProfile(props: ClickProfileProps) {
                 </div>
             ) : (
                 <div className="navbar-login">
-                    <Typography level='h2' color={checkForPass ? 'purple' : 'green'} id="navbar-login">
+                    <Typography
+                        level="h2"
+                        color={checkForPass ? 'purple' : 'green'}
+                        id="navbar-login"
+                    >
                         <a onClick={handleClick}>
                             {displayText ? displayText : 'login'}
                         </a>
