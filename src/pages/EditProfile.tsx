@@ -229,17 +229,13 @@ function EditProfile() {
                     <Typography color="purple" level="h3">
                         About Profile
                     </Typography>
-                    <Grid
-                        container
-                        direction="column"
-                        rowSpacing={3}
-                        className="edit-inner"
-                    >
+                    <Grid container direction="column" className="edit-inner">
                         <Grid
                             container
                             columnSpacing={1}
                             alignItems="center"
                             justifyContent="space-between"
+                            className="edit-profile-about"
                         >
                             <Grid xs={4}>
                                 <Textarea
@@ -264,7 +260,7 @@ function EditProfile() {
                                 />
                             </Grid>
                         </Grid>
-                        <Grid>
+                        <Grid className="edit-profile-about">
                             <Textarea
                                 className="desc"
                                 defaultValue={user && user.description}
@@ -303,7 +299,6 @@ function EditProfile() {
                         <Grid
                             container
                             direction="column"
-                            rowSpacing={3}
                             className="edit-inner"
                         >
                             <Grid>
