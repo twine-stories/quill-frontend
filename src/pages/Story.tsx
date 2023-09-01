@@ -176,7 +176,6 @@ function Story() {
                     style={{
                         aspectRatio: '4.4/1',
                         width: '100%',
-                        height: '1',
                         objectFit: 'cover',
                         borderRadius: '20px',
                     }}
