@@ -258,7 +258,7 @@ export const theme = extendTheme({
                             cursor: 'pointer',
                         },
                     }),
-                    ...(ownerState.variant === 'purple-dashed-varient' && {
+                    ...(ownerState.variant === 'purple-dashed-variant' && {
                         borderRadius: '28px',
                         border: 'none',
                         background: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='30' ry='30' stroke='%239E9FEB' stroke-width='4' stroke-dasharray='7%2c 15' stroke-dashoffset='7' stroke-linecap='square'/%3e%3c/svg%3e")`,

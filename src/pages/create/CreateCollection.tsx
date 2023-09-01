@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, createContext } from 'react'
 import useState from 'react-usestateref'
 import './CreateArtwork.css'
 import { UserContext } from '../../App.tsx'
@@ -22,6 +22,8 @@ type AlgorandAsset = {
     url: string
 }
 
+export const ArtworkContext = createContext(null as any)
+
 function CreateCollection(props: CreateCollectionProps) {
 
     const context: object = useContext(UserContext)
@@ -31,10 +33,10 @@ function CreateCollection(props: CreateCollectionProps) {
     const [collaborators, setCollaborators] = useState<JSX.Element[]>([])
     const [populatedForEdit, setPopulatedForEdit] = useState<boolean>(false)
 
-    // const [nfts, setNfts, nftsRef] = useState<Set<AlgorandAsset>>(new Set());
     const [nfts, setNfts, nftsRef] = useState<Map<number, AlgorandAsset>>(new Map());
 
-    const [sellableNfts, setSellableNfts] = useState<JSX.Element[]>([]);
+    const [sellableNfts, setSellableNfts] = useState<JSX.Element[]>([])
+    const [selectedNfts, setSelectedNfts] = useState<Set<number>>(new Set())
 
     useEffect(() => {
         if (user && !props.edit && collaborators.length === 0) {
@@ -120,9 +122,7 @@ function CreateCollection(props: CreateCollectionProps) {
         let count: number = 0
         nfts.forEach((nft) => {
             nftImgs.push(
-                <Grid container justifyContent='center' alignItems='center' sx={{ margin: '10px' }} key={count} className="create-collection-gallery">
-                    <GalleryTile img={nft.url} noBorder={true} />
-                </Grid>
+                <GalleryTile key={count} img={nft.url} artId={nft.id} />
             )
             count++
         })
@@ -140,9 +140,26 @@ function CreateCollection(props: CreateCollectionProps) {
 
         setCollaborators(newCollaborators)
     }
-    
 
-    console.log(nfts);
+    const selectArtwork = (id: number): void => {
+        let found: boolean = false
+        let newSelectedNfts: Set<number> = new Set()
+        selectedNfts.forEach((nft: number) => {
+            if (nft === id) {
+                found = true
+            } else {
+                newSelectedNfts.add(nft)
+            }
+        })
+
+        if (!found) {
+            newSelectedNfts.add(id)
+        }
+
+        setSelectedNfts(newSelectedNfts)
+    }
+
+    console.log(selectedNfts)
 
     return (
         <div>
@@ -202,9 +219,15 @@ function CreateCollection(props: CreateCollectionProps) {
                     <Typography level='h3' color='green' sx={{ fontSize: "22px", paddingLeft: '32px' }}>
                         Select Artwork
                     </Typography>
-                    <Grid container direction='row' alignItems='center' justifyContent='space-around' flexWrap='wrap'>
-                        {sellableNfts}
-                    </Grid>
+                    <ArtworkContext.Provider
+                        value={{
+                            select: selectArtwork,
+                        }}
+                    >
+                        <Grid container direction='row' alignItems='center' justifyContent='flex-start' flexWrap='wrap'>
+                            {sellableNfts}
+                        </Grid>
+                    </ArtworkContext.Provider>
                 </Grid>
             </Grid>
         </div>

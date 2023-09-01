@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import './GalleryTile.css'
 import { NFTCollection, Work } from '../utils/types.ts'
 import { Card, Typography, Grid } from '@mui/joy'
@@ -6,21 +6,24 @@ import { STORY_IMGS_BUCKET } from '../config.ts'
 import { COVER_PATH } from '../utils/aws.ts'
 import { genericGet } from '../utils/api.ts'
 import { Artwork } from '../utils/types.ts'
+import { ArtworkContext } from '../pages/create/CreateCollection.tsx'
 
 interface GalleryTileProps {
     work?: Work
     coll?: NFTCollection
     img?: string
     story?: boolean
-    noBorder?: boolean
+    artId?: number
 }
 
 function GalleryTile(props: GalleryTileProps) {
 
-    const [imgSrc, setImgSrc] = useState<string>();
+    const context: object = useContext(ArtworkContext)
+
+    const [imgSrc, setImgSrc] = useState<string>()
+    const [noBorder, setNoBorder] = useState<boolean>(true)
 
     useEffect(() => {
-        // console.log('here')
         if (props.work) {
             setImgSrc(
                 'https://' +
@@ -107,9 +110,9 @@ function GalleryTile(props: GalleryTileProps) {
         )
     } else if (props.img) {
         let borderStyling: object
-        if (props.noBorder) {
+        if (noBorder) {
             borderStyling = {
-                border: 'none'
+                borderColor: '#14100E'
             }
         } else {
             borderStyling = {}
@@ -127,12 +130,16 @@ function GalleryTile(props: GalleryTileProps) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     height: 'auto',
+                    marginLeft: '32px',
+                    marginBottom: '20px',
+                    marginTop: '10px',
                     ...borderStyling
                 }}
-                onClick={() => {
-                    console.log('here1');
-                }}
                 className="gallery-tile"
+                onClick={() => {
+                    context['select'](props.artId)
+                    setNoBorder(!noBorder)
+                }}
             >
                 <Grid container alignItems="center" justifyContent="center">
                     <img
