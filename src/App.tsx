@@ -339,197 +339,189 @@ function App() {
                         }}
                         message="You need to have a Twine Pass in your wallet to access the site!"
                     />
-                    {!user ? (
-                        <Routes>
-                            <Route path="/*" element={<Beta />}></Route>
-                        </Routes>
-                    ) : (
-                        <>
-                            <div id="content-wrapper">
-                                {user ? (
-                                    <Routes>
-                                        <Route
-                                            path="/about"
-                                            element={<About />}
-                                        ></Route>
-                                        <Route
-                                            path="/feedback"
-                                            element={<FeedbackPage />}
-                                        ></Route>
-                                        <Route
-                                            path="/terms"
-                                            element={<Terms />}
-                                        ></Route>
-                                        <Route
-                                            path="/help/wallet"
-                                            element={<WalletWalkthrough />}
-                                        ></Route>
-                                        <Route
-                                            path="/help/fund"
-                                            element={<FundHelp />}
-                                        ></Route>
-                                        <Route
-                                            path="/help/swap"
-                                            element={<SwapHelp />}
-                                        ></Route>
-                                        <Route
-                                            path="/help/*"
-                                            element={<AlgoHelp />}
-                                        ></Route>
-                                        <Route
-                                            path="/art"
-                                            element={<Art />}
-                                        ></Route>
+                    <div id="content-wrapper">
+                        {user ? (
+                            <Routes>
+                                <Route
+                                    path="/about"
+                                    element={<About />}
+                                ></Route>
+                                <Route
+                                    path="/feedback"
+                                    element={<FeedbackPage />}
+                                ></Route>
+                                <Route
+                                    path="/terms"
+                                    element={<Terms />}
+                                ></Route>
+                                <Route
+                                    path="/help/wallet"
+                                    element={<WalletWalkthrough />}
+                                ></Route>
+                                <Route
+                                    path="/help/fund"
+                                    element={<FundHelp />}
+                                ></Route>
+                                <Route
+                                    path="/help/swap"
+                                    element={<SwapHelp />}
+                                ></Route>
+                                <Route
+                                    path="/help/*"
+                                    element={<AlgoHelp />}
+                                ></Route>
+                                <Route
+                                    path="/art"
+                                    element={<Art />}
+                                ></Route>
 
-                                        <Route
-                                            path="/create"
-                                            element={<Create />}
-                                        ></Route>
-                                        <Route
-                                            path="/create/story"
-                                            element={<CreateStory />}
-                                        ></Route>
-                                        <Route
-                                            path="/create/chapter/*"
-                                            element={<CreateChapter />}
-                                        ></Route>
-                                        <Route
-                                            path="/create/art"
-                                            element={<CreateArtwork />}
-                                        ></Route>
+                                <Route
+                                    path="/create"
+                                    element={<Create />}
+                                ></Route>
+                                <Route
+                                    path="/create/story"
+                                    element={<CreateStory />}
+                                ></Route>
+                                <Route
+                                    path="/create/chapter/*"
+                                    element={<CreateChapter />}
+                                ></Route>
+                                <Route
+                                    path="/create/art"
+                                    element={<CreateArtwork />}
+                                ></Route>
 
-                                        <Route
-                                            path="/edit/story/*"
-                                            element={
-                                                <CreateStory edit={true} />
-                                            }
-                                        ></Route>
-                                        <Route
-                                            path="/edit/chapter/*"
-                                            element={
-                                                <CreateChapter edit={true} />
-                                            }
-                                        ></Route>
+                                <Route
+                                    path="/edit/story/*"
+                                    element={
+                                        <CreateStory edit={true} />
+                                    }
+                                ></Route>
+                                <Route
+                                    path="/edit/chapter/*"
+                                    element={
+                                        <CreateChapter edit={true} />
+                                    }
+                                ></Route>
 
-                                        <Route
-                                            path="/story/*"
-                                            element={<Story />}
-                                        ></Route>
-                                        <Route
-                                            path="/chapter/*"
-                                            element={<Chapter />}
-                                        ></Route>
+                                <Route
+                                    path="/story/*"
+                                    element={<Story />}
+                                ></Route>
+                                <Route
+                                    path="/chapter/*"
+                                    element={<Chapter />}
+                                ></Route>
 
-                                        <Route
-                                            path="/gallery/story/draft"
-                                            element={
-                                                <Gallery
-                                                    art={false}
-                                                    draft={true}
-                                                />
-                                            }
-                                        ></Route>
-                                        <Route
-                                            path="/gallery/story/published"
-                                            element={
-                                                <Gallery
-                                                    art={false}
-                                                    draft={false}
-                                                />
-                                            }
-                                        ></Route>
+                                <Route
+                                    path="/gallery/story/draft"
+                                    element={
+                                        <Gallery
+                                            art={false}
+                                            draft={true}
+                                        />
+                                    }
+                                ></Route>
+                                <Route
+                                    path="/gallery/story/published"
+                                    element={
+                                        <Gallery
+                                            art={false}
+                                            draft={false}
+                                        />
+                                    }
+                                ></Route>
 
-                                        <Route
-                                            path="/profile"
-                                            element={<Profile />}
-                                        ></Route>
-                                        <Route
-                                            path="/edit-profile"
-                                            element={<EditProfile />}
-                                        ></Route>
-                                        <Route
-                                            path="/profile/:username"
-                                            element={<GenericProfile />}
-                                        ></Route>
+                                <Route
+                                    path="/profile"
+                                    element={<Profile />}
+                                ></Route>
+                                <Route
+                                    path="/edit-profile"
+                                    element={<EditProfile />}
+                                ></Route>
+                                <Route
+                                    path="/profile/:username"
+                                    element={<GenericProfile />}
+                                ></Route>
 
-                                        <Route
-                                            path="/collection/*"
-                                            element={<Collection />}
-                                        ></Route>
+                                <Route
+                                    path="/collection/*"
+                                    element={<Collection />}
+                                ></Route>
 
-                                        <Route
-                                            path="/"
-                                            element={<Home />}
-                                        ></Route>
-                                        <Route
-                                            path="*"
-                                            element={<RouteNotFound />}
-                                        ></Route>
-                                    </Routes>
-                                ) : (
-                                    <Routes>
-                                        <Route
-                                            path="/about"
-                                            element={<About />}
-                                        ></Route>
-                                        <Route
-                                            path="/feedback"
-                                            element={<FeedbackPage />}
-                                        ></Route>
-                                        <Route
-                                            path="/terms"
-                                            element={<Terms />}
-                                        ></Route>
-                                        <Route
-                                            path="/help/wallet"
-                                            element={<WalletWalkthrough />}
-                                        ></Route>
-                                        <Route
-                                            path="/help/fund"
-                                            element={<FundHelp />}
-                                        ></Route>
-                                        <Route
-                                            path="/help/swap"
-                                            element={<SwapHelp />}
-                                        ></Route>
-                                        <Route
-                                            path="/help/*"
-                                            element={<AlgoHelp />}
-                                        ></Route>
-                                        <Route
-                                            path="/art"
-                                            element={<Art />}
-                                        ></Route>
-                                        <Route
-                                            path="/profile/:username"
-                                            element={<GenericProfile />}
-                                        ></Route>
-                                        <Route
-                                            path="/story/*"
-                                            element={<Story />}
-                                        ></Route>
-                                        <Route
-                                            path="/chapter/*"
-                                            element={<Chapter />}
-                                        ></Route>
-                                        <Route
-                                            path="/collection/*"
-                                            element={<Collection />}
-                                        ></Route>
-                                        <Route
-                                            path="/"
-                                            element={<Home />}
-                                        ></Route>
-                                        <Route
-                                            path="*"
-                                            element={<RouteNotFound />}
-                                        ></Route>
-                                    </Routes>
-                                )}
-                            </div>
-                            <Footer />
-                        </>
-                    )}
+                                <Route
+                                    path="/"
+                                    element={<Home />}
+                                ></Route>
+                                <Route
+                                    path="*"
+                                    element={<RouteNotFound />}
+                                ></Route>
+                            </Routes>
+                        ) : (
+                            <Routes>
+                                <Route
+                                    path="/about"
+                                    element={<About />}
+                                ></Route>
+                                <Route
+                                    path="/feedback"
+                                    element={<FeedbackPage />}
+                                ></Route>
+                                <Route
+                                    path="/terms"
+                                    element={<Terms />}
+                                ></Route>
+                                <Route
+                                    path="/help/wallet"
+                                    element={<WalletWalkthrough />}
+                                ></Route>
+                                <Route
+                                    path="/help/fund"
+                                    element={<FundHelp />}
+                                ></Route>
+                                <Route
+                                    path="/help/swap"
+                                    element={<SwapHelp />}
+                                ></Route>
+                                <Route
+                                    path="/help/*"
+                                    element={<AlgoHelp />}
+                                ></Route>
+                                <Route
+                                    path="/art"
+                                    element={<Art />}
+                                ></Route>
+                                <Route
+                                    path="/profile/:username"
+                                    element={<GenericProfile />}
+                                ></Route>
+                                <Route
+                                    path="/story/*"
+                                    element={<Story />}
+                                ></Route>
+                                <Route
+                                    path="/chapter/*"
+                                    element={<Chapter />}
+                                ></Route>
+                                <Route
+                                    path="/collection/*"
+                                    element={<Collection />}
+                                ></Route>
+                                <Route
+                                    path="/"
+                                    element={<Home />}
+                                ></Route>
+                                <Route
+                                    path="*"
+                                    element={<RouteNotFound />}
+                                ></Route>
+                            </Routes>
+                        )}
+                    </div>
+                    <Footer />
                 </UserContext.Provider>
             </CssVarsProvider>
         </div>

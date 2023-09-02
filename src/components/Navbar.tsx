@@ -91,7 +91,7 @@ function Navbar() {
                                 <a href="/" id="navbarLogo">
                                     <img
                                         src="/icons/twine_logo_3.svg"
-                                        width="100%"
+                                        width="80%"
                                     />
                                 </a>
                             </Box>
