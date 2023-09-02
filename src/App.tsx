@@ -370,10 +370,7 @@ function App() {
                                     path="/help/*"
                                     element={<AlgoHelp />}
                                 ></Route>
-                                <Route
-                                    path="/art"
-                                    element={<Art />}
-                                ></Route>
+                                <Route path="/art" element={<Art />}></Route>
 
                                 <Route
                                     path="/create"
@@ -394,15 +391,11 @@ function App() {
 
                                 <Route
                                     path="/edit/story/*"
-                                    element={
-                                        <CreateStory edit={true} />
-                                    }
+                                    element={<CreateStory edit={true} />}
                                 ></Route>
                                 <Route
                                     path="/edit/chapter/*"
-                                    element={
-                                        <CreateChapter edit={true} />
-                                    }
+                                    element={<CreateChapter edit={true} />}
                                 ></Route>
 
                                 <Route
@@ -417,19 +410,13 @@ function App() {
                                 <Route
                                     path="/gallery/story/draft"
                                     element={
-                                        <Gallery
-                                            art={false}
-                                            draft={true}
-                                        />
+                                        <Gallery art={false} draft={true} />
                                     }
                                 ></Route>
                                 <Route
                                     path="/gallery/story/published"
                                     element={
-                                        <Gallery
-                                            art={false}
-                                            draft={false}
-                                        />
+                                        <Gallery art={false} draft={false} />
                                     }
                                 ></Route>
 
@@ -451,10 +438,7 @@ function App() {
                                     element={<Collection />}
                                 ></Route>
 
-                                <Route
-                                    path="/"
-                                    element={<Home />}
-                                ></Route>
+                                <Route path="/" element={<Home />}></Route>
                                 <Route
                                     path="*"
                                     element={<RouteNotFound />}
@@ -490,10 +474,7 @@ function App() {
                                     path="/help/*"
                                     element={<AlgoHelp />}
                                 ></Route>
-                                <Route
-                                    path="/art"
-                                    element={<Art />}
-                                ></Route>
+                                <Route path="/art" element={<Art />}></Route>
                                 <Route
                                     path="/profile/:username"
                                     element={<GenericProfile />}
@@ -510,10 +491,7 @@ function App() {
                                     path="/collection/*"
                                     element={<Collection />}
                                 ></Route>
-                                <Route
-                                    path="/"
-                                    element={<Home />}
-                                ></Route>
+                                <Route path="/" element={<Home />}></Route>
                                 <Route
                                     path="*"
                                     element={<RouteNotFound />}
