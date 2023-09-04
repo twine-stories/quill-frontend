@@ -63,6 +63,7 @@ export type NFTCollection = {
     collType: CollectionType
     url: string
     active: boolean
+    published: boolean
 }
 
 export type Artwork = {

@@ -4,16 +4,18 @@ import useState from 'react-usestateref'
 import './CreateArtwork.css'
 import { UserContext } from '../../App.tsx'
 import Navbar from '../../components/Navbar.tsx'
-import { Typography, Grid } from '@mui/joy'
+import { Typography, Grid, Option } from '@mui/joy'
 import { CollaboratorContext } from './Create.tsx'
 import { v4 as uuidv4 } from 'uuid'
 import { MAX_COLLABORATORS_SMART_CONTRACTS } from '../../utils/constants.ts'
 import Collaborator from '../../components/Collaborator.tsx'
 import TwineButton from '../../components/TwineButton.tsx'
-import { User, ProfitSplit, NFTCollection } from '../../utils/types.ts'
-import { genericGet } from '../../utils/api.ts'
+import { User, ProfitSplit, NFTCollection, Work, Artwork } from '../../utils/types.ts'
+import { genericGet, genericPost } from '../../utils/api.ts'
 import GalleryTile from '../../components/GalleryTile.tsx'
 import TwineInput from '../../components/TwineInput.tsx'
+import TwineSelect from '../../components/TwineSelect.tsx'
+import { CollectionType } from '../../utils/enums.ts'
 
 interface CreateCollectionProps {
     edit?: boolean
@@ -40,6 +42,11 @@ function CreateCollection(props: CreateCollectionProps) {
 
     const [sellableNfts, setSellableNfts] = useState<JSX.Element[]>([])
     const [selectedNfts, setSelectedNfts] = useState<Set<number>>(new Set())
+
+    const [works, setWorks] = useState<Map<number, Work>>(new Map())
+    const [defaultSelectedWork, setDefaultSelectedWork] = useState<number>()
+
+    const [selectedWork, setSelectedWork] = useState<number>()
 
     useEffect(() => {
         if (user && !props.edit && collaborators.length === 0) {
@@ -68,6 +75,18 @@ function CreateCollection(props: CreateCollectionProps) {
                     }
                 }
             )
+
+            genericGet('/api/work/creator/published/' + user.walletAddress).then(
+                (response: Work[]) => {
+                    if (response) {
+                        let worksMap: Map<number, Work> = new Map()
+                        response.forEach((item: Work) => {
+                            worksMap.set(item.id, item)
+                        })
+                        setWorks(worksMap)
+                    }
+                }
+            )
         }
     }, [user])
 
@@ -77,6 +96,7 @@ function CreateCollection(props: CreateCollectionProps) {
                 '/api/collection/url/' + window.location.href.split('/'[5])
             ).then((response: NFTCollection) => {
                 setCollection(response)
+                setDefaultSelectedWork(response.work.id)
             })
         }
     }, [props.edit, user])
@@ -164,6 +184,43 @@ function CreateCollection(props: CreateCollectionProps) {
         }
 
         setSelectedNfts(newSelectedNfts)
+    }
+
+    const saveCollection = (publish: boolean): void => {
+        if (selectedNfts.size == 0) {
+            return
+        }
+
+        const name = (document.getElementById('collection-name-field') as HTMLInputElement).value
+        const description = (document.getElementById('collection-desc-field') as HTMLInputElement).value
+        const price = (document.getElementById('collection-price-field') as HTMLInputElement).value
+
+        if (!(name && description && selectedWork !== undefined && price && parseFloat(price) >= 0.1)) {
+            return
+        }
+
+        if (publish) {
+            return
+        }
+
+        const artworks: Artwork[] = Array.from(selectedNfts).map((nft: number) => {
+            return {id: nft}
+        })
+        const coll: NFTCollection = {
+            work: works.get(selectedWork),
+            name: name,
+            collType: CollectionType.SALE,
+            url: 'test',
+            active: false,
+            published: false,
+        }
+
+        genericPost('/api/collection/createWithArt', {
+            collection: coll,
+            artworks: artworks
+        }).then(response => {
+            console.log(response)
+        })
     }
 
     return (
@@ -285,6 +342,10 @@ function CreateCollection(props: CreateCollectionProps) {
                             }}
                             endDecorator="/icons/algo.svg"
                         />
+                        <TwineSelect id="create-coll-select-story" label="Story" defaultValue={defaultSelectedWork?.toString()}
+                            options={Array.from(works.values()).map((work: Work) => {
+                                return <Option value={work.id} onClick={() => setSelectedWork(work.id)}>{work.title}</Option>
+                            })}/>
                     </Grid>
                 </Grid>
 
@@ -292,8 +353,9 @@ function CreateCollection(props: CreateCollectionProps) {
                     <TwineButton
                         color="green"
                         name="Save Draft"
-                        enabled={false}
-                        action={() => {}}
+                        action={() => {
+                            saveCollection(false)
+                        }}
                     />
                 </Grid>
             </Grid>
