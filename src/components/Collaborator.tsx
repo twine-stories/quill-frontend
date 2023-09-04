@@ -4,9 +4,9 @@ import { CollaboratorContext } from '../pages/create/Create.tsx'
 import TwineInput from './TwineInput.tsx'
 
 interface CollaboratorProps {
-    defaultCreator: string
-    defaultWallet: string
-    defaultProfit: number
+    defaultCreator?: string
+    defaultWallet?: string
+    defaultProfit?: number
     principle: boolean
     id: number
     profitSplit: boolean

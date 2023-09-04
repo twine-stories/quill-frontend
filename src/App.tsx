@@ -2,7 +2,6 @@ import React, { useEffect, useState, createContext } from 'react'
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
 import RouteNotFound from './pages/RouteNotFound.tsx'
-import Beta from './pages/Beta.tsx'
 import FeedbackPage from './pages/footer/FeedbackPage.tsx'
 import Home from './pages/Home.tsx'
 import Create from './pages/create/Create.tsx'
@@ -47,6 +46,7 @@ import ErrorPopup from './components/ErrorPopup.tsx'
 import { env } from './config.ts'
 import { AlgorandChainIDs } from '@perawallet/connect/dist/util/peraWalletTypes'
 import CreateArtwork from './pages/create/CreateArtwork.tsx'
+import CreateCollection from './pages/create/CreateCollection.tsx'
 
 const reach = loadStdlib('ALGO')
 let chainId: AlgorandChainIDs
@@ -371,7 +371,7 @@ function App() {
                                     element={<AlgoHelp />}
                                 ></Route>
                                 <Route path="/art" element={<Art />}></Route>
-
+                                
                                 <Route
                                     path="/create"
                                     element={<Create />}
@@ -387,6 +387,14 @@ function App() {
                                 <Route
                                     path="/create/art"
                                     element={<CreateArtwork />}
+                                ></Route>
+                                <Route
+                                    path="/create/collection"
+                                    element={<CreateCollection />}
+                                ></Route>
+                                <Route
+                                    path="/create/collection/*"
+                                    element={<CreateCollection edit={true} />}
                                 ></Route>
 
                                 <Route
