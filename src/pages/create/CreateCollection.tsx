@@ -1,3 +1,4 @@
+import './CreateCollection.css'
 import React, { useEffect, useContext, createContext } from 'react'
 import useState from 'react-usestateref'
 import './CreateArtwork.css'
@@ -12,6 +13,7 @@ import TwineButton from '../../components/TwineButton.tsx'
 import { User, ProfitSplit, NFTCollection } from '../../utils/types.ts'
 import { genericGet } from '../../utils/api.ts'
 import GalleryTile from '../../components/GalleryTile.tsx'
+import TwineInput from '../../components/TwineInput.tsx'
 
 interface CreateCollectionProps {
     edit?: boolean
@@ -159,8 +161,6 @@ function CreateCollection(props: CreateCollectionProps) {
         setSelectedNfts(newSelectedNfts)
     }
 
-    console.log(selectedNfts)
-
     return (
         <div>
             <Navbar />
@@ -228,6 +228,31 @@ function CreateCollection(props: CreateCollectionProps) {
                             {sellableNfts}
                         </Grid>
                     </ArtworkContext.Provider>
+                </Grid>
+
+                <Grid sx={{ marginTop: '40px', paddingLeft: '32px' }}>
+                    <Typography level='h3' color='green' sx={{ fontSize: "22px" }}>
+                        Fixed Price
+                    </Typography>
+                    <Grid id="create-coll-fields">
+                        <TwineInput label='Collection name' placeholder='name'
+                            inputAttrs={{
+                                id: 'collection-name-field',
+                            }} />
+                        <TwineInput label='Description' multiline rows={3} placeholder='description'
+                            inputAttrs={{
+                                id: 'collection-desc-field',
+                            }} />
+                        <TwineInput label='Price per artwork' type="number" placeholder='price'
+                            inputAttrs={{
+                                id: 'collection-price-field',
+                            }}
+                            endDecorator="/icons/algo.svg" />
+                    </Grid>
+                </Grid>
+
+                <Grid sx={{ marginTop: '40px', paddingLeft: '32px' }}>
+                    <TwineButton color='green' name='Save Draft' enabled={false} action={() => {}} />
                 </Grid>
             </Grid>
         </div>

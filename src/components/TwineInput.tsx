@@ -11,6 +11,7 @@ interface InputProps {
     size?: string
     id?: string
     multiline?: boolean
+    rows?: number
     sx?: object
     onChange?: (elem: React.ChangeEvent<HTMLInputElement>) => void
     disabled?: boolean
@@ -43,7 +44,11 @@ function TwineInput(props: InputProps) {
                     placeholder={props.placeholder}
                     defaultValue={props.defaultValue}
                     sx={props.sx}
+                    minRows={props.rows || 1}
                     onChange={props.onChange}
+                    slotProps={{
+                        textarea: props.inputAttrs
+                    }}
                 />
             </FormControl>
         )
