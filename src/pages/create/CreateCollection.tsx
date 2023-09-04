@@ -27,15 +27,16 @@ type AlgorandAsset = {
 export const ArtworkContext = createContext(null as any)
 
 function CreateCollection(props: CreateCollectionProps) {
-
     const context: object = useContext(UserContext)
-    const user: User = context['user'];
+    const user: User = context['user']
 
-    const [collection, setCollection] = useState<NFTCollection>();
+    const [collection, setCollection] = useState<NFTCollection>()
     const [collaborators, setCollaborators] = useState<JSX.Element[]>([])
     const [populatedForEdit, setPopulatedForEdit] = useState<boolean>(false)
 
-    const [nfts, setNfts, nftsRef] = useState<Map<number, AlgorandAsset>>(new Map());
+    const [nfts, setNfts, nftsRef] = useState<Map<number, AlgorandAsset>>(
+        new Map()
+    )
 
     const [sellableNfts, setSellableNfts] = useState<JSX.Element[]>([])
     const [selectedNfts, setSelectedNfts] = useState<Set<number>>(new Set())
@@ -56,22 +57,26 @@ function CreateCollection(props: CreateCollectionProps) {
         }
 
         if (user) {
-            genericGet('/api/algo/assets/' + user.walletAddress).then((response: AlgorandAsset[]) => {
-                if (response) {
-                    let assets: Map<number, AlgorandAsset> = new Map()
-                    response.forEach((asset) => {
-                        assets.set(asset.id, asset)
-                    })
-                    setNfts(new Map([...assets, ...nftsRef.current]))
+            genericGet('/api/algo/assets/' + user.walletAddress).then(
+                (response: AlgorandAsset[]) => {
+                    if (response) {
+                        let assets: Map<number, AlgorandAsset> = new Map()
+                        response.forEach((asset) => {
+                            assets.set(asset.id, asset)
+                        })
+                        setNfts(new Map([...assets, ...nftsRef.current]))
+                    }
                 }
-            })
+            )
         }
     }, [user])
 
     useEffect(() => {
         if (user && props.edit) {
-            genericGet('/api/collection/url/' + window.location.href.split('/'[5])).then((response: NFTCollection) => {
-                setCollection(response);
+            genericGet(
+                '/api/collection/url/' + window.location.href.split('/'[5])
+            ).then((response: NFTCollection) => {
+                setCollection(response)
             })
         }
     }, [props.edit, user])
@@ -117,7 +122,7 @@ function CreateCollection(props: CreateCollectionProps) {
                 }
             )
         }
-    }, [props.edit, user, collection]);
+    }, [props.edit, user, collection])
 
     useEffect(() => {
         let nftImgs: JSX.Element[] = []
@@ -129,7 +134,7 @@ function CreateCollection(props: CreateCollectionProps) {
             count++
         })
 
-        setSellableNfts(nftImgs);
+        setSellableNfts(nftImgs)
     }, [nfts])
 
     const removeCollaborator = (id: number): void => {
@@ -173,7 +178,13 @@ function CreateCollection(props: CreateCollectionProps) {
                     Publish Art Collection
                 </Typography>
                 <Grid sx={{ marginLeft: '32px' }}>
-                    <Typography level='h3' color='green' sx={{fontSize: "22px"}}>Profit Split</Typography>
+                    <Typography
+                        level="h3"
+                        color="green"
+                        sx={{ fontSize: '22px' }}
+                    >
+                        Profit Split
+                    </Typography>
                     <CollaboratorContext.Provider
                         value={{
                             remove: removeCollaborator,
@@ -216,7 +227,11 @@ function CreateCollection(props: CreateCollectionProps) {
                     </CollaboratorContext.Provider>
                 </Grid>
                 <Grid sx={{ marginTop: '40px' }}>
-                    <Typography level='h3' color='green' sx={{ fontSize: "22px", paddingLeft: '32px' }}>
+                    <Typography
+                        level="h3"
+                        color="green"
+                        sx={{ fontSize: '22px', paddingLeft: '32px' }}
+                    >
                         Select Artwork
                     </Typography>
                     <ArtworkContext.Provider
@@ -224,35 +239,62 @@ function CreateCollection(props: CreateCollectionProps) {
                             select: selectArtwork,
                         }}
                     >
-                        <Grid container direction='row' alignItems='center' justifyContent='flex-start' flexWrap='wrap'>
+                        <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="flex-start"
+                            flexWrap="wrap"
+                        >
                             {sellableNfts}
                         </Grid>
                     </ArtworkContext.Provider>
                 </Grid>
 
                 <Grid sx={{ marginTop: '40px', paddingLeft: '32px' }}>
-                    <Typography level='h3' color='green' sx={{ fontSize: "22px" }}>
+                    <Typography
+                        level="h3"
+                        color="green"
+                        sx={{ fontSize: '22px' }}
+                    >
                         Fixed Price
                     </Typography>
                     <Grid id="create-coll-fields">
-                        <TwineInput label='Collection name' placeholder='name'
+                        <TwineInput
+                            label="Collection name"
+                            placeholder="name"
                             inputAttrs={{
                                 id: 'collection-name-field',
-                            }} />
-                        <TwineInput label='Description' multiline rows={3} placeholder='description'
+                            }}
+                        />
+                        <TwineInput
+                            label="Description"
+                            multiline
+                            rows={3}
+                            placeholder="description"
                             inputAttrs={{
                                 id: 'collection-desc-field',
-                            }} />
-                        <TwineInput label='Price per artwork' type="number" placeholder='price'
+                            }}
+                        />
+                        <TwineInput
+                            label="Price per artwork"
+                            type="number"
+                            placeholder="price"
                             inputAttrs={{
                                 id: 'collection-price-field',
                             }}
-                            endDecorator="/icons/algo.svg" />
+                            endDecorator="/icons/algo.svg"
+                        />
                     </Grid>
                 </Grid>
 
                 <Grid sx={{ marginTop: '40px', paddingLeft: '32px' }}>
-                    <TwineButton color='green' name='Save Draft' enabled={false} action={() => {}} />
+                    <TwineButton
+                        color="green"
+                        name="Save Draft"
+                        enabled={false}
+                        action={() => {}}
+                    />
                 </Grid>
             </Grid>
         </div>

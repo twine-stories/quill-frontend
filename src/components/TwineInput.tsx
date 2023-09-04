@@ -47,7 +47,7 @@ function TwineInput(props: InputProps) {
                     minRows={props.rows || 1}
                     onChange={props.onChange}
                     slotProps={{
-                        textarea: props.inputAttrs
+                        textarea: props.inputAttrs,
                     }}
                 />
             </FormControl>
