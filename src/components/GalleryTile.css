@@ -25,8 +25,19 @@
     object-fit: cover;
 }
 
+.otris-tile-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 20px;
+    object-fit: cover;
+}
+
 .gallery-tile-title-container {
     display: flex;
     justify-content: left;
     margin-left: 16px;
+}
+
+.h6-twine-font {
+    font-family: 'Twine';
 }
