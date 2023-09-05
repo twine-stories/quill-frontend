@@ -42,6 +42,10 @@ function Art() {
                     NFT Marketplace Launch
                 </Typography>
 
+                <Typography level="h4" color="green">
+                    Coming Soon!
+                </Typography>
+
                 <img
                     src='/icons/otris/otris_logo.png'
                     loading="lazy"
