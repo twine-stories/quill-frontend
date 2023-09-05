@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import './CreateArtwork.css'
 import { UserContext } from '../../App.tsx'
-import Navbar from '../../components/Navbar.tsx'
+import Navbar from '../../components/layout/Navbar.tsx'
 import { Typography, Grid, CircularProgress } from '@mui/joy'
 import TwineInput from '../../components/TwineInput.tsx'
 import TwineButton from '../../components/TwineButton.tsx'
@@ -14,6 +14,7 @@ import SuccessPopup from '../../components/SuccessPopup.tsx'
 import { env } from '../../config.ts'
 import { sendToS3 } from '../../utils/aws.ts'
 import { MINT_IMGS_BUCKET } from '../../config.ts'
+import Footer from '../../components/layout/Footer.tsx'
 
 function CreateArtwork() {
     const encoder = new TextEncoder()
@@ -310,6 +311,7 @@ function CreateArtwork() {
                     onClose={() => setOpenSuccess(false)}
                 />
             </Grid>
+             <Footer/> 
         </div>
     )
 }

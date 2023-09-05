@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import './CreateStory.css'
 import useState from 'react-usestateref'
-import Navbar from '../../components/Navbar.tsx'
+import Navbar from '../../components/layout/Navbar.tsx'
 import { UserContext } from '../../App.tsx'
 import { User, Work, ImageUpload } from '../../utils/types.ts'
 import { Box, Option, Typography, Grid, CircularProgress } from '@mui/joy'
@@ -19,6 +19,7 @@ import { STORY_IMGS_BUCKET } from '../../config.ts'
 import { COVER_PATH, STORY_BANNER_PATH, sendToS3 } from '../../utils/aws.ts'
 import { v4 as uuidv4 } from 'uuid'
 import ErrorPopup from '../../components/ErrorPopup.tsx'
+import Footer from '../../components/layout/Footer.tsx'
 
 enableMapSet()
 
@@ -459,7 +460,8 @@ function CreateStory(props: CreateStoryProps) {
                     </Box>
                 }
             />
-        </div>
+                 <Footer />
+          </div>
     )
 
     function returnSaveButton() {

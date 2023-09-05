@@ -1,14 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react'
 import styled from 'styled-components'
-import CollabPopup from './CollabPopup.tsx'
-import { UserContext } from '../App.tsx'
-import LoginWall from './LoginWall.tsx'
-import RegisterCreator from './RegisterCreator.tsx'
-import ClickProfile from './ClickProfile.tsx'
+import CollabPopup from '../CollabPopup.tsx'
+import { UserContext } from '../../App.tsx'
+import LoginWall from '../LoginWall.tsx'
+import RegisterCreator from '../RegisterCreator.tsx'
+import ClickProfile from '../ClickProfile.tsx'
 import { Box } from '@mui/joy'
-import './Navbar.css'
-import Hamburger from './Hamburger.tsx'
-import Search from './Search.tsx'
+import '../layout/Navbar.css'
+import Hamburger from '../Hamburger.tsx'
+import Search from '../Search.tsx'
 
 const NavDiv = styled.div`
     .nav-container {
@@ -45,7 +45,7 @@ const NavDiv = styled.div`
     }
 `
 
-function Navbar() {
+function Navbar({isViewChapterPage}) {
     const context: object = useContext(UserContext)
     const [open, setOpen] = useState<boolean>(false)
     const [openCreator, setOpenCreator] = useState<boolean>(false)
@@ -86,7 +86,7 @@ function Navbar() {
                 <>
                     <NavDiv>
                         <Box className="nav-container">
-                            {!isMenuOpen && <Hamburger />}
+                            {!isMenuOpen && <Hamburger isViewChapterPage={isViewChapterPage} />}
                             <Box className="nav-logo">
                                 <a href="/" id="navbarLogo">
                                     <img
@@ -144,7 +144,7 @@ function Navbar() {
                 <>
                     <NavDiv>
                         <Box className="nav-container">
-                            {!isMenuOpen && <Hamburger />}
+                            {!isMenuOpen && <Hamburger isViewChapterPage={isViewChapterPage} />}
                             <Box className="nav-logo">
                                 <a href="/" id="navbarLogo">
                                     <img

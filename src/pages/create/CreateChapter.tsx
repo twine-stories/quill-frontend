@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, createContext } from 'react'
 import './CreateChapter.css'
 import useState from 'react-usestateref'
-import Navbar from '../../components/Navbar.tsx'
+import Navbar from '../../components/layout/Navbar.tsx'
 import { UserContext } from '../../App.tsx'
 import {
     User,
@@ -59,6 +59,7 @@ import UploadImage from '../../components/UploadImage.tsx'
 import { useNavigate } from 'react-router-dom'
 import ErrorPopup from '../../components/ErrorPopup.tsx'
 import { marked } from 'marked'
+import Footer from '../../components/layout/Footer.tsx'
 
 enableMapSet()
 
@@ -948,6 +949,7 @@ function CreateChapter(props: CreateChapterProps) {
                     </Box>
                 }
             />
+          <Footer/> 
         </div>
     )
 

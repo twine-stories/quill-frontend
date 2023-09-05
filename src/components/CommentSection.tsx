@@ -105,7 +105,7 @@ export default function CommentSection({ episode }) {
     }
 
     return (
-        <div>
+        <div className="comment-section">
             <Typography level="h2" sx={{ color: '#9e9feb' }}>
                 Comments
             </Typography>
@@ -163,8 +163,8 @@ export default function CommentSection({ episode }) {
                                         PROFILE_IMGS_BUCKET +
                                         '.s3.amazonaws.com/default.jpeg'
                                 }}
-                                width={70}
-                                height={70}
+                                width={60}
+                                height={60}
                                 style={{
                                     borderRadius: '50%',
                                     objectFit: 'cover',

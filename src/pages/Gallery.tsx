@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import useState from 'react-usestateref'
-import Navbar from '../components/Navbar.tsx'
+import Navbar from '../components/layout/Navbar.tsx'
 import { UserContext } from '../App.tsx'
 import { User, Episode } from '../utils/types.ts'
 import {
@@ -15,6 +15,7 @@ import {
     Textarea,
     Typography,
 } from '@mui/joy'
+import Footer from '../components/layout/Footer.tsx'
 import { useImmer } from 'use-immer'
 import { enableMapSet } from 'immer'
 import Sheet from '@mui/joy/Sheet'
@@ -213,6 +214,7 @@ function Gallery(props: WorkGalleryProps) {
                     )
                 }
             />
+             <Footer/>
         </div>
     )
 }

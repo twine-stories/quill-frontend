@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, createContext } from 'react'
 import { UserContext } from '../../App.tsx'
-import Navbar from '../../components/Navbar.tsx'
+import Navbar from '../../components/layout/Navbar.tsx'
 import Collaborator from '../../components/Collaborator.tsx'
 import TwineButton from '../../components/TwineButton.tsx'
 import {
@@ -45,6 +45,7 @@ import { Typography, Sheet, Stack, Grid } from '@mui/joy'
 import { CollectionType } from '../../utils/enums.ts'
 import { env } from '../../config.ts'
 import './Create.css'
+import Footer from '../../components/layout/Footer.tsx'
 
 const axios = require('axios').default
 export const CollaboratorContext = createContext(null as any)
@@ -644,6 +645,7 @@ function Create() {
                     </div>
                 </div>
             )}
+          <Footer/>
         </div>
     )
 }

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import './Feedback.css'
-import Navbar from '../../components/Navbar.tsx'
+import Navbar from '../../components/layout/Navbar.tsx'
 import TwineInput from '../../components/TwineInput.tsx'
 import TwineButton from '../../components/TwineButton.tsx'
 import { Typography, Grid, Textarea, FormControl, FormLabel } from '@mui/joy'
@@ -13,6 +13,7 @@ import { User, Feedback, ImageUpload } from '../../utils/types.ts'
 import { v4 as uuidv4 } from 'uuid'
 import SuccessPopup from '../../components/SuccessPopup.tsx'
 import ErrorPopup from '../../components/ErrorPopup.tsx'
+import Footer from '../../components/layout/Footer.tsx'
 
 function FeedbackPage() {
     const [feedbackImg, setFeedbackImg] = useState<ImageUpload>({
@@ -236,6 +237,7 @@ function FeedbackPage() {
                     </Grid>
                 </Grid>
             )}
+            <Footer />
         </div>
     )
 }

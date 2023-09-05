@@ -14,7 +14,6 @@ import Art from './pages/Art.tsx'
 import Gallery from './pages/Gallery.tsx'
 import Collection from './pages/Collection.tsx'
 import CreateStory from './pages/create/CreateStory.tsx'
-import Footer from './components/Footer.tsx'
 import WalletWalkthrough from './pages/help/WalletWalkthrough.tsx'
 import FundHelp from './pages/help/FundHelp.tsx'
 import SwapHelp from './pages/help/SwapHelp.tsx'
@@ -527,7 +526,6 @@ function App() {
                                     </Routes>
                                 )}
                             </div>
-                            <Footer />
                         </>
                     )}
                 </UserContext.Provider>

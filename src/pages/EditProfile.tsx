@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import Navbar from '../components/Navbar.tsx'
+import Navbar from '../components/layout/Navbar.tsx'
 import { UserContext } from '../App.tsx'
 import { User } from '../utils/types.ts'
 import ProfileWork from '../components/ProfileWork.tsx'
@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import { genericPost, genericGet } from '../utils/api.ts'
 import ErrorPopup from '../components/ErrorPopup.tsx'
 import { proxy } from '../utils/api.ts'
+import Footer from '../components/layout/Footer.tsx'
 
 const axios = require('axios').default
 
@@ -371,6 +372,7 @@ function EditProfile() {
                     'that username is already taken, please choose another!'
                 }
             />
+             <Footer/>
         </div>
     )
 }

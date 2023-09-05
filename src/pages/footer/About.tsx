@@ -1,7 +1,8 @@
 import React from 'react'
 import './About.css'
-import Navbar from '../../components/Navbar.tsx'
+import Navbar from '../../components/layout/Navbar.tsx'
 import { Grid, Typography } from '@mui/joy'
+import Footer from '../../components/layout/Footer.tsx'
 
 function About() {
     return (
@@ -67,6 +68,7 @@ function About() {
                     <Typography level="h6">Twine: We Create Worlds.</Typography>
                 </Grid>
             </Grid>
+            <Footer/> 
         </div>
     )
 }

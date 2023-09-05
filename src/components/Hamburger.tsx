@@ -13,7 +13,7 @@ import IconButton from './IconButton.tsx'
 import './Hamburger.css'
 import Search from './Search.tsx'
 
-const Hamburger = () => {
+const Hamburger = ({isViewChapterPage}) => {
     const [openCollab, setOpenCollab] = useState<boolean>(false)
     const [openCreator, setOpenCreator] = useState<boolean>(false)
     const context: object = useContext(UserContext)
@@ -22,7 +22,6 @@ const Hamburger = () => {
     const buttonRef = React.useRef(null)
     const [open, setOpen] = React.useState(false)
     const [openLogin, setOpenLogin] = React.useState(false)
-
     const blockAccess = (
         e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
     ) => {
@@ -118,6 +117,44 @@ const Hamburger = () => {
                             </a>
                         </MenuItem>
                     )}
+                   {isViewChapterPage === true && (
+                    <>
+                   <MenuItem>
+                        <a href="/about">About</a>
+                    </MenuItem>
+                    <MenuItem>
+                       <a href="/feedback">Feedback</a>
+                    </MenuItem>
+                    <MenuItem>
+                       <a href="/help">Algo Help</a>
+                    </MenuItem>
+                    <MenuItem>
+                       <a href="/terms">Terms</a>
+                    </MenuItem>
+                    <MenuItem>
+                    <IconButton
+                        color="darkpurple"
+                        icon="/icons/socials/twitter.svg"
+                        action={() =>
+                            window.open(
+                                'https://twitter.com/twinestories',
+                                '_blank'
+                            )
+                        }
+                    />
+                    <IconButton
+                        color="darkpurple"
+                        icon="/icons/socials/discord.svg"
+                        action={() =>
+                            window.open(
+                                'https://discord.gg/HKrvJrRUwJ',
+                                '_blank'
+                            )
+                        }
+                    />
+                    </MenuItem>
+                    </>
+                    )}    
                 </Menu>
             </div>
             <CollabPopup open={openCollab} close={() => setOpenCollab(false)} />

@@ -1,7 +1,8 @@
 import React from 'react'
 import './Help.css'
-import Navbar from '../../components/Navbar.tsx'
+import Navbar from '../../components/layout/Navbar.tsx'
 import { Grid, Typography } from '@mui/joy'
+import Footer from '../../components/layout/Footer.tsx'
 
 function FundHelp() {
     return (
@@ -82,6 +83,7 @@ function FundHelp() {
                     </Grid>
                 </Grid>
             </Grid>
+          <Footer/> 
         </div>
     )
 }

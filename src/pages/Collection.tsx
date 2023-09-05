@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import Navbar from '../components/Navbar.tsx'
+import Navbar from '../components/layout/Navbar.tsx'
 import { UserContext } from '../App.tsx'
 import { User, NFTCollection, Artwork, ProfitSplit } from '../utils/types.ts'
 import { collectionGetByUrl } from '../utils/api.ts'
@@ -27,6 +27,7 @@ import {
 } from '../utils/blockchain/constants.ts'
 import { CollectionType } from '../utils/enums.ts'
 import { adminAddr } from '../utils/blockchain/credentials.ts'
+import Footer from '../components/layout/Footer.tsx'
 
 function Collection() {
     const [coll, setColl] = useState<NFTCollection>()
@@ -299,6 +300,7 @@ function Collection() {
                     {listings}
                 </div>
             )}
+            <Footer/>
         </div>
     )
 }

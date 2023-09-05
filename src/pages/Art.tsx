@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import Navbar from '../components/Navbar.tsx'
+import Navbar from '../components/layout/Navbar.tsx'
 import { NFTCollection } from '../utils/types.ts'
 import { collectionGetAll } from '../utils/api.ts'
 import { env } from '../config.ts'
 import { Typography, Grid } from '@mui/joy'
 import './Art.css'
+import Footer from '../components/layout/Footer.tsx'
 
 function Art() {
     const [colls, setColls] = useState<NFTCollection[]>()
@@ -41,6 +42,7 @@ function Art() {
                 </Typography>
                 {env === 'dev' && collListings}
             </Grid>
+            <Footer/>
         </div>
     )
 }

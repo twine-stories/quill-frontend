@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, createContext } from 'react'
 import useState from 'react-usestateref'
-import Navbar from '../components/Navbar.tsx'
+import Navbar from '../components/layout/Navbar.tsx'
 import { UserContext } from '../App.tsx'
 import { Episode, User, Work } from '../utils/types.ts'
 import {
@@ -16,6 +16,7 @@ import EpisodeTile from '../components/EpisodeTile.tsx'
 import { PROFILE_IMGS_BUCKET } from '../config.ts'
 import IconButton from '../components/IconButton.tsx'
 import { useNavigate } from 'react-router-dom'
+import Footer from '../components/layout/Footer.tsx'
 
 export const EpisodeOrderContext = createContext(null as any)
 
@@ -760,6 +761,7 @@ function Story() {
                     />
                 </Grid>
             </Grid>
+            <Footer/>
         </div>
     )
 }

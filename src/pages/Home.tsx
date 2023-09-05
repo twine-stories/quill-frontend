@@ -1,11 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react'
-import Navbar from '../components/Navbar.tsx'
+import Navbar from '../components/layout/Navbar.tsx'
 import HomeSlot from '../components/HomeSlot.tsx'
 import IconButton from '../components/IconButton.tsx'
 import TwineButton from '../components/TwineButton.tsx'
 import { genericGet } from '../utils/api.ts'
 import { Work } from '../utils/types.ts'
 import { Grid } from '@mui/joy'
+import Footer from '../components/layout/Footer.tsx'
 
 function Home() {
     const [homeWorks, setHomeWorks] = useState<Work[]>([])
@@ -79,6 +80,7 @@ function Home() {
                     }}
                 />
             </Grid>
+            <Footer/>
         </div>
     )
 }

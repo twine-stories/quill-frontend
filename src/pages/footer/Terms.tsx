@@ -1,7 +1,8 @@
 import React from 'react'
 import './Terms.css'
-import Navbar from '../../components/Navbar.tsx'
+import Navbar from '../../components/layout/Navbar.tsx'
 import { Grid, Typography } from '@mui/joy'
+import Footer from '../../components/layout/Footer.tsx'
 
 function Terms() {
     const legalUrl: string = 'https://twine-legal.s3.amazonaws.com/'
@@ -55,6 +56,7 @@ function Terms() {
                     </a>
                 </Grid>
             </Grid>
+            <Footer/> 
         </div>
     )
 }

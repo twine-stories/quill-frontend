@@ -1,7 +1,8 @@
 import React from 'react'
 import './AlgoHelp.css'
-import Navbar from '../../components/Navbar.tsx'
+import Navbar from '../../components/layout/Navbar.tsx'
 import { Grid, Typography } from '@mui/joy'
+import Footer from '../../components/layout/Footer.tsx'
 
 function AlgoHelp() {
     return (
@@ -36,6 +37,7 @@ function AlgoHelp() {
                     </a>
                 </Grid>
             </Grid>
+           <Footer />
         </div>
     )
 }

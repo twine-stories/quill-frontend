@@ -1,6 +1,7 @@
 import React from 'react'
 import { Grid, Typography } from '@mui/joy'
-import Navbar from '../components/Navbar.tsx'
+import Navbar from '../components/layout/Navbar.tsx'
+import Footer from '../components/layout/Footer.tsx'
 
 function RouteNotFound() {
     return (
@@ -21,6 +22,7 @@ function RouteNotFound() {
                     </Typography>
                 </Grid>
             </Grid>
+            <Footer/>
         </div>
     )
 }
