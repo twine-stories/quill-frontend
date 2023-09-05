@@ -69,7 +69,7 @@ function HomeSlot(props: HomeProps) {
                 <Typography level="h6">
                     {props.work
                         ? props.work.hook
-                        : 'click "create" on the top bar above to create a story and publish a chapter'}
+                        : ''}
                 </Typography>
             </Grid>
         </Grid>
@@ -85,7 +85,7 @@ function HomeSlot(props: HomeProps) {
             <Typography className="full-hook" level="h6">
                 {chapterContent
                     ? chapterContent
-                    : 'click "create" on the top bar above to create a story and publish a chapter'}
+                    : ''}
             </Typography>
         </Grid>
     )
