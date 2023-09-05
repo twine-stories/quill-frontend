@@ -199,6 +199,27 @@ function CreateCollection(props: CreateCollectionProps) {
             return
         }
 
+        const collabCreators: HTMLCollectionOf<Element> =
+            document.getElementsByClassName('usernameTopLeftCollab')
+        const collabPercents: HTMLCollectionOf<Element> =
+            document.getElementsByClassName('profitPercentTopRightCollab')
+
+        let usernames: string[] = []
+        let percents: number[] = []
+
+        Array.from(collabCreators).forEach((elem: Element) => {
+            usernames.push((elem as HTMLInputElement).value)
+        })
+
+        Array.from(collabPercents).forEach((elem: Element) => {
+            percents.push(parseInt((elem as HTMLInputElement).value))
+        })
+
+        const sum: number = percents.reduce((partial, curr) => partial + curr, 0)
+        if (sum !== 100) {
+            return
+        }
+
         if (publish) {
             return
         }
@@ -219,7 +240,19 @@ function CreateCollection(props: CreateCollectionProps) {
             collection: coll,
             artworks: artworks
         }).then(response => {
-            console.log(response)
+            let profitSplitsWithAddrs: object[] = []
+            for (let i = 0; i < usernames.length; i++) {
+                profitSplitsWithAddrs.push({
+                    creatorUsername: usernames[i],
+                    profitSplit: {
+                        creator: null,
+                        collection: response,
+                        percentage: percents[i],
+                    },
+                })
+            }
+
+            genericPost('/api/profitSplit/addMany', profitSplitsWithAddrs)
         })
     }
 

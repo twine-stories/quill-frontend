@@ -76,11 +76,6 @@ function Collaborator(props: CollaboratorProps) {
                             />
                         </Grid>
                     </Grid>
-                    {/*<Grid>*/}
-                    {/*    <TwineInput placeholder={bottomField} defaultValue={props.defaultWallet} inputAttrs={{*/}
-                    {/*        className: 'bottomCollab'*/}
-                    {/*    }}/>*/}
-                    {/*</Grid>*/}
                 </Grid>
                 <Grid xs={2 - offset}>
                     {!props.principle && (
