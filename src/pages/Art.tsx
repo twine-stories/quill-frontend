@@ -29,7 +29,7 @@ function Art() {
     })
 
     return (
-        <div id='art-page'>
+        <div id="art-page">
             <Navbar />
             <Grid
                 container
@@ -41,7 +41,11 @@ function Art() {
                     NFT Marketplace Launch
                 </Typography>
 
-                <Typography level="h4" color="green" sx={{ textAlign: 'center' }}>
+                <Typography
+                    level="h4"
+                    color="green"
+                    sx={{ textAlign: 'center' }}
+                >
                     9pm UTC Saturday September 16
                 </Typography>
 
@@ -74,7 +78,7 @@ function Art() {
 
                 <Grid
                     container
-                    justifyContent='center'
+                    justifyContent="center"
                     sx={{ padding: '12px' }}
                 >
                     <GalleryTile
