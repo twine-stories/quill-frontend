@@ -3,7 +3,8 @@
     height: 332px;
 }
 
-.gallery-tile h2 {
+.gallery-tile h2,
+.gallery-tile span {
     font-size: 22px;
     margin-top: 10px;
     text-overflow: ellipsis;
@@ -11,7 +12,8 @@
     white-space: nowrap;
 }
 
-.gallery-tile h6 {
+.gallery-tile h6,
+.gallery-tile span {
     font-size: 16px;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -25,8 +27,19 @@
     object-fit: cover;
 }
 
+.otris-tile-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 20px;
+    object-fit: cover;
+}
+
 .gallery-tile-title-container {
     display: flex;
     justify-content: left;
     margin-left: 16px;
+}
+
+.h6-twine-font {
+    font-family: 'Twine';
 }

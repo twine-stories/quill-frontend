@@ -158,8 +158,6 @@ function Story() {
             <Navbar />
             {work && work['banner'] && (
                 <img
-                    className="episode-tile-img"
-                    id="img-episode"
                     src={
                         'https://' +
                         STORY_IMGS_BUCKET +
