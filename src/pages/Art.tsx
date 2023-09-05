@@ -43,7 +43,7 @@ function Art() {
                 </Typography>
 
                 <Typography level="h4" color="green">
-                    Coming Soon!
+                    9pm UTC Saturday September 16
                 </Typography>
 
                 <img
