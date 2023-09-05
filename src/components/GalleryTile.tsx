@@ -18,7 +18,6 @@ interface GalleryTileProps {
 }
 
 function GalleryTile(props: GalleryTileProps) {
-
     const context: object = useContext(ArtworkContext)
 
     const [imgSrc, setImgSrc] = useState<string>()
@@ -28,25 +27,28 @@ function GalleryTile(props: GalleryTileProps) {
         if (props.work) {
             setImgSrc(
                 'https://' +
-                STORY_IMGS_BUCKET +
-                '.s3.amazonaws.com/' +
-                COVER_PATH +
-                props.work.cover
+                    STORY_IMGS_BUCKET +
+                    '.s3.amazonaws.com/' +
+                    COVER_PATH +
+                    props.work.cover
             )
         } else if (props.coll) {
-            genericGet('/api/cover-artwork/collection/' + props.coll.id).then((response: Artwork) => {
-                genericGet('/api/algo/asset-img/' + response.id).then((assetImg: string) => {
-                    setImgSrc(assetImg)
-                })
-            })
+            genericGet('/api/cover-artwork/collection/' + props.coll.id).then(
+                (response: Artwork) => {
+                    genericGet('/api/algo/asset-img/' + response.id).then(
+                        (assetImg: string) => {
+                            setImgSrc(assetImg)
+                        }
+                    )
+                }
+            )
         } else if (props.img) {
             setImgSrc(props.img)
         }
     }, [])
-    
+
     if (props.otris) {
         return (
-            <Grid xs={2} sm={2} md={2} lg={2}>
             <Card
                 variant="outlined"
                 sx={{
@@ -55,7 +57,8 @@ function GalleryTile(props: GalleryTileProps) {
                     border: '2px solid #241D19',
                     padding: '13px',
                     width: '200px',
-                    height: '270px'
+                    height: '270px',
+                    margin: '10px',
                 }}
             >
                 <Grid container alignItems="center" justifyContent="center">
@@ -67,15 +70,16 @@ function GalleryTile(props: GalleryTileProps) {
                     />
                 </Grid>
                 <div className="gallery-tile-title-container">
-                    <Typography level="h5" sx={{ fontFamily: 'Twine', color: '#9E9FEB'}}>
+                    <Typography
+                        level="h5"
+                        sx={{ fontFamily: 'Twine', color: '#9E9FEB' }}
+                    >
                         {props.otris}
                     </Typography>
                 </div>
             </Card>
-            </Grid>
         )
-    }
-    else if (props.story) {
+    } else if (props.story) {
         return (
             <Card
                 variant="outlined"
@@ -143,7 +147,7 @@ function GalleryTile(props: GalleryTileProps) {
         let borderStyling: object
         if (noBorder) {
             borderStyling = {
-                borderColor: '#14100E'
+                borderColor: '#14100E',
             }
         } else {
             borderStyling = {}
@@ -164,7 +168,7 @@ function GalleryTile(props: GalleryTileProps) {
                     marginLeft: '32px',
                     marginBottom: '20px',
                     marginTop: '10px',
-                    ...borderStyling
+                    ...borderStyling,
                 }}
                 className="gallery-tile"
                 onClick={() => {

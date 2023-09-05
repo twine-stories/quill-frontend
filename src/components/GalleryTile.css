@@ -3,7 +3,8 @@
     height: 332px;
 }
 
-.gallery-tile h2 {
+.gallery-tile h2,
+.gallery-tile span {
     font-size: 22px;
     margin-top: 10px;
     text-overflow: ellipsis;
@@ -11,7 +12,8 @@
     white-space: nowrap;
 }
 
-.gallery-tile h6 {
+.gallery-tile h6,
+.gallery-tile span {
     font-size: 16px;
     text-overflow: ellipsis;
     overflow: hidden;
