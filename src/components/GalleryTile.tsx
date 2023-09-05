@@ -11,6 +11,7 @@ import { ArtworkContext } from '../pages/create/CreateCollection.tsx'
 interface GalleryTileProps {
     work?: Work
     coll?: NFTCollection
+    otris?: string
     img?: string
     story?: boolean
     artId?: number
@@ -43,8 +44,38 @@ function GalleryTile(props: GalleryTileProps) {
         }
     }, [])
     
-
-    if (props.story) {
+    if (props.otris) {
+        return (
+            <Grid xs={2} sm={2} md={2} lg={2}>
+            <Card
+                variant="outlined"
+                sx={{
+                    backgroundColor: '#14100E',
+                    borderRadius: '32px',
+                    border: '2px solid #241D19',
+                    padding: '13px',
+                    width: '200px',
+                    height: '270px'
+                }}
+            >
+                <Grid container alignItems="center" justifyContent="center">
+                    <img
+                        className="otris-tile-img"
+                        src={imgSrc}
+                        loading="lazy"
+                        alt=""
+                    />
+                </Grid>
+                <div className="gallery-tile-title-container">
+                    <Typography level="h5" sx={{ fontFamily: 'Twine', color: '#9E9FEB'}}>
+                        {props.otris}
+                    </Typography>
+                </div>
+            </Card>
+            </Grid>
+        )
+    }
+    else if (props.story) {
         return (
             <Card
                 variant="outlined"
