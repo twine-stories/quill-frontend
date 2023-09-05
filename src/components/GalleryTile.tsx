@@ -46,7 +46,6 @@ function GalleryTile(props: GalleryTileProps) {
     
     if (props.otris) {
         return (
-            <Grid xs={2} sm={2} md={2} lg={2}>
             <Card
                 variant="outlined"
                 sx={{
@@ -55,7 +54,8 @@ function GalleryTile(props: GalleryTileProps) {
                     border: '2px solid #241D19',
                     padding: '13px',
                     width: '200px',
-                    height: '270px'
+                    height: '270px',
+                    margin: '10px',
                 }}
             >
                 <Grid container alignItems="center" justifyContent="center">
@@ -72,7 +72,6 @@ function GalleryTile(props: GalleryTileProps) {
                     </Typography>
                 </div>
             </Card>
-            </Grid>
         )
     }
     else if (props.story) {

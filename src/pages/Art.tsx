@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar.tsx'
 import { NFTCollection } from '../utils/types.ts'
 import { collectionGetAll } from '../utils/api.ts'
-import { env, STORY_IMGS_BUCKET } from '../config.ts'
+import { env } from '../config.ts'
 import { Typography, Grid } from '@mui/joy'
 import './Art.css'
-import { STORY_BANNER_PATH } from '../utils/aws'
 import GalleryTile from '../components/GalleryTile.tsx'
 
 function Art() {
@@ -30,7 +29,7 @@ function Art() {
     })
 
     return (
-        <div>
+        <div id='art-page'>
             <Navbar />
             <Grid
                 container
@@ -42,7 +41,7 @@ function Art() {
                     NFT Marketplace Launch
                 </Typography>
 
-                <Typography level="h4" color="green">
+                <Typography level="h4" color="green" sx={{ textAlign: 'center' }}>
                     9pm UTC Saturday September 16
                 </Typography>
 
@@ -75,8 +74,7 @@ function Art() {
 
                 <Grid
                     container
-                    spacing={2}
-                    columns={{ xs: 2, sm: 4, md: 6, lg: 10 }}
+                    justifyContent='center'
                     sx={{ padding: '12px' }}
                 >
                     <GalleryTile
