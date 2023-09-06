@@ -592,6 +592,31 @@ function Create() {
                             />
                         </span>
                     </Sheet>
+                    <Sheet color="purple-dashed" variant="rounded">
+                        <span
+                            onMouseEnter={() => setOnHover(true)}
+                            onMouseLeave={() => setOnHover(false)}
+                        >
+                            <TwineButton
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    paddingBlock: '2rem',
+                                    paddingInline: '2.4rem',
+                                    borderRadius: '15px',
+                                }}
+                                icon="/icons/purple-img.svg"
+                                name="Art Collection Drafts"
+                                action={() => {
+                                    window.location.href = '/gallery/collection/drafts'
+                                }}
+                                color='blackpurple'
+                                paddingTop="10px"
+                                className="custom-start-decorator"
+                            />
+                        </span>
+                    </Sheet>
                 </Stack>
             </Grid>
             {env === 'dev' && (

@@ -2,24 +2,12 @@ import React, { useContext, useEffect } from 'react'
 import useState from 'react-usestateref'
 import Navbar from '../components/Navbar.tsx'
 import { UserContext } from '../App.tsx'
-import { User, Episode } from '../utils/types.ts'
+import { User } from '../utils/types.ts'
 import {
-    AspectRatio,
     Box,
-    Button,
-    Card,
     Grid,
-    IconButton,
-    Input,
-    Stack,
-    Textarea,
     Typography,
 } from '@mui/joy'
-import { useImmer } from 'use-immer'
-import { enableMapSet } from 'immer'
-import Sheet from '@mui/joy/Sheet'
-import ProfileWork from '../components/ProfileWork.tsx'
-import { default as axios } from 'axios'
 import TwineButton from '../components/TwineButton.tsx'
 import GalleryTile from '../components/GalleryTile.tsx'
 import { genericGet } from '../utils/api.ts'
@@ -38,7 +26,7 @@ function Gallery(props: WorkGalleryProps) {
 
     const [view, setView] = useState(false)
 
-    const [galleryItems, setGalleryItems] = useState<Array<GalleryTile>>([])
+    const [galleryItems, setGalleryItems] = useState<Array<JSX.Element>>([])
 
     useEffect(() => {
         if (user && user.creator && user.walletAddress) {
@@ -161,12 +149,12 @@ function Gallery(props: WorkGalleryProps) {
                             <TwineButton
                                 color="green"
                                 icon="/icons/green_plus.svg"
-                                name="Create One Art"
+                                name="Create Digital Art"
                             />
                             <TwineButton
                                 color="green"
                                 icon="/icons/green_plus.svg"
-                                name="Publish Art Collection"
+                                name="Create New Collections"
                             />
                             <TwineButton
                                 icon="/icons/purple_paper.svg"
