@@ -34,14 +34,26 @@ function Gallery(props: WorkGalleryProps) {
             let i = 0
             const fetchAndSet = async () => {
                 if (props.art) {
-                    const response: NFTCollection[] = await genericGet(
-                        '/api/collection/active/creator/' + user.walletAddress
-                    )
-                    response.forEach((elem: NFTCollection) => {
-                        profileWorks.push(
-                            <GalleryTile story={false} coll={elem} key={1} />
+                    if (props.draft) {
+                        const response: NFTCollection[] = await genericGet('/api/collection/drafts/creator/' + user.walletAddress)
+                        console.log(response)
+                        response.forEach((elem: NFTCollection) => {
+                            profileWorks.push(
+                                <GalleryTile story={false} coll={elem} key={i} />
+                            )
+                            i += 1
+                        })
+                    } else {
+                        const response: NFTCollection[] = await genericGet(
+                            '/api/collection/active/creator/' + user.walletAddress
                         )
-                    })
+                        response.forEach((elem: NFTCollection) => {
+                            profileWorks.push(
+                                <GalleryTile story={false} coll={elem} key={i} />
+                            )
+                            i += 1
+                        })
+                    }
                 } else {
                     const response: Work[] = await genericGet(
                         '/api/work/creator/' + user.walletAddress
@@ -145,25 +157,46 @@ function Gallery(props: WorkGalleryProps) {
                 }
                 rightComponent={
                     props.art ? (
-                        <div>
+                        <div className="create-published-button">
                             <TwineButton
+                                sx={{
+                                    width: '100%',
+                                    borderRadius: '13px',
+                                    height: '45px',
+                                }}
                                 color="green"
                                 icon="/icons/green_plus.svg"
                                 name="Create Digital Art"
+                                action={() => {
+                                    window.location.href = '/create/art'
+                                }}
                             />
                             <TwineButton
+                                sx={{
+                                    width: '100%',
+                                    borderRadius: '13px',
+                                    height: '45px',
+                                }}
                                 color="green"
                                 icon="/icons/green_plus.svg"
                                 name="Create New Collections"
+                                action={() => {
+                                    window.location.href = '/create/collection'
+                                }}
                             />
-                            <TwineButton
+                            {/* <TwineButton
+                                sx={{
+                                    width: '100%',
+                                    borderRadius: '13px',
+                                    height: '45px',
+                                }}
                                 icon="/icons/purple_paper.svg"
                                 name={
                                     'Open ' + props.draft
                                         ? 'Published'
                                         : 'Draft'
                                 }
-                            />
+                            /> */}
                         </div>
                     ) : (
                         <div className="create-published-button">

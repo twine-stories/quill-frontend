@@ -134,6 +134,7 @@ function GalleryTile(props: GalleryTileProps) {
                         src={imgSrc}
                         loading="lazy"
                         alt=""
+                        style={{objectFit: 'contain'}}
                     />
                 </Grid>
                 <div className="gallery-tile-title-container">
