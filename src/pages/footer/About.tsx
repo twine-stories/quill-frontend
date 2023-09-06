@@ -43,28 +43,32 @@ function About() {
                             <img id="about-logo" src="/icons/twine_logo.svg" />
                         </Grid>
                     </Grid>
-                    <Typography level="h6">
-                        With Twine, creators come first. We afford authors and
-                        illustrators a genuine opportunity to make enough money
-                        to support themselves with their work. Too many legacy
-                        storytelling corporations, from animation companies to
-                        novel publishing houses, greenlight projects based on
-                        predicted audience interest or social media followings.
-                        Unlike competitor platforms, Twine does not stand
-                        between creators and fans, control the intellectual
-                        property, or determine how and what creators publish.
-                        Twine provides tools for creators to connect directly
-                        with each other, visualize worlds together, and grow
-                        loyal fanbases.{' '}
+                    <Typography level="h6" color='white'>
+                        Twine is a Web3 publishing platform where authors and illustrators collaborate to create story-based art and serialized fiction.
                     </Typography>
-                    <Typography level="h6">
-                        We chose the name Twine because we were inspired by the
-                        science of forests. Transformational change can begin
-                        with small networks of people who fight for equity. A
-                        tree alone is vulnerable to weather, but a forest
-                        controls the weather.
+                    <Typography level='h6' color='white'>
+                        Creators should be able to support themselves with their work. Twine provides a Creator Collab
+                        for authors and illustrators to meet and match and a platform to post and sell the art. Author-illustrator teams retain 97% of revenue from art sales, and authors retain 90% of all story tips.
+                        By working together to visualize stories and build worlds, authors and illustrators transform the
+                        way they monetize.
                     </Typography>
-                    <Typography level="h6">Twine: We Create Worlds.</Typography>
+                    <Typography level="h6" color='white'>
+                        Many storytelling corporations greenlight projects based on predicted audience interest or
+                        social media followings. Unlike competitor platforms, Twine does not stand between creators
+                        and fans, control the intellectual property, or determine how, what, or when creators publish.
+                        We chose the name Twine because we were inspired by the science of forests. A tree alone is
+                        vulnerable to weather, but a forest controls it. Transformational change can begin
+                        with a small community of people who demand equity. Let’s grow a forest together!
+                    </Typography>
+                    <Typography level="h6" color='white'>The Twine Team:</Typography>
+                    <Typography level="h6" className='about-team' color='white'>
+                        <a href='https://www.linkedin.com/in/sam-raphaelson-87514422b/' target='_blank'>Sam Raphaelson</a> <br />
+                        <a href='https://www.linkedin.com/in/rithikjain/' target='_blank'>Rithik Jain</a> <br />
+                        <a href='https://www.linkedin.com/in/nicholas-raphaelson-a343b7149/' target='_blank'>Nick Raphaelson</a> <br />
+                        <a href='https://www.linkedin.com/in/j-bryant-cassady/' target='_blank'>Bryant Cassady</a> <br />
+                        <a href='https://www.linkedin.com/in/parvs1/' target='_blank'>Parv Shrivastava</a> <br />
+                        <a href='https://www.linkedin.com/in/jeff-raphaelson-aa98031b/' target='_blank'>Jeff Raphaelson</a> <br />
+                    </Typography>
                 </Grid>
             </Grid>
         </div>
