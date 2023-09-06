@@ -21,3 +21,12 @@
     width: 150px;
     height: 150px;
 }
+
+.about-team a {
+    color: #E4E5FF;
+    text-decoration: none;
+}
+
+.about-team a:hover {
+    text-decoration: underline;
+}
