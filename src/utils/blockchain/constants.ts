@@ -25,8 +25,8 @@ export const nameMapping: object = {
 }
 
 export const TWINE_CUT = 0.1
-export const microToAlgo = (micro_algo: bigint): number => {
-    return Number(micro_algo / 1000000n) + Number(micro_algo % 1000000n)
+export const microToAlgo = (microAlgo: bigint): number => {
+    return Number(microAlgo / 1000000n) + Number(microAlgo % 1000000n) / 1000000
 }
 export const algoToMicro = (algo: number): bigint => {
     return BigInt(algo * 1000000)

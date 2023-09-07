@@ -12,7 +12,9 @@ interface GalleryTileProps {
     work?: Work
     coll?: NFTCollection
     otris?: string
+    art?: boolean
     img?: string
+    noBorder?: boolean
     story?: boolean
     artId?: number
 }
@@ -21,7 +23,9 @@ function GalleryTile(props: GalleryTileProps) {
     const context: object = useContext(ArtworkContext)
 
     const [imgSrc, setImgSrc] = useState<string>()
-    const [noBorder, setNoBorder] = useState<boolean>(true)
+    const [noBorder, setNoBorder] = useState<boolean>(
+        props.noBorder === undefined ? true : props.noBorder
+    )
 
     useEffect(() => {
         if (props.work) {
@@ -79,6 +83,30 @@ function GalleryTile(props: GalleryTileProps) {
                 </div>
             </Card>
         )
+    } else if (props.art) {
+        return (
+            <Card
+                variant="outlined"
+                sx={{
+                    backgroundColor: '#14100E',
+                    borderRadius: '32px',
+                    border: '2px solid #241D19',
+                    padding: '13px',
+                    width: '200px',
+                    height: '270px',
+                    margin: '10px',
+                }}
+            >
+                <Grid container alignItems="center" justifyContent="center">
+                    <img
+                        className="otris-tile-img"
+                        src={imgSrc}
+                        loading="lazy"
+                        alt=""
+                    />
+                </Grid>
+            </Card>
+        )
     } else if (props.story) {
         return (
             <Card
@@ -134,6 +162,7 @@ function GalleryTile(props: GalleryTileProps) {
                         src={imgSrc}
                         loading="lazy"
                         alt=""
+                        style={{ objectFit: 'contain' }}
                     />
                 </Grid>
                 <div className="gallery-tile-title-container">

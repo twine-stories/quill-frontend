@@ -371,7 +371,7 @@ function App() {
                                     element={<AlgoHelp />}
                                 ></Route>
                                 <Route path="/art" element={<Art />}></Route>
-                                
+
                                 <Route
                                     path="/create"
                                     element={<Create />}
@@ -392,10 +392,6 @@ function App() {
                                     path="/create/collection"
                                     element={<CreateCollection />}
                                 ></Route>
-                                <Route
-                                    path="/create/collection/*"
-                                    element={<CreateCollection edit={true} />}
-                                ></Route>
 
                                 <Route
                                     path="/edit/story/*"
@@ -404,6 +400,10 @@ function App() {
                                 <Route
                                     path="/edit/chapter/*"
                                     element={<CreateChapter edit={true} />}
+                                ></Route>
+                                <Route
+                                    path="/edit/collection/*"
+                                    element={<CreateCollection edit={true} />}
                                 ></Route>
 
                                 <Route
@@ -425,6 +425,12 @@ function App() {
                                     path="/gallery/story/published"
                                     element={
                                         <Gallery art={false} draft={false} />
+                                    }
+                                ></Route>
+                                <Route
+                                    path="/gallery/collection/draft"
+                                    element={
+                                        <Gallery art={true} draft={true} />
                                     }
                                 ></Route>
 
