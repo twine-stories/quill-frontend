@@ -576,7 +576,9 @@ function CreateCollection(props: CreateCollectionProps) {
                             <TwineSelect
                                 id="create-coll-select-story"
                                 label="Story"
-                                defaultValue={collection ? collection.work.id : ''}
+                                defaultValue={
+                                    collection ? collection.work.id : ''
+                                }
                                 options={Array.from(works.values()).map(
                                     (work: Work) => {
                                         return (
