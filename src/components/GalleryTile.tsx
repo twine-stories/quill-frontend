@@ -23,7 +23,9 @@ function GalleryTile(props: GalleryTileProps) {
     const context: object = useContext(ArtworkContext)
 
     const [imgSrc, setImgSrc] = useState<string>()
-    const [noBorder, setNoBorder] = useState<boolean>(props.noBorder === undefined ? true : props.noBorder)
+    const [noBorder, setNoBorder] = useState<boolean>(
+        props.noBorder === undefined ? true : props.noBorder
+    )
 
     useEffect(() => {
         if (props.work) {
@@ -160,7 +162,7 @@ function GalleryTile(props: GalleryTileProps) {
                         src={imgSrc}
                         loading="lazy"
                         alt=""
-                        style={{objectFit: 'contain'}}
+                        style={{ objectFit: 'contain' }}
                     />
                 </Grid>
                 <div className="gallery-tile-title-container">

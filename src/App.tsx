@@ -371,7 +371,7 @@ function App() {
                                     element={<AlgoHelp />}
                                 ></Route>
                                 <Route path="/art" element={<Art />}></Route>
-                                
+
                                 <Route
                                     path="/create"
                                     element={<Create />}

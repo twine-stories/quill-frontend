@@ -10,7 +10,13 @@ import { v4 as uuidv4 } from 'uuid'
 import { MAX_COLLABORATORS_SMART_CONTRACTS } from '../../utils/constants.ts'
 import Collaborator from '../../components/Collaborator.tsx'
 import TwineButton from '../../components/TwineButton.tsx'
-import { User, ProfitSplit, NFTCollection, Work, Artwork } from '../../utils/types.ts'
+import {
+    User,
+    ProfitSplit,
+    NFTCollection,
+    Work,
+    Artwork,
+} from '../../utils/types.ts'
 import { genericGet, genericPost } from '../../utils/api.ts'
 import GalleryTile from '../../components/GalleryTile.tsx'
 import TwineInput from '../../components/TwineInput.tsx'
@@ -77,17 +83,17 @@ function CreateCollection(props: CreateCollectionProps) {
                 }
             )
 
-            genericGet('/api/work/creator/published/' + user.walletAddress).then(
-                (response: Work[]) => {
-                    if (response) {
-                        let worksMap: Map<number, Work> = new Map()
-                        response.forEach((item: Work) => {
-                            worksMap.set(item.id, item)
-                        })
-                        setWorks(worksMap)
-                    }
+            genericGet(
+                '/api/work/creator/published/' + user.walletAddress
+            ).then((response: Work[]) => {
+                if (response) {
+                    let worksMap: Map<number, Work> = new Map()
+                    response.forEach((item: Work) => {
+                        worksMap.set(item.id, item)
+                    })
+                    setWorks(worksMap)
                 }
-            )
+            })
         }
     }, [user])
 
@@ -99,49 +105,63 @@ function CreateCollection(props: CreateCollectionProps) {
                 setCollection(response)
                 setSelectedWork(response.work.id)
 
-                genericGet('/api/artwork/collection/' + response.id).then((response: Artwork[]) => {
-                    if (response) {
-                        setSelectedNfts(new Set(response.map(art => art.id)))
-                        setShowNfts(true)
+                genericGet('/api/artwork/collection/' + response.id).then(
+                    (response: Artwork[]) => {
+                        if (response) {
+                            setSelectedNfts(
+                                new Set(response.map((art) => art.id))
+                            )
+                            setShowNfts(true)
+                        }
                     }
-                })
+                )
 
-                genericGet('/api/profitSplit/collection/' + response.id).then((splits: ProfitSplit[]) => {
-                    if (splits) {
-                        let collabs: JSX.Element[] = [<div></div>]
-                        splits.forEach((item: ProfitSplit) => {
-                            if (
-                                item.creator.userName !==
-                                response.work.creator.userName
-                            ) {
-                                collabs.push(
-                                    <Collaborator
-                                        profitSplit={true}
-                                        defaultCreator={item.creator.userName}
-                                        defaultWallet={item.creator.walletAddress}
-                                        defaultProfit={item.percentage}
-                                        principle={false}
-                                        id={uuidv4()}
-                                        key={uuidv4()}
-                                    />
-                                )
-                            } else {
-                                collabs[0] = (
-                                    <Collaborator
-                                        profitSplit={true}
-                                        defaultCreator={item.creator.userName}
-                                        defaultWallet={item.creator.walletAddress}
-                                        defaultProfit={item.percentage}
-                                        principle={true}
-                                        id={uuidv4()}
-                                        key={uuidv4()}
-                                    />
-                                )
-                            }
-                        })
-                        setCollaborators(collabs)
+                genericGet('/api/profitSplit/collection/' + response.id).then(
+                    (splits: ProfitSplit[]) => {
+                        if (splits) {
+                            let collabs: JSX.Element[] = [<div></div>]
+                            splits.forEach((item: ProfitSplit) => {
+                                if (
+                                    item.creator.userName !==
+                                    response.work.creator.userName
+                                ) {
+                                    collabs.push(
+                                        <Collaborator
+                                            profitSplit={true}
+                                            defaultCreator={
+                                                item.creator.userName
+                                            }
+                                            defaultWallet={
+                                                item.creator.walletAddress
+                                            }
+                                            defaultProfit={item.percentage}
+                                            principle={false}
+                                            id={uuidv4()}
+                                            key={uuidv4()}
+                                        />
+                                    )
+                                } else {
+                                    collabs[0] = (
+                                        <Collaborator
+                                            profitSplit={true}
+                                            defaultCreator={
+                                                item.creator.userName
+                                            }
+                                            defaultWallet={
+                                                item.creator.walletAddress
+                                            }
+                                            defaultProfit={item.percentage}
+                                            principle={true}
+                                            id={uuidv4()}
+                                            key={uuidv4()}
+                                        />
+                                    )
+                                }
+                            })
+                            setCollaborators(collabs)
+                        }
                     }
-                })
+                )
             })
         }
     }, [props.edit, user])
@@ -195,7 +215,12 @@ function CreateCollection(props: CreateCollectionProps) {
             let count: number = 0
             nfts.forEach((nft) => {
                 nftImgs.push(
-                    <GalleryTile key={count} img={nft.url} artId={nft.id} noBorder={!selectedNfts.has(nft.id)} />
+                    <GalleryTile
+                        key={count}
+                        img={nft.url}
+                        artId={nft.id}
+                        noBorder={!selectedNfts.has(nft.id)}
+                    />
                 )
                 count++
             })
@@ -238,12 +263,25 @@ function CreateCollection(props: CreateCollectionProps) {
             return
         }
 
-        const name = (document.getElementById('collection-name-field') as HTMLInputElement).value
-        const price = (document.getElementById('collection-price-field') as HTMLInputElement).value
+        const name = (
+            document.getElementById('collection-name-field') as HTMLInputElement
+        ).value
+        const price = (
+            document.getElementById(
+                'collection-price-field'
+            ) as HTMLInputElement
+        ).value
 
         console.log('top')
 
-        if (!(name && selectedWork !== undefined && price && parseFloat(price) >= 0.1)) {
+        if (
+            !(
+                name &&
+                selectedWork !== undefined &&
+                price &&
+                parseFloat(price) >= 0.1
+            )
+        ) {
             return
         }
 
@@ -264,7 +302,10 @@ function CreateCollection(props: CreateCollectionProps) {
         })
 
         console.log('sum')
-        const sum: number = percents.reduce((partial, curr) => partial + curr, 0)
+        const sum: number = percents.reduce(
+            (partial, curr) => partial + curr,
+            0
+        )
         if (sum !== 100) {
             return
         }
@@ -280,14 +321,22 @@ function CreateCollection(props: CreateCollectionProps) {
             profitSplitMap.set(users[i], percents[i])
         }
 
-        const artworks: Artwork[] = Array.from(selectedNfts).map((nft: number) => {
-            return {id: nft}
-        })
+        const artworks: Artwork[] = Array.from(selectedNfts).map(
+            (nft: number) => {
+                return { id: nft }
+            }
+        )
         const coll: NFTCollection = {
             work: works.get(selectedWork),
             name: name,
             collType: CollectionType.SALE,
-            url: works.get(selectedWork)?.creator.userName.replace(' ', '-').toLowerCase() + '-' + name.replace(' ', '-').toLowerCase(),
+            url:
+                works
+                    .get(selectedWork)
+                    ?.creator.userName.replace(' ', '-')
+                    .toLowerCase() +
+                '-' +
+                name.replace(' ', '-').toLowerCase(),
             active: false,
             published: false,
             price: parseFloat(price),
@@ -299,8 +348,8 @@ function CreateCollection(props: CreateCollectionProps) {
             if (!props.edit) {
                 genericPost('/api/collection/createWithArt', {
                     collection: coll,
-                    artworks: artworks
-                }).then(response => {
+                    artworks: artworks,
+                }).then((response) => {
                     let profitSplitsWithAddrs: object[] = []
                     for (let i = 0; i < usernames.length; i++) {
                         profitSplitsWithAddrs.push({
@@ -312,14 +361,22 @@ function CreateCollection(props: CreateCollectionProps) {
                             },
                         })
                     }
-        
-                    genericPost('/api/profitSplit/addMany', profitSplitsWithAddrs).then(response => {
+
+                    genericPost(
+                        '/api/profitSplit/addMany',
+                        profitSplitsWithAddrs
+                    ).then((response) => {
                         window.location.href = '/collections/' + coll.url
                     })
                 })
             } else {
-                genericPost('/api/collection/update', {...collection, ...coll}).then((response: NFTCollection) => {
-                    genericGet('/api/profitSplit/collection/' + response.id).then((splits: ProfitSplit[]) => {
+                genericPost('/api/collection/update', {
+                    ...collection,
+                    ...coll,
+                }).then((response: NFTCollection) => {
+                    genericGet(
+                        '/api/profitSplit/collection/' + response.id
+                    ).then((splits: ProfitSplit[]) => {
                         let newSplit: ProfitSplit
                         let foundEntries: Set<number> = new Set()
                         let i: number
@@ -329,12 +386,11 @@ function CreateCollection(props: CreateCollectionProps) {
                                 creator: user,
                                 percentage: value,
                             }
-    
+
                             let found: boolean = false
                             for (i = 0; i < splits.length; i++) {
                                 if (
-                                    splits[i].creator.userName ===
-                                    user.userName
+                                    splits[i].creator.userName === user.userName
                                 ) {
                                     newSplit.id = splits[i].id
                                     genericPost(
@@ -345,12 +401,12 @@ function CreateCollection(props: CreateCollectionProps) {
                                     foundEntries.add(i)
                                 }
                             }
-    
+
                             if (!found) {
                                 genericPost('/api/profitSplit/add', newSplit)
                             }
                         })
-    
+
                         for (i = 0; i < splits.length; i++) {
                             if (!foundEntries.has(i)) {
                                 genericPost(
@@ -360,39 +416,44 @@ function CreateCollection(props: CreateCollectionProps) {
                             }
                         }
                     })
-    
-                    genericGet('/api/artwork/collection/' + response.id).then((art: Artwork[]) => {
-                        let foundEntries: Set<number> = new Set()
-                        artworks.forEach((nft: Artwork) => {
-                            let found: boolean = false
-                            const newArt: Artwork = {
-                                ...nft,
-                                origColl: response,
-                                currColl: response,
-                            }
+
+                    genericGet('/api/artwork/collection/' + response.id).then(
+                        (art: Artwork[]) => {
+                            let foundEntries: Set<number> = new Set()
+                            artworks.forEach((nft: Artwork) => {
+                                let found: boolean = false
+                                const newArt: Artwork = {
+                                    ...nft,
+                                    origColl: response,
+                                    currColl: response,
+                                }
+                                for (let i = 0; i < art.length; i++) {
+                                    if (nft.id === art[i].id) {
+                                        foundEntries.add(i)
+                                        found = true
+
+                                        genericPost(
+                                            '/api/artwork/update',
+                                            newArt
+                                        )
+                                    }
+                                }
+
+                                if (!found) {
+                                    genericPost('/api/artwork/create', newArt)
+                                }
+                            })
+
                             for (let i = 0; i < art.length; i++) {
-                                if (nft.id === art[i].id){
-                                    foundEntries.add(i)
-                                    found = true
-    
-                                    genericPost('/api/artwork/update', newArt)
+                                if (!foundEntries.has(i)) {
+                                    genericPost(
+                                        '/api/artwork/remove/' + art[i].id,
+                                        {}
+                                    )
                                 }
                             }
-                            
-                            if (!found) {
-                                genericPost('/api/artwork/create', newArt)
-                            }
-                        })
-    
-                        for (let i = 0; i < art.length; i++) {
-                            if (!foundEntries.has(i)) {
-                                genericPost(
-                                    '/api/artwork/remove/' + art[i].id,
-                                    {}
-                                )
-                            }
                         }
-                    })
+                    )
                 })
             }
         }
@@ -492,7 +553,7 @@ function CreateCollection(props: CreateCollectionProps) {
                     >
                         Fixed Price
                     </Typography>
-                    {(!props.edit || collection) &&
+                    {(!props.edit || collection) && (
                         <Grid id="create-coll-fields">
                             <TwineInput
                                 label="Collection name"
@@ -512,12 +573,27 @@ function CreateCollection(props: CreateCollectionProps) {
                                 endDecorator="/icons/algo.svg"
                                 defaultValue={collection?.price?.toString()}
                             />
-                            <TwineSelect id="create-coll-select-story" label="Story" defaultValue={collection.work.id}
-                                options={Array.from(works.values()).map((work: Work) => {
-                                    return <Option value={work.id} onClick={() => setSelectedWork(work.id)}>{work.title}</Option>
-                                })}/>
+                            <TwineSelect
+                                id="create-coll-select-story"
+                                label="Story"
+                                defaultValue={collection.work.id}
+                                options={Array.from(works.values()).map(
+                                    (work: Work) => {
+                                        return (
+                                            <Option
+                                                value={work.id}
+                                                onClick={() =>
+                                                    setSelectedWork(work.id)
+                                                }
+                                            >
+                                                {work.title}
+                                            </Option>
+                                        )
+                                    }
+                                )}
+                            />
                         </Grid>
-                    }
+                    )}
                 </Grid>
 
                 <Grid sx={{ marginTop: '40px', paddingLeft: '32px' }}>

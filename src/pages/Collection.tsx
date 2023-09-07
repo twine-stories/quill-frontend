@@ -14,7 +14,6 @@ function Collection() {
     const [artwork, setArtwork] = useState<Artwork[]>()
     const [nftTiles, setNftTiles] = useState<JSX.Element[]>([])
 
-
     const context: object = useContext(UserContext)
     const user: User = context['user']
 
@@ -36,13 +35,17 @@ function Collection() {
                 }
             )
 
-            genericGet('/api/algo/asset-imgs/' + coll.id).then(response => {
+            genericGet('/api/algo/asset-imgs/' + coll.id).then((response) => {
                 let nftImgs: JSX.Element[] = []
                 let count: number = 0
                 console.log(response)
                 for (const id in response) {
                     nftImgs.push(
-                        <GalleryTile key={count} img={response[id]} artId={parseInt(id)} />
+                        <GalleryTile
+                            key={count}
+                            img={response[id]}
+                            artId={parseInt(id)}
+                        />
                     )
                     count++
                 }
@@ -57,14 +60,21 @@ function Collection() {
             <Navbar />
             {coll && (
                 <div>
-                    <Typography level="h2" color="purple">{coll.name}</Typography>
-                    {user.walletAddress === coll.work.creator.walletAddress &&
-                        <TwineButton name="Edit Collection" color='blackpurple' icon="/icons/purple_settings.svg" sx={{ width: '90%' }} action={() => {
-                            window.location.href =
-                                '/edit/collection/' +
-                                coll.url
-                        }} />
-                    }
+                    <Typography level="h2" color="purple">
+                        {coll.name}
+                    </Typography>
+                    {user.walletAddress === coll.work.creator.walletAddress && (
+                        <TwineButton
+                            name="Edit Collection"
+                            color="blackpurple"
+                            icon="/icons/purple_settings.svg"
+                            sx={{ width: '90%' }}
+                            action={() => {
+                                window.location.href =
+                                    '/edit/collection/' + coll.url
+                            }}
+                        />
+                    )}
                     <Grid
                         container
                         direction="row"
