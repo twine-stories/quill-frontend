@@ -5,14 +5,15 @@ import { User, NFTCollection, Artwork } from '../utils/types.ts'
 import { collectionGetByUrl } from '../utils/api.ts'
 import { Asset } from '../utils/blockchain/types.ts'
 import { genericGet } from '../utils/api.ts'
-import Footer from '../components/Footer.tsx'
+import { Grid, Typography } from '@mui/joy'
+import GalleryTile from '../components/GalleryTile.tsx'
+import TwineButton from '../components/TwineButton.tsx'
 
 function Collection() {
     const [coll, setColl] = useState<NFTCollection>()
     const [artwork, setArtwork] = useState<Artwork[]>()
-    const [assets, setAssets] = useState<Record<number, Asset>>()
-    const [initLoad, setInitLoad] = useState<boolean>(false)
-    const [listings, setListings] = useState<JSX.Element[]>([])
+    const [nftTiles, setNftTiles] = useState<JSX.Element[]>([])
+
 
     const context: object = useContext(UserContext)
     const user: User = context['user']
@@ -34,25 +35,47 @@ function Collection() {
                     setArtwork(response)
                 }
             )
+
+            genericGet('/api/algo/asset-imgs/' + coll.id).then(response => {
+                let nftImgs: JSX.Element[] = []
+                let count: number = 0
+                console.log(response)
+                for (const id in response) {
+                    nftImgs.push(
+                        <GalleryTile key={count} img={response[id]} artId={parseInt(id)} />
+                    )
+                    count++
+                }
+
+                setNftTiles(nftImgs)
+            })
         }
     }, [coll])
-
-    useEffect(() => {
-        if (assets) {
-            setInitLoad(true)
-        }
-    }, [assets])
 
     return (
         <div>
             <Navbar />
             {coll && (
                 <div>
-                    <p>{coll.name}</p>
-                    {listings}
+                    <Typography level="h2" color="purple">{coll.name}</Typography>
+                    {user.walletAddress === coll.work.creator.walletAddress &&
+                        <TwineButton name="Edit Collection" color='blackpurple' icon="/icons/purple_settings.svg" sx={{ width: '90%' }} action={() => {
+                            window.location.href =
+                                '/edit/collection/' +
+                                coll.url
+                        }} />
+                    }
+                    <Grid
+                        container
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="flex-start"
+                        flexWrap="wrap"
+                    >
+                        {nftTiles}
+                    </Grid>
                 </div>
             )}
-            <Footer />
         </div>
     )
 }
