@@ -57,7 +57,7 @@
     margin-top: 15px;
 }
 
-.works-list {
+.works-list-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -70,9 +70,6 @@
 }
 
 @media only screen and (max-width: 575px) {
-    .bell-class {
-        width: initial !important;
-    }
     .profile-info .profile-pic {
         width: 50px !important;
         height: 50px !important;
@@ -92,4 +89,14 @@
     .bell-class img {
         width: 10px !important;
     }
+    button.MuiButton-root.MuiButton-variantSolid.MuiButton-colorDarkpurple.MuiButton-sizeMd.bell-class {
+        width: 30%;
+    }
+}
+
+.MuiGrid-root.MuiGrid-direction-xs-row.MuiGrid-grid-md-1.MuiGrid-grid-xl-1.MuiGrid-grid-lg-1.MuiGrid-grid-sm-2.MuiGrid-grid-xs-1.work-list{
+    width: 225px;
+}
+button.MuiButton-root.MuiButton-variantSolid.MuiButton-colorDarkpurple.MuiButton-sizeMd.bell-class {
+    width: 30%;
 }
