@@ -13,8 +13,15 @@ import {
     TWINE_CUT,
 } from '../utils/blockchain/constants.ts'
 
-
-function TipComponent({ showTip, setOpenTipError, setOpenTipSuccess, setOpenError, episode, work, percentages }) {
+function TipComponent({
+    showTip,
+    setOpenTipError,
+    setOpenTipSuccess,
+    setOpenError,
+    episode,
+    work,
+    percentages,
+}) {
     const [showAnimation, setShowAnimation] = useState<boolean>(false)
     const [processingTip, setProcessingTip] = useState<boolean>(false)
     const context: object = useContext(UserContext)
@@ -36,13 +43,14 @@ function TipComponent({ showTip, setOpenTipError, setOpenTipSuccess, setOpenErro
                 sx={
                     showTip
                         ? {
-                            marginTop: '20px',
-                            background: '#202020',
-                            padding: '10px 0',
-                            borderRadius: '15px',
-                        } : {
-                            visibility: 'hidden',
-                        }
+                              marginTop: '20px',
+                              background: '#202020',
+                              padding: '10px 0',
+                              borderRadius: '15px',
+                          }
+                        : {
+                              visibility: 'hidden',
+                          }
                 }
             >
                 <img
@@ -60,24 +68,22 @@ function TipComponent({ showTip, setOpenTipError, setOpenTipSuccess, setOpenErro
                     sx={
                         showTip
                             ? {
-                                marginTop: '20px',
-                                background:
-                                    '#202020',
-                                padding:
-                                    '0px 20px',
-                                borderRadius:
-                                    '15px',
-                            } : {
-                                visibility:
-                                    'hidden',
-                                padding: '20px',
-                            }
-                    }>
+                                  marginTop: '20px',
+                                  background: '#202020',
+                                  padding: '0px 20px',
+                                  borderRadius: '15px',
+                              }
+                            : {
+                                  visibility: 'hidden',
+                                  padding: '20px',
+                              }
+                    }
+                >
                     <TwineInput
                         type="number"
                         label={
                             'Send tip to @' +
-                            episode?.work?.creator?.userName || ''
+                                episode?.work?.creator?.userName || ''
                         }
                         placeholder="tip amount"
                         inputAttrs={{
@@ -101,59 +107,39 @@ function TipComponent({ showTip, setOpenTipError, setOpenTipSuccess, setOpenErro
                         }
                         action={() => {
                             if (user) {
-                                const tipVal =
-                                    document.getElementById(
-                                        'tipInput'
-                                    ) as HTMLInputElement
+                                const tipVal = document.getElementById(
+                                    'tipInput'
+                                ) as HTMLInputElement
                                 if (
                                     tipVal &&
                                     tipVal.value &&
-                                    parseFloat(
-                                        tipVal.value
-                                    ) >= 0.1
+                                    parseFloat(tipVal.value) >= 0.1
                                 ) {
-                                    const adjustedVal: bigint =
-                                        algoToMicro(
-                                            parseFloat(
-                                                tipVal.value
-                                            )
-                                        )
+                                    const adjustedVal: bigint = algoToMicro(
+                                        parseFloat(tipVal.value)
+                                    )
                                     tip(
                                         user.walletAddress,
                                         creators,
                                         percentages,
                                         adjustedVal,
-                                        user.connectType ===
-                                        ConnectType.PERA,
+                                        user.connectType === ConnectType.PERA,
                                         setProcessingTip
                                     ).then(() => {
-                                        setShowAnimation(
-                                            true
-                                        )
+                                        setShowAnimation(true)
                                         prepareSuccessAnimation()
-                                        tipVal.value =
-                                            ''
-                                        const tipObj: Tip =
-                                        {
+                                        tipVal.value = ''
+                                        const tipObj: Tip = {
                                             tipper: user,
-                                            episode:
-                                                episode,
+                                            episode: episode,
                                             amount:
-                                                microToAlgo(
-                                                    adjustedVal
-                                                ) *
-                                                (1.0 -
-                                                    TWINE_CUT),
+                                                microToAlgo(adjustedVal) *
+                                                (1.0 - TWINE_CUT),
                                         }
-                                        genericPost(
-                                            '/api/tip/tip',
-                                            tipObj
-                                        )
+                                        genericPost('/api/tip/tip', tipObj)
                                     })
                                 } else {
-                                    setOpenTipError(
-                                        true
-                                    )
+                                    setOpenTipError(true)
                                 }
                             } else {
                                 setOpenError(true)

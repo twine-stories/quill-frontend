@@ -29,8 +29,8 @@ import {
     algoToMicro,
     TWINE_CUT,
 } from '../utils/blockchain/constants.ts'
-import Modal from '@mui/joy/Modal';
-import ModalDialog from '@mui/joy/ModalDialog';
+import Modal from '@mui/joy/Modal'
+import ModalDialog from '@mui/joy/ModalDialog'
 import ModalClose from '@mui/joy/ModalClose'
 import { Layout } from '../components/layout/index.tsx'
 import TipComponent from '../components/TipComponent.tsx'
@@ -71,9 +71,9 @@ function Chapter() {
                 const episode_str: string = String(episode.id)
                 genericGet(
                     '/api/like/isLikedByUser/' +
-                    user.userName +
-                    '/' +
-                    episode_str
+                        user.userName +
+                        '/' +
+                        episode_str
                 ).then((response: any) => {
                     setLiked(response)
                 })
@@ -94,8 +94,8 @@ function Chapter() {
                                 level="h3"
                                 color="white"
                                 onClick={() =>
-                                (window.location.href =
-                                    '/profile/' + item.creator.userName)
+                                    (window.location.href =
+                                        '/profile/' + item.creator.userName)
                                 }
                                 sx={{ cursor: 'pointer', fontSize: '20px' }}
                             >
@@ -305,8 +305,8 @@ function Chapter() {
                                     <div>
                                         {user &&
                                             user.userName ===
-                                            episode.work.creator
-                                                .userName && (
+                                                episode.work.creator
+                                                    .userName && (
                                                 <TwineButton
                                                     sx={{ width: '100%' }}
                                                     icon="/icons/green_setting.svg"
@@ -337,35 +337,58 @@ function Chapter() {
                                                 setShowTip(!showTip)
                                             }}
                                         />
-                                        {windowWidth < 700 ?
+                                        {windowWidth < 700 ? (
                                             <Modal
                                                 aria-labelledby="modal-title"
                                                 aria-describedby="modal-desc"
                                                 open={showTip}
-                                                onClose={() => setShowTip(false)}
-                                                sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                                onClose={() =>
+                                                    setShowTip(false)
+                                                }
+                                                sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
                                                 <>
                                                     <ModalDialog>
                                                         <ModalClose />
-                                                        <TipComponent showTip={showTip}
-                                                            setOpenTipError={setOpenTipError}
-                                                            setOpenTipSuccess={setOpenTipSuccess}
-                                                            setOpenError={setOpenError}
+                                                        <TipComponent
+                                                            showTip={showTip}
+                                                            setOpenTipError={
+                                                                setOpenTipError
+                                                            }
+                                                            setOpenTipSuccess={
+                                                                setOpenTipSuccess
+                                                            }
+                                                            setOpenError={
+                                                                setOpenError
+                                                            }
                                                             episode={episode}
                                                             work={work}
-                                                            percentages={percentages}
+                                                            percentages={
+                                                                percentages
+                                                            }
                                                         />
                                                     </ModalDialog>
                                                 </>
-                                            </Modal> :
-                                            <TipComponent showTip={showTip}
-                                                setOpenTipError={setOpenTipError}
-                                                setOpenTipSuccess={setOpenTipSuccess}
+                                            </Modal>
+                                        ) : (
+                                            <TipComponent
+                                                showTip={showTip}
+                                                setOpenTipError={
+                                                    setOpenTipError
+                                                }
+                                                setOpenTipSuccess={
+                                                    setOpenTipSuccess
+                                                }
                                                 setOpenError={setOpenError}
                                                 episode={episode}
                                                 work={work}
                                                 percentages={percentages}
-                                            />}
+                                            />
+                                        )}
                                     </Grid>
                                 }
                             />
@@ -378,24 +401,31 @@ function Chapter() {
                             </Typography>
                             {collaborators}
                         </Grid>
-                        {windowWidth < 700 ?
+                        {windowWidth < 700 ? (
                             <Modal
                                 aria-labelledby="modal-title"
                                 aria-describedby="modal-desc"
                                 open={showComment}
                                 onClose={() => setCommentSection(!showComment)}
-                                sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
                             >
                                 <>
                                     <ModalClose
                                         sx={{
-                                            top: "94px",
-                                            right: "17px",
+                                            top: '94px',
+                                            right: '17px',
                                         }}
                                     />
                                     <CommentSection episode={episode} />
                                 </>
-                            </Modal> : <CommentSection episode={episode} />}
+                            </Modal>
+                        ) : (
+                            <CommentSection episode={episode} />
+                        )}
                         <ErrorPopup
                             isOpen={openError}
                             onClose={() => setOpenError(false)}
@@ -415,14 +445,10 @@ function Chapter() {
             )}
             <div className="bottom-bar">
                 <div className="view-chapter-icons">
-                    <Grid
-                        container
-                        direction="row"
-                        className="like-icon"
-                    >
+                    <Grid container direction="row" className="like-icon">
                         <IconButton
                             icon="/icons/chat.svg"
-                            customSize='36px'
+                            customSize="36px"
                             action={() => {
                                 setCommentSection(!showComment)
                             }}
@@ -454,11 +480,11 @@ function Chapter() {
                         sx={{
                             borderRadius: '12px',
                             height: '50px',
-                            width: '50px'
+                            width: '50px',
                         }}
                         className="tip-icon"
                         icon="/icons/tip_jar.svg"
-                        customSize='30px'
+                        customSize="30px"
                         color="green"
                         action={() => {
                             setShowTip(!showTip)
@@ -466,7 +492,7 @@ function Chapter() {
                     />
                 </div>
             </div>
-        </div >
+        </div>
     )
 
     function loadEpisodeContent(content: string) {

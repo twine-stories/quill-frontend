@@ -194,10 +194,8 @@ span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorP
     margin: 11px 60px 0px 0px;
 }
 
-
 @media screen and (max-width: 700px) and (min-width: 320px) {
-
-    .view-chapter-icons{
+    .view-chapter-icons {
         width: 100%;
         background-color: #14100e;
         display: flex;
@@ -205,12 +203,12 @@ span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorP
         border-radius: 15px;
         height: 60px;
     }
-    .bottom-bar{
-        position:sticky;
+    .bottom-bar {
+        position: sticky;
         bottom: 0;
         display: flex;
     }
-    .comment-section{
+    .comment-section {
         background-color: #13100d;
         width: 86%;
         padding: 20px 20px 20px 20px;
@@ -222,32 +220,32 @@ span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorP
     .tip-container {
         margin-left: 2px;
     }
-    .like-icon{
-       align-items: center;
+    .like-icon {
+        align-items: center;
     }
-    .tip-pop-up{
-       padding: 15px 15px 15px 15px;
-    } 
+    .tip-pop-up {
+        padding: 15px 15px 15px 15px;
+    }
 }
 
 @media screen and (max-width: 2560px) and (min-width: 701px) {
-   .view-chapter-icons{
-       display: none;
+    .view-chapter-icons {
+        display: none;
     }
-   .tip-container {
-       display: none;
+    .tip-container {
+        display: none;
     }
 }
 @media screen and (max-width: 428px) and (min-width: 320px) {
-     span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
         margin: 0px;
-     }
-     h3.episode-title{
+    }
+    h3.episode-title {
         font-size: 14px;
-     }
-     .name-comment{
-         margin:0px;
-     }
+    }
+    .name-comment {
+        margin: 0px;
+    }
 }
 @media screen and (max-width: 700px) and (min-width: 320px) {
     button.MuiButton-root.MuiButton-variantSolid.MuiButton-colorGreen.MuiButton-sizeMd.tip-button {
