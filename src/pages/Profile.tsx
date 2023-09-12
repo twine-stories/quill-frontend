@@ -208,7 +208,7 @@ function Profile() {
                     {works && (
                         <div>
                             <div className="works-header">
-                                <Typography color="purple" level="h2">
+                                <Typography color="purple" level="h2" className="profile-title">
                                     {works.length +
                                         ' ' +
                                         (works.length === 1

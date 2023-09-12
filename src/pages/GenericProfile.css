@@ -15,6 +15,10 @@
 .profile-info h1 {
     margin-top: -10px;
     text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 300px;
 }
 
 .profile-info h2 {
@@ -57,9 +61,18 @@
     margin-top: 15px;
 }
 
-.works-list {
+.generic-works-list-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 10px;
+}
+.MuiGrid-root.MuiGrid-direction-xs-row.MuiGrid-grid-md-1.MuiGrid-grid-xl-1.MuiGrid-grid-lg-1.MuiGrid-grid-sm-2.MuiGrid-grid-xs-1.generic-work-list{
+    width: 225px;
+}
+.generic-title{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space:nowrap;
+    width:200px;
 }

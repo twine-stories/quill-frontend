@@ -15,6 +15,10 @@
 .profile-info h1 {
     margin-top: -10px;
     text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 300px;
 }
 
 .profile-info h2 {
@@ -99,4 +103,11 @@
 }
 button.MuiButton-root.MuiButton-variantSolid.MuiButton-colorDarkpurple.MuiButton-sizeMd.bell-class {
     width: 30%;
+}
+
+.profile-title{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space:nowrap;
+    width:200px;
 }

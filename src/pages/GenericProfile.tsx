@@ -226,7 +226,7 @@ function GenericProfile() {
                 </div>
                 <div className="works">
                     <div className="works-header">
-                        <Typography color="purple" level="h2">
+                        <Typography color="purple" level="h2" className="generic-title">
                             {works.length +
                                 ' ' +
                                 (works.length === 1 ? 'Story' : 'Stories')}
@@ -234,15 +234,23 @@ function GenericProfile() {
                     </div>
                     <Grid
                         container
-                        spacing={{ xs: 3 }}
-                        columns={{ xs: 12 }}
-                        sx={{ flexGrow: 1, padding: '20px' }}
-                        className="works-list"
+                        spacing={{ xs: 2 }}
+                        columns={{ xs: 1, sm: 2, md: 2, lg: 3 }}
+                        sx={{ padding: '12px' }}
+                        className="generic-works-list-container"
                     >
                         {works &&
                             works.map((work, index) => {
                                 return (
-                                    <Grid xs={4} key={index}>
+                                    <Grid
+                                        className="generic-work-list"
+                                        md={1}
+                                        xl={1}
+                                        lg={1}
+                                        sm={2}
+                                        xs={1}
+                                        key={index}
+                                    >
                                         <GalleryTile
                                             work={work.props.work}
                                             story={true}
