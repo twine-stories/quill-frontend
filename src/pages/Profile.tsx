@@ -84,9 +84,9 @@ function Profile() {
                         src={
                             user &&
                             'https://' +
-                            PROFILE_IMGS_BUCKET +
-                            '.s3.amazonaws.com/' +
-                            user.profileImg
+                                PROFILE_IMGS_BUCKET +
+                                '.s3.amazonaws.com/' +
+                                user.profileImg
                         }
                         alt=""
                         width="128"
@@ -208,7 +208,11 @@ function Profile() {
                     {works && (
                         <div>
                             <div className="works-header">
-                                <Typography color="purple" level="h2" className="profile-title">
+                                <Typography
+                                    color="purple"
+                                    level="h2"
+                                    className="profile-title"
+                                >
                                     {works.length +
                                         ' ' +
                                         (works.length === 1

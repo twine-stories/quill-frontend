@@ -226,7 +226,11 @@ function GenericProfile() {
                 </div>
                 <div className="works">
                     <div className="works-header">
-                        <Typography color="purple" level="h2" className="generic-title">
+                        <Typography
+                            color="purple"
+                            level="h2"
+                            className="generic-title"
+                        >
                             {works.length +
                                 ' ' +
                                 (works.length === 1 ? 'Story' : 'Stories')}

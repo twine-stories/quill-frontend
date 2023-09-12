@@ -67,12 +67,12 @@
     flex-wrap: wrap;
     gap: 10px;
 }
-.MuiGrid-root.MuiGrid-direction-xs-row.MuiGrid-grid-md-1.MuiGrid-grid-xl-1.MuiGrid-grid-lg-1.MuiGrid-grid-sm-2.MuiGrid-grid-xs-1.generic-work-list{
+.MuiGrid-root.MuiGrid-direction-xs-row.MuiGrid-grid-md-1.MuiGrid-grid-xl-1.MuiGrid-grid-lg-1.MuiGrid-grid-sm-2.MuiGrid-grid-xs-1.generic-work-list {
     width: 225px;
 }
-.generic-title{
+.generic-title {
     text-overflow: ellipsis;
     overflow: hidden;
-    white-space:nowrap;
-    width:200px;
+    white-space: nowrap;
+    width: 200px;
 }

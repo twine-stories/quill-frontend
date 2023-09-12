@@ -98,16 +98,16 @@
     }
 }
 
-.MuiGrid-root.MuiGrid-direction-xs-row.MuiGrid-grid-md-1.MuiGrid-grid-xl-1.MuiGrid-grid-lg-1.MuiGrid-grid-sm-2.MuiGrid-grid-xs-1.work-list{
+.MuiGrid-root.MuiGrid-direction-xs-row.MuiGrid-grid-md-1.MuiGrid-grid-xl-1.MuiGrid-grid-lg-1.MuiGrid-grid-sm-2.MuiGrid-grid-xs-1.work-list {
     width: 225px;
 }
 button.MuiButton-root.MuiButton-variantSolid.MuiButton-colorDarkpurple.MuiButton-sizeMd.bell-class {
     width: 30%;
 }
 
-.profile-title{
+.profile-title {
     text-overflow: ellipsis;
     overflow: hidden;
-    white-space:nowrap;
-    width:200px;
+    white-space: nowrap;
+    width: 200px;
 }
