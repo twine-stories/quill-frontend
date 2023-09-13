@@ -38,7 +38,6 @@ function Collection() {
             genericGet('/api/algo/asset-imgs/' + coll.id).then((response) => {
                 let nftImgs: JSX.Element[] = []
                 let count: number = 0
-                console.log(response)
                 for (const id in response) {
                     nftImgs.push(
                         <GalleryTile

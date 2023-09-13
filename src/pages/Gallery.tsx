@@ -36,7 +36,6 @@ function Gallery(props: WorkGalleryProps) {
                 if (props.art) {
                     if (props.draft) {
                         const response: NFTCollection[] = await genericGet('/api/collection/drafts/creator/' + user.walletAddress)
-                        console.log(response)
                         response.forEach((elem: NFTCollection) => {
                             profileWorks.push(
                                 <GalleryTile story={false} coll={elem} key={i} />

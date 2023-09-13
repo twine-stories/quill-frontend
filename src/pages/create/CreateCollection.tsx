@@ -272,7 +272,6 @@ function CreateCollection(props: CreateCollectionProps) {
             ) as HTMLInputElement
         ).value
 
-        console.log('top')
 
         if (
             !(
@@ -301,7 +300,6 @@ function CreateCollection(props: CreateCollectionProps) {
             percents.push(parseInt((elem as HTMLInputElement).value))
         })
 
-        console.log('sum')
         const sum: number = percents.reduce(
             (partial, curr) => partial + curr,
             0
@@ -310,7 +308,6 @@ function CreateCollection(props: CreateCollectionProps) {
             return
         }
 
-        console.log('users')
         let profitSplitMap: Map<User, number> = new Map()
         let users: User[] = []
         for (let i = 0; i < usernames.length; i++) {
@@ -343,120 +340,128 @@ function CreateCollection(props: CreateCollectionProps) {
         }
 
         if (publish) {
-            return
-        } else {
-            if (!props.edit) {
-                genericPost('/api/collection/createWithArt', {
-                    collection: coll,
-                    artworks: artworks,
-                }).then((response) => {
-                    let profitSplitsWithAddrs: object[] = []
-                    for (let i = 0; i < usernames.length; i++) {
-                        profitSplitsWithAddrs.push({
-                            creatorUsername: usernames[i],
-                            profitSplit: {
-                                creator: null,
-                                collection: response,
-                                percentage: percents[i],
-                            },
-                        })
-                    }
+            coll.published = true;
+        }
 
-                    genericPost(
-                        '/api/profitSplit/addMany',
-                        profitSplitsWithAddrs
-                    ).then((response) => {
-                        window.location.href = '/collections/' + coll.url
-                    })
-                })
-            } else {
-                genericPost('/api/collection/update', {
-                    ...collection,
-                    ...coll,
-                }).then((response: NFTCollection) => {
-                    genericGet(
-                        '/api/profitSplit/collection/' + response.id
-                    ).then((splits: ProfitSplit[]) => {
-                        let newSplit: ProfitSplit
-                        let foundEntries: Set<number> = new Set()
-                        let i: number
-                        profitSplitMap.forEach((value, user) => {
-                            newSplit = {
-                                collection: response,
-                                creator: user,
-                                percentage: value,
-                            }
+        if (!props.edit) {
+            const response: NFTCollection = await genericPost('/api/collection/createWithArt', {
+                collection: coll,
+                artworks: artworks,
+            })
 
-                            let found: boolean = false
-                            for (i = 0; i < splits.length; i++) {
-                                if (
-                                    splits[i].creator.userName === user.userName
-                                ) {
-                                    newSplit.id = splits[i].id
-                                    genericPost(
-                                        '/api/profitSplit/update',
-                                        newSplit
-                                    )
-                                    found = true
-                                    foundEntries.add(i)
-                                }
-                            }
-
-                            if (!found) {
-                                genericPost('/api/profitSplit/add', newSplit)
-                            }
-                        })
-
-                        for (i = 0; i < splits.length; i++) {
-                            if (!foundEntries.has(i)) {
-                                genericPost(
-                                    '/api/profitSplit/delete',
-                                    splits[i]
-                                )
-                            }
-                        }
-                    })
-
-                    genericGet('/api/artwork/collection/' + response.id).then(
-                        (art: Artwork[]) => {
-                            let foundEntries: Set<number> = new Set()
-                            artworks.forEach((nft: Artwork) => {
-                                let found: boolean = false
-                                const newArt: Artwork = {
-                                    ...nft,
-                                    origColl: response,
-                                    currColl: response,
-                                }
-                                for (let i = 0; i < art.length; i++) {
-                                    if (nft.id === art[i].id) {
-                                        foundEntries.add(i)
-                                        found = true
-
-                                        genericPost(
-                                            '/api/artwork/update',
-                                            newArt
-                                        )
-                                    }
-                                }
-
-                                if (!found) {
-                                    genericPost('/api/artwork/create', newArt)
-                                }
-                            })
-
-                            for (let i = 0; i < art.length; i++) {
-                                if (!foundEntries.has(i)) {
-                                    genericPost(
-                                        '/api/artwork/remove/' + art[i].id,
-                                        {}
-                                    )
-                                }
-                            }
-                        }
-                    )
+            let profitSplitsWithAddrs: object[] = []
+            for (let i = 0; i < usernames.length; i++) {
+                profitSplitsWithAddrs.push({
+                    creatorUsername: usernames[i],
+                    profitSplit: {
+                        creator: null,
+                        collection: response,
+                        percentage: percents[i],
+                    },
                 })
             }
+
+            await genericPost(
+                '/api/profitSplit/addMany',
+                profitSplitsWithAddrs
+            )
+        } else {
+            const response: NFTCollection = await genericPost('/api/collection/update', {
+                ...collection,
+                ...coll,
+            })
+
+            const splits: ProfitSplit[] = await genericGet(
+                '/api/profitSplit/collection/' + response.id
+            )
+
+            let promises: Promise<any>[] = []
+            let newSplit: ProfitSplit
+            let foundEntries: Set<number> = new Set()
+            let i: number
+            profitSplitMap.forEach((value, user) => {
+                newSplit = {
+                    collection: response,
+                    creator: user,
+                    percentage: value,
+                }
+
+                let found: boolean = false
+                for (i = 0; i < splits.length; i++) {
+                    if (
+                        splits[i].creator.userName === user.userName
+                    ) {
+                        newSplit.id = splits[i].id
+                        promises.push(genericPost(
+                            '/api/profitSplit/update',
+                            newSplit
+                        ))
+                        found = true
+                        foundEntries.add(i)
+                    }
+                }
+
+                if (!found) {
+                    promises.push(genericPost('/api/profitSplit/add', newSplit))
+                }
+            })
+
+            for (i = 0; i < splits.length; i++) {
+                if (!foundEntries.has(i)) {
+                    promises.push(genericPost(
+                        '/api/profitSplit/delete',
+                        splits[i]
+                    ))
+                }
+            }
+
+            const art: Artwork[] = await genericGet('/api/artwork/collection/' + response.id)
+            foundEntries = new Set()
+            artworks.forEach((nft: Artwork) => {
+                let found: boolean = false
+                const newArt: Artwork = {
+                    ...nft,
+                    origColl: response,
+                    currColl: response,
+                }
+                for (let i = 0; i < art.length; i++) {
+                    if (nft.id === art[i].id) {
+                        foundEntries.add(i)
+                        found = true
+
+                        promises.push(genericPost(
+                            '/api/artwork/update',
+                            newArt
+                        ))
+                    }
+                }
+
+                if (!found) {
+                    promises.push(genericPost('/api/artwork/create', newArt))
+                }
+            })
+
+            for (let i = 0; i < art.length; i++) {
+                if (!foundEntries.has(i)) {
+                    promises.push(genericPost(
+                        '/api/artwork/remove/' + art[i].id,
+                        {}
+                    ))
+                }
+            }
+
+            await Promise.all(promises)
         }
+
+        if (publish) {
+            const response = await genericPost('/api/algo/sell', {
+                seller: user.walletAddress,
+                saleType: 'sale',
+                nftIds: Array.from(selectedNfts)
+            })
+            console.log(response)
+        }
+
         window.location.href = '/collection/' + coll.url
     }
 
@@ -604,6 +609,13 @@ function CreateCollection(props: CreateCollectionProps) {
                         name="Save Draft"
                         action={() => {
                             saveCollection(false)
+                        }}
+                    />
+                    <TwineButton
+                        color="purple"
+                        name="Publish Collection"
+                        action={() => {
+                            saveCollection(true)
                         }}
                     />
                 </Grid>
