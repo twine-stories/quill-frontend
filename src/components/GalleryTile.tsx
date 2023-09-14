@@ -14,6 +14,8 @@ interface GalleryTileProps {
     otris?: string
     art?: boolean
     img?: string
+    collUrl?: string
+    price?: number
     noBorder?: boolean
     story?: boolean
     artId?: number
@@ -92,9 +94,18 @@ function GalleryTile(props: GalleryTileProps) {
                     borderRadius: '32px',
                     border: '2px solid #241D19',
                     padding: '13px',
-                    width: '200px',
+                    width: '220px',
                     height: '270px',
                     margin: '10px',
+                    display: 'flex',
+                    cursor: 'pointer',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+                onClick={() => {
+                    if (props.art && props.collUrl && props.artId) {
+                        window.location.href = '/collection/' + props.collUrl + '/' + props.artId
+                    }
                 }}
             >
                 <Grid container alignItems="center" justifyContent="center">
@@ -105,6 +116,12 @@ function GalleryTile(props: GalleryTileProps) {
                         alt=""
                     />
                 </Grid>
+                {props.price &&
+                    <Grid container alignItems='center'>
+                        <Typography level='h5' color='purple' sx={{marginRight: '10px'}}>{props.price.toFixed(2)}</Typography>
+                        <img height='30px' width='30px' src='/icons/algo.svg' />
+                    </Grid>
+                }
             </Card>
         )
     } else if (props.story) {
@@ -148,6 +165,7 @@ function GalleryTile(props: GalleryTileProps) {
                     borderRadius: '32px',
                     border: '2px solid #241D19',
                     padding: '13px',
+                    margin: '10px',
                 }}
                 onClick={() => {
                     if (props.coll) {

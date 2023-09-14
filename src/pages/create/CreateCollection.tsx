@@ -16,12 +16,14 @@ import {
     NFTCollection,
     Work,
     Artwork,
+    AdminApp
 } from '../../utils/types.ts'
 import { genericGet, genericPost } from '../../utils/api.ts'
 import GalleryTile from '../../components/GalleryTile.tsx'
 import TwineInput from '../../components/TwineInput.tsx'
 import TwineSelect from '../../components/TwineSelect.tsx'
 import { CollectionType } from '../../utils/enums.ts'
+import { assetTransfer } from '../../utils/blockchain/transactionRepository.ts'
 
 interface CreateCollectionProps {
     edit?: boolean
@@ -333,7 +335,7 @@ function CreateCollection(props: CreateCollectionProps) {
                     ?.creator.userName.replace(' ', '-')
                     .toLowerCase() +
                 '-' +
-                name.replace(' ', '-').toLowerCase(),
+                name.replace(' ', '-').replace('/', '-').toLowerCase(),
             active: false,
             published: false,
             price: parseFloat(price),
@@ -454,12 +456,30 @@ function CreateCollection(props: CreateCollectionProps) {
         }
 
         if (publish) {
+            const adminApp: AdminApp = await genericGet('/api/algo/admin-app/get-latest')
+            let signedTxnPromises: Promise<string>[] = []
+            const nftIds: number[] = Array.from(selectedNfts)
+
+            let idsAndTxnsWrapper: object[] = []
+
+            for (let i = 0; i < nftIds.length; i++) {
+                signedTxnPromises.push(assetTransfer(user.walletAddress, adminApp.address, 1, nftIds[i], user.connectType))
+            }
+
+            const signedTxns: string[] = await Promise.all(signedTxnPromises)
+            for (let i = 0; i < nftIds.length; i++) {
+                idsAndTxnsWrapper.push({
+                    nftId: nftIds[i],
+                    signedAssetTransfer: signedTxns[i]
+                })
+            }
+
             const response = await genericPost('/api/algo/sell', {
                 seller: user.walletAddress,
                 saleType: 'sale',
-                nftIds: Array.from(selectedNfts)
+                price: parseFloat(price) * 1000000,
+                idsAndTxns: idsAndTxnsWrapper,
             })
-            console.log(response)
         }
 
         window.location.href = '/collection/' + coll.url
