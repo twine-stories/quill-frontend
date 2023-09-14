@@ -29,9 +29,11 @@ function ArtPiece() {
 
         genericGet('/api/artwork/' + urlSplit[5]).then((response: Artwork) => {
             setArtwork(response)
-            genericGet('/api/algo/app-call-txn/' + response.id).then((appCallStr: string) => {
-                setAppCall(appCallStr)
-            })
+            if (user) {
+                genericGet('/api/algo/app-call-txn/' + response.id + '/' + user.walletAddress).then((appCallStr: string) => {
+                    setAppCall(appCallStr)
+                })
+            }
         })
 
         genericGet('/api/algo/admin-app/get-latest').then((response: AdminApp) => {
