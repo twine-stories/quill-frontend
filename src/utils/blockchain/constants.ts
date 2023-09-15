@@ -25,6 +25,7 @@ export const nameMapping: object = {
 }
 
 export const TWINE_CUT = 0.1
+export const TWINE_NFT_CUT = 0.03;
 export const microToAlgo = (microAlgo: bigint): number => {
     return Number(microAlgo / 1000000n) + Number(microAlgo % 1000000n) / 1000000
 }

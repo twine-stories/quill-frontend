@@ -14,7 +14,7 @@ function Art() {
     useEffect(() => {
         collectionGetAll().then((response: NFTCollection[]) => {
             let filteredResponse: NFTCollection[] = response.filter(
-                (elem: NFTCollection) => (elem.active = true)
+                (elem: NFTCollection) => (elem.active === true)
             )
             setColls(filteredResponse)
 

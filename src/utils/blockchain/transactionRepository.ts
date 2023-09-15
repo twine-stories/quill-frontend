@@ -3,7 +3,6 @@ import algosdk, {
     Transaction,
     assignGroupID,
     decodeUnsignedTransaction,
-    encodeUnsignedTransaction,
     makeAssetTransferTxnWithSuggestedParamsFromObject,
     makePaymentTxnWithSuggestedParamsFromObject,
 } from 'algosdk'
@@ -11,6 +10,9 @@ import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect'
 import { genericGet, genericPost } from '../api.ts'
 import { ConnectType } from '../enums.ts'
 import { peraWallet } from '../../App.tsx'
+import { ProfitSplit } from '../../utils/types.ts'
+import { TWINE_NFT_CUT } from './constants.ts'
+import { adminAddr } from './credentials.ts'
 
 const myAlgoConnect = new MyAlgoConnect()
 
@@ -209,25 +211,41 @@ async function optIn(
 }
 
 export async function buy(
-    adminAddr: string,
+    superAddr: string,
     buyer: string,
-    seller: string,
-    price: number | bigint,
+    profitSplits: ProfitSplit[],
+    price: bigint,
     assetId: number,
     appCall: string,
     connectType: ConnectType,
 ): Promise<string[]> {
-    const optInTxn: Transaction = await optIn(buyer, assetId)
-    const payTxn: Transaction = await pay(buyer, adminAddr, price)
+    let txnArrayPromises: Promise<Transaction>[] = []
+
+    txnArrayPromises.push(optIn(buyer, assetId))
+    
+    // const optInTxn: Transaction = await optIn(buyer, assetId)
+
+    const twineCut: bigint = (price * BigInt(TWINE_NFT_CUT * 100)) / 100n;
+    const creatorCut: bigint = price - twineCut;
+
+    txnArrayPromises.push(pay(buyer, adminAddr, twineCut));
+
+    for (let i = 0; i < profitSplits.length; i++) {
+        txnArrayPromises.push(pay(buyer, profitSplits[i].creator.walletAddress, (creatorCut * BigInt(profitSplits[i].percentage)) / 100n))
+    }
+
+    // const payTxn: Transaction = await pay(buyer, superAddr, price)
     const appCallTxn: Transaction = decodeUnsignedTransaction(
         Buffer.from(appCall, 'base64')
     );
 
-    const txnArray: Transaction[] = [optInTxn, payTxn, appCallTxn]
+    const response: Transaction[] = await Promise.all(txnArrayPromises);
+
+    const txnArray: Transaction[] = [response[0], appCallTxn, ...response.slice(1)]
     const txnGroup: Transaction[] = assignGroupID(txnArray);
 
     const signedGroup: string[] = await prepareSignedTxns(txnGroup, connectType, buyer)
-    const unsignedAppCall: string = Buffer.from(algosdk.encodeUnsignedTransaction(txnGroup[2])).toString('base64')
+    const unsignedAppCall: string = Buffer.from(algosdk.encodeUnsignedTransaction(txnGroup[1])).toString('base64')
 
-    return [signedGroup[0], signedGroup[1], unsignedAppCall]
+    return [signedGroup[0], unsignedAppCall, ...signedGroup.slice(2)]
 }
