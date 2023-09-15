@@ -434,6 +434,12 @@ function App() {
                                         <Gallery art={true} draft={true} />
                                     }
                                 ></Route>
+                                <Route
+                                    path="/gallery/collection/published"
+                                    element={
+                                        <Gallery art={true} draft={false} />
+                                    }
+                                ></Route>
 
                                 <Route
                                     path="/profile"

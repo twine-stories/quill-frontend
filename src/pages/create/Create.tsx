@@ -195,10 +195,35 @@ function Create() {
                                     borderRadius: '15px',
                                 }}
                                 icon="/icons/purple_plus.svg"
-                                name="Publish Art Collection"
+                                name="Create Art Collection"
                                 action={() => {
                                     window.location.href = '/create/collection'
                                 }}
+                                paddingTop="10px"
+                                className="custom-start-decorator"
+                            />
+                        </span>
+                    </Sheet>
+                    <Sheet color="purple-dashed" variant="rounded">
+                        <span
+                            onMouseEnter={() => setOnHover(true)}
+                            onMouseLeave={() => setOnHover(false)}
+                        >
+                            <TwineButton
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    paddingBlock: '2rem',
+                                    paddingInline: '2.4rem',
+                                    borderRadius: '15px',
+                                }}
+                                icon="/icons/purple-img.svg"
+                                name="Published Art Collection"
+                                action={() => {
+                                    window.location.href = '/gallery/collection/published'
+                                }}
+                                color='blackpurple'
                                 paddingTop="10px"
                                 className="custom-start-decorator"
                             />

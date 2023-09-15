@@ -44,7 +44,7 @@ function Gallery(props: WorkGalleryProps) {
                         })
                     } else {
                         const response: NFTCollection[] = await genericGet(
-                            '/api/collection/active/creator/' + user.walletAddress
+                            '/api/collection/published/creator/' + user.walletAddress
                         )
                         response.forEach((elem: NFTCollection) => {
                             profileWorks.push(
@@ -183,7 +183,7 @@ function Gallery(props: WorkGalleryProps) {
                                     window.location.href = '/create/collection'
                                 }}
                             />
-                            {/* <TwineButton
+                            <TwineButton
                                 sx={{
                                     width: '100%',
                                     borderRadius: '13px',
@@ -191,11 +191,18 @@ function Gallery(props: WorkGalleryProps) {
                                 }}
                                 icon="/icons/purple_paper.svg"
                                 name={
-                                    'Open ' + props.draft
+                                    'Open ' + (props.draft
                                         ? 'Published'
-                                        : 'Draft'
+                                        : 'Drafts')
                                 }
-                            /> */}
+                                action={() => {
+                                    if (props.draft) {
+                                        window.location.href = '/gallery/collection/published'
+                                    } else {
+                                        window.location.href = '/gallery/collection/draft'
+                                    }
+                                }}
+                            />
                         </div>
                     ) : (
                         <div className="create-published-button">
