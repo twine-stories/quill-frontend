@@ -83,7 +83,6 @@ function CreateCollection(props: CreateCollectionProps) {
         if (user) {
             if (!gotAssetsRef.current) {
                 setGotAssets(true)
-                console.log('here')
                 genericGet('/api/algo/assets/' + user.walletAddress).then(
                     (response: AlgorandAsset[]) => {
                         if (response) {
@@ -513,7 +512,6 @@ function CreateCollection(props: CreateCollectionProps) {
             }
 
             if (signedTxns && signedTxns.length > 0) {
-                console.log('here')
                 await genericPost('/api/algo/sell', {
                     seller: user.walletAddress,
                     saleType: 'sale',
