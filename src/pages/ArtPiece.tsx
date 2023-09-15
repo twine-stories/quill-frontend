@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
+import './ArtPiece.css'
 import Navbar from '../components/Navbar.tsx'
 import { UserContext } from '../App.tsx'
 import { User, NFTCollection, Artwork, AdminApp } from '../utils/types.ts'
@@ -6,12 +7,15 @@ import { collectionGetByUrl } from '../utils/api.ts'
 import { genericGet, genericPost } from '../utils/api.ts'
 import TwineButton from '../components/TwineButton.tsx'
 import { buy } from '../utils/blockchain/transactionRepository.ts'
+import { Grid, Typography } from '@mui/joy'
 
 function ArtPiece() {
 
     const [coll, setColl] = useState<NFTCollection>()
     const [artwork, setArtwork] = useState<Artwork>()
-    const [artTiles, setArtTiles] = useState<JSX.Element[]>([])
+    const [artUrl, setArtUrl] = useState<string>()
+    const [artName, setArtName] = useState<string>()
+    const [artDesc, setArtDesc] = useState<string>()
 
     const [appCall, setAppCall] = useState<string>()
     const [adminAddr, setAdminAddr] = useState<string>()
@@ -34,6 +38,18 @@ function ArtPiece() {
                     setAppCall(appCallStr)
                 })
             }
+
+            genericGet('/api/algo/asset-img/' + response.id).then((url: string) => {
+                setArtUrl(url)
+            })
+
+            genericGet('/api/algo/asset-desc/' + response.id).then((desc: string) => {
+                setArtDesc(desc)
+            })
+
+            genericGet('/api/algo/asset-name/' + response.id).then((name: string) => {
+                setArtName(name)
+            })
         })
 
         genericGet('/api/algo/admin-app/get-latest').then((response: AdminApp) => {
@@ -44,21 +60,34 @@ function ArtPiece() {
     return (
         <div>
             <Navbar />
-            <TwineButton color='purple' name='Buy' enabled={user && coll && user.walletAddress !== coll.work.creator.walletAddress} action={async () => {
-                if (user && adminAddr && artwork && appCall && coll) {
-                    const txns: string[] = await buy(adminAddr, user.walletAddress, coll.work.creator.walletAddress, BigInt(coll.price * 1000000), artwork.id, appCall, user.connectType)
-                    const response: string = await genericPost('/api/algo/buy-art', {
-                        assetId: artwork.id,
-                        signedOptIn: txns[0],
-                        signedPay: txns[1],
-                        unsignedCall: txns[2],
-                    })
+            <Grid container alignItems="center" justifyContent="center">
+                <Grid sx={{width: '60vw'}}>
+                    <Grid container flexDirection="column" alignItems="flex-start" justifyContent="center">
+                        <Typography level='h2' color='purple'>{artName}</Typography>
+                        <Grid container alignItems="center" justifyContent="center" xs={12}>
+                            <img id="art-piece-img" src={artUrl} />
+                        </Grid>
+                        <Typography level='h4' color='white' sx={{fontSize: '18px', marginBottom: '30px'}}>{artDesc}</Typography>
+                        <Grid container alignItems="center" justifyContent="center" xs={12}>
+                            <TwineButton color='green' name='Purchase' enabled={user && coll && user.walletAddress !== coll.work.creator.walletAddress} action={async () => {
+                                if (user && adminAddr && artwork && appCall && coll) {
+                                    const txns: string[] = await buy(adminAddr, user.walletAddress, coll.work.creator.walletAddress, BigInt(coll.price * 1000000), artwork.id, appCall, user.connectType)
+                                    const response: string = await genericPost('/api/algo/buy-art', {
+                                        assetId: artwork.id,
+                                        signedOptIn: txns[0],
+                                        signedPay: txns[1],
+                                        unsignedCall: txns[2],
+                                    })
 
-                    if (response === 'Success') {
-                        console.log("we in this bitch fr fr")
-                    }
-                }
-            }} />
+                                    if (response === 'Success') {
+                                        console.log("we in this bitch fr fr")
+                                    }
+                                }
+                            }} />
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
         </div>
     )
 }
