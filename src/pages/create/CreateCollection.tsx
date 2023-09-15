@@ -16,7 +16,7 @@ import {
     NFTCollection,
     Work,
     Artwork,
-    AdminApp
+    AdminApp,
 } from '../../utils/types.ts'
 import { genericGet, genericPost } from '../../utils/api.ts'
 import GalleryTile from '../../components/GalleryTile.tsx'
@@ -108,9 +108,11 @@ function CreateCollection(props: CreateCollectionProps) {
                 }
             })
 
-            genericGet('/api/algo/admin-app/get-latest').then((response: AdminApp) => {
-                setAdminApp(response)
-            })
+            genericGet('/api/algo/admin-app/get-latest').then(
+                (response: AdminApp) => {
+                    setAdminApp(response)
+                }
+            )
         }
     }, [user])
 
@@ -290,7 +292,6 @@ function CreateCollection(props: CreateCollectionProps) {
             ) as HTMLInputElement
         ).value
 
-
         if (
             !(
                 name &&
@@ -360,15 +361,18 @@ function CreateCollection(props: CreateCollectionProps) {
         }
 
         if (publish) {
-            coll.published = true;
-            coll.active = true;
+            coll.published = true
+            coll.active = true
         }
 
         if (!props.edit) {
-            const response: NFTCollection = await genericPost('/api/collection/createWithArt', {
-                collection: coll,
-                artworks: artworks,
-            })
+            const response: NFTCollection = await genericPost(
+                '/api/collection/createWithArt',
+                {
+                    collection: coll,
+                    artworks: artworks,
+                }
+            )
 
             if (response) {
                 let profitSplitsWithAddrs: object[] = []
@@ -392,29 +396,37 @@ function CreateCollection(props: CreateCollectionProps) {
                 return
             }
         } else {
-            const art: Artwork[] = await genericGet('/api/artwork/collection/' + collection?.id)
+            const art: Artwork[] = await genericGet(
+                '/api/artwork/collection/' + collection?.id
+            )
             if (!art) {
                 setShowError(true)
                 return
             }
 
             let newArt: number[] = []
-            let currArtSet: Set<number> = new Set(art.map(art => art.id))
-            Array.from(selectedNfts).forEach(item => {
+            let currArtSet: Set<number> = new Set(art.map((art) => art.id))
+            Array.from(selectedNfts).forEach((item) => {
                 if (!currArtSet.has(item)) {
                     newArt.push(item)
                 }
             })
-            const artExists: number[] = await genericPost('/api/artwork/exists', newArt)
+            const artExists: number[] = await genericPost(
+                '/api/artwork/exists',
+                newArt
+            )
             if (artExists.length > 0) {
                 setShowError(true)
                 return
             }
 
-            const response: NFTCollection = await genericPost('/api/collection/update', {
-                ...collection,
-                ...coll,
-            })
+            const response: NFTCollection = await genericPost(
+                '/api/collection/update',
+                {
+                    ...collection,
+                    ...coll,
+                }
+            )
 
             const splits: ProfitSplit[] = await genericGet(
                 '/api/profitSplit/collection/' + response.id
@@ -433,14 +445,11 @@ function CreateCollection(props: CreateCollectionProps) {
 
                 let found: boolean = false
                 for (i = 0; i < splits.length; i++) {
-                    if (
-                        splits[i].creator.userName === user.userName
-                    ) {
+                    if (splits[i].creator.userName === user.userName) {
                         newSplit.id = splits[i].id
-                        promises.push(genericPost(
-                            '/api/profitSplit/update',
-                            newSplit
-                        ))
+                        promises.push(
+                            genericPost('/api/profitSplit/update', newSplit)
+                        )
                         found = true
                         foundEntries.add(i)
                     }
@@ -453,13 +462,11 @@ function CreateCollection(props: CreateCollectionProps) {
 
             for (i = 0; i < splits.length; i++) {
                 if (!foundEntries.has(i)) {
-                    promises.push(genericPost(
-                        '/api/profitSplit/delete',
-                        splits[i]
-                    ))
+                    promises.push(
+                        genericPost('/api/profitSplit/delete', splits[i])
+                    )
                 }
             }
-            
 
             foundEntries = new Set()
             artworks.forEach((nft: Artwork) => {
@@ -474,10 +481,9 @@ function CreateCollection(props: CreateCollectionProps) {
                         foundEntries.add(i)
                         found = true
 
-                        promises.push(genericPost(
-                            '/api/artwork/update',
-                            newArt
-                        ))
+                        promises.push(
+                            genericPost('/api/artwork/update', newArt)
+                        )
                     }
                 }
 
@@ -488,10 +494,9 @@ function CreateCollection(props: CreateCollectionProps) {
 
             for (let i = 0; i < art.length; i++) {
                 if (!foundEntries.has(i)) {
-                    promises.push(genericPost(
-                        '/api/artwork/remove/' + art[i].id,
-                        {}
-                    ))
+                    promises.push(
+                        genericPost('/api/artwork/remove/' + art[i].id, {})
+                    )
                 }
             }
 
@@ -503,11 +508,17 @@ function CreateCollection(props: CreateCollectionProps) {
             const nftIds: number[] = Array.from(selectedNfts)
             let idsAndTxnsWrapper: object[] = []
 
-            const signedTxns: string[] = await assetTransfer(user.walletAddress, adminApp.address, 1, nftIds, user.connectType)
+            const signedTxns: string[] = await assetTransfer(
+                user.walletAddress,
+                adminApp.address,
+                1,
+                nftIds,
+                user.connectType
+            )
             for (let i = 0; i < nftIds.length; i++) {
                 idsAndTxnsWrapper.push({
                     nftId: nftIds[i],
-                    signedAssetTransfer: signedTxns[i]
+                    signedAssetTransfer: signedTxns[i],
                 })
             }
 
@@ -527,7 +538,6 @@ function CreateCollection(props: CreateCollectionProps) {
         } else {
             window.location.href = '/collection/' + coll.url
         }
-
     }
 
     return (
@@ -668,7 +678,13 @@ function CreateCollection(props: CreateCollectionProps) {
                     )}
                 </Grid>
 
-                <Grid container alignItems='center' justifyContent='center' xs={12} sx={{ marginTop: '40px', paddingLeft: '32px' }}>
+                <Grid
+                    container
+                    alignItems="center"
+                    justifyContent="center"
+                    xs={12}
+                    sx={{ marginTop: '40px', paddingLeft: '32px' }}
+                >
                     <TwineButton
                         color="green"
                         name="Save Draft"
@@ -678,17 +694,27 @@ function CreateCollection(props: CreateCollectionProps) {
                     />
                     <TwineButton
                         color="purple"
-                        name={loadingPublish ? <CircularProgress
-                            color="darkpurple"
-                            variant="plain"
-                        /> : "Publish Collection"}
+                        name={
+                            loadingPublish ? (
+                                <CircularProgress
+                                    color="darkpurple"
+                                    variant="plain"
+                                />
+                            ) : (
+                                'Publish Collection'
+                            )
+                        }
                         action={() => {
                             saveCollection(true)
                         }}
                     />
                 </Grid>
             </Grid>
-            <ErrorPopup isOpen={showError} onClose={() => setShowError(false)} message="Unable to save collection" />
+            <ErrorPopup
+                isOpen={showError}
+                onClose={() => setShowError(false)}
+                message="Unable to save collection"
+            />
         </div>
     )
 }
