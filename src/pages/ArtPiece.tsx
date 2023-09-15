@@ -7,7 +7,7 @@ import { collectionGetByUrl } from '../utils/api.ts'
 import { genericGet, genericPost } from '../utils/api.ts'
 import TwineButton from '../components/TwineButton.tsx'
 import { buy } from '../utils/blockchain/transactionRepository.ts'
-import { Grid, Typography } from '@mui/joy'
+import { Grid, Typography, CircularProgress } from '@mui/joy'
 import SuccessPopup from '../components/SuccessPopup.tsx'
 
 function ArtPiece() {
@@ -24,6 +24,8 @@ function ArtPiece() {
 
     const [appCall, setAppCall] = useState<string>()
     const [adminAddr, setAdminAddr] = useState<string>()
+
+    const [loadingBuy, setLoadingBuy] = useState<boolean>(false);
 
     const context: object = useContext(UserContext)
     const user: User = context['user']
@@ -99,9 +101,13 @@ function ArtPiece() {
                                     {purchased ?
                                         <TwineButton color='green' name='Purchased' enabled={false} action={() => {}} />
                                         :
-                                        <TwineButton color='green' name='Purchase' enabled={user && coll && user.walletAddress !== coll.work.creator.walletAddress} action={async () => {
-                                            if (user && adminAddr && artwork && appCall && coll) {
+                                        <TwineButton color='green' name={loadingBuy ? <CircularProgress
+                                            color="darkgreen"
+                                            variant="plain"
+                                        /> : 'Purchase'} enabled={user && coll && user.walletAddress !== coll.work.creator.walletAddress && coll.published} action={async () => {
+                                            if (user && adminAddr && artwork && appCall && coll && coll.published) {
                                                 const txns: string[] = await buy(adminAddr, user.walletAddress, profitSplits, BigInt(coll.price * 1000000), artwork.id, appCall, user.connectType)
+                                                setLoadingBuy(true)
                                                 const response: string = await genericPost('/api/algo/buy-art', {
                                                     assetId: artwork.id,
                                                     signedOptIn: txns[0],
@@ -110,9 +116,11 @@ function ArtPiece() {
                                                 })
 
                                                 if (response === 'Success') {
-                                                    setPurchased(true);
-                                                    setShowSuccess(true);
+                                                    setPurchased(true)
+                                                    setShowSuccess(true)
                                                 }
+
+                                                setLoadingBuy(false)
                                             }
                                         }} />
                                     }

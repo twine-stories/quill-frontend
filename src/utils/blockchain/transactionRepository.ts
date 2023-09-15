@@ -158,14 +158,14 @@ export async function createNFT(
     )
 }
 
-export async function assetTransfer(
+async function indivAssetTransfer(
     senderAddress: string,
     receiverAddress: string,
     amount: number | bigint,
     assetId: number,
-    connectType: ConnectType,
-): Promise<string> {
+): Promise<Transaction> {
     let suggestedParams = await getSuggestedParams()
+
     const txn = {
         from: senderAddress,
         to: receiverAddress,
@@ -174,8 +174,26 @@ export async function assetTransfer(
         assetIndex: assetId,
     }
 
-    const transferTxn = makeAssetTransferTxnWithSuggestedParamsFromObject(txn)
-    return prepareSignedTxn(transferTxn, connectType, senderAddress)
+    return makeAssetTransferTxnWithSuggestedParamsFromObject(txn)
+}
+
+export async function assetTransfer(
+    senderAddress: string,
+    receiverAddress: string,
+    amount: number | bigint,
+    assetIds: number[],
+    connectType: ConnectType,
+): Promise<string[]> {
+    let txnPromises: Promise<Transaction>[] = []
+
+    assetIds.forEach((assetId: number) => {
+        txnPromises.push(indivAssetTransfer(senderAddress, receiverAddress, amount, assetId))
+    })
+
+    const txnArray: Transaction[] = await Promise.all(txnPromises)
+    const txnGroup: Transaction[] = assignGroupID(txnArray);
+
+    return prepareSignedTxns(txnGroup, connectType, senderAddress)
 }
 
 async function pay(

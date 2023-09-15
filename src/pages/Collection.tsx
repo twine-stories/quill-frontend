@@ -96,6 +96,9 @@ function Collection() {
                     >
                         {nftTiles}
                     </Grid>
+                    {coll.published && nftTiles.length === 0 &&
+                        <Typography level='h3' color='green' sx={{marginLeft: '32px'}}>Sold out!</Typography>
+                    }
                 </div>
             )}
         </div>
