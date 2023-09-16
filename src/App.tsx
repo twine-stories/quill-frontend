@@ -47,6 +47,7 @@ import { env } from './config.ts'
 import { AlgorandChainIDs } from '@perawallet/connect/dist/util/peraWalletTypes'
 import CreateArtwork from './pages/create/CreateArtwork.tsx'
 import CreateCollection from './pages/create/CreateCollection.tsx'
+import ArtPiece from './pages/ArtPiece.tsx'
 
 const reach = loadStdlib('ALGO')
 let chainId: AlgorandChainIDs
@@ -433,6 +434,12 @@ function App() {
                                         <Gallery art={true} draft={true} />
                                     }
                                 ></Route>
+                                <Route
+                                    path="/gallery/collection/published"
+                                    element={
+                                        <Gallery art={true} draft={false} />
+                                    }
+                                ></Route>
 
                                 <Route
                                     path="/profile"
@@ -448,7 +455,11 @@ function App() {
                                 ></Route>
 
                                 <Route
-                                    path="/collection/*"
+                                    path="/collection/:collection/:artid"
+                                    element={<ArtPiece />}
+                                ></Route>
+                                <Route
+                                    path="/collection/:collection"
                                     element={<Collection />}
                                 ></Route>
 
@@ -502,7 +513,11 @@ function App() {
                                     element={<Chapter />}
                                 ></Route>
                                 <Route
-                                    path="/collection/*"
+                                    path="/collection/:collection/:artid"
+                                    element={<ArtPiece />}
+                                ></Route>
+                                <Route
+                                    path="/collection/:collection"
                                     element={<Collection />}
                                 ></Route>
                                 <Route path="/" element={<Home />}></Route>

@@ -1,0 +1,23 @@
+#art-piece-img {
+    width: 45%;
+    height: auto;
+    border-radius: 20px;
+    min-width: 250px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+}
+
+#buy-art-panel {
+    background-color: #14100E;
+    border-radius: 20px;
+    padding: 25px;
+    min-width: 250px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right: 0px;
+}
+
+#buy-art-panel img {
+    margin-left: 10px;
+}

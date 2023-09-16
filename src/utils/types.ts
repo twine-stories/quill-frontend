@@ -125,3 +125,10 @@ export type Tip = {
     episode: Episode
     amount: number
 }
+
+export type AdminApp = {
+    id: number
+    appId: number
+    address: string
+    createdStamp: Date
+}

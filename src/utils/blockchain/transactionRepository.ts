@@ -1,34 +1,20 @@
 import algosdk, {
     SuggestedParams,
     Transaction,
-    Algodv2,
-    LogicSigAccount,
-    Indexer,
-    makeApplicationCallTxnFromObject,
-    makePaymentTxnWithSuggestedParamsFromObject,
+    assignGroupID,
+    decodeUnsignedTransaction,
     makeAssetTransferTxnWithSuggestedParamsFromObject,
-    computeGroupID,
-    signLogicSigTransactionObject,
-    encodeUint64,
-    decodeAddress,
+    makePaymentTxnWithSuggestedParamsFromObject,
 } from 'algosdk'
 import MyAlgoConnect, { SignedTx } from '@randlabs/myalgo-connect'
-import {
-    getClient,
-    getIndexer,
-    adminAddr,
-    getSecretKey,
-} from './credentials.ts'
-import { BUY } from './constants.ts'
 import { genericGet, genericPost } from '../api.ts'
 import { ConnectType } from '../enums.ts'
 import { peraWallet } from '../../App.tsx'
+import { ProfitSplit } from '../../utils/types.ts'
+import { TWINE_NFT_CUT } from './constants.ts'
+import { adminAddr } from './credentials.ts'
 
 const myAlgoConnect = new MyAlgoConnect()
-
-const client: Algodv2 = getClient()
-const indexer: Indexer = getIndexer()
-const encoder = new TextEncoder()
 
 export const sendTransaction = async (
     signedTxn: Uint8Array
@@ -42,17 +28,47 @@ export const getSuggestedParams = async (): Promise<SuggestedParams> => {
     return await genericGet('/api/algo/suggested-params')
 }
 
-export async function waitForTxn(txnId: string): Promise<Record<string, any>> {
-    const status = await client.status().do()
-    var lastRound = status['last-round']
-    var pending = await client.pendingTransactionInformation(txnId).do()
-    while (!('confirmed-round' in pending && pending['confirmed-round'] > 0)) {
-        lastRound += 1
-        await client.statusAfterBlock(lastRound)
-        pending = await client.pendingTransactionInformation(txnId).do()
+export async function prepareSignedTxn(
+    txn: Transaction,
+    connectType: ConnectType,
+    sender: string
+): Promise<string> {
+    var signed: Uint8Array
+    if (connectType == ConnectType.PERA) {
+        const signedTxn = await peraWallet.signTransaction([
+            [{ txn: txn, signers: [sender] }],
+        ])
+        signed = signedTxn[0]
+    } else {
+        const signedTxn: SignedTx = await myAlgoConnect.signTransaction(
+            txn.toByte()
+        )
+        signed = signedTxn.blob
     }
 
-    return pending
+    return Buffer.from(signed).toString('base64')
+}
+
+export async function prepareSignedTxns(
+    txns: Transaction[],
+    connectType: ConnectType,
+    sender: string
+): Promise<string[]> {
+    const txnsBytes: Uint8Array[] = txns.map(txn => txn.toByte())
+    var signed: Uint8Array[]
+    if (connectType == ConnectType.PERA) {
+        const signedTxns = await peraWallet.signTransaction([
+            txns.map(txn => { return { txn: txn, signers: [sender] } })
+        ])
+        signed = signedTxns
+    } else {
+        const signedTxns: SignedTx[] = await myAlgoConnect.signTransaction(
+            txnsBytes
+        )
+        signed = signedTxns.map(signedTxn => signedTxn.blob)
+    }
+
+    return signed.map(txn => Buffer.from(txn).toString('base64'))
 }
 
 async function signTxn(
@@ -88,43 +104,6 @@ export async function signTxns(txns: Transaction[]): Promise<string[]> {
     }
 
     return await Promise.all(promises)
-}
-
-async function logicSign(txn: Transaction) {
-    const signedTxn: Uint8Array = txn.signTxn(getSecretKey())
-    return await sendTransaction(signedTxn)
-}
-
-export async function pay(
-    sender: string,
-    receiver: string,
-    amount: number | bigint
-): Promise<Transaction> {
-    let suggestedParams = await getSuggestedParams()
-    const txn = {
-        amount: amount,
-        from: sender,
-        to: receiver,
-        suggestedParams: suggestedParams,
-    }
-
-    const paymentTxn: Transaction =
-        makePaymentTxnWithSuggestedParamsFromObject(txn)
-    return paymentTxn
-}
-
-export async function paySign(
-    sender: string,
-    receiver: string,
-    amount: number | bigint,
-    logicSig?: boolean
-): Promise<string> {
-    const paymentTxn: Transaction = await pay(sender, receiver, amount)
-
-    if (logicSig) {
-        return await logicSign(paymentTxn)
-    }
-    return await signTxn(paymentTxn)
 }
 
 async function createASA(
@@ -179,296 +158,112 @@ export async function createNFT(
     )
 }
 
-export async function createApplication(
-    approvalProgram: string,
-    clearProgram: string,
-    globalInts: number,
-    globalByteSlices: number,
-    localInts: number,
-    localByteSlices: number,
-    appArgs: Uint8Array[],
-    foreignAssets: number[]
-): Promise<number> {
-    let suggestedParams = await getSuggestedParams()
-
-    const apBytes: Uint8Array = await compileProgram(approvalProgram)
-    const cpBytes: Uint8Array = await compileProgram(clearProgram)
-
-    const txn = {
-        from: adminAddr,
-        suggestedParams: suggestedParams,
-        approvalProgram: apBytes,
-        clearProgram: cpBytes,
-        numLocalInts: localInts,
-        numLocalByteSlices: localByteSlices,
-        numGlobalInts: globalInts,
-        numGlobalByteSlices: globalByteSlices,
-        appArgs: appArgs,
-        foreignAssets: foreignAssets,
-        onComplete: algosdk.OnApplicationComplete.NoOpOC,
-    }
-
-    let createTxn: Transaction = algosdk.makeApplicationCreateTxnFromObject(txn)
-
-    const signedTxn = createTxn.signTxn(getSecretKey())
-    const response = await client.sendRawTransaction(signedTxn).do()
-
-    const txnInfo = await waitForTxn(response['txId'])
-
-    return txnInfo['application-index']
-}
-
-async function compileProgram(source: string): Promise<Uint8Array> {
-    const programBytes: Uint8Array = encoder.encode(source)
-    const compileResponse = await client.compile(programBytes).do()
-    const compiledBytes = new Uint8Array(
-        Buffer.from(compileResponse.result, 'base64')
-    )
-    return compiledBytes
-}
-
-export async function changeAssetManagement(
-    assetId: number,
-    currentManagerAddress: string,
-    manager: string | undefined,
-    reserve: string | undefined,
-    freeze: string | undefined,
-    clawback: string | undefined,
-    emptyAddressChecking: boolean
-): Promise<Transaction> {
-    let suggestedParams = await getSuggestedParams()
-    const txn = {
-        from: currentManagerAddress,
-        assetIndex: assetId,
-        manager: manager,
-        reserve: reserve,
-        freeze: freeze,
-        clawback: clawback,
-        suggestedParams: suggestedParams,
-        strictEmptyAddressChecking: emptyAddressChecking,
-    }
-
-    const assetChangeTxn: Transaction =
-        algosdk.makeAssetConfigTxnWithSuggestedParamsFromObject(txn)
-    return assetChangeTxn
-}
-
-export async function changeAssetManagementSign(
-    assetId: number,
-    currentManagerAddress: string,
-    manager: string | undefined,
-    reserve: string | undefined,
-    freeze: string | undefined,
-    clawback: string | undefined,
-    emptyAddressChecking: boolean
-): Promise<string> {
-    const assetChangeTxn: Transaction = await changeAssetManagement(
-        assetId,
-        currentManagerAddress,
-        manager,
-        reserve,
-        freeze,
-        clawback,
-        emptyAddressChecking
-    )
-    return await signTxn(assetChangeTxn)
-}
-
-export async function escrowProgramToAddress(
-    escrowProgram: string
-): Promise<string> {
-    const account: LogicSigAccount = new LogicSigAccount(
-        await compileProgram(escrowProgram)
-    )
-    return account.address()
-}
-
-export async function getApplicationById(appId: number): Promise<object> {
-    const app = await indexer.lookupApplications(appId).do()
-    return app['application']
-}
-
-export async function getAssetById(assetId: number): Promise<object> {
-    const asset = await indexer.lookupAssetByID(assetId).do()
-    return asset['asset']
-}
-
-export async function getAccountAssets(
-    walletAddress: string
-): Promise<Array<object>> {
-    const assets: Record<string, any> = await indexer
-        .lookupAccountCreatedAssets(walletAddress)
-        .do()
-    // console.log(await indexer.lookupAccountAssets(walletAddress).do());
-    return assets['assets']
-}
-
-export async function callApplication(
-    appId: number,
-    callerAddress: string,
-    onComplete: algosdk.OnApplicationComplete,
-    appArgs?: Uint8Array[],
-    foreignAssets?: number[],
-    accounts?: string[]
-): Promise<Transaction> {
-    let suggestedParams = await getSuggestedParams()
-    const txn = {
-        from: callerAddress,
-        suggestedParams: suggestedParams,
-        appIndex: appId,
-        onComplete: onComplete,
-        appArgs: appArgs,
-        foreignAssets: foreignAssets,
-        accounts: accounts,
-    }
-
-    const callTxn: Transaction = makeApplicationCallTxnFromObject(txn)
-    return callTxn
-}
-
-export async function callApplicationSign(
-    appId: number,
-    callerAddress: string,
-    onComplete: algosdk.OnApplicationComplete,
-    appArgs?: Uint8Array[],
-    foreignAssets?: number[],
-    accounts?: string[],
-    logicSig?: boolean
-) {
-    const callTxn: Transaction = await callApplication(
-        appId,
-        callerAddress,
-        onComplete,
-        appArgs,
-        foreignAssets,
-        accounts
-    )
-
-    if (logicSig) {
-        return await logicSign(callTxn)
-    }
-    return await signTxn(callTxn)
-}
-
-async function assetTransfer(
+async function indivAssetTransfer(
     senderAddress: string,
     receiverAddress: string,
     amount: number | bigint,
     assetId: number,
-    revocationTarget?: string
 ): Promise<Transaction> {
     let suggestedParams = await getSuggestedParams()
+
     const txn = {
         from: senderAddress,
         to: receiverAddress,
         suggestedParams: suggestedParams,
         amount: amount,
         assetIndex: assetId,
-        revocationTarget: revocationTarget,
     }
 
-    const transferTxn = makeAssetTransferTxnWithSuggestedParamsFromObject(txn)
-    return transferTxn
+    return makeAssetTransferTxnWithSuggestedParamsFromObject(txn)
 }
 
-export async function optIn(
-    assetId: number,
-    address: string
-): Promise<Transaction> {
-    return await assetTransfer(address, address, 0, assetId)
-}
+export async function assetTransfer(
+    senderAddress: string,
+    receiverAddress: string,
+    amount: number | bigint,
+    assetIds: number[],
+    connectType: ConnectType,
+): Promise<string[]> {
+    let txnPromises: Promise<Transaction>[] = []
 
-export async function buyAsset(
-    assetId: number,
-    appId: number,
-    ownerAddress: string,
-    buyerAddress: string,
-    price: number | bigint,
-    escrowAddress: string,
-    contractAddress: string,
-    timestamp?: number
-): Promise<Transaction[]> {
-    let appArgs: Uint8Array[] = [BUY]
-    if (timestamp) {
-        appArgs.push(encodeUint64(timestamp))
-    }
-    appArgs.push(
-        ...[
-            decodeAddress(
-                'KYUH2SNU6FWFGBK6PNWI4EUIABOYFIQIQH2WOP3FW7DGA623ESTGXYQPJA'
-            ).publicKey,
-            encodeUint64(90),
-            decodeAddress(
-                'CB2MYSJFLTUMGRURINUT3B5A7VK45LNZWFRTLG2SJGBRVAQF32UDDUEX34'
-            ).publicKey,
-            encodeUint64(10),
-        ]
-    )
-    let appCallTxn: Transaction = await callApplication(
-        appId,
-        buyerAddress,
-        algosdk.OnApplicationComplete.NoOpOC,
-        appArgs
-    )
-    // change hardcod
-    let paymentTxn: Transaction = await pay(
-        buyerAddress,
-        contractAddress,
-        price
-    )
-    let assetTransferTxn: Transaction = await assetTransfer(
-        escrowAddress,
-        buyerAddress,
-        1,
-        assetId,
-        ownerAddress
-    )
-
-    let txns: Transaction[] = [appCallTxn, paymentTxn, assetTransferTxn]
-    const gid: Buffer = computeGroupID(txns)
-
-    return txns.map((txn: Transaction) => {
-        txn.group = gid
-        return txn
+    assetIds.forEach((assetId: number) => {
+        txnPromises.push(indivAssetTransfer(senderAddress, receiverAddress, amount, assetId))
     })
+
+    const txnArray: Transaction[] = await Promise.all(txnPromises)
+    const txnGroup: Transaction[] = assignGroupID(txnArray);
+
+    return prepareSignedTxns(txnGroup, connectType, senderAddress)
 }
 
-export async function buySign(
-    optInTxn: Transaction,
-    buyTxns: Transaction[],
-    escrowProgram: string
-): Promise<object> {
-    const myAlgoSignTxns: Transaction[] = [optInTxn, buyTxns[0], buyTxns[1]]
-    const convertedTxns: Uint8Array[] = myAlgoSignTxns.map((txn: Transaction) =>
-        txn.toByte()
-    )
+async function pay(
+    sender: string,
+    receiver: string,
+    price: number | bigint,
+): Promise<Transaction> {
+    let suggestedParams = await getSuggestedParams()
+    const txn = {
+        from: sender,
+        to: receiver,
+        suggestedParams: suggestedParams,
+        amount: price
+    }
 
-    const signedTxns: SignedTx[] =
-        await myAlgoConnect.signTransaction(convertedTxns)
+    return makePaymentTxnWithSuggestedParamsFromObject(txn)
+}
 
-    const account: LogicSigAccount = new LogicSigAccount(
-        await compileProgram(escrowProgram)
-    )
-    const transferTxnSigned: SignedTx = signLogicSigTransactionObject(
-        buyTxns[2],
-        account
-    )
+async function optIn(
+    sender: string,
+    assetId: number,
+): Promise<Transaction> {
+    let suggestedParams = await getSuggestedParams()
+    const txn = {
+        from: sender,
+        to: sender,
+        suggestedParams: suggestedParams,
+        amount: 0,
+        assetIndex: assetId,
+    }
 
-    // send and wait for opt in
-    let response = await client.sendRawTransaction(signedTxns[0].blob).do()
-    let txnInfo = await waitForTxn(signedTxns[0].txID)
+    return makeAssetTransferTxnWithSuggestedParamsFromObject(txn)
+}
 
-    // send and wait for atomic swap
-    const buySignedTxns: SignedTx[] = [
-        signedTxns[1],
-        signedTxns[2],
-        transferTxnSigned,
-    ]
-    const buySignedTxnsBlobs: Uint8Array[] = buySignedTxns.map(
-        (elem: SignedTx) => elem.blob
-    )
-    response = await client.sendRawTransaction(buySignedTxnsBlobs).do()
-    txnInfo = await waitForTxn(response['txId'])
+export async function buy(
+    superAddr: string,
+    buyer: string,
+    profitSplits: ProfitSplit[],
+    price: bigint,
+    assetId: number,
+    appCall: string,
+    connectType: ConnectType,
+): Promise<string[]> {
+    let txnArrayPromises: Promise<Transaction>[] = []
 
-    return txnInfo
+    txnArrayPromises.push(optIn(buyer, assetId))
+    
+    // const optInTxn: Transaction = await optIn(buyer, assetId)
+
+    const twineCut: bigint = (price * BigInt(TWINE_NFT_CUT * 100)) / 100n;
+    const creatorCut: bigint = price - twineCut;
+
+    txnArrayPromises.push(pay(buyer, adminAddr, twineCut));
+
+    for (let i = 0; i < profitSplits.length; i++) {
+        txnArrayPromises.push(pay(buyer, profitSplits[i].creator.walletAddress, (creatorCut * BigInt(profitSplits[i].percentage)) / 100n))
+    }
+
+    // const payTxn: Transaction = await pay(buyer, superAddr, price)
+    const appCallTxn: Transaction = decodeUnsignedTransaction(
+        Buffer.from(appCall, 'base64')
+    );
+
+    const response: Transaction[] = await Promise.all(txnArrayPromises);
+
+    const txnArray: Transaction[] = [response[0], appCallTxn, ...response.slice(1)]
+    const txnGroup: Transaction[] = assignGroupID(txnArray);
+
+    const signedGroup: string[] = await prepareSignedTxns(txnGroup, connectType, buyer)
+    const unsignedAppCall: string = Buffer.from(algosdk.encodeUnsignedTransaction(txnGroup[1])).toString('base64')
+
+    return [signedGroup[0], unsignedAppCall, ...signedGroup.slice(2)]
 }

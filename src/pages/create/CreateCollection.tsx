@@ -4,7 +4,7 @@ import useState from 'react-usestateref'
 import './CreateArtwork.css'
 import { UserContext } from '../../App.tsx'
 import Navbar from '../../components/Navbar.tsx'
-import { Typography, Grid, Option } from '@mui/joy'
+import { Typography, Grid, Option, CircularProgress } from '@mui/joy'
 import { CollaboratorContext } from './Create.tsx'
 import { v4 as uuidv4 } from 'uuid'
 import { MAX_COLLABORATORS_SMART_CONTRACTS } from '../../utils/constants.ts'
@@ -16,12 +16,15 @@ import {
     NFTCollection,
     Work,
     Artwork,
+    AdminApp,
 } from '../../utils/types.ts'
 import { genericGet, genericPost } from '../../utils/api.ts'
 import GalleryTile from '../../components/GalleryTile.tsx'
 import TwineInput from '../../components/TwineInput.tsx'
 import TwineSelect from '../../components/TwineSelect.tsx'
 import { CollectionType } from '../../utils/enums.ts'
+import { assetTransfer } from '../../utils/blockchain/transactionRepository.ts'
+import ErrorPopup from '../../components/ErrorPopup.tsx'
 
 interface CreateCollectionProps {
     edit?: boolean
@@ -36,7 +39,7 @@ export const ArtworkContext = createContext(null as any)
 
 function CreateCollection(props: CreateCollectionProps) {
     const context: object = useContext(UserContext)
-    const user: User = context['user']
+    const user: User = context['user'] || null
 
     const [collection, setCollection] = useState<NFTCollection>()
     const [collaborators, setCollaborators] = useState<JSX.Element[]>([])
@@ -46,6 +49,8 @@ function CreateCollection(props: CreateCollectionProps) {
         new Map()
     )
 
+    const [adminApp, setAdminApp] = useState<AdminApp>()
+
     const [sellableNfts, setSellableNfts] = useState<JSX.Element[]>([])
     const [selectedNfts, setSelectedNfts] = useState<Set<number>>(new Set())
 
@@ -54,6 +59,11 @@ function CreateCollection(props: CreateCollectionProps) {
     const [selectedWork, setSelectedWork] = useState<number>()
 
     const [showNfts, setShowNfts] = useState<boolean>(props.edit ? false : true)
+
+    const [showError, setShowError] = useState<boolean>(false)
+    const [loadingPublish, setLoadingPublish] = useState<boolean>(false)
+
+    const [gotAssets, setGotAssets, gotAssetsRef] = useState<boolean>(false)
 
     useEffect(() => {
         if (user && !props.edit && collaborators.length === 0) {
@@ -71,17 +81,20 @@ function CreateCollection(props: CreateCollectionProps) {
         }
 
         if (user) {
-            genericGet('/api/algo/assets/' + user.walletAddress).then(
-                (response: AlgorandAsset[]) => {
-                    if (response) {
-                        let assets: Map<number, AlgorandAsset> = new Map()
-                        response.forEach((asset) => {
-                            assets.set(asset.id, asset)
-                        })
-                        setNfts(new Map([...assets, ...nftsRef.current]))
+            if (!gotAssetsRef.current) {
+                setGotAssets(true)
+                genericGet('/api/algo/assets/' + user.walletAddress).then(
+                    (response: AlgorandAsset[]) => {
+                        if (response) {
+                            let assets: Map<number, AlgorandAsset> = new Map()
+                            response.forEach((asset) => {
+                                assets.set(asset.id, asset)
+                            })
+                            setNfts(new Map([...assets, ...nftsRef.current]))
+                        }
                     }
-                }
-            )
+                )
+            }
 
             genericGet(
                 '/api/work/creator/published/' + user.walletAddress
@@ -94,6 +107,12 @@ function CreateCollection(props: CreateCollectionProps) {
                     setWorks(worksMap)
                 }
             })
+
+            genericGet('/api/algo/admin-app/get-latest').then(
+                (response: AdminApp) => {
+                    setAdminApp(response)
+                }
+            )
         }
     }, [user])
 
@@ -260,6 +279,7 @@ function CreateCollection(props: CreateCollectionProps) {
 
     const saveCollection = async (publish: boolean): Promise<void> => {
         if (selectedNfts.size == 0) {
+            setShowError(true)
             return
         }
 
@@ -272,8 +292,6 @@ function CreateCollection(props: CreateCollectionProps) {
             ) as HTMLInputElement
         ).value
 
-        console.log('top')
-
         if (
             !(
                 name &&
@@ -282,6 +300,7 @@ function CreateCollection(props: CreateCollectionProps) {
                 parseFloat(price) >= 0.1
             )
         ) {
+            setShowError(true)
             return
         }
 
@@ -301,16 +320,15 @@ function CreateCollection(props: CreateCollectionProps) {
             percents.push(parseInt((elem as HTMLInputElement).value))
         })
 
-        console.log('sum')
         const sum: number = percents.reduce(
             (partial, curr) => partial + curr,
             0
         )
         if (sum !== 100) {
+            setShowError(true)
             return
         }
 
-        console.log('users')
         let profitSplitMap: Map<User, number> = new Map()
         let users: User[] = []
         for (let i = 0; i < usernames.length; i++) {
@@ -336,128 +354,190 @@ function CreateCollection(props: CreateCollectionProps) {
                     ?.creator.userName.replace(' ', '-')
                     .toLowerCase() +
                 '-' +
-                name.replace(' ', '-').toLowerCase(),
+                name.replace(' ', '-').replace('/', '-').toLowerCase(),
             active: false,
             published: false,
             price: parseFloat(price),
         }
 
         if (publish) {
-            return
-        } else {
-            if (!props.edit) {
-                genericPost('/api/collection/createWithArt', {
+            coll.published = true
+            coll.active = true
+        }
+
+        if (!props.edit) {
+            const response: NFTCollection = await genericPost(
+                '/api/collection/createWithArt',
+                {
                     collection: coll,
                     artworks: artworks,
-                }).then((response) => {
-                    let profitSplitsWithAddrs: object[] = []
-                    for (let i = 0; i < usernames.length; i++) {
-                        profitSplitsWithAddrs.push({
-                            creatorUsername: usernames[i],
-                            profitSplit: {
-                                creator: null,
-                                collection: response,
-                                percentage: percents[i],
-                            },
-                        })
-                    }
+                }
+            )
 
-                    genericPost(
-                        '/api/profitSplit/addMany',
-                        profitSplitsWithAddrs
-                    ).then((response) => {
-                        window.location.href = '/collections/' + coll.url
+            if (response) {
+                let profitSplitsWithAddrs: object[] = []
+                for (let i = 0; i < usernames.length; i++) {
+                    profitSplitsWithAddrs.push({
+                        creatorUsername: usernames[i],
+                        profitSplit: {
+                            creator: null,
+                            collection: response,
+                            percentage: percents[i],
+                        },
                     })
-                })
+                }
+
+                await genericPost(
+                    '/api/profitSplit/addMany',
+                    profitSplitsWithAddrs
+                )
             } else {
-                genericPost('/api/collection/update', {
+                setShowError(true)
+                return
+            }
+        } else {
+            const art: Artwork[] = await genericGet(
+                '/api/artwork/collection/' + collection?.id
+            )
+            if (!art) {
+                setShowError(true)
+                return
+            }
+
+            let newArt: number[] = []
+            let currArtSet: Set<number> = new Set(art.map((art) => art.id))
+            Array.from(selectedNfts).forEach((item) => {
+                if (!currArtSet.has(item)) {
+                    newArt.push(item)
+                }
+            })
+            const artExists: number[] = await genericPost(
+                '/api/artwork/exists',
+                newArt
+            )
+            if (artExists.length > 0) {
+                setShowError(true)
+                return
+            }
+
+            const response: NFTCollection = await genericPost(
+                '/api/collection/update',
+                {
                     ...collection,
                     ...coll,
-                }).then((response: NFTCollection) => {
-                    genericGet(
-                        '/api/profitSplit/collection/' + response.id
-                    ).then((splits: ProfitSplit[]) => {
-                        let newSplit: ProfitSplit
-                        let foundEntries: Set<number> = new Set()
-                        let i: number
-                        profitSplitMap.forEach((value, user) => {
-                            newSplit = {
-                                collection: response,
-                                creator: user,
-                                percentage: value,
-                            }
+                }
+            )
 
-                            let found: boolean = false
-                            for (i = 0; i < splits.length; i++) {
-                                if (
-                                    splits[i].creator.userName === user.userName
-                                ) {
-                                    newSplit.id = splits[i].id
-                                    genericPost(
-                                        '/api/profitSplit/update',
-                                        newSplit
-                                    )
-                                    found = true
-                                    foundEntries.add(i)
-                                }
-                            }
+            const splits: ProfitSplit[] = await genericGet(
+                '/api/profitSplit/collection/' + response.id
+            )
 
-                            if (!found) {
-                                genericPost('/api/profitSplit/add', newSplit)
-                            }
-                        })
+            let promises: Promise<any>[] = []
+            let newSplit: ProfitSplit
+            let foundEntries: Set<number> = new Set()
+            let i: number
+            profitSplitMap.forEach((value, user) => {
+                newSplit = {
+                    collection: response,
+                    creator: user,
+                    percentage: value,
+                }
 
-                        for (i = 0; i < splits.length; i++) {
-                            if (!foundEntries.has(i)) {
-                                genericPost(
-                                    '/api/profitSplit/delete',
-                                    splits[i]
-                                )
-                            }
-                        }
-                    })
+                let found: boolean = false
+                for (i = 0; i < splits.length; i++) {
+                    if (splits[i].creator.userName === user.userName) {
+                        newSplit.id = splits[i].id
+                        promises.push(
+                            genericPost('/api/profitSplit/update', newSplit)
+                        )
+                        found = true
+                        foundEntries.add(i)
+                    }
+                }
 
-                    genericGet('/api/artwork/collection/' + response.id).then(
-                        (art: Artwork[]) => {
-                            let foundEntries: Set<number> = new Set()
-                            artworks.forEach((nft: Artwork) => {
-                                let found: boolean = false
-                                const newArt: Artwork = {
-                                    ...nft,
-                                    origColl: response,
-                                    currColl: response,
-                                }
-                                for (let i = 0; i < art.length; i++) {
-                                    if (nft.id === art[i].id) {
-                                        foundEntries.add(i)
-                                        found = true
+                if (!found) {
+                    promises.push(genericPost('/api/profitSplit/add', newSplit))
+                }
+            })
 
-                                        genericPost(
-                                            '/api/artwork/update',
-                                            newArt
-                                        )
-                                    }
-                                }
-
-                                if (!found) {
-                                    genericPost('/api/artwork/create', newArt)
-                                }
-                            })
-
-                            for (let i = 0; i < art.length; i++) {
-                                if (!foundEntries.has(i)) {
-                                    genericPost(
-                                        '/api/artwork/remove/' + art[i].id,
-                                        {}
-                                    )
-                                }
-                            }
-                        }
+            for (i = 0; i < splits.length; i++) {
+                if (!foundEntries.has(i)) {
+                    promises.push(
+                        genericPost('/api/profitSplit/delete', splits[i])
                     )
+                }
+            }
+
+            foundEntries = new Set()
+            artworks.forEach((nft: Artwork) => {
+                let found: boolean = false
+                const newArt: Artwork = {
+                    ...nft,
+                    origColl: response,
+                    currColl: response,
+                }
+                for (let i = 0; i < art.length; i++) {
+                    if (nft.id === art[i].id) {
+                        foundEntries.add(i)
+                        found = true
+
+                        promises.push(
+                            genericPost('/api/artwork/update', newArt)
+                        )
+                    }
+                }
+
+                if (!found) {
+                    promises.push(genericPost('/api/artwork/create', newArt))
+                }
+            })
+
+            for (let i = 0; i < art.length; i++) {
+                if (!foundEntries.has(i)) {
+                    promises.push(
+                        genericPost('/api/artwork/remove/' + art[i].id, {})
+                    )
+                }
+            }
+
+            await Promise.all(promises)
+        }
+
+        if (publish && adminApp) {
+            setLoadingPublish(true)
+            const nftIds: number[] = Array.from(selectedNfts)
+            let idsAndTxnsWrapper: object[] = []
+
+            const signedTxns: string[] = await assetTransfer(
+                user.walletAddress,
+                adminApp.address,
+                1,
+                nftIds,
+                user.connectType
+            )
+            for (let i = 0; i < nftIds.length; i++) {
+                idsAndTxnsWrapper.push({
+                    nftId: nftIds[i],
+                    signedAssetTransfer: signedTxns[i],
                 })
             }
+
+            if (signedTxns && signedTxns.length > 0) {
+                await genericPost('/api/algo/sell', {
+                    seller: user.walletAddress,
+                    saleType: 'sale',
+                    price: parseFloat(price) * 1000000,
+                    idsAndTxns: idsAndTxnsWrapper,
+                })
+                setLoadingPublish(false)
+                window.location.href = '/collection/' + coll.url
+            } else {
+                setLoadingPublish(false)
+                setShowError(true)
+            }
+        } else {
+            window.location.href = '/collection/' + coll.url
         }
-        window.location.href = '/collection/' + coll.url
     }
 
     return (
@@ -598,7 +678,13 @@ function CreateCollection(props: CreateCollectionProps) {
                     )}
                 </Grid>
 
-                <Grid sx={{ marginTop: '40px', paddingLeft: '32px' }}>
+                <Grid
+                    container
+                    alignItems="center"
+                    justifyContent="center"
+                    xs={12}
+                    sx={{ marginTop: '40px', paddingLeft: '32px' }}
+                >
                     <TwineButton
                         color="green"
                         name="Save Draft"
@@ -606,8 +692,29 @@ function CreateCollection(props: CreateCollectionProps) {
                             saveCollection(false)
                         }}
                     />
+                    <TwineButton
+                        color="purple"
+                        name={
+                            loadingPublish ? (
+                                <CircularProgress
+                                    color="darkpurple"
+                                    variant="plain"
+                                />
+                            ) : (
+                                'Publish Collection'
+                            )
+                        }
+                        action={() => {
+                            saveCollection(true)
+                        }}
+                    />
                 </Grid>
             </Grid>
+            <ErrorPopup
+                isOpen={showError}
+                onClose={() => setShowError(false)}
+                message="Unable to save collection"
+            />
         </div>
     )
 }
