@@ -120,7 +120,6 @@ function Profile() {
                                 icon="/icons/bell.svg"
                                 color="darkpurple"
                                 name=""
-                                sx={{ width: '15%' }}
                                 name="0"
                             />
                         </div>
@@ -209,7 +208,11 @@ function Profile() {
                     {works && (
                         <div>
                             <div className="works-header">
-                                <Typography color="purple" level="h2">
+                                <Typography
+                                    color="purple"
+                                    level="h2"
+                                    className="profile-title"
+                                >
                                     {works.length +
                                         ' ' +
                                         (works.length === 1
@@ -220,17 +223,20 @@ function Profile() {
                             <Grid
                                 container
                                 spacing={{ xs: 2 }}
-                                columns={{ xs: 1, sm: 6, md: 3, lg: 4, xl: 8 }}
-                                className="works-list"
+                                columns={{ xs: 1, sm: 2, md: 2, lg: 3 }}
+                                sx={{ padding: '12px' }}
+                                className="works-list-container"
                             >
                                 {works &&
                                     works.map((work, index) => {
                                         return (
                                             <Grid
+                                                className="work-list"
                                                 md={1}
                                                 xl={1}
                                                 lg={1}
                                                 sm={2}
+                                                xs={1}
                                                 key={index}
                                             >
                                                 <GalleryTile
