@@ -88,7 +88,7 @@ span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorP
 }
 @media screen and (max-width: 499px) and (min-width: 426px) {
     .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
-        height: 115px;
+        height: 75px;
     }
 }
 
@@ -99,16 +99,16 @@ span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorP
 }
 @media screen and (max-width: 425px) and (min-width: 320px) {
     .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
-        height: 105px;
+        height: 75px;
         max-width: 95%;
     }
 }
-
+/* 
 @media screen and (max-width: 500px) and (min-width: 320px) {
     .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.MuiGrid-grid-xs-12.chapter-view-container {
         justify-content: center;
     }
-}
+} */
 
 @media screen and (max-width: 400px) and (min-width: 320px) {
     span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
@@ -192,4 +192,63 @@ h3.episode-title {
 
 span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
     margin: 11px 60px 0px 0px;
+}
+
+@media screen and (max-width: 700px) and (min-width: 320px) {
+    .view-chapter-icons {
+        width: 100%;
+        background-color: #14100e;
+        display: flex;
+        justify-content: center;
+        border-radius: 15px;
+        height: 60px;
+    }
+    .bottom-bar {
+        position: sticky;
+        bottom: 0;
+        display: flex;
+    }
+    .comment-section {
+        background-color: #13100d;
+        width: 86%;
+        padding: 20px 20px 20px 20px;
+        border-radius: 35px;
+    }
+    .MuiGrid-root.MuiGrid-container.MuiGrid-direction-xs-row.like-heart-container {
+        display: none;
+    }
+    .tip-container {
+        margin-left: 2px;
+    }
+    .like-icon {
+        align-items: center;
+    }
+    .tip-pop-up {
+        padding: 15px 15px 15px 15px;
+    }
+}
+
+@media screen and (max-width: 2560px) and (min-width: 701px) {
+    .view-chapter-icons {
+        display: none;
+    }
+    .tip-container {
+        display: none;
+    }
+}
+@media screen and (max-width: 428px) and (min-width: 320px) {
+    span.view-chapter-title.MuiTypography-root.MuiTypography-h1.MuiTypography-colorPurple {
+        margin: 0px;
+    }
+    h3.episode-title {
+        font-size: 14px;
+    }
+    .name-comment {
+        margin: 0px;
+    }
+}
+@media screen and (max-width: 700px) and (min-width: 320px) {
+    button.MuiButton-root.MuiButton-variantSolid.MuiButton-colorGreen.MuiButton-sizeMd.tip-button {
+        display: none;
+    }
 }

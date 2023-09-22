@@ -29,6 +29,11 @@ import {
     algoToMicro,
     TWINE_CUT,
 } from '../utils/blockchain/constants.ts'
+import Modal from '@mui/joy/Modal'
+import ModalDialog from '@mui/joy/ModalDialog'
+import ModalClose from '@mui/joy/ModalClose'
+import { Layout } from '../components/layout/index.tsx'
+import TipComponent from '../components/TipComponent.tsx'
 
 function Chapter() {
     const [episode, setEpisode] = useState<Episode>([])
@@ -51,6 +56,8 @@ function Chapter() {
     const [percentages, setPercentages] = useState<number[]>([])
 
     const [showTip, setShowTip] = useState<boolean>(false)
+    const [showComment, setCommentSection] = useState<boolean>(false)
+    const windowWidth = window.innerWidth
 
     useEffect(() => {
         episodeGetByUrl(window.location.href.split('/')[4], setEpisode, () => {
@@ -330,146 +337,58 @@ function Chapter() {
                                                 setShowTip(!showTip)
                                             }}
                                         />
-                                        <Grid
-                                            container
-                                            alignItems="center"
-                                            direction="column"
-                                            sx={
-                                                showTip
-                                                    ? {
-                                                          marginTop: '20px',
-                                                          background: '#202020',
-                                                          padding: '10px 0',
-                                                          borderRadius: '15px',
-                                                      }
-                                                    : {
-                                                          visibility: 'hidden',
-                                                      }
-                                            }
-                                        >
-                                            <img
-                                                src={
-                                                    showAnimation
-                                                        ? '/icons/tipping-animation.gif'
-                                                        : '/icons/tipping-animation-first.png'
+                                        {windowWidth < 700 ? (
+                                            <Modal
+                                                aria-labelledby="modal-title"
+                                                aria-describedby="modal-desc"
+                                                open={showTip}
+                                                onClose={() =>
+                                                    setShowTip(false)
                                                 }
-                                                style={{ width: '100%' }}
-                                            />
-                                            <Grid
-                                                container
-                                                alignItems="center"
-                                                direction="column"
-                                                sx={
-                                                    showTip
-                                                        ? {
-                                                              marginTop: '20px',
-                                                              background:
-                                                                  '#202020',
-                                                              padding:
-                                                                  '0px 20px',
-                                                              borderRadius:
-                                                                  '15px',
-                                                          }
-                                                        : {
-                                                              visibility:
-                                                                  'hidden',
-                                                              padding: '20px',
-                                                          }
-                                                }
+                                                sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                }}
                                             >
-                                                <TwineInput
-                                                    type="number"
-                                                    label={
-                                                        'Send tip to @' +
-                                                        episode.work.creator
-                                                            .userName
-                                                    }
-                                                    placeholder="tip amount"
-                                                    inputAttrs={{
-                                                        id: 'tipInput',
-                                                    }}
-                                                    endDecorator="/icons/algo.svg"
-                                                />
-                                                <TwineButton
-                                                    icon="/icons/green_checkmark.svg"
-                                                    sx={{ marginTop: '20px' }}
-                                                    color="green"
-                                                    name={
-                                                        processingTip ? (
-                                                            <CircularProgress
-                                                                color="darkgreen"
-                                                                variant="plain"
-                                                            />
-                                                        ) : (
-                                                            'Confirm'
-                                                        )
-                                                    }
-                                                    action={() => {
-                                                        if (user) {
-                                                            const tipVal =
-                                                                document.getElementById(
-                                                                    'tipInput'
-                                                                ) as HTMLInputElement
-                                                            if (
-                                                                tipVal &&
-                                                                tipVal.value &&
-                                                                parseFloat(
-                                                                    tipVal.value
-                                                                ) >= 0.1
-                                                            ) {
-                                                                const adjustedVal: bigint =
-                                                                    algoToMicro(
-                                                                        parseFloat(
-                                                                            tipVal.value
-                                                                        )
-                                                                    )
-                                                                // BigInt(Math.floor(parseFloat(tipVal.value) * 1000000));
-                                                                tip(
-                                                                    user.walletAddress,
-                                                                    creators,
-                                                                    percentages,
-                                                                    adjustedVal,
-                                                                    user.connectType ===
-                                                                        ConnectType.PERA,
-                                                                    setProcessingTip
-                                                                ).then(() => {
-                                                                    setShowAnimation(
-                                                                        true
-                                                                    )
-                                                                    prepareSuccessAnimation()
-                                                                    tipVal.value =
-                                                                        ''
-                                                                    const tipObj: Tip =
-                                                                        {
-                                                                            tipper: user,
-                                                                            episode:
-                                                                                episode,
-                                                                            amount:
-                                                                                microToAlgo(
-                                                                                    adjustedVal
-                                                                                ) *
-                                                                                (1.0 -
-                                                                                    TWINE_CUT),
-                                                                        }
-                                                                    genericPost(
-                                                                        '/api/tip/tip',
-                                                                        tipObj
-                                                                    )
-                                                                })
-                                                            } else {
-                                                                setOpenTipError(
-                                                                    true
-                                                                )
+                                                <>
+                                                    <ModalDialog>
+                                                        <ModalClose />
+                                                        <TipComponent
+                                                            showTip={showTip}
+                                                            setOpenTipError={
+                                                                setOpenTipError
                                                             }
-                                                        } else {
-                                                            setOpenError(true)
-                                                        }
-                                                        // make sure loading goes away
-                                                        setProcessingTip(false)
-                                                    }}
-                                                />
-                                            </Grid>
-                                        </Grid>
+                                                            setOpenTipSuccess={
+                                                                setOpenTipSuccess
+                                                            }
+                                                            setOpenError={
+                                                                setOpenError
+                                                            }
+                                                            episode={episode}
+                                                            work={work}
+                                                            percentages={
+                                                                percentages
+                                                            }
+                                                        />
+                                                    </ModalDialog>
+                                                </>
+                                            </Modal>
+                                        ) : (
+                                            <TipComponent
+                                                showTip={showTip}
+                                                setOpenTipError={
+                                                    setOpenTipError
+                                                }
+                                                setOpenTipSuccess={
+                                                    setOpenTipSuccess
+                                                }
+                                                setOpenError={setOpenError}
+                                                episode={episode}
+                                                work={work}
+                                                percentages={percentages}
+                                            />
+                                        )}
                                     </Grid>
                                 }
                             />
@@ -482,7 +401,31 @@ function Chapter() {
                             </Typography>
                             {collaborators}
                         </Grid>
-                        <CommentSection episode={episode} />
+                        {windowWidth < 700 ? (
+                            <Modal
+                                aria-labelledby="modal-title"
+                                aria-describedby="modal-desc"
+                                open={showComment}
+                                onClose={() => setCommentSection(!showComment)}
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <>
+                                    <ModalClose
+                                        sx={{
+                                            top: '94px',
+                                            right: '17px',
+                                        }}
+                                    />
+                                    <CommentSection episode={episode} />
+                                </>
+                            </Modal>
+                        ) : (
+                            <CommentSection episode={episode} />
+                        )}
                         <ErrorPopup
                             isOpen={openError}
                             onClose={() => setOpenError(false)}
@@ -500,6 +443,55 @@ function Chapter() {
                     </Grid>
                 </Grid>
             )}
+            <div className="bottom-bar">
+                <div className="view-chapter-icons">
+                    <Grid container direction="row" className="like-icon">
+                        <IconButton
+                            icon="/icons/chat.svg"
+                            customSize="36px"
+                            action={() => {
+                                setCommentSection(!showComment)
+                            }}
+                        />
+
+                        <IconButton
+                            buttonClassName="like-heart-icon"
+                            action={likeAction}
+                            icon={
+                                liked
+                                    ? '/icons/heart-red.svg'
+                                    : '/icons/heart.svg'
+                            }
+                            color="purple"
+                        />
+                        <Typography
+                            level="h6"
+                            className="num-like"
+                            sx={{ marginLeft: '10px' }}
+                        >
+                            {String(numLikes) +
+                                ' like' +
+                                (numLikes === 1 ? '' : 's')}
+                        </Typography>
+                    </Grid>
+                </div>
+                <div className="tip-container">
+                    <IconButton
+                        sx={{
+                            borderRadius: '12px',
+                            height: '50px',
+                            width: '50px',
+                        }}
+                        className="tip-icon"
+                        icon="/icons/tip_jar.svg"
+                        customSize="30px"
+                        color="green"
+                        action={() => {
+                            setShowTip(!showTip)
+                        }}
+                    />
+                </div>
+            </div>
         </div>
     )
 
